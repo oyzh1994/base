@@ -63,7 +63,6 @@ public class ResourceUtil {
         return stream;
     }
 
-
     /**
      * 转换为物理地址
      *
@@ -74,6 +73,28 @@ public class ResourceUtil {
         JulLog.info("url:{}", url);
         URL u = getResource(url);
         return u == null ? null : u.toExternalForm();
+    }
+
+    /**
+     * 转换为物理文件
+     *
+     * @param url 地址
+     * @return 物理地址
+     */
+    public static String toExternalFile(@NonNull String url) {
+        JulLog.info("url:{}", url);
+        URL u = getResource(url);
+        if (u == null) {
+            return null;
+        }
+        String externalForm = u.toExternalForm();
+        if (externalForm == null) {
+            return null;
+        }
+        if (externalForm.startsWith("file:/")) {
+            externalForm = externalForm.substring(6);
+        }
+        return externalForm;
     }
 
     /**
