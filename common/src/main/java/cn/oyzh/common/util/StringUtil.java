@@ -273,4 +273,11 @@ public class StringUtil {
         return containsIgnoreCase(source, target) || containsIgnoreCase(target, source);
     }
 
+    public static String upperFirst(String source) {
+        if (source == null || source.isEmpty()) {
+            return source;
+        }
+        return source.substring(0, 1).toUpperCase() + source.substring(1);
+    }
+
 }
