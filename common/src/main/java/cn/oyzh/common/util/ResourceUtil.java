@@ -82,7 +82,7 @@ public class ResourceUtil {
      * @return 物理地址
      */
     public static String toExternalFile(@NonNull String url) {
-        JulLog.info("url:{}", url);
+        JulLog.debug("url:{}", url);
         URL u = getResource(url);
         if (u == null) {
             return null;
