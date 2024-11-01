@@ -1,7 +1,7 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.fx.common.log.JulLog;
-import cn.oyzh.fx.common.util.ArrayUtil;
+import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.util.ArrayUtil;
 import lombok.experimental.UtilityClass;
 
 import java.sql.JDBCType;

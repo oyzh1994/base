@@ -1,7 +1,8 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.fx.common.util.StringUtil;
-import cn.oyzh.fx.common.util.UUIDUtil;
+
+import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.common.util.UUIDUtil;
 
 /**
  * @author oyzh

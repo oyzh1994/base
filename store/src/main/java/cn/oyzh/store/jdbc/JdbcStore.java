@@ -1,9 +1,9 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.fx.common.h2.H2Operator;
-import cn.oyzh.fx.common.sqlite.SqliteOperator;
-import cn.oyzh.fx.common.util.CollectionUtil;
-import cn.oyzh.fx.common.util.ReflectUtil;
+import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.ReflectUtil;
+import cn.oyzh.store.h2.H2Operator;
+import cn.oyzh.store.sqlite.SqliteOperator;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

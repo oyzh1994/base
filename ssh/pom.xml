@@ -20,19 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.oyzh</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.oyzh</groupId>
             <artifactId>store</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
         </dependency>
         <!-- ssh类库 -->
         <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
@@ -40,7 +28,6 @@
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
