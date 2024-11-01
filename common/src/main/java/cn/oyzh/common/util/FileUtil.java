@@ -188,7 +188,11 @@ public class FileUtil {
         return null;
     }
 
-    public static String readUtf8String(File file) {
+    public static String readUtf8String(@NonNull String file) {
+        return readUtf8String(new File(file));
+    }
+
+    public static String readUtf8String(@NonNull File file) {
         return readString(file, StandardCharsets.UTF_8);
     }
 
