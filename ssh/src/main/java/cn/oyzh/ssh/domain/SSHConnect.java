@@ -1,4 +1,4 @@
-package cn.oyzh.ssh;
+package cn.oyzh.ssh.domain;
 
 import cn.oyzh.store.jdbc.Column;
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
  * @since 2023/12/15
  */
 @Data
-public class SSHConnectInfo {
+public class SSHConnect {
 
     /**
      * 连接端口，默认22

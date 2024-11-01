@@ -1,6 +1,9 @@
-package cn.oyzh.ssh;
+package cn.oyzh.ssh.forward;
 
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.ssh.util.SSHUtil;
+import cn.oyzh.ssh.domain.SSHConnect;
+import cn.oyzh.ssh.exception.SSHException;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -27,14 +30,14 @@ public class SSHForwarder {
     /**
      * ssh连接信息
      */
-    private final SSHConnectInfo connectInfo;
+    private final SSHConnect connectInfo;
 
     /**
      * 转发信息
      */
-    private final List<SSHForwardInfo> forwardInfos = new ArrayList<>();
+    private final List<SSHForwardConfig> forwardInfos = new ArrayList<>();
 
-    public SSHForwarder(@NonNull SSHConnectInfo connectInfo) {
+    public SSHForwarder(@NonNull SSHConnect connectInfo) {
         this.connectInfo = connectInfo;
     }
 
@@ -62,7 +65,7 @@ public class SSHForwarder {
      * @return 转发的端口列表
      */
     protected Set<Integer> getForwardPorts() {
-        return this.forwardInfos.parallelStream().map(SSHForwardInfo::getLocalPort).collect(Collectors.toSet());
+        return this.forwardInfos.parallelStream().map(SSHForwardConfig::getLocalPort).collect(Collectors.toSet());
     }
 
     /**
@@ -81,7 +84,7 @@ public class SSHForwarder {
      * @return 转发后的本地端口
      * @throws SSHException ssh异常
      */
-    public int forward(SSHForwardInfo forwardInfo) throws SSHException {
+    public int forward(SSHForwardConfig forwardInfo) throws SSHException {
         if (forwardInfo != null) {
             int localPort = SSHUtil.findAvailablePort(this.getForwardPorts());
             if (localPort == -1) {
@@ -107,7 +110,7 @@ public class SSHForwarder {
     public void destroy() {
         // 删除端口本地转发
         if (!this.forwardInfos.isEmpty() && this.isConnected()) {
-            for (SSHForwardInfo forwardInfo : this.forwardInfos) {
+            for (SSHForwardConfig forwardInfo : this.forwardInfos) {
                 try {
                     this.session.delPortForwardingL(forwardInfo.getLocalPort());
                 } catch (Exception ex) {

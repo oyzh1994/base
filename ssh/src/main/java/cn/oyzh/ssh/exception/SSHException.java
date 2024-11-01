@@ -1,4 +1,4 @@
-package cn.oyzh.ssh;
+package cn.oyzh.ssh.exception;
 
 import com.jcraft.jsch.JSchException;
 

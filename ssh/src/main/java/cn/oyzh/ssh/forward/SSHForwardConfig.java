@@ -1,4 +1,4 @@
-package cn.oyzh.ssh;
+package cn.oyzh.ssh.forward;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import lombok.Data;
  * @since 2023/12/15
  */
 @Data
-public class SSHForwardInfo {
+public class SSHForwardConfig {
 
     /**
      * 远程端口
