@@ -41,7 +41,6 @@
             <dependency>
                 <groupId>cn.oyzh</groupId>
                 <artifactId>common</artifactId>
-                <scope>provided</scope>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，存储模块 -->
@@ -70,7 +69,6 @@
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
-                <scope>compile</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

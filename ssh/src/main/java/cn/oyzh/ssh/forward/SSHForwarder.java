@@ -30,15 +30,15 @@ public class SSHForwarder {
     /**
      * ssh连接信息
      */
-    private final SSHConnect connectInfo;
+    private final SSHConnect connect;
 
     /**
      * 转发信息
      */
     private final List<SSHForwardConfig> forwardInfos = new ArrayList<>();
 
-    public SSHForwarder(@NonNull SSHConnect connectInfo) {
-        this.connectInfo = connectInfo;
+    public SSHForwarder(@NonNull SSHConnect connect) {
+        this.connect = connect;
     }
 
     /**
@@ -50,12 +50,12 @@ public class SSHForwarder {
         if (this.session == null || !this.session.isConnected()) {
             JSch jsch = new JSch();
             // 登陆跳板机
-            this.session = jsch.getSession(this.connectInfo.getUser(), this.connectInfo.getHost(), this.connectInfo.getPort());
+            this.session = jsch.getSession(this.connect.getUser(), this.connect.getHost(), this.connect.getPort());
             this.session.setConfig("StrictHostKeyChecking", "no");
-            this.session.setTimeout(this.connectInfo.getTimeout());
-            this.session.setPassword(this.connectInfo.getPassword());
+            this.session.setTimeout(this.connect.getTimeout());
+            this.session.setPassword(this.connect.getPassword());
             this.session.connect();
-            JulLog.info("ssh连接成功 connectInfo:{}", this.connectInfo);
+            JulLog.info("ssh连接成功 connectInfo:{}", this.connect);
         }
     }
 
