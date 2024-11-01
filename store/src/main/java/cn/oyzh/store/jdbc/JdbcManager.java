@@ -1,8 +1,10 @@
 package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -28,16 +30,25 @@ public class JdbcManager {
     private static final List<JdbcConn> CONNECTIONS = new CopyOnWriteArrayList<>();
 
     static {
-        String dialect = System.getProperty(JdbcConst.DB_DIALECT);
-        JdbcManager.dialect = JdbcDialect.valueOf(dialect);
+        try {
+            String dialect = System.getProperty(JdbcConst.DB_DIALECT);
+            if (StringUtil.isEmpty(dialect)) {
+                JdbcManager.dialect = JdbcDialect.H2;
+            } else {
+                JdbcManager.dialect = JdbcDialect.valueOf(dialect);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JdbcManager.dialect = JdbcDialect.H2;
+        }
     }
 
     public static boolean isH2Dialect() {
-        return JdbcDialect.H2==dialect;
+        return JdbcDialect.H2 == dialect;
     }
 
     public static boolean isSqliteDialect() {
-        return JdbcDialect.SQLITE==dialect;
+        return JdbcDialect.SQLITE == dialect;
     }
 
     /**
@@ -53,6 +64,9 @@ public class JdbcManager {
             }
         }
         String dbFile = System.getProperty(JdbcConst.DB_FILE);
+        if (StringUtil.isBlank(dbFile)) {
+            dbFile = System.getProperty("user.dir") + File.separator + "temp_db";
+        }
         Connection connection;
         if (dialect == JdbcDialect.H2) {
             connection = DriverManager.getConnection("jdbc:h2:" + dbFile);
