@@ -1,8 +1,8 @@
-package cn.oyzh.common.test;
+package cn.oyzh.store.test;
 
-import cn.oyzh.common.jdbc.ColumnDefinition;
-import cn.oyzh.common.jdbc.JdbcStore;
-import cn.oyzh.common.jdbc.TableDefinition;
+import cn.oyzh.store.jdbc.ColumnDefinition;
+import cn.oyzh.store.jdbc.JdbcStore;
+import cn.oyzh.store.jdbc.TableDefinition;
 
 import java.io.Serializable;
 import java.util.Map;

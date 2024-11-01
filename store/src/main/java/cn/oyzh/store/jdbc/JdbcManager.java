@@ -1,6 +1,6 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.fx.common.util.CollectionUtil;
+import cn.oyzh.common.util.CollectionUtil;
 import lombok.experimental.UtilityClass;
 
 import java.sql.Connection;

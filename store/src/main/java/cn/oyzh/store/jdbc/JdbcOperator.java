@@ -1,7 +1,7 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.fx.common.util.CollectionUtil;
-import cn.oyzh.fx.common.util.StringUtil;
+import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.StringUtil;
 import lombok.Getter;
 
 import java.sql.SQLException;

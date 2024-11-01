@@ -1,4 +1,4 @@
-package cn.oyzh.common.test;
+package cn.oyzh.store.test;
 
 import org.junit.Test;
 
