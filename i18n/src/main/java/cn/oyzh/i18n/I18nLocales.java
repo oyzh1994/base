@@ -1,6 +1,6 @@
 package cn.oyzh.i18n;
 
-import cn.oyzh.fx.common.util.StringUtil;
+import cn.oyzh.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Locale;
  * @since 2024/4/7
  */
 @UtilityClass
-public class Locales {
+public class I18nLocales {
 
     /**
      * 获取区域列表

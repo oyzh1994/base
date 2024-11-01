@@ -1,10 +1,7 @@
 package cn.oyzh.i18n;
 
-import cn.oyzh.fx.plus.window.StageAdapter;
-import cn.oyzh.fx.plus.window.StageManager;
 import lombok.experimental.UtilityClass;
 
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -44,7 +41,7 @@ public class I18nManager {
      * @return 当前区域名称
      */
     public static String currentLocaleName() {
-        return Locales.getLocaleName(currentLocale());
+        return I18nLocales.getLocaleName(currentLocale());
     }
 
     /**
@@ -53,7 +50,7 @@ public class I18nManager {
      * @param localeName 区域名称
      */
     public static void apply(String localeName) {
-        apply(Locales.getLocale(localeName));
+        apply(I18nLocales.getLocale(localeName));
     }
 
     /**
@@ -66,13 +63,6 @@ public class I18nManager {
             locale = defaultLocale;
         }
         try {
-            // 变更颜色
-            List<StageAdapter> wrappers = StageManager.allStages();
-            for (StageAdapter wrapper : wrappers) {
-                if (wrapper.controller() instanceof I18nAdapter adapter) {
-                    adapter.changeLocale(locale);
-                }
-            }
             // 设置当前区域
             currentLocale = locale;
             // 设置系统区域
@@ -81,6 +71,4 @@ public class I18nManager {
             ex.printStackTrace();
         }
     }
-
-
 }
