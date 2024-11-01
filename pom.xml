@@ -10,6 +10,7 @@
         <module>store</module>
         <module>ssh</module>
         <module>i18n</module>
+        <module>event</module>
     </modules>
     <groupId>cn.oyzh</groupId>
     <packaging>pom</packaging>
@@ -61,6 +62,13 @@
             <dependency>
                 <groupId>cn.oyzh</groupId>
                 <artifactId>i18n</artifactId>
+                <scope>provided</scope>
+                <version>${base.version}</version>
+            </dependency>
+            <!-- 自定义类库，事件模块 -->
+            <dependency>
+                <groupId>cn.oyzh</groupId>
+                <artifactId>event</artifactId>
                 <scope>provided</scope>
                 <version>${base.version}</version>
             </dependency>
