@@ -1629,6 +1629,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(LOAD, FAIL);
     }
 
+    public static String auth() {
+        return I18nResourceBundle.i18nString(AUTH);
+    }
+
     public static String authed() {
         return I18nResourceBundle.i18nString(AUTHED);
     }
