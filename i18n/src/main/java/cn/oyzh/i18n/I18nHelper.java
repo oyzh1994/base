@@ -557,6 +557,8 @@ public class I18nHelper {
 
     public static final String HIS = "base.his";
 
+    public static final String HISTORY = "base.history";
+
     public static final String QR_CODE = "base.qrCode";
 
     public static final String SORT_ASC = "base.sortAsc";
@@ -1807,6 +1809,10 @@ public class I18nHelper {
 
     public static String his() {
         return I18nResourceBundle.i18nString(HIS);
+    }
+
+    public static String history() {
+        return I18nResourceBundle.i18nString(HISTORY);
     }
 
     public static String qrCode() {
