@@ -2678,4 +2678,8 @@ public class I18nHelper {
     public static String nodeUpdated() {
         return I18nResourceBundle.i18nString(NODE, UPDATED);
     }
+
+    public static String homeTitle() {
+       return I18nResourceBundle.i18nString("base.title.home");
+    }
 }
