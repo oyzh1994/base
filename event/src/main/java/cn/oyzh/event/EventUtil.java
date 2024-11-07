@@ -27,6 +27,7 @@ public class EventUtil {
 
     /**
      * 获取事件总线对象
+     *
      * @return 事件总线对象
      */
     private EventBus eventBus() {
@@ -111,7 +112,7 @@ public class EventUtil {
             }
         };
         // 延迟、异步
-         if (config.isDelay() && config.isAsync()) {
+        if (config.isDelay() && config.isAsync()) {
             TaskManager.startDelay(func, config.getDelay());
         } else if (config.isAsync()) {// 异步
             TaskManager.start(func);
@@ -138,7 +139,7 @@ public class EventUtil {
      * @param event 事件
      */
     public static void postAsync(Event<?> event) {
-        post(event, EventConfigBuilder.newBuilder().async(true).build());
+        post(event, EventConfig.ASYNC);
     }
 }
 

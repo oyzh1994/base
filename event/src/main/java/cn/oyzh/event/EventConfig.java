@@ -31,8 +31,13 @@ public class EventConfig {
 
     public static EventConfig DEFAULT = new EventConfig();
 
+    public static EventConfig ASYNC = new EventConfig();
+
     static {
-        DEFAULT.async = true;
+        DEFAULT.async = false;
         DEFAULT.verbose = true;
+
+        ASYNC.async = true;
+        ASYNC.verbose = true;
     }
 }
