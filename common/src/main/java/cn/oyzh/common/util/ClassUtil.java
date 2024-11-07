@@ -27,6 +27,16 @@ import java.util.jar.JarFile;
 @UtilityClass
 public class ClassUtil {
 
+    public static <T> T newInstance(Class<T> clazz) {
+        if (clazz != null) {
+            try {
+                return (T) clazz.getConstructors()[0].newInstance();
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
     /**
      * 获取类的所有接口
      *
