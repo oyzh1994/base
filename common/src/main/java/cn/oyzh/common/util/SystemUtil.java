@@ -30,10 +30,10 @@ public class SystemUtil {
             // 获取非堆内存信息
             MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
             long usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
-            JulLog.info("gc之前预估使用内存:{}Mb", usedMemory / 1024 / 1024.0 + 256);
+            JulLog.info("gc之前预估使用内存:{}Mb", usedMemory / 1024 / 1024.0);
             System.gc();
             usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
-            JulLog.info("gc之后预估使用内存:{}Mb", usedMemory / 1024 / 1024.0 + 256);
+            JulLog.info("gc之后预估使用内存:{}Mb", usedMemory / 1024 / 1024.0);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
