@@ -44,6 +44,7 @@ public class Task implements Runnable {
     /**
      * 异常
      */
+    @Getter
     private Exception exception;
 
     public void onStart() throws Exception {
@@ -85,6 +86,10 @@ public class Task implements Runnable {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public boolean hasException() {
+        return this.exception != null;
     }
 
     public void throwRuntimeException() {
