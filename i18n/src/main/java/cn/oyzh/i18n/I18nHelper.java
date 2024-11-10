@@ -2682,4 +2682,8 @@ public class I18nHelper {
     public static String homeTitle() {
        return I18nResourceBundle.i18nString("base.title.home");
     }
+
+    public static String base() {
+       return I18nResourceBundle.i18nString("base.base");
+    }
 }
