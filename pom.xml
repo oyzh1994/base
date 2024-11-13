@@ -29,12 +29,11 @@
         <guava.version>33.1.0-jre</guava.version>
         <sqllit.version>3.46.1.0</sqllit.version>
         <fastjson.version>2.0.52</fastjson.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
+        <maven.compiler.release>22</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 
     <dependencyManagement>
         <dependencies>
@@ -48,34 +47,31 @@
             <dependency>
                 <groupId>cn.oyzh</groupId>
                 <artifactId>store</artifactId>
-                <scope>provided</scope>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，ssh模块 -->
             <dependency>
                 <groupId>cn.oyzh</groupId>
                 <artifactId>ssh</artifactId>
-                <scope>provided</scope>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，i18n模块 -->
             <dependency>
                 <groupId>cn.oyzh</groupId>
                 <artifactId>i18n</artifactId>
-                <scope>provided</scope>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，事件模块 -->
             <dependency>
                 <groupId>cn.oyzh</groupId>
                 <artifactId>event</artifactId>
-                <scope>provided</scope>
                 <version>${base.version}</version>
             </dependency>
             <!--  lombok-->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
+                <scope>compile</scope>
                 <version>${lombok.version}</version>
             </dependency>
         </dependencies>
