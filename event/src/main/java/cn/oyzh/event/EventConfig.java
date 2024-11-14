@@ -10,19 +10,12 @@ import lombok.Setter;
 @Setter
 public class EventConfig {
 
-    private Boolean async;
+    protected Boolean async;
 
-    @Getter
-    private Integer delay;
-
-    private Boolean verbose;
+    protected Boolean verbose;
 
     public boolean isAsync() {
         return async != null && async;
-    }
-
-    public boolean isDelay() {
-        return delay != null && delay > 0;
     }
 
     public boolean isVerbose() {

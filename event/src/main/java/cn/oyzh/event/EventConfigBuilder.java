@@ -8,19 +8,12 @@ package cn.oyzh.event;
  */
 public class EventConfigBuilder {
 
-    private int delay;
-
     private boolean async;
 
     private boolean verbose;
 
     public EventConfigBuilder async(boolean async) {
         this.async = async;
-        return this;
-    }
-
-    public EventConfigBuilder delay(int delay) {
-        this.delay = delay;
         return this;
     }
 
@@ -31,7 +24,6 @@ public class EventConfigBuilder {
 
     public EventConfig build() {
         EventConfig config = new EventConfig();
-        config.setDelay(delay);
         config.setAsync(async);
         config.setVerbose(verbose);
         return config;
