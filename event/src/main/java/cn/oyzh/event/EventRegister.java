@@ -1,0 +1,65 @@
+package cn.oyzh.event;
+
+import cn.oyzh.common.log.JulLog;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+/**
+ * @author oyzh
+ * @since 2024-11-14
+ */
+public class EventRegister {
+
+    private final List<EventSubscriber> subscribers = new CopyOnWriteArrayList<>();
+
+    public void register(Object listener) {
+        if (listener != null) {
+            Class<?> clazz = listener.getClass();
+            Method[] methods = clazz.getDeclaredMethods();
+            for (Method method : methods) {
+                EventSubscribe subscribe = method.getAnnotation(EventSubscribe.class);
+                if (subscribe != null) {
+                    if (method.getParameterCount() == 1) {
+                        EventSubscriber subscriber = new EventSubscriber(method, listener);
+                        synchronized (this.subscribers) {
+                            this.subscribers.add(subscriber);
+                        }
+                    } else {
+                        JulLog.error("EventSubscribe is found, but parameterCount is not 1");
+                    }
+                }
+            }
+            synchronized (this.subscribers) {
+                this.subscribers.removeIf(EventSubscriber::isInvalid);
+            }
+        }
+    }
+
+    public void unregister(Object listener) {
+        if (listener != null) {
+            synchronized (this.subscribers) {
+                this.subscribers.removeIf(s -> s.isInvalid() || listener.equals(s.getListener()));
+            }
+        }
+    }
+
+    public List<EventSubscriber> getSubscribers(Object event) {
+        if (event == null) {
+            return Collections.emptyList();
+        }
+        List<EventSubscriber> result = new ArrayList<>();
+        synchronized (this.subscribers) {
+            for (EventSubscriber subscriber : this.subscribers) {
+                if (subscriber.isInvokeAble(event)) {
+                    result.add(subscriber);
+                }
+            }
+        }
+        return result;
+    }
+
+}

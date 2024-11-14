@@ -1,10 +1,8 @@
 package cn.oyzh.event;
 
-import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.thread.TaskManager;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.SubscriberExceptionHandler;
 import lombok.experimental.UtilityClass;
+
+import java.util.function.Consumer;
 
 /**
  * 事件工具类
@@ -18,38 +16,15 @@ public class EventUtil {
     /**
      * 事件总线对象
      */
-    private static EventBus eventBus;
-
-    /**
-     * 异常处理器
-     */
-    private static SubscriberExceptionHandler exceptionHandler;
-
-    /**
-     * 获取事件总线对象
-     *
-     * @return 事件总线对象
-     */
-    private EventBus eventBus() {
-        if (eventBus == null) {
-            synchronized (EventUtil.class) {
-                eventBus = new EventBus((e, c) -> {
-                    if (exceptionHandler != null) {
-                        exceptionHandler.handleException(e, c);
-                    }
-                });
-            }
-        }
-        return eventBus;
-    }
+    private static final EventBus EVENT_BUS = EventFactory.newInstance();
 
     /**
      * 异常处理器
      *
      * @param exceptionHandler 异常处理器
      */
-    public static void exceptionHandler(SubscriberExceptionHandler exceptionHandler) {
-        EventUtil.exceptionHandler = exceptionHandler;
+    public static void exceptionHandler(Consumer<Exception> exceptionHandler) {
+        EVENT_BUS.exceptionHandler(exceptionHandler);
     }
 
     /**
@@ -58,9 +33,7 @@ public class EventUtil {
      * @param listener 监听器
      */
     public static void register(EventListener listener) {
-        if (listener != null) {
-            eventBus().register(listener);
-        }
+        EVENT_BUS.register(listener);
     }
 
     /**
@@ -69,13 +42,7 @@ public class EventUtil {
      * @param listener 监听器
      */
     public static void unregister(EventListener listener) {
-        if (listener != null) {
-            try {
-                eventBus().unregister(listener);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        EVENT_BUS.unregister(listener);
     }
 
     /**
@@ -84,62 +51,28 @@ public class EventUtil {
      * @param event 事件
      */
     public static void post(Event<?> event) {
-        post(event, EventConfig.DEFAULT);
+        post(event, EventFactory.defaultEventConfig(), null);
     }
 
     /**
      * 发送事件
      *
-     * @param event  事件
-     * @param config 配置
-     */
-    public static void post(Event<?> event, EventConfig config) {
-        if (event == null || config == null) {
-            return;
-        }
-        Runnable func = () -> {
-            Long startTime = null;
-            // 打印日志
-            if (config.isVerbose()) {
-                startTime = System.currentTimeMillis();
-                JulLog.debug("post event[type={}] start.", event.getClass());
-            }
-            eventBus().post(event);
-            // 打印日志
-            if (startTime != null) {
-                long endTime = System.currentTimeMillis();
-                JulLog.debug("post event:[type={}] finish, cost:{}ms.", event.getClass(), (endTime - startTime));
-            }
-        };
-        // 延迟、异步
-        if (config.isDelay() && config.isAsync()) {
-            TaskManager.startDelay(func, config.getDelay());
-        } else if (config.isAsync()) {// 异步
-            TaskManager.start(func);
-        } else if (config.isDelay()) {// 延迟
-            TaskManager.startDelay(func, config.getDelay());
-        } else {// 正常执行
-            func.run();
-        }
-    }
-
-    /**
-     * 触发事件，延迟执行
-     *
      * @param event 事件
-     * @param delay 延迟事件
+     * @param delay 延迟时间
      */
     public static void postDelay(Event<?> event, int delay) {
-        post(event, EventConfigBuilder.newBuilder().async(true).delay(delay).build());
+        post(event, EventFactory.defaultEventConfig(), delay);
     }
 
     /**
-     * 触发事件，异步执行
+     * 发送事件
      *
-     * @param event 事件
+     * @param event       事件
+     * @param config      配置
+     * @param delayMillis 延迟毫秒数
      */
-    public static void postAsync(Event<?> event) {
-        post(event, EventConfig.ASYNC);
+    public static void post(Event<?> event, EventConfig config, Integer delayMillis) {
+        EVENT_BUS.post(event, config, delayMillis);
     }
 }
 
