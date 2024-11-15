@@ -19,19 +19,17 @@
     <properties>
         <h2.version>2.3.232</h2.version>
         <poi.version>5.3.0</poi.version>
-        <h2.version>2.3.232</h2.version>
         <base.version>1.0.0</base.version>
         <jsch.version>0.2.17</jsch.version>
         <zxing.version>3.5.3</zxing.version>
-        <dom4j.version>2.1.3</dom4j.version>
         <junit.version>4.13.2</junit.version>
         <lombok.version>1.18.34</lombok.version>
         <guava.version>33.1.0-jre</guava.version>
         <sqllit.version>3.46.1.0</sqllit.version>
         <fastjson.version>2.0.52</fastjson.version>
-        <maven.compiler.source>22</maven.compiler.source>
-        <maven.compiler.target>22</maven.compiler.target>
-        <maven.compiler.release>22</maven.compiler.release>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -74,6 +72,44 @@
                 <scope>compile</scope>
                 <version>${lombok.version}</version>
             </dependency>
+            <!-- ssh类库 -->
+            <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
+            <dependency>
+                <groupId>com.github.mwiede</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${jsch.version}</version>
+            </dependency>
+            <!-- 测试类库 -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <!-- 编译插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <source>${maven.compiler.release}</source>
+                    <target>${maven.compiler.release}</target>
+                    <release>${maven.compiler.release}</release>
+                    <encoding>UTF-8</encoding>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
