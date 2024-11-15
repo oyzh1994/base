@@ -8,6 +8,7 @@ import lombok.experimental.UtilityClass;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
+import java.util.Properties;
 
 /**
  * 系统工具类
@@ -17,6 +18,23 @@ import java.lang.management.MemoryUsage;
  */
 @UtilityClass
 public class SystemUtil {
+
+    /**
+     * 移除可选属性
+     */
+    public static void removeOptionalProperties() {
+        Properties properties = System.getProperties();
+        properties.remove("java.vendor");
+        properties.remove("user.script");
+        properties.remove("user.variant");
+        properties.remove("java.vm.vendor");
+        properties.remove("java.vendor.url");
+        properties.remove("sun.os.patch.level");
+        properties.remove("jansi.passthrough");
+        properties.remove("java.vendor.url.bug");
+        properties.remove("java.vm.specification.name");
+        properties.remove("debugger.agent.enable.coroutines");
+    }
 
     /**
      * 执行gc
