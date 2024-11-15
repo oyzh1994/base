@@ -1,29 +1,37 @@
 package cn.oyzh.common.log;
 
 
-import cn.oyzh.common.util.ArrayUtil;
-import cn.oyzh.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 
+import java.time.Instant;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
+ * jul日志
+ *
  * @author oyzh
  * @since 2024-09-27
  */
 @UtilityClass
 public class JulLog {
 
-    private static final Logger LOGGER = Logger.getLogger("JULLog");
+    /**
+     * 日志对象
+     */
+    private static final Logger LOGGER = Logger.getLogger("JulLog");
 
     static {
-        setLevel(Level.ALL);
+        System.setProperty("jansi.passthrough", "true");
+        JulLog.setLevel(JulLevel.DEBUG);
+        LOGGER.setUseParentHandlers(false);
+        LOGGER.addHandler(new JulConsoleHandler());
     }
 
-    public static void setLevel(Level level) {
-        LOGGER.setLevel(level);
+    public static void setLevel(JulLevel level) {
+        if (level != null) {
+            LOGGER.setLevel(level.toLevel());
+        }
     }
 
     public static void trace(String format, Object... args) {
@@ -32,9 +40,21 @@ public class JulLog {
         }
     }
 
+    public static void trace(String format, Throwable throwable) {
+        if (LOGGER.isLoggable(Level.FINEST)) {
+            LOGGER.log(format(Level.FINEST, format, throwable));
+        }
+    }
+
     public static void debug(String format, Object... args) {
-        if (LOGGER.isLoggable(Level.FINER)) {
-            LOGGER.log(format(Level.FINER, format, args));
+        if (LOGGER.isLoggable(Level.CONFIG)) {
+            LOGGER.log(format(Level.CONFIG, format, args));
+        }
+    }
+
+    public static void debug(String format, Throwable throwable) {
+        if (LOGGER.isLoggable(Level.CONFIG)) {
+            LOGGER.log(format(Level.CONFIG, format, throwable));
         }
     }
 
@@ -44,9 +64,21 @@ public class JulLog {
         }
     }
 
+    public static void info(String format, Throwable throwable) {
+        if (LOGGER.isLoggable(Level.INFO)) {
+            LOGGER.log(format(Level.INFO, format, throwable));
+        }
+    }
+
     public static void warn(String format, Object... args) {
         if (LOGGER.isLoggable(Level.WARNING)) {
             LOGGER.log(format(Level.WARNING, format, args));
+        }
+    }
+
+    public static void warn(String format, Throwable throwable) {
+        if (LOGGER.isLoggable(Level.WARNING)) {
+            LOGGER.log(format(Level.WARNING, format, throwable));
         }
     }
 
@@ -56,29 +88,43 @@ public class JulLog {
         }
     }
 
-    private static LogRecord format(Level level, String format, Object... args) {
+    public static void error(String format, Throwable throwable) {
+        if (LOGGER.isLoggable(Level.SEVERE)) {
+            LOGGER.log(format(Level.SEVERE, format, throwable));
+        }
+    }
+
+    private static JulLogRecord format(Level level, String format, Object... args) {
         return format(level, format, null, args);
     }
 
-    private static LogRecord format(Level level, String format, Throwable throwable) {
+    private static JulLogRecord format(Level level, String format, Throwable throwable) {
         return format(level, format, throwable, null);
     }
 
-    private static LogRecord format(Level level, String format, Throwable throwable, Object... args) {
-        if (StringUtil.isNotBlank(format) && ArrayUtil.isNotEmpty(args)) {
-            int index = 0;
-            while (format.contains("{}") && index < args.length) {
-                format = format.replace("{}", "{" + index++ + "}");
-            }
-        }
-        StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+    private static JulLogRecord format(Level level, String format, Throwable throwable, Object... args) {
+        // 获取线程和堆栈信息
+        Thread thread = Thread.currentThread();
+        StackTraceElement[] trace = thread.getStackTrace();
         StackTraceElement element = trace[4];
-        LogRecord logRecord = new LogRecord(level, format);
+        // 日志对象
+        JulLogRecord logRecord = new JulLogRecord(level, format);
+        // 参数
         logRecord.setParameters(args);
+        // 异常
         logRecord.setThrown(throwable);
-        logRecord.setSourceClassName(element.getClassName() + "#" + element.getMethodName());
-        logRecord.setLongThreadID(Thread.currentThread().threadId());
-        logRecord.setSourceMethodName(element.getLineNumber()+"");
+        // 时间
+        logRecord.setInstant(Instant.now());
+        // 线程名称
+        logRecord.setThreadName(thread.getName());
+        // 线程id
+        logRecord.setLongThreadID(thread.threadId());
+        // 行号
+        logRecord.setLineNumber(element.getLineNumber());
+        // class名称
+        logRecord.setSourceClassName(element.getClassName());
+        // 方法名
+        logRecord.setSourceMethodName(element.getMethodName());
         return logRecord;
     }
 }
