@@ -3,6 +3,7 @@ package cn.oyzh.common.date;
 import lombok.experimental.UtilityClass;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -48,6 +49,10 @@ public class DateHelper {
 
     public static String formatDateTime(Date date) {
         return DATE_TIME_FORMAT.format(date);
+    }
+
+    public static String formatDateTime(Instant instant) {
+        return DATE_TIME_FORMAT.format(instant.toEpochMilli());
     }
 
     public static String formatDateTimeSimple() {
