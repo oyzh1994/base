@@ -49,7 +49,7 @@ public class TableDefinition {
     public PrimaryKeyColumn primaryKeyColumn(Object model) throws IllegalAccessException {
         ColumnDefinition column = this.primaryKey();
         if (column != null) {
-            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true);
+            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true, true);
             field.setAccessible(true);
             Object primaryVal = field.get(model);
             return new PrimaryKeyColumn(column.getColumnName(), primaryVal);
@@ -60,7 +60,7 @@ public class TableDefinition {
     public void handlePrimaryKeyValue(Object model) throws IllegalAccessException {
         ColumnDefinition columnDefinition = this.primaryKey();
         if (columnDefinition != null) {
-            Field field = ReflectUtil.getField(model.getClass(), columnDefinition.getFieldName(), true);
+            Field field = ReflectUtil.getField(model.getClass(), columnDefinition.getFieldName(), true, true);
             field.setAccessible(true);
             Object primaryVal = field.get(model);
             if (primaryVal == null) {
@@ -77,7 +77,7 @@ public class TableDefinition {
     public Object getPrimaryKeyValue(Object model) throws IllegalAccessException {
         ColumnDefinition columnDefinition = this.primaryKey();
         if (columnDefinition != null) {
-            Field field = ReflectUtil.getField(model.getClass(), columnDefinition.getFieldName(), true);
+            Field field = ReflectUtil.getField(model.getClass(), columnDefinition.getFieldName(), true, true);
             field.setAccessible(true);
             return field.get(model);
         }
@@ -95,7 +95,7 @@ public class TableDefinition {
                     definition.tableName = table.value();
                 }
             }
-            Field[] fields = ReflectUtil.getFields(clazz, true);
+            Field[] fields = ReflectUtil.getFields(clazz, true, true);
             for (Field field : fields) {
                 ColumnDefinition columnDefinition = ColumnDefinition.ofField(field);
                 if (columnDefinition != null) {
