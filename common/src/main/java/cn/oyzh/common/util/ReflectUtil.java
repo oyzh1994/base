@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -38,10 +39,10 @@ public class ReflectUtil {
     }
 
     public static Field getField(Class<?> beanClass, String fieldName) throws SecurityException {
-        return getField(beanClass, fieldName, false);
+        return getField(beanClass, fieldName, true, false);
     }
 
-    public static Field getField(@NonNull Class<?> beanClass, String fieldName, boolean withSuperClassFields) throws SecurityException {
+    public static Field getField(@NonNull Class<?> beanClass, String fieldName, boolean withDeclared, boolean withSuper) throws SecurityException {
         Class<?> searchType = beanClass;
         Field field = null;
         while (searchType != null) {
@@ -49,42 +50,42 @@ public class ReflectUtil {
                 field = searchType.getField(fieldName);
             } catch (NoSuchFieldException ignore) {
             }
-            if (null == field) {
+            if (null == field && withDeclared) {
                 try {
                     field = searchType.getDeclaredField(fieldName);
                 } catch (NoSuchFieldException ignore) {
                 }
             }
-            searchType = withSuperClassFields ? searchType.getSuperclass() : null;
+            searchType = withSuper ? searchType.getSuperclass() : null;
         }
         return field;
     }
 
-    public static Field[] getFields(Class<?> beanClass) throws SecurityException {
-        return getFields(beanClass, false);
-    }
-
-    public static Field[] getFields(@NonNull Class<?> beanClass, boolean withSuperClassFields) throws SecurityException {
+    public static Field[] getFields(@NonNull Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
         Field[] allFields = null;
         Class<?> searchType = beanClass;
-        Field[] declaredFields;
+        Field[] fields;
         while (searchType != null) {
-            declaredFields = searchType.getDeclaredFields();
-            if (null == allFields) {
-                allFields = declaredFields;
+            if (withDeclared) {
+                fields = searchType.getDeclaredFields();
             } else {
-                allFields = ArrayUtil.append(allFields, declaredFields);
+                fields = searchType.getFields();
             }
-            searchType = withSuperClassFields ? searchType.getSuperclass() : null;
+            if (null == allFields) {
+                allFields = fields;
+            } else {
+                allFields = ArrayUtil.append(allFields, fields);
+            }
+            searchType = withSuper ? searchType.getSuperclass() : null;
         }
         return allFields;
     }
 
     public static Method getMethod(Class<?> beanClass, String methodName, Class<?>... paramTypes) throws SecurityException {
-        return getMethod(beanClass, methodName, false, paramTypes);
+        return getMethod(beanClass, methodName, true, false, paramTypes);
     }
 
-    public static Method getMethod(@NonNull Class<?> beanClass, String methodName, boolean withSuperClassFields, Class<?>... paramTypes) throws SecurityException {
+    public static Method getMethod(@NonNull Class<?> beanClass, String methodName, boolean withDeclared, boolean withSuper, Class<?>... paramTypes) throws SecurityException {
         Class<?> searchType = beanClass;
         Method method = null;
         while (searchType != null) {
@@ -92,14 +93,42 @@ public class ReflectUtil {
                 method = searchType.getMethod(methodName, paramTypes);
             } catch (NoSuchMethodException ignore) {
             }
-            if (null == method) {
+            if (null == method && withDeclared) {
                 try {
                     method = searchType.getDeclaredMethod(methodName, paramTypes);
                 } catch (NoSuchMethodException ignore) {
                 }
             }
-            searchType = withSuperClassFields ? searchType.getSuperclass() : null;
+            searchType = withSuper ? searchType.getSuperclass() : null;
         }
         return method;
+    }
+
+    public static Method[] getMethods(@NonNull Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
+        Method[] allMethods = null;
+        Class<?> searchType = beanClass;
+        Method[] methods;
+        while (searchType != null) {
+            if (withDeclared) {
+                methods = searchType.getDeclaredMethods();
+            } else {
+                methods = searchType.getMethods();
+            }
+            if (null == allMethods) {
+                allMethods = methods;
+            } else {
+                allMethods = ArrayUtil.append(allMethods, methods);
+            }
+            searchType = withSuper ? searchType.getSuperclass() : null;
+        }
+        return allMethods;
+    }
+
+    public static Object invoke(Object obj, Method method) throws InvocationTargetException, IllegalAccessException {
+        if (method == null) {
+            return null;
+        }
+        method.setAccessible(true);
+        return method.invoke(obj);
     }
 }

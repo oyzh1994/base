@@ -39,13 +39,22 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 -->
+        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2 &ndash;&gt; -->
+        <!-- <dependency> -->
+        <!--     <groupId>com.alibaba.fastjson2</groupId> -->
+        <!--     <artifactId>fastjson2</artifactId> -->
+        <!--     <version>2.0.53</version> -->
+        <!-- </dependency> -->
+
+        <!-- 轻量json库 -->
+        <!-- https://mvnrepository.com/artifact/com.github.cliftonlabs/json-simple -->
         <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-            <version>2.0.53</version>
+            <groupId>com.github.cliftonlabs</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>4.0.1</version>
         </dependency>
 
+        <!-- 测试库 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

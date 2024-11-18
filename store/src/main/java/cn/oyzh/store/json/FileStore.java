@@ -54,7 +54,7 @@ public abstract class FileStore<T> {
     protected synchronized boolean saveData(Object obj) {
         try {
             if (obj != null) {
-                String content = JSONUtil.toJsonStr(obj);
+                String content = JSONUtil.toJson(obj);
                 return FileUtil.writeString(content, this.storeFile, this.charset) != null;
             }
         } catch (Exception ex) {

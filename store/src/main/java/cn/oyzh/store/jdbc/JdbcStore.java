@@ -63,7 +63,7 @@ public abstract class JdbcStore<M extends Serializable> {
         }
         M model = this.newModel();
         for (ColumnDefinition column : definition.getColumns()) {
-            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true);
+            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true, true);
             field.setAccessible(true);
             Object sqlData = record.get(column.getColumnName());
             Object javaValue = JdbcUtil.toJavaValue(field.getType(), sqlData);
@@ -81,7 +81,7 @@ public abstract class JdbcStore<M extends Serializable> {
         }
         Map<String, Object> record = new HashMap<>();
         for (ColumnDefinition column : definition.getColumns()) {
-            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true);
+            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true, true);
             field.setAccessible(true);
             record.put(column.getColumnName(), field.get(model));
         }
@@ -146,6 +146,7 @@ public abstract class JdbcStore<M extends Serializable> {
         }
         return null;
     }
+
     public M selectOne(SelectParam selectParam) {
         try {
             return this.toModel(this.operator.selectOne(selectParam));

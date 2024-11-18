@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -30,8 +31,10 @@ public class ClassUtil {
     public static <T> T newInstance(Class<T> clazz) {
         if (clazz != null) {
             try {
-                return (T) clazz.getConstructors()[0].newInstance();
-            } catch (Exception ignored) {
+                Constructor<?>[] constructors = clazz.getConstructors();
+                return (T) constructors[0].newInstance();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
         return null;
@@ -116,5 +119,14 @@ public class ClassUtil {
                 }
             }
         }
+    }
+
+    public static Class<?> forName(String typeName) {
+        try {
+            return Class.forName(typeName);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return null;
     }
 }

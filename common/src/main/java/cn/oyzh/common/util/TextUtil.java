@@ -249,7 +249,7 @@ public class TextUtil {
             if (!data.contains("{") && !data.contains("[")) {
                 return data;
             }
-            return JSONUtil.toJsonPrettyStr(data);
+            return JSONUtil.toPretty(data);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
