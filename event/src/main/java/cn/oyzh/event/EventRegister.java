@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -14,10 +15,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class EventRegister {
 
+    /**
+     * 订阅者列表
+     */
     private final List<EventSubscriber> subscribers = new CopyOnWriteArrayList<>();
 
+    /**
+     * 注册
+     *
+     * @param listener 监听器
+     */
     public void register(Object listener) {
         if (listener != null) {
+            Optional<EventSubscriber> optional = subscribers.parallelStream().filter(f -> f.getListener() == listener).findAny();
+            if (optional.isPresent()) {
+                throw new EventListenerAlreadyExistsException(listener);
+            }
             Class<?> clazz = listener.getClass();
             Method[] methods = clazz.getDeclaredMethods();
             for (Method method : methods) {
@@ -54,7 +67,7 @@ public class EventRegister {
         List<EventSubscriber> result = new ArrayList<>();
         synchronized (this.subscribers) {
             for (EventSubscriber subscriber : this.subscribers) {
-                if (subscriber.isInvokeAble(event)) {
+                if (subscriber.isAccept(event)) {
                     result.add(subscriber);
                 }
             }
