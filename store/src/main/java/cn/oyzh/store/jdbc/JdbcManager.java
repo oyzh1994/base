@@ -68,11 +68,17 @@ public class JdbcManager {
             dbFile = System.getProperty("user.dir") + File.separator + "temp_db";
         }
         Connection connection;
+        String url = "";
         if (dialect == JdbcDialect.H2) {
-            connection = DriverManager.getConnection("jdbc:h2:" + dbFile);
+            url = "jdbc:h2:" + dbFile;
+            String cacheSize = System.getProperty(JdbcConst.DB_CACHE_SIZE);
+            if (cacheSize != null) {
+                url += ";CACHE_SIZE=" + cacheSize;
+            }
         } else {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFile);
+            url = "jdbc:sqlite:" + dbFile;
         }
+        connection = DriverManager.getConnection(url);
         JdbcConn jdbcConn = new JdbcConn(connection);
         CONNECTIONS.add(jdbcConn);
         return jdbcConn;
