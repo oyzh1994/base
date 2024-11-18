@@ -1,4 +1,4 @@
-package cn.oyzh.ssh.domain;
+package cn.oyzh.ssh;
 
 import cn.oyzh.store.jdbc.Column;
 import lombok.Data;

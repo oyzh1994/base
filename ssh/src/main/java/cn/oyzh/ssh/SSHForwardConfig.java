@@ -1,4 +1,4 @@
-package cn.oyzh.ssh.forward;
+package cn.oyzh.ssh;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package cn.oyzh.ssh.util;
+package cn.oyzh.ssh;
 
 import lombok.experimental.UtilityClass;
 
