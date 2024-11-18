@@ -46,11 +46,18 @@ public class EventSubscriber {
         }
     }
 
-    public boolean isInvokeAble(Object event) {
+    public boolean isAccept(Object event) {
         if (event != null && !this.isInvalid()) {
             Method method = this.method;
-            Class<?> eventClass = method.getParameterTypes()[0];
-            return eventClass == event.getClass() || event.getClass().isAssignableFrom(eventClass);
+            Class<?> eventType = event.getClass();
+            Class<?> parameterType = method.getParameterTypes()[0];
+            if (parameterType == eventType) {
+                return true;
+            }
+            if (parameterType.isAssignableFrom(eventType)) {
+                return true;
+            }
+            return eventType.isAssignableFrom(parameterType);
         }
         return false;
     }
