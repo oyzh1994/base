@@ -13,4 +13,6 @@ public class JdbcConst {
 
     public String DB_DIALECT = "db.dialect";
 
+    public String DB_CACHE_SIZE = "db.cache.size";
+
 }
