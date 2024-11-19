@@ -79,6 +79,10 @@ public class DateHelper {
         return TIME_FORMAT.format(date);
     }
 
+    public static String formatTime(Instant instant) {
+        return TIME_FORMAT.format(instant.toEpochMilli());
+    }
+
     public static String formatTimeSimple() {
         return TIME_SIMPLE_FORMAT.format(System.currentTimeMillis());
     }

@@ -65,7 +65,7 @@ public class JulLogFormatter extends Formatter {
         StringBuilder builder = new StringBuilder();
 
         // 日志时间
-        builder.append(DateHelper.formatDateTime(record.getInstant()));
+        builder.append(DateHelper.formatTime(record.getInstant()));
 
         // 日志等级
         JulLevel level = JulLevel.ofLevel(record.getLevel());
@@ -90,9 +90,9 @@ public class JulLogFormatter extends Formatter {
 
         // 线程名称
         if (record instanceof JulLogRecord logRecord) {
-            builder.append(" --- ");
+            builder.append(" - ");
             builder.append(ANSI_CYAN);
-            builder.append("[").append(logRecord.getThreadName()).append("] ");
+            builder.append("[").append(logRecord.getThreadName()).append("]");
             builder.append(ANSI_RESET);
         }
 
