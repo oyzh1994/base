@@ -22,8 +22,18 @@ public class JdbcConst {
     public String DB_DIALECT = "db.dialect";
 
     /**
-     * db缓存
+     * db缓存大小
      */
     public String DB_CACHE_SIZE = "db.cache.size";
+
+    /*
+     * db缓存类型
+     */
+    public String DB_CACHE_TYPE = "db.cache.type";
+
+    /*
+     * db页大小
+     */
+    public String DB_PAGE_SIZE = "db.page.size";
 
 }

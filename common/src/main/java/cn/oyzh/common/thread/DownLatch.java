@@ -21,6 +21,10 @@ public class DownLatch extends CountDownLatch {
         }
     }
 
+    public static DownLatch of() {
+        return of(1);
+    }
+
     public static DownLatch of(int count) {
         return new DownLatch(count);
     }
