@@ -84,15 +84,16 @@ public class JulLogFormatter extends Formatter {
         }
 
         // 线程id
-        builder.append(ANSI_PURPLE);
-        builder.append(" ").append(record.getLongThreadID());
-        builder.append(ANSI_RESET);
+        if (JulConst.isEnableThreadId()) {
+            builder.append(ANSI_PURPLE);
+            builder.append(" ").append(record.getLongThreadID());
+            builder.append(ANSI_RESET);
+        }
 
         // 线程名称
         if (record instanceof JulLogRecord logRecord) {
-            builder.append(" - ");
             builder.append(ANSI_CYAN);
-            builder.append("[").append(logRecord.getThreadName()).append("]");
+            builder.append(" [").append(logRecord.getThreadName()).append("]");
             builder.append(ANSI_RESET);
         }
 
