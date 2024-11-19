@@ -118,7 +118,9 @@ public class JulLog {
         // 线程名称
         logRecord.setThreadName(thread.getName());
         // 线程id
-        logRecord.setLongThreadID(thread.threadId());
+        if (JulConst.isEnableThreadId()) {
+            logRecord.setLongThreadID(thread.threadId());
+        }
         // 行号
         logRecord.setLineNumber(element.getLineNumber());
         // class名称
