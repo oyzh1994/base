@@ -29,4 +29,12 @@ public class FileNameUtil {
         }
         return builder.toString();
     }
+
+    public static String getSuffix(String fileName) {
+        final int index = fileName.lastIndexOf(".");
+        if (index == -1) {
+            return null;
+        }
+        return fileName.substring(index + 1);
+    }
 }
