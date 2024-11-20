@@ -36,4 +36,27 @@ public class JdbcConst {
      */
     public String DB_PAGE_SIZE = "db.page.size";
 
+    public static void dbFile(String dbFile) {
+        System.setProperty(DB_FILE, dbFile);
+    }
+
+    public static String dbFile() {
+        return System.getProperty(DB_FILE);
+    }
+
+    public static void dbDialect(JdbcDialect dialect) {
+        System.setProperty(DB_DIALECT, dialect.toString());
+    }
+
+    public static String dbDialect() {
+        return System.getProperty(DB_DIALECT);
+    }
+
+    public static void dbCacheSize(int dbCacheSize) {
+        System.setProperty(DB_CACHE_SIZE, dbCacheSize+"");
+    }
+
+    public static String dbCacheSize() {
+        return System.getProperty(DB_CACHE_SIZE);
+    }
 }

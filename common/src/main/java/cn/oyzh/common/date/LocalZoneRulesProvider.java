@@ -121,7 +121,7 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
     }
 
     private void doCache(String zoneId, ZoneRules rules) throws IOException {
-        String cacheDir = System.getProperty(SysConst.CACHE_DIR);
+        String cacheDir = SysConst.cacheDir();
         File file = new File(cacheDir, zoneId);
         FileUtil.touch(file);
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file));
@@ -139,7 +139,7 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
     }
 
     private ZoneRules readCache(String zoneId) throws IOException, ClassNotFoundException {
-        String cacheDir = System.getProperty(SysConst.CACHE_DIR);
+        String cacheDir = SysConst.cacheDir();
         File file = new File(cacheDir, zoneId);
         if (!file.exists()) {
             return null;

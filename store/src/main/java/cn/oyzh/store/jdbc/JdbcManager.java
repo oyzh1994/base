@@ -31,7 +31,7 @@ public class JdbcManager {
 
     static {
         try {
-            String dialect = System.getProperty(JdbcConst.DB_DIALECT);
+            String dialect = JdbcConst.dbDialect();
             if (StringUtil.isEmpty(dialect)) {
                 JdbcManager.dialect = JdbcDialect.H2;
             } else {
@@ -63,7 +63,7 @@ public class JdbcManager {
                 return connection;
             }
         }
-        String dbFile = System.getProperty(JdbcConst.DB_FILE);
+        String dbFile = JdbcConst.dbFile();
         if (StringUtil.isBlank(dbFile)) {
             dbFile = System.getProperty("user.dir") + File.separator + "temp_db";
         }
@@ -71,7 +71,7 @@ public class JdbcManager {
         String url = "";
         if (dialect == JdbcDialect.H2) {
             url = "jdbc:h2:" + dbFile;
-            String cacheSize = System.getProperty(JdbcConst.DB_CACHE_SIZE);
+            String cacheSize = JdbcConst.dbCacheSize();
             if (cacheSize != null) {
                 url += ";CACHE_SIZE=" + cacheSize;
             }
