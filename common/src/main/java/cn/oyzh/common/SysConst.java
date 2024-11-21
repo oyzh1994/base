@@ -13,6 +13,8 @@ public class SysConst {
 
     public String STORE_DIR = "store.dir";
 
+    public String PROJECT_NAME = "project.name";
+
     public static String storeDir() {
         return System.getProperty(STORE_DIR);
     }
@@ -27,5 +29,13 @@ public class SysConst {
 
     public static void cacheDir(String cacheDir) {
         System.setProperty(CACHE_DIR, cacheDir);
+    }
+
+    public static String projectName() {
+        return System.getProperty(PROJECT_NAME);
+    }
+
+    public static void projectName(String projectName) {
+        System.setProperty(PROJECT_NAME, projectName);
     }
 }

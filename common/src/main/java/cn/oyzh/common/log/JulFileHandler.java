@@ -1,18 +1,21 @@
 package cn.oyzh.common.log;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 
 /**
- * 控制台日志处理器
+ * 文件日志处理器
  *
  * @author oyzh
  * @since 2024-11-15
  */
-public class JulConsoleHandler extends StreamHandler {
+public class JulFileHandler extends StreamHandler {
 
-    public JulConsoleHandler() {
-        super(System.out, new JulConsoleLogFormatter());
+    public JulFileHandler(File logFile) throws FileNotFoundException {
+        super(new FileOutputStream(logFile, true), new JulFileLogFormatter());
     }
 
     @Override
