@@ -4,7 +4,6 @@ import cn.oyzh.common.date.DateHelper;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.StringUtil;
 
-import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 /**
@@ -14,7 +13,7 @@ import java.util.logging.LogRecord;
  * @since 2024-09-27
  */
 
-public class JulFileLogFormatter extends Formatter {
+public class JulFileLogFormatter extends JulFormatter {
 
     @Override
     public String format(LogRecord record) {
@@ -44,47 +43,49 @@ public class JulFileLogFormatter extends Formatter {
             builder.append("#").append(logRecord.getLineNumber());
         }
 
-        // 具体消息
-        builder.append(" : ");
-        // 异常处理
-        if (record.getThrown() != null) {
-            if (record instanceof JulLogRecord logRecord) {
-                builder.append(this.formatMessage(record.getMessage(), record.getThrown(), record.getSourceClassName(), record.getSourceMethodName(), logRecord.getLineNumber()));
-            } else {
-                builder.append(this.formatMessage(record.getMessage(), record.getThrown(), record.getSourceClassName(), record.getSourceMethodName(), -1));
-            }
-        } else {// 消息处理
-            builder.append(this.formatMessage(record.getMessage(), record.getParameters()));
-        }
+        // 消息处理
+        builder.append(" : ").append(this.formatMessage(record));
         builder.append("\n");
         return builder.toString();
     }
 
-    /**
-     * 格式化消息
-     *
-     * @param message 消息
-     * @param args    参数
-     * @return 结果
-     */
-    private String formatMessage(String message, Object[] args) {
+    @Override
+    public String formatMessage(LogRecord record) {
+        String message = record.getMessage();
+        Throwable throwable = record.getThrown();
+        Object[] args = record.getParameters();
         if (StringUtil.isNotBlank(message) && ArrayUtil.isNotEmpty(args)) {
             int index = 0;
             // 兼容其他日志库的占位符
             if (message.contains("{}")) {
                 while (message.contains("{}") && index < args.length) {
                     Object arg = args[index];
-                    arg = arg == null ? "null" : arg;
+                    if (arg instanceof Throwable t && record.getThrown() == null) {
+                        throwable = t;
+                        continue;
+                    }
+                    arg = this.pretreatmentArg(arg, true);
                     message = message.replaceFirst("\\{}", arg.toString());
                     index++;
                 }
             } else {// jul类型占位符
                 while (index < args.length) {
                     Object arg = args[index];
-                    arg = arg == null ? "null" : arg;
+                    if (arg instanceof Throwable t && record.getThrown() == null) {
+                        throwable = t;
+                        continue;
+                    }
+                    arg = this.pretreatmentArg(arg, true);
                     message = message.replaceFirst("\\{" + index + "}", arg.toString());
                     index++;
                 }
+            }
+        }
+        if (throwable != null) {
+            if (record instanceof JulLogRecord logRecord) {
+                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), logRecord.getLineNumber());
+            } else {
+                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), -1);
             }
         }
         return message;
@@ -100,7 +101,7 @@ public class JulFileLogFormatter extends Formatter {
      * @param lineNumber       消息行号
      * @return 结果
      */
-    private String formatMessage(String message, Throwable throwable, String sourceClassName, String sourceMethodName, int lineNumber) {
+    public String formatThrow(String message, Throwable throwable, String sourceClassName, String sourceMethodName, int lineNumber) {
         if (StringUtil.isNotBlank(message) && throwable != null) {
             StringBuilder builder = new StringBuilder(message);
             builder.append("\n");
