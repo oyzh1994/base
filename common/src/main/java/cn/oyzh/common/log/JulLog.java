@@ -1,8 +1,10 @@
 package cn.oyzh.common.log;
 
 
+import cn.oyzh.common.util.ClassUtil;
 import lombok.experimental.UtilityClass;
 
+import java.io.File;
 import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +27,17 @@ public class JulLog {
         System.setProperty("jansi.passthrough", "true");
         JulLog.setLevel(JulLevel.DEBUG);
         LOGGER.setUseParentHandlers(false);
-        LOGGER.addHandler(new JulConsoleHandler());
+        // 控制台日志
+        if (!ClassUtil.isInJar()) {
+            LOGGER.addHandler(new JulConsoleHandler());
+        }
+        // 文件日志
+        try {
+            File logFile = JulUtil.getLogFile();
+            LOGGER.addHandler(new JulFileHandler(logFile));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void setLevel(JulLevel level) {

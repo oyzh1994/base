@@ -10,6 +10,7 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -129,4 +130,19 @@ public class ClassUtil {
         }
         return null;
     }
+
+    public static boolean isInJar() {
+        // Get the CodeSource of the current class
+        CodeSource codeSource = ClassUtil.class.getProtectionDomain().getCodeSource();
+
+        if (codeSource == null) {
+            return false;  // This should never happen, but let's be safe
+        }
+        // Get the location of the CodeSource, which is the URL of the JAR file or class file
+        String location = codeSource.getLocation().toString();
+
+        // Check if the location ends with ".jar"
+        return location.endsWith(".jar");
+    }
+
 }
