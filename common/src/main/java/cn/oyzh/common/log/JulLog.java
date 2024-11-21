@@ -48,73 +48,69 @@ public class JulLog {
 
     public static void trace(String format, Object... args) {
         if (LOGGER.isLoggable(Level.FINEST)) {
-            LOGGER.log(format(Level.FINEST, format, args));
+            LOGGER.log(record(Level.FINEST, format, args));
         }
     }
 
     public static void trace(String format, Throwable throwable) {
         if (LOGGER.isLoggable(Level.FINEST)) {
-            LOGGER.log(format(Level.FINEST, format, throwable));
+            LOGGER.log(record(Level.FINEST, format, throwable));
         }
     }
 
     public static void debug(String format, Object... args) {
         if (LOGGER.isLoggable(Level.CONFIG)) {
-            LOGGER.log(format(Level.CONFIG, format, args));
+            LOGGER.log(record(Level.CONFIG, format, args));
         }
     }
 
     public static void debug(String format, Throwable throwable) {
         if (LOGGER.isLoggable(Level.CONFIG)) {
-            LOGGER.log(format(Level.CONFIG, format, throwable));
+            LOGGER.log(record(Level.CONFIG, format, throwable));
         }
     }
 
     public static void info(String format, Object... args) {
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.log(format(Level.INFO, format, args));
+            LOGGER.log(record(Level.INFO, format, args));
         }
     }
 
     public static void info(String format, Throwable throwable) {
         if (LOGGER.isLoggable(Level.INFO)) {
-            LOGGER.log(format(Level.INFO, format, throwable));
+            LOGGER.log(record(Level.INFO, format, throwable));
         }
     }
 
     public static void warn(String format, Object... args) {
         if (LOGGER.isLoggable(Level.WARNING)) {
-            LOGGER.log(format(Level.WARNING, format, args));
+            LOGGER.log(record(Level.WARNING, format, args));
         }
     }
 
     public static void warn(String format, Throwable throwable) {
         if (LOGGER.isLoggable(Level.WARNING)) {
-            LOGGER.log(format(Level.WARNING, format, throwable));
+            LOGGER.log(record(Level.WARNING, format, throwable));
         }
     }
 
     public static void error(String format, Object... args) {
         if (LOGGER.isLoggable(Level.SEVERE)) {
-            LOGGER.log(format(Level.SEVERE, format, args));
+            LOGGER.log(record(Level.SEVERE, format, args));
         }
     }
 
     public static void error(String format, Throwable throwable) {
         if (LOGGER.isLoggable(Level.SEVERE)) {
-            LOGGER.log(format(Level.SEVERE, format, throwable));
+            LOGGER.log(record(Level.SEVERE, format, throwable));
         }
     }
 
-    private static JulLogRecord format(Level level, String format, Object... args) {
-        return format(level, format, null, args);
+    private static JulLogRecord record(Level level, String format, Object... args) {
+        return record(level, format, null, args);
     }
 
-    private static JulLogRecord format(Level level, String format, Throwable throwable) {
-        return format(level, format, throwable, null);
-    }
-
-    private static JulLogRecord format(Level level, String format, Throwable throwable, Object... args) {
+    private static JulLogRecord record(Level level, String format, Throwable throwable, Object... args) {
         // 获取线程和堆栈信息
         Thread thread = Thread.currentThread();
         StackTraceElement[] trace = thread.getStackTrace();
