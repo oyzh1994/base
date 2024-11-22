@@ -55,6 +55,15 @@ public class EventUtil {
     }
 
     /**
+     * 发送同步步事件
+     *
+     * @param event 事件
+     */
+    public static void postSync(Event<?> event) {
+        post(event, EventFactory.syncEventConfig(), null);
+    }
+
+    /**
      * 发送异步事件
      *
      * @param event 事件

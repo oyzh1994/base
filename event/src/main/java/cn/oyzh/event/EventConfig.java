@@ -22,15 +22,20 @@ public class EventConfig {
         return verbose != null && verbose;
     }
 
-    public static EventConfig DEFAULT = new EventConfig();
+    public static EventConfig SYNC = new EventConfig();
 
     public static EventConfig ASYNC = new EventConfig();
 
+    public static EventConfig DEFAULT = new EventConfig();
+
     static {
-        DEFAULT.async = false;
-        DEFAULT.verbose = true;
+        SYNC.async = true;
+        SYNC.verbose = true;
 
         ASYNC.async = true;
         ASYNC.verbose = true;
+
+        DEFAULT.async = false;
+        DEFAULT.verbose = true;
     }
 }
