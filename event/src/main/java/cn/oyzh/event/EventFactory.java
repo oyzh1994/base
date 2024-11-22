@@ -12,6 +12,8 @@ public class EventFactory {
 
     private static Class<? extends EventBus> eventBusClass;
 
+    private static EventConfig syncEventConfig;
+
     private static EventConfig asyncEventConfig;
 
     private static EventConfig defaultEventConfig;
@@ -20,12 +22,23 @@ public class EventFactory {
         EventFactory.eventBusClass = eventBusClass;
     }
 
+    public static void syncEventConfig(EventConfig config) {
+        EventFactory.syncEventConfig = config;
+    }
+
     public static void asyncEventConfig(EventConfig config) {
         EventFactory.asyncEventConfig = config;
     }
 
     public static void defaultEventConfig(EventConfig config) {
         EventFactory.defaultEventConfig = config;
+    }
+
+    public static EventConfig syncEventConfig() {
+        if (syncEventConfig == null) {
+            syncEventConfig = EventConfig.SYNC;
+        }
+        return syncEventConfig;
     }
 
     public static EventConfig asyncEventConfig() {
