@@ -1,7 +1,8 @@
 package cn.oyzh.common.json;
 
-import com.github.cliftonlabs.json_simple.JsonKey;
-import com.github.cliftonlabs.json_simple.JsonObject;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -12,225 +13,112 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-11-18
  */
-public class JSONObject extends JsonObject {
+public class JSONObject {
 
-    public JSONObject(Map<String, ?> object) {
-        if (object != null) {
 
-            this.putAll(object);
-        }
+    private JsonObject object;
+
+    public JSONObject(JsonObject object) {
+        this.object = new JsonObject();
     }
 
     public String getString(String key) {
-        return super.getString(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
+        JsonElement element = object.get(key);
+        return element == null ? null : element.getAsString();
     }
 
     public int getIntValue(String key) {
-        return super.getIntegerOrDefault(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return -1;
-            }
-        });
+        JsonElement element = object.get(key);
+        return element == null ? -1 : element.getAsInt();
     }
 
     public Integer getInt(String key) {
-        return super.getInteger(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
+        JsonElement element = object.get(key);
+        if (element == null) {
+            return null;
+        }
+        Number number = element.getAsNumber();
+        return number == null ? null : number.intValue();
     }
 
     public long getLongValue(String key) {
-        return super.getLongOrDefault(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return -1L;
-            }
-        });
+        JsonElement element = object.get(key);
+        return element == null ? -1 : element.getAsLong();
     }
 
     public Long getLong(String key) {
-        return super.getLong(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
+        JsonElement element = object.get(key);
+        if (element == null) {
+            return null;
+        }
+        Number number = element.getAsNumber();
+        return number == null ? null : number.longValue();
     }
 
     public byte getByteValue(String key) {
-        return super.getByteOrDefault(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return -1;
-            }
-        });
+        JsonElement element = object.get(key);
+        return element == null ? -1 : element.getAsByte();
     }
 
     public Byte getByte(String key) {
-        return super.getByte(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
+        JsonElement element = object.get(key);
+        if (element == null) {
+            return null;
+        }
+        Number number = element.getAsNumber();
+        return number == null ? null : number.byteValue();
     }
 
     public float getFloatValue(String key) {
-        return super.getFloatOrDefault(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return -1.f;
-            }
-        });
+        JsonElement element = object.get(key);
+        return element == null ? -1 : element.getAsFloat();
     }
 
     public Float getFloat(String key) {
-        return super.getFloat(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
+        JsonElement element = object.get(key);
+        if (element == null) {
+            return null;
+        }
+        Number number = element.getAsNumber();
+        return number == null ? null : number.floatValue();
     }
 
     public double getDoubleValue(String key) {
-        return super.getDoubleOrDefault(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return -1.d;
-            }
-        });
+        JsonElement element = object.get(key);
+        return element == null ? -1 : element.getAsDouble();
     }
 
     public Double getDouble(String key) {
-        return super.getDouble(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
+        JsonElement element = object.get(key);
+        if (element == null) {
+            return null;
+        }
+        Number number = element.getAsNumber();
+        return number == null ? null : number.doubleValue();
     }
 
     public short getShortValue(String key) {
-        return super.getShortOrDefault(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return -1;
-            }
-        });
+        JsonElement element = object.get(key);
+        return element == null ? -1 : element.getAsShort();
     }
 
     public Short getShort(String key) {
-        return super.getShort(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
+        JsonElement element = object.get(key);
+        if (element == null) {
+            return null;
+        }
+        Number number = element.getAsNumber();
+        return number == null ? null : number.shortValue();
     }
 
     public JSONObject getJSONObject(String key) {
-        Object o = super.get(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
-        return o instanceof JsonObject ? (JSONObject) o : null;
+        JsonElement element = object.get(key);
+        return element instanceof JsonObject ? new JSONObject(element.getAsJsonObject()) : null;
     }
 
     public JSONArray getJSONArray(String key) {
-        Collection<?> collection = super.getCollection(new JsonKey() {
-            @Override
-            public String getKey() {
-                return key;
-            }
-
-            @Override
-            public Object getValue() {
-                return null;
-            }
-        });
-        return new JSONArray(collection);
+        JsonElement element = object.get(key);
+        return element == null ? null : new JSONArray(element.getAsJsonArray());
     }
 
     public <T> T getBean(String key, Class<T> beanClass) {
@@ -251,10 +139,14 @@ public class JSONObject extends JsonObject {
 
     public <T> T toBean(Class<T> beanClass) {
         try {
-            return JSONParser.INSTANCE.toBean(this, beanClass);
+            return JSONUtil.toBean(this.object, beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public boolean containsKey(String key) {
+        return this.object.has(key);
     }
 }
