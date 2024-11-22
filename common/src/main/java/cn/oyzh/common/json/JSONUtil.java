@@ -1,13 +1,19 @@
 package cn.oyzh.common.json;
 
-import com.github.cliftonlabs.json_simple.JsonArray;
-import com.github.cliftonlabs.json_simple.JsonException;
-import com.github.cliftonlabs.json_simple.JsonObject;
-import com.github.cliftonlabs.json_simple.Jsoner;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
+import org.apache.poi.ss.formula.functions.T;
 
-import java.util.Collection;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,11 +24,9 @@ import java.util.List;
 @UtilityClass
 public class JSONUtil {
 
-    private static final JsonArray EMPTY_ARRAY = new JsonArray();
+    private static final Gson GSON = new Gson();
 
-    private static final JsonObject EMPTY_OBJECT = new JsonObject();
-
-
+    private static final Gson GSON_PRETTY = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * 美化
@@ -33,8 +37,7 @@ public class JSONUtil {
     public static String toPretty(Object obj) {
         if (obj != null) {
             try {
-                String jsonStr = JSONParser.INSTANCE.toJson(obj);
-                return Jsoner.prettyPrint(jsonStr);
+                return GSON_PRETTY.toJson(obj);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -51,7 +54,8 @@ public class JSONUtil {
     public static String toPretty(String str) {
         if (str != null) {
             try {
-                return Jsoner.prettyPrint(str);
+                Object json = GSON_PRETTY.fromJson(str, Object.class);
+                return GSON_PRETTY.toJson(json);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -67,7 +71,7 @@ public class JSONUtil {
      */
     public static String toJson(Object obj) {
         try {
-            return JSONParser.INSTANCE.toJson(obj);
+            return GSON.toJson(obj);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -82,9 +86,9 @@ public class JSONUtil {
      */
     public static boolean isJson(String json) {
         try {
-            Jsoner.deserialize(json);
-            return true;
-        } catch (JsonException ignore) {
+            JsonElement jsonElement = JsonParser.parseString(json);
+            return jsonElement.isJsonObject() || jsonElement.isJsonArray();
+        } catch (JsonSyntaxException ignore) {
         }
         return false;
     }
@@ -96,8 +100,11 @@ public class JSONUtil {
      * @return json对象
      */
     public static JSONObject parseObject(@NonNull String json) {
-        JsonObject object = Jsoner.deserialize(json, EMPTY_OBJECT);
-        return new JSONObject(object);
+        JsonElement element = JsonParser.parseString(json);
+        if (element.isJsonObject()) {
+            return new JSONObject(element.getAsJsonObject());
+        }
+        return null;
     }
 
     /**
@@ -107,21 +114,38 @@ public class JSONUtil {
      * @return json树组
      */
     public static JSONArray parseArray(@NonNull String json) {
-        JsonArray array = Jsoner.deserialize(json, EMPTY_ARRAY);
-        return new JSONArray(array);
+        JsonElement element = JsonParser.parseString(json);
+        if (element.isJsonArray()) {
+            return new JSONArray(element.getAsJsonArray());
+        }
+        return null;
     }
 
     /**
      * 解析为bean
      *
-     * @param json      json串
-     * @param beanClass java类
+     * @param json json串
+     * @return java对象
+     */
+    public static <T> T toBean(JsonObject json, Class<T> beanClass) {
+        try {
+            return GSON.fromJson(json, beanClass);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 解析为bean
+     *
+     * @param json json串
      * @return java对象
      */
     public static <T> T toBean(String json, Class<T> beanClass) {
         try {
-            JsonObject object = Jsoner.deserialize(json, EMPTY_OBJECT);
-            return JSONParser.INSTANCE.toBean(object, beanClass);
+            JsonElement element = JsonParser.parseString(json);
+            return GSON.fromJson(element, beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -131,14 +155,20 @@ public class JSONUtil {
     /**
      * 转换为java对象列表
      *
-     * @param collection 对象集合
-     * @param beanClass  java类
-     * @param <T>        对象泛型
+     * @param json json字符串
+     * @param <T>  对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(Collection<?> collection, Class<T> beanClass) {
+    public static <T> List<T> toBeanList(String json, Class<T> beanClass) {
         try {
-            return JSONParser.INSTANCE.toBean(collection, beanClass);
+            JsonElement element = JsonParser.parseString(json);
+            if (element.isJsonArray()) {
+                List<T> list = new ArrayList<>();
+                for (JsonElement obj : element.getAsJsonArray()) {
+                    list.add(GSON.fromJson(obj, beanClass));
+                }
+                return list;
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -148,15 +178,17 @@ public class JSONUtil {
     /**
      * 转换为java对象列表
      *
-     * @param json      json字符串
-     * @param beanClass java类
-     * @param <T>       对象泛型
+     * @param array json字符串
+     * @param <T>   对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(String json, Class<T> beanClass) {
+    public static <T> List<T> toBeanList(JsonArray array, Class<T> beanClass) {
         try {
-            JsonArray array = Jsoner.deserialize(json, EMPTY_ARRAY);
-            return JSONParser.INSTANCE.toBean(array, beanClass);
+            List<T> list = new ArrayList<>();
+            for (JsonElement obj : array) {
+                list.add(GSON.fromJson(obj, beanClass));
+            }
+            return list;
         } catch (Exception ex) {
             ex.printStackTrace();
         }

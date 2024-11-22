@@ -1,8 +1,6 @@
 package cn.oyzh.common.test;
 
 import cn.oyzh.common.json.JSONUtil;
-import com.github.cliftonlabs.json_simple.JsonException;
-import com.github.cliftonlabs.json_simple.Jsoner;
 import lombok.Data;
 import org.junit.Test;
 
@@ -13,34 +11,10 @@ import java.util.List;
  * @author oyzh
  * @since 2024-11-18
  */
-public class JsonTest {
+public class JsonTest2 {
 
     @Test
-    public void test1() throws JsonException {
-        String xx = """
-                {
-                "a":1,
-                "b":"2",
-                "c":{
-                    "c1":1,
-                    "c2":"2"
-                },
-                "d":[
-                   {
-                   "d1":1
-                   },
-                   {
-                    "d1":1
-                   }  
-                ]
-                }
-                """;
-        Object o = Jsoner.deserialize(xx);
-        System.out.println(o);
-    }
-
-    @Test
-    public void test2() throws JsonException {
+    public void test2() {
         JsonBean1 jb = new JsonBean1();
         jb.param1 = "1";
         jb.param2 = true;
@@ -59,7 +33,7 @@ public class JsonTest {
     }
 
     @Test
-    public void test3() throws JsonException {
+    public void test3() {
         String xx = """
                 {
                 "a":1,
@@ -83,7 +57,7 @@ public class JsonTest {
     }
 
     @Test
-    public void test4() throws JsonException {
+    public void test4() {
         String json = """
                 {
                    	"param1": "1",

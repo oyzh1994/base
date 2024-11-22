@@ -1,31 +1,37 @@
 package cn.oyzh.common.json;
 
-import com.github.cliftonlabs.json_simple.JsonArray;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author oyzh
  * @since 2024-11-18
  */
-public class JSONArray extends JsonArray {
+public class JSONArray implements Iterable<JsonElement>{
 
-    public JSONArray(Collection<?> array) {
-        if (array != null) {
+    private JsonArray array;
 
-            this.addAll(array);
-        }
+    public JSONArray(JsonArray array) {
+        this.array = array;
     }
 
     public <T> List<T> toBeanList(Class<T> beanClass) {
         try {
-            return JSONParser.INSTANCE.toBean(this, beanClass);
+            return JSONUtil.toBeanList(this.array, beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return Collections.emptyList();
     }
 
+    @Override
+    public Iterator<JsonElement> iterator() {
+        return array.iterator();
+    }
 }
