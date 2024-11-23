@@ -391,6 +391,10 @@ public class I18nHelper {
 
     public static final String PLEASE = "base.please";
 
+    public static final String BASE = "base.base";
+
+    public static final String TITLE_HOME = "base.title.home";
+
     public static final String CONNECTIONS_CANNOT_BE_THE_SAME = "base.connectionsCannotBeTheSame";
 
     public static final String WAIT = "base.wait";
@@ -2682,14 +2686,14 @@ public class I18nHelper {
     }
 
     public static String homeTitle() {
-       return I18nResourceBundle.i18nString("base.title.home");
+        return I18nResourceBundle.i18nString(TITLE_HOME);
     }
 
     public static String base() {
-       return I18nResourceBundle.i18nString("base.base");
+        return I18nResourceBundle.i18nString(BASE);
     }
 
     public static String connectionsCannotBeTheSame() {
-       return I18nResourceBundle.i18nString(CONNECTIONS_CANNOT_BE_THE_SAME);
+        return I18nResourceBundle.i18nString(CONNECTIONS_CANNOT_BE_THE_SAME);
     }
 }
