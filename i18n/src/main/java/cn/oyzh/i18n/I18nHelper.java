@@ -391,6 +391,8 @@ public class I18nHelper {
 
     public static final String PLEASE = "base.please";
 
+    public static final String CONNECTIONS_CANNOT_BE_THE_SAME = "base.connectionsCannotBeTheSame";
+
     public static final String WAIT = "base.wait";
 
     public static final String DAYS = "base.days";
@@ -2685,5 +2687,9 @@ public class I18nHelper {
 
     public static String base() {
        return I18nResourceBundle.i18nString("base.base");
+    }
+
+    public static String connectionsCannotBeTheSame() {
+       return I18nResourceBundle.i18nString(CONNECTIONS_CANNOT_BE_THE_SAME);
     }
 }
