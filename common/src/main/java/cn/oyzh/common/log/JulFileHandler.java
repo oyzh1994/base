@@ -15,7 +15,7 @@ import java.util.logging.StreamHandler;
 public class JulFileHandler extends StreamHandler {
 
     public JulFileHandler(File logFile) throws FileNotFoundException {
-        super(new FileOutputStream(logFile, true), new JulFileLogFormatter());
+        super(new FileOutputStream(logFile, true), new JulFileFormatter());
     }
 
     @Override

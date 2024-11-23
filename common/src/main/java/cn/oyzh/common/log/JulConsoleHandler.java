@@ -12,7 +12,7 @@ import java.util.logging.StreamHandler;
 public class JulConsoleHandler extends StreamHandler {
 
     public JulConsoleHandler() {
-        super(System.out, new JulConsoleLogFormatter());
+        super(System.out, new JulConsoleFormatter());
     }
 
     @Override

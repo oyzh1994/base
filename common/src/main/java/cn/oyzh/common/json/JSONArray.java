@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class JSONArray implements Iterable<JsonElement>{
 
-    private JsonArray array;
+    private final JsonArray array;
 
     public JSONArray(JsonArray array) {
         this.array = array;

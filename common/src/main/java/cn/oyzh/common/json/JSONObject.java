@@ -15,11 +15,14 @@ import java.util.Map;
  */
 public class JSONObject {
 
-
-    private JsonObject object;
+    private final JsonObject object;
 
     public JSONObject(JsonObject object) {
-        this.object = new JsonObject();
+        this.object = object;
+    }
+
+    public boolean containsKey(String key) {
+        return this.object.has(key);
     }
 
     public String getString(String key) {
@@ -113,12 +116,12 @@ public class JSONObject {
 
     public JSONObject getJSONObject(String key) {
         JsonElement element = object.get(key);
-        return element instanceof JsonObject ? new JSONObject(element.getAsJsonObject()) : null;
+        return element.isJsonObject() ? new JSONObject(element.getAsJsonObject()) : null;
     }
 
     public JSONArray getJSONArray(String key) {
         JsonElement element = object.get(key);
-        return element == null ? null : new JSONArray(element.getAsJsonArray());
+        return element.isJsonArray() ? new JSONArray(element.getAsJsonArray()) : null;
     }
 
     public <T> T getBean(String key, Class<T> beanClass) {
@@ -144,9 +147,5 @@ public class JSONObject {
             ex.printStackTrace();
         }
         return null;
-    }
-
-    public boolean containsKey(String key) {
-        return this.object.has(key);
     }
 }
