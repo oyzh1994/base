@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -21,11 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 文件工具类
+ *
  * @author oyzh
  * @since 2024-09-29
  */
+@UtilityClass
 public class FileUtil {
 
+    /**
+     * 创建文件
+     *
+     * @param filePath 文件路径
+     * @return 文件
+     */
     public static File touch(String filePath) {
         if (StringUtil.isBlank(filePath)) {
             return null;
@@ -33,15 +43,23 @@ public class FileUtil {
         return touch(new File(filePath));
     }
 
+    /**
+     * 创建文件
+     *
+     * @param file 文件
+     * @return 文件
+     */
     public static File touch(File file) {
-        try {
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
+        if (file != null) {
+            try {
+                if (!file.exists()) {
+                    file.getParentFile().mkdirs();
+                    file.createNewFile();
+                }
+                return file;
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            return file;
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
         return null;
     }
