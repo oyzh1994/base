@@ -114,6 +114,19 @@ public class JSONObject {
         return number == null ? null : number.shortValue();
     }
 
+    public boolean getBooleanValue(String key) {
+        JsonElement element = object.get(key);
+        return element != null && element.getAsBoolean();
+    }
+
+    public Boolean getBoolean(String key) {
+        JsonElement element = object.get(key);
+        if (element == null) {
+            return null;
+        }
+        return element.getAsBoolean();
+    }
+
     public JSONObject getJSONObject(String key) {
         JsonElement element = object.get(key);
         return element.isJsonObject() ? new JSONObject(element.getAsJsonObject()) : null;
