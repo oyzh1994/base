@@ -265,4 +265,9 @@ public abstract class JdbcStore<M extends Serializable> {
         }
         return false;
     }
+
+    public boolean clear() {
+        return this.delete((DeleteParam) null);
+    }
+
 }
