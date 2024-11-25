@@ -4,7 +4,6 @@ package cn.oyzh.common.json;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -13,12 +12,24 @@ import java.util.List;
  * @author oyzh
  * @since 2024-11-18
  */
-public class JSONArray implements Iterable<JsonElement>{
+public class JSONArray implements Iterable<JsonElement> {
 
     private final JsonArray array;
 
     public JSONArray(JsonArray array) {
         this.array = array;
+    }
+
+    public int size() {
+        return this.array.size();
+    }
+
+    public JSONObject getJSONObject(int index) {
+        JsonElement element = this.array.get(index);
+        if (element.isJsonObject()) {
+            return new JSONObject(element.getAsJsonObject());
+        }
+        return null;
     }
 
     public <T> List<T> toBeanList(Class<T> beanClass) {

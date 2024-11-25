@@ -1,6 +1,7 @@
 package cn.oyzh.common.thread;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author oyzh
@@ -12,13 +13,21 @@ public class DownLatch extends CountDownLatch {
         super(count);
     }
 
-    @Override
     public void await() {
         try {
             super.await();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public boolean await(int timeout) {
+        try {
+            return super.await(timeout, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     public static DownLatch of() {
