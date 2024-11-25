@@ -154,22 +154,24 @@ public class H2Operator extends JdbcOperator {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("DELETE FROM ");
         sql.append(JdbcUtil.wrap(tableName));
-        if (CollectionUtil.isNotEmpty(deleteParam.getQueryParams())) {
-            boolean first = true;
-            for (QueryParam queryParam : deleteParam.getQueryParams()) {
-                if (first) {
-                    first = false;
-                    sql.append(" WHERE ");
-                } else {
-                    sql.append(" AND ");
+        if (deleteParam != null) {
+            if (CollectionUtil.isNotEmpty(deleteParam.getQueryParams())) {
+                boolean first = true;
+                for (QueryParam queryParam : deleteParam.getQueryParams()) {
+                    if (first) {
+                        first = false;
+                        sql.append(" WHERE ");
+                    } else {
+                        sql.append(" AND ");
+                    }
+                    sql.append(queryParam.getName());
+                    sql.append(queryParam.getOperator());
+                    sql.append(JdbcUtil.wrapData(queryParam.getData()));
                 }
-                sql.append(queryParam.getName());
-                sql.append(queryParam.getOperator());
-                sql.append(JdbcUtil.wrapData(queryParam.getData()));
             }
-        }
-        if (deleteParam.getLimit() != null && deleteParam.getLimit() > 0) {
-            sql.append(" LIMIT ").append(deleteParam.getLimit());
+            if (deleteParam.getLimit() != null && deleteParam.getLimit() > 0) {
+                sql.append(" LIMIT ").append(deleteParam.getLimit());
+            }
         }
         JdbcConn connection = JdbcManager.takeoff();
         try {
