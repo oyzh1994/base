@@ -395,6 +395,12 @@ public class I18nHelper {
 
     public static final String TITLE_HOME = "base.title.home";
 
+    public static final String TITLE_TRANSPORT = "base.title.transport";
+
+    public static final String MIGRATION = "base.migration";
+
+    public static final String TITLE_MIGRATION = "base.title.migration";
+
     public static final String CONNECTIONS_CANNOT_BE_THE_SAME = "base.connectionsCannotBeTheSame";
 
     public static final String WAIT = "base.wait";
@@ -951,6 +957,10 @@ public class I18nHelper {
 
     public static String transportStarting() {
         return I18nResourceBundle.i18nString(TRANSPORT, START, ING);
+    }
+
+    public static String migrationStarting() {
+        return I18nResourceBundle.i18nString(MIGRATION, START, ING);
     }
 
     public static String connect() {
@@ -2521,12 +2531,20 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(TRANSPORT, IN_PROGRESS);
     }
 
+    public static String migrationInProgress() {
+        return I18nResourceBundle.i18nString(MIGRATION, IN_PROGRESS);
+    }
+
     public static String pleaseCheckDatabase() {
         return I18nResourceBundle.i18nString(PLEASE, CHECK, DATABASE);
     }
 
     public static String transportFinished() {
         return I18nResourceBundle.i18nString(TRANSPORT, FINISHED);
+    }
+
+    public static String migrationFinished() {
+        return I18nResourceBundle.i18nString(MIGRATION, FINISHED);
     }
 
     public static String serviceName() {
@@ -2695,5 +2713,17 @@ public class I18nHelper {
 
     public static String connectionsCannotBeTheSame() {
         return I18nResourceBundle.i18nString(CONNECTIONS_CANNOT_BE_THE_SAME);
+    }
+
+    public static String migration() {
+        return I18nResourceBundle.i18nString(MIGRATION);
+    }
+
+    public static String migrationTitle() {
+        return I18nResourceBundle.i18nString(TITLE_MIGRATION);
+    }
+
+    public static String transportTitle() {
+        return I18nResourceBundle.i18nString(TITLE_TRANSPORT);
     }
 }
