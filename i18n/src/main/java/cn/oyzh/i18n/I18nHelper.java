@@ -21,6 +21,10 @@ public class I18nHelper {
 
     public static final String SUCCESS = "base.success";
 
+    public static final String SUCCESSFUL = "base.successful";
+
+    public static final String FILTERS = "base.filters";
+
     public static final String SUCCEED = "base.succeed";
 
     public static final String BINARY = "base.binary";
@@ -128,6 +132,8 @@ public class I18nHelper {
     public static final String OPERATION = "base.operation";
 
     public static final String EXECUTE = "base.execute";
+
+    public static final String EXECUTING = "base.executing";
 
     public static final String CANCEL = "base.cancel";
 
@@ -307,6 +313,8 @@ public class I18nHelper {
 
     public static final String CONNECTION = "base.connection";
 
+    public static final String CONNECTIONS = "base.connections";
+
     public static final String CONNECTED = "base.connected";
 
     public static final String DISCONNECTED = "base.disconnected";
@@ -399,6 +407,8 @@ public class I18nHelper {
 
     public static final String MIGRATION = "base.migration";
 
+    public static final String MIGRATING = "base.migrating";
+
     public static final String TITLE_MIGRATION = "base.title.migration";
 
     public static final String CONNECTIONS_CANNOT_BE_THE_SAME = "base.connectionsCannotBeTheSame";
@@ -436,6 +446,10 @@ public class I18nHelper {
     public static final String REPEAT = "base.repeat";
 
     public static final String GROUP = "base.group";
+
+    public static final String CLEARED = "base.cleared";
+
+    public static final String GROUPS = "base.groups";
 
     public static final String CONTENT_TIP1 = "base.contentTip1";
 
@@ -512,6 +526,8 @@ public class I18nHelper {
     public static final String OPEN = "base.open";
 
     public static final String TERMINAL = "base.terminal";
+
+    public static final String APPLICATION_SETTING = "base.applicationSetting";
 
     public static final String RESET = "base.reset";
 
@@ -2725,5 +2741,109 @@ public class I18nHelper {
 
     public static String transportTitle() {
         return I18nResourceBundle.i18nString(TITLE_TRANSPORT);
+    }
+
+    public static String executingMigration() {
+        return I18nResourceBundle.i18nString(EXECUTING, MIGRATION);
+    }
+
+    public static String migratingGroups() {
+        return I18nResourceBundle.i18nString(MIGRATING, GROUPS);
+    }
+
+    public static String foundGroup() {
+        return I18nResourceBundle.i18nString(FOUND, GROUP);
+    }
+
+    public static String groupDataCleared() {
+        return I18nResourceBundle.i18nString(GROUP, DATA, CLEARED);
+    }
+
+    public static String migrationGroupsSuccessful() {
+        return I18nResourceBundle.i18nString(MIGRATION, GROUPS, SUCCESSFUL);
+    }
+
+    public static String migratingConnections() {
+        return I18nResourceBundle.i18nString(MIGRATING, CONNECTIONS);
+    }
+
+    public static String foundConnection() {
+        return I18nResourceBundle.i18nString(FOUND, CONNECTION);
+    }
+
+    public static String connectionDataCleared() {
+        return I18nResourceBundle.i18nString(CONNECTION, DATA, CLEARED);
+    }
+
+    public static String migrationConnectionsSuccessful() {
+        return I18nResourceBundle.i18nString(MIGRATION, CONNECTIONS, SUCCESSFUL);
+    }
+
+    public static String migratingFilters() {
+        return I18nResourceBundle.i18nString(MIGRATING, FILTERS);
+    }
+
+    public static String foundFilter() {
+        return I18nResourceBundle.i18nString(FOUND, FILTER);
+    }
+
+    public static String filterDataCleared() {
+        return I18nResourceBundle.i18nString(FILTER, DATA, CLEARED);
+    }
+
+    public static String migrationFiltersSuccessful() {
+        return I18nResourceBundle.i18nString(MIGRATION, FILTERS, SUCCESSFUL);
+    }
+
+    public static String migratingAuth() {
+        return I18nResourceBundle.i18nString(MIGRATING, AUTH);
+    }
+
+    public static String foundAuth() {
+        return I18nResourceBundle.i18nString(FOUND, AUTH);
+    }
+
+    public static String authDataCleared() {
+        return I18nResourceBundle.i18nString(AUTH, DATA, CLEARED);
+    }
+
+    public static String migrationAuthSuccessful() {
+        return I18nResourceBundle.i18nString(MIGRATION, AUTH, SUCCESSFUL);
+    }
+
+    public static String migratingTerminalHistory() {
+        return I18nResourceBundle.i18nString(MIGRATING, TERMINAL, HISTORY);
+    }
+
+    public static String foundTerminalHistory() {
+        return I18nResourceBundle.i18nString(FOUND, TERMINAL, HISTORY);
+    }
+
+    public static String terminalHistoryDataCleared() {
+        return I18nResourceBundle.i18nString(TERMINAL, HISTORY, DATA, CLEARED);
+    }
+
+    public static String migrationTerminalHistorySuccessful() {
+        return I18nResourceBundle.i18nString(MIGRATION, TERMINAL, HISTORY, SUCCESSFUL);
+    }
+
+    public static String migratingApplicationSetting() {
+        return I18nResourceBundle.i18nString(MIGRATING, APPLICATION_SETTING);
+    }
+
+    public static String applicationSettingDataCleared() {
+        return I18nResourceBundle.i18nString(APPLICATION_SETTING, DATA, CLEARED);
+    }
+
+    public static String migrationApplicationSettingSuccessful() {
+        return I18nResourceBundle.i18nString(MIGRATION, APPLICATION_SETTING, SUCCESSFUL);
+    }
+
+    public static String applicationSettingNotFound() {
+        return I18nResourceBundle.i18nString(APPLICATION_SETTING, NOT_FOUND);
+    }
+
+    public static String added() {
+        return I18nResourceBundle.i18nString(ADDED);
     }
 }
