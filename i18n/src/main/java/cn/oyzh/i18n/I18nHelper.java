@@ -405,6 +405,8 @@ public class I18nHelper {
 
     public static final String TITLE_TRANSPORT = "base.title.transport";
 
+    public static final String TITLE_SETTING = "base.title.setting";
+
     public static final String MIGRATION = "base.migration";
 
     public static final String MIGRATING = "base.migrating";
@@ -2741,6 +2743,10 @@ public class I18nHelper {
 
     public static String transportTitle() {
         return I18nResourceBundle.i18nString(TITLE_TRANSPORT);
+    }
+
+    public static String settingTitle() {
+        return I18nResourceBundle.i18nString(TITLE_SETTING);
     }
 
     public static String executingMigration() {
