@@ -280,4 +280,10 @@ public class StringUtil {
         return source.substring(0, 1).toUpperCase() + source.substring(1);
     }
 
+    public static boolean endWithIgnoreCase(String source, String str) {
+        if (source == null || source.isEmpty() || str == null) {
+            return false;
+        }
+        return source.toLowerCase().endsWith(str.toLowerCase());
+    }
 }
