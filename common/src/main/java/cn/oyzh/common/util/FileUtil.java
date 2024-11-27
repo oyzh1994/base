@@ -113,10 +113,14 @@ public class FileUtil {
 
     public static boolean del(String file) {
         if (file != null) {
-            File file1 = new File(file);
-            if (file1.exists()) {
-                return file1.delete();
-            }
+            return del(new File(file));
+        }
+        return false;
+    }
+
+    public static boolean del(File file) {
+        if (file != null) {
+            return file.delete();
         }
         return false;
     }
@@ -252,6 +256,17 @@ public class FileUtil {
             return false;
         }
         return source.renameTo(target);
+    }
+
+    public static boolean clean(File source) {
+        if (source != null && source.exists() && !source.isDirectory() && !source.isAbsolute()) {
+            try (FileOutputStream fos = new FileOutputStream(source)) {
+                fos.write(new byte[]{});
+                return true;
+            } catch (Exception ignore) {
+            }
+        }
+        return false;
     }
 
 
