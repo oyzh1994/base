@@ -1,17 +1,11 @@
 package cn.oyzh.common.json;
 
 import cn.oyzh.common.util.StringUtil;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONWriter;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,10 +16,6 @@ import java.util.List;
 @UtilityClass
 public class JSONUtil {
 
-    private static final Gson GSON = new Gson();
-
-    private static final Gson GSON_PRETTY = new GsonBuilder().setPrettyPrinting().create();
-
     /**
      * 美化
      *
@@ -35,7 +25,7 @@ public class JSONUtil {
     public static String toPretty(Object obj) {
         if (obj != null) {
             try {
-                return GSON_PRETTY.toJson(obj);
+                return JSON.toJSONString(obj, JSONWriter.Feature.PrettyFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -52,8 +42,8 @@ public class JSONUtil {
     public static String toPretty(String str) {
         if (str != null) {
             try {
-                Object json = GSON_PRETTY.fromJson(str, Object.class);
-                return GSON_PRETTY.toJson(json);
+                Object json = JSON.parse(str);
+                return JSON.toJSONString(json, JSONWriter.Feature.PrettyFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -69,7 +59,8 @@ public class JSONUtil {
      */
     public static String toJson(Object obj) {
         try {
-            return GSON.toJson(obj);
+            return JSON.toJSONString(obj);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -83,12 +74,7 @@ public class JSONUtil {
      * @return 结果
      */
     public static boolean isJson(String json) {
-        try {
-            JsonElement jsonElement = JsonParser.parseString(json);
-            return jsonElement.isJsonObject() || jsonElement.isJsonArray();
-        } catch (JsonSyntaxException ignore) {
-        }
-        return false;
+        return JSON.isValid(json);
     }
 
     /**
@@ -98,11 +84,8 @@ public class JSONUtil {
      * @return json对象
      */
     public static JSONObject parseObject(@NonNull String json) {
-        JsonElement element = JsonParser.parseString(json);
-        if (element.isJsonObject()) {
-            return new JSONObject(element.getAsJsonObject());
-        }
-        return null;
+        com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
+        return new JSONObject(object);
     }
 
     /**
@@ -112,27 +95,10 @@ public class JSONUtil {
      * @return json树组
      */
     public static JSONArray parseArray(@NonNull String json) {
-        JsonElement element = JsonParser.parseString(json);
-        if (element.isJsonArray()) {
-            return new JSONArray(element.getAsJsonArray());
-        }
-        return null;
+        com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
+        return new JSONArray(array);
     }
 
-    /**
-     * 解析为bean
-     *
-     * @param json json串
-     * @return java对象
-     */
-    public static <T> T toBean(JsonObject json, Class<T> beanClass) {
-        try {
-            return GSON.fromJson(json, beanClass);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
 
     /**
      * 解析为bean
@@ -142,8 +108,8 @@ public class JSONUtil {
      */
     public static <T> T toBean(String json, Class<T> beanClass) {
         try {
-            JsonElement element = JsonParser.parseString(json);
-            return GSON.fromJson(element, beanClass);
+            com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
+            return object.toJavaObject(beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -159,14 +125,8 @@ public class JSONUtil {
      */
     public static <T> List<T> toBeanList(String json, Class<T> beanClass) {
         try {
-            JsonElement element = JsonParser.parseString(json);
-            if (element.isJsonArray()) {
-                List<T> list = new ArrayList<>();
-                for (JsonElement obj : element.getAsJsonArray()) {
-                    list.add(GSON.fromJson(obj, beanClass));
-                }
-                return list;
-            }
+            com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
+            return array.toJavaList(beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -180,13 +140,9 @@ public class JSONUtil {
      * @param <T>   对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(JsonArray array, Class<T> beanClass) {
+    public static <T> List<T> toBeanList(JSONArray array, Class<T> beanClass) {
         try {
-            List<T> list = new ArrayList<>();
-            for (JsonElement obj : array) {
-                list.add(GSON.fromJson(obj, beanClass));
-            }
-            return list;
+            return array.toBeanList(beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
