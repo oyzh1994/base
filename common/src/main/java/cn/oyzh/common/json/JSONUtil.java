@@ -1,5 +1,6 @@
 package cn.oyzh.common.json;
 
+import cn.oyzh.common.util.StringUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -7,12 +8,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
-import org.apache.poi.ss.formula.functions.T;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -193,5 +191,39 @@ public class JSONUtil {
             ex.printStackTrace();
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * 转义显示不可见字符
+     *
+     * @param str 字符串
+     * @return 转义后的字符串
+     */
+    public static String escape(String str) {
+        if (StringUtil.isEmpty(str)) {
+            return str;
+        }
+        final int len = str.length();
+        final StringBuilder builder = new StringBuilder(len);
+        char c;
+        for (int i = 0; i < len; i++) {
+            c = str.charAt(i);
+            String c1 = switch (c) {
+                case '\b':
+                    yield "\\b";
+                case '\t':
+                    yield "\\t";
+                case '\n':
+                    yield "\\n";
+                case '\f':
+                    yield "\\f";
+                case '\r':
+                    yield "\\r";
+                default:
+                    yield Character.toString(c);
+            };
+            builder.append(c1);
+        }
+        return builder.toString();
     }
 }
