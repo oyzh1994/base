@@ -206,23 +206,41 @@ public class JSONUtil {
         final int len = str.length();
         final StringBuilder builder = new StringBuilder(len);
         char c;
+        Character lastChar = null;
         for (int i = 0; i < len; i++) {
             c = str.charAt(i);
-            String c1 = switch (c) {
-                case '\b':
-                    yield "\\b";
-                case '\t':
-                    yield "\\t";
-                case '\n':
-                    yield "\\n";
-                case '\f':
-                    yield "\\f";
-                case '\r':
-                    yield "\\r";
-                default:
-                    yield Character.toString(c);
-            };
-            builder.append(c1);
+            String c1 = null;
+            if (c == '"') {
+                if (lastChar == null || lastChar != '\\') {
+                    c1 = "\\\"";
+                }
+            } else if (c == '\n') {
+                if (lastChar == null || lastChar != '\\') {
+                    c1 = "\\n";
+                }
+            } else if (c == '\b') {
+                if (lastChar == null || lastChar != '\\') {
+                    c1 = "\\b";
+                }
+            } else if (c == '\t') {
+                if (lastChar == null || lastChar != '\\') {
+                    c1 = "\\t";
+                }
+            } else if (c == '\f') {
+                if (lastChar == null || lastChar != '\\') {
+                    c1 = "\\f";
+                }
+            } else if (c == '\r') {
+                if (lastChar == null || lastChar != '\\') {
+                    c1 = "\\r";
+                }
+            }
+            if (c1 == null) {
+                builder.append(c);
+            } else {
+                builder.append(c1);
+            }
+            lastChar = c;
         }
         return builder.toString();
     }

@@ -139,8 +139,9 @@ public class FileUtil {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try (fis; bos) {
                 byte[] buffer = new byte[1024];
-                while (fis.read(buffer) != -1) {
-                    bos.write(buffer, 0, buffer.length);
+                int len;
+                while ((len=fis.read(buffer)) != -1) {
+                    bos.write(buffer, 0, len);
                 }
                 bytes = bos.toByteArray();
             }
