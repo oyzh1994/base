@@ -1,15 +1,10 @@
 package cn.oyzh.store.file;
 
 import cn.oyzh.common.file.SkipAbleFileReader;
-import lombok.NonNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author oyzh
@@ -17,10 +12,10 @@ import java.util.Map;
  */
 public class CsvTypeFileReader extends TypeFileReader {
 
-    /**
-     * 字段列表
-     */
-    private List<String> columns;
+    // /**
+    //  * 字段列表
+    //  */
+    // private List<String> columns;
 
     /**
      * 导入配置
@@ -32,31 +27,31 @@ public class CsvTypeFileReader extends TypeFileReader {
      */
     private SkipAbleFileReader reader;
 
-    public CsvTypeFileReader(@NonNull File file, FileReadConfig config) throws IOException {
+    public CsvTypeFileReader(FileReadConfig config, FileColumns columns) throws IOException {
         this.config = config;
-        this.reader = new SkipAbleFileReader(file, Charset.forName(config.charset()));
+        this.reader = new SkipAbleFileReader(config.filePath(), Charset.forName(config.charset()));
         this.init();
     }
 
     @Override
     protected void init() throws IOException {
-        this.reader.jumpLine(this.config.columnIndex());
-        this.columns = new ArrayList<>();
-        String line = this.reader.readLine();
-        this.columns.addAll(this.parseLine(line, this.config.txtIdentifierChar(), ','));
-        this.reader.jumpLine(this.config.dataStartIndex());
+        // this.reader.jumpLine(this.config.columnIndex());
+        // this.columns = new ArrayList<>();
+        // String line = this.reader.readLine();
+        // this.columns.addAll(this.parseLine(line, this.config.txtIdentifier(), ','));
+        // this.reader.jumpLine(this.config.dataStartIndex());
     }
 
     @Override
-    public Map<String, Object> readObject() throws IOException {
+    public FileRecord readRecord() throws IOException {
         String line = this.reader.readLine();
         if (line != null) {
-            List<String> arr = this.parseLine(line, this.config.txtIdentifierChar(), ',');
-            Map<String, Object> map = new HashMap<>();
+            List<String> arr = this.parseLine(line, this.config.txtIdentifier(), ',');
+            FileRecord record = new FileRecord();
             for (int i = 0; i < arr.size(); i++) {
-                map.put(this.columns.get(i), arr.get(i));
+                record.put(i, arr.get(i));
             }
-            return map;
+            return record;
         }
         return null;
     }
@@ -66,6 +61,6 @@ public class CsvTypeFileReader extends TypeFileReader {
         this.reader.close();
         this.reader = null;
         this.config = null;
-        this.columns = null;
+        // this.columns = null;
     }
 }

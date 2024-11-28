@@ -17,18 +17,18 @@ public abstract class TypeFileReader implements Closeable {
 
     }
 
-    public abstract Map<String, Object> readObject() throws Exception;
+    public abstract FileRecord readRecord() throws Exception;
 
-    public List<Map<String, Object>> readObjects(int count) throws Exception {
+    public List<FileRecord> readRecords(int count) throws Exception {
         // 数据列表
-        List<Map<String, Object>> records = new ArrayList<>();
+        List<FileRecord> records = new ArrayList<>();
         // 读取数据
         while (records.size() < count) {
-            Map<String, Object> item = this.readObject();
-            if (item == null) {
+            FileRecord record = this.readRecord();
+            if (record == null) {
                 break;
             }
-            records.add(item);
+            records.add(record);
         }
         return records;
     }

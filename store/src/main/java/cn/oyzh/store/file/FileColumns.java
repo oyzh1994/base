@@ -19,6 +19,10 @@ public class FileColumns {
         this.columns.add(new FileColumn(name));
     }
 
+    public void addColumn(String name, int position) {
+        this.columns.add(new FileColumn(name, position));
+    }
+
     public int index(String columnName) {
         FileColumn column = this.column(columnName);
         return column == null ? -1 : this.columns.indexOf(column);

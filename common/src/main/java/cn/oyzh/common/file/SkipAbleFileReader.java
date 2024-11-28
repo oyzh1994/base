@@ -40,6 +40,10 @@ public class SkipAbleFileReader implements AutoCloseable {
         this(file, StandardCharsets.UTF_8);
     }
 
+    public SkipAbleFileReader(@NonNull String filePath, Charset charset) throws FileNotFoundException {
+        this(new File(filePath), charset);
+    }
+
     public SkipAbleFileReader(@NonNull File file, Charset charset) throws FileNotFoundException {
         this.reader = FileUtil.getReader(file, charset);
     }

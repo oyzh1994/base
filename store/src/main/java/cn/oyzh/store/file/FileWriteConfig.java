@@ -14,9 +14,14 @@ import java.nio.charset.StandardCharsets;
 public class FileWriteConfig {
 
     /**
+     * 记录分割符号
+     */
+    private String recordSeparator = System.lineSeparator();
+
+    /**
      * 文本识别符号
      */
-    private String txtIdentifier = "\"";
+    private char txtIdentifier = '"';
 
     /**
      * 字符集

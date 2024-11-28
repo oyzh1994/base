@@ -108,7 +108,7 @@ public class TextUtil {
      * @return 处理字符集后的内容
      */
     public static String changeCharset(String str, String fromCharset, String targetCharset) {
-        if (str == null || str.length() == 0) {
+        if (str == null || str.isEmpty() || Objects.equals(fromCharset, targetCharset)) {
             return str;
         }
         // 转换字符集
@@ -118,6 +118,19 @@ public class TextUtil {
             e.printStackTrace();
         }
         return str;
+    }
+
+    /**
+     * 更换内容字符集，并转为byte
+     *
+     * @param str           内容
+     * @param fromCharset   原始字符集
+     * @param targetCharset 目标字符集
+     * @return 处理字符集后的内容
+     */
+    public static byte[] changeCharsetToBytes(String str, String fromCharset, String targetCharset) {
+        str = changeCharset(str, fromCharset, targetCharset);
+        return str == null ? null : str.getBytes();
     }
 
     /**

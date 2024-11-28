@@ -48,7 +48,7 @@ public class CsvTypeFileWriter extends TypeFileWriter {
             Object val = this.parameterized(entry.getValue());
             values[index] = val;
         }
-        this.writer.write(this.formatLine(values, null, ",", this.config.txtIdentifier(), "\n"));
+        this.writer.write(this.formatLine(values, null, ',', this.config.txtIdentifier(), "\n"));
     }
 
     @Override

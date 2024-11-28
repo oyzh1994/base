@@ -68,6 +68,10 @@ public class FileUtil {
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append), charset));
     }
 
+    public static BufferedReader getReader(@NonNull String filePath, Charset charset) throws FileNotFoundException {
+        return getReader(new File(filePath), charset);
+    }
+
     public static BufferedReader getReader(@NonNull File file, Charset charset) throws FileNotFoundException {
         return new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
     }
@@ -140,7 +144,7 @@ public class FileUtil {
             try (fis; bos) {
                 byte[] buffer = new byte[1024];
                 int len;
-                while ((len=fis.read(buffer)) != -1) {
+                while ((len = fis.read(buffer)) != -1) {
                     bos.write(buffer, 0, len);
                 }
                 bytes = bos.toByteArray();
