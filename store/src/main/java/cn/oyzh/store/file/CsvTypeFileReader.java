@@ -60,5 +60,4 @@ public class CsvTypeFileReader extends TypeFileReader {
             ex.printStackTrace();
         }
     }
-
 }
