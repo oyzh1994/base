@@ -1,11 +1,10 @@
 package cn.oyzh.store.file;
 
 import cn.oyzh.common.file.LineFileWriter;
-import cn.oyzh.common.json.JSONUtil;
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.TextUtil;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -76,14 +75,6 @@ public class JsonTypeFileWriter extends TypeFileWriter {
     }
 
     @Override
-    public void close() throws IOException {
-        this.writer.close();
-        this.writer = null;
-        this.config = null;
-        this.columns = null;
-    }
-
-    @Override
     public Object parameterized(Object value) {
         if (value == null) {
             return "null";
@@ -92,5 +83,18 @@ public class JsonTypeFileWriter extends TypeFileWriter {
             return value;
         }
         return "\"" + TextUtil.escape(value.toString()) + "\"";
+    }
+
+    @Override
+    public void close() {
+        try {
+            IOUtil.close(this.writer);
+            this.writer = null;
+            this.config = null;
+            this.columns.clear();
+            this.columns = null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

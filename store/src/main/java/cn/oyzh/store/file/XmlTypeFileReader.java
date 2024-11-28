@@ -1,5 +1,6 @@
 package cn.oyzh.store.file;
 
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.xml.XMLHelper;
 
 import javax.xml.stream.XMLEventReader;
@@ -24,7 +25,10 @@ public class XmlTypeFileReader extends TypeFileReader {
      */
     private FileReadConfig config;
 
-    private final FileColumns columns;
+    /**
+     * 字段列表
+     */
+    private FileColumns columns;
 
     public XmlTypeFileReader(FileReadConfig config, FileColumns columns) throws Exception {
         this.config = config;
@@ -49,17 +53,17 @@ public class XmlTypeFileReader extends TypeFileReader {
         String name = null;
         String value = null;
         FileRecord record = null;
-        boolean objStart = false;
+        boolean rootStart = false;
         boolean childStart = false;
         while (this.reader.hasNext()) {
             XMLEvent event = this.reader.nextEvent();
-            // 读取结束
-            if (event.isEndElement() && objStart && !childStart) {
+            // 根节点结束
+            if (event.isEndElement() && rootStart && !childStart) {
                 break;
             }
-            // 读取开始
-            if (event.isStartElement() && !objStart) {
-                objStart = true;
+            // 根节点开始
+            if (event.isStartElement() && !rootStart) {
+                rootStart = true;
                 continue;
             }
             // 子节点开始
@@ -97,8 +101,10 @@ public class XmlTypeFileReader extends TypeFileReader {
             }
             this.reader = null;
             this.config = null;
+            this.columns.clear();
+            this.columns = null;
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            ex.printStackTrace();
         }
     }
 }

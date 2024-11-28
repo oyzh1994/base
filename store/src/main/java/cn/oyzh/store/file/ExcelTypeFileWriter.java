@@ -1,5 +1,6 @@
 package cn.oyzh.store.file;
 
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.common.xls.WorkbookHelper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -125,10 +126,15 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
     }
 
     @Override
-    public void close() throws IOException {
-        this.workbook.close();
-        this.workbook = null;
-        this.config = null;
-        this.columns = null;
+    public void close() {
+        try {
+            IOUtil.close(this.workbook);
+            this.workbook = null;
+            this.config = null;
+            this.columns.clear();
+            this.columns = null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

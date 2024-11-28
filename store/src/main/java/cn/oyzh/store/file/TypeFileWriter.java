@@ -92,5 +92,4 @@ public abstract class TypeFileWriter implements Closeable {
         }
         return sb.toString();
     }
-
 }
