@@ -41,7 +41,7 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
     /**
      * xls行记录
      */
-    private int xlsRowIndex = 1;
+    private int xlsRowIndex = 0;
 
     public ExcelTypeFileWriter(FileWriteConfig config, FileColumns columns) throws IOException, InvalidFormatException {
         this.columns = columns;
@@ -50,21 +50,30 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
         this.workbook = WorkbookHelper.create(isXlsx);
     }
 
-    @Override
-    public void writeHeader() throws Exception {
-        // 重置行索引
-        this.xlsRowIndex = 1;
-        // 创建一个新的工作表sheet
-        Sheet sheet = this.workbook.createSheet("Nodes");
-        // 创建列名行
-        Row headerRow = sheet.createRow(0);
-        // 写入列名
-        List<FileColumn> columnList = columns.sortOfPosition();
-        for (int i = 0; i < columnList.size(); i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columnList.get(i).getName());
-        }
-        // 写入数据
+    // @Override
+    // public void writeHeader() throws Exception {
+    //     // 重置行索引
+    //     this.xlsRowIndex = 1;
+    //     // 创建一个新的工作表sheet
+    //     Sheet sheet = this.workbook.createSheet(this.config.sheetName());
+    //     // 创建列名行
+    //     Row headerRow = sheet.createRow(0);
+    //     // 写入列名
+    //     List<FileColumn> columnList = columns.sortOfPosition();
+    //     for (int i = 0; i < columnList.size(); i++) {
+    //         Cell cell = headerRow.createCell(i);
+    //         cell.setCellValue(columnList.get(i).getName());
+    //     }
+    //     // 写入数据
+    //     WorkbookHelper.write(this.workbook, this.config.filePath());
+    // }
+
+    /**
+     * 刷新工作薄
+     *
+     * @throws IOException 异常
+     */
+    private void flush() throws IOException {
         WorkbookHelper.write(this.workbook, this.config.filePath());
     }
 
@@ -76,6 +85,13 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
      * @throws Exception 异常
      */
     private void writeRecord(FileRecord record, boolean flush) throws Exception {
+        // 获取当前页
+        Sheet sheet;
+        if (this.xlsRowIndex == 0) {
+            sheet = this.workbook.createSheet(this.config.sheetName());
+        } else {
+            sheet = WorkbookHelper.getActiveSheet(this.workbook);
+        }
         // 处理数据
         Object[] values = new Object[record.size()];
         for (Map.Entry<Integer, Object> entry : record.entrySet()) {
@@ -83,8 +99,6 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
             Object val = entry.getValue();
             values[index] = val;
         }
-        // 获取当前页
-        Sheet sheet = WorkbookHelper.getActiveSheet(this.workbook);
         // 创建数据行
         Row row = sheet.createRow(this.xlsRowIndex++);
         // 填充数据列
@@ -105,9 +119,8 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
                 default -> cell.setCellValue(val.toString());
             }
         }
-        // 写入数据
         if (flush) {
-            WorkbookHelper.write(this.workbook, this.config.filePath());
+            this.flush();
         }
     }
 
@@ -121,8 +134,7 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
         for (FileRecord record : records) {
             this.writeRecord(record, false);
         }
-        // 写入数据
-        WorkbookHelper.write(this.workbook, this.config.filePath());
+        this.flush();
     }
 
     @Override

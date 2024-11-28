@@ -80,7 +80,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isExcelType(String fileType) {
-        return isXlsType(fileType) || isXlsxType(fileType);
+        return isXlsType(fileType) || isXlsxType(fileType) || "excel".equalsIgnoreCase(fileType);
     }
 
     /**
