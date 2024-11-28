@@ -48,4 +48,9 @@ public class FileWriteConfig {
      */
     private String itemNodeName = "Node";
 
+    /**
+     * 工作薄名称，excel需要
+     */
+    private String sheetName = "Nodes";
+
 }

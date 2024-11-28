@@ -34,14 +34,13 @@ public class ExcelTypeFileReader extends TypeFileReader {
     /**
      * 当前行索引
      */
-    private Integer currentRowIndex;
+    private int currentRowIndex;
 
     public ExcelTypeFileReader(FileReadConfig config, FileColumns columns) throws Exception {
         this.config = config;
         this.columns = columns;
         boolean isXlsx = StringUtil.endWithIgnoreCase(config.filePath(), ".xlsx");
         this.workbook = WorkbookHelper.create(isXlsx, config.filePath());
-        this.init();
     }
 
     @Override
@@ -79,7 +78,6 @@ public class ExcelTypeFileReader extends TypeFileReader {
             IOUtil.close(this.workbook);
             this.workbook = null;
             this.config = null;
-            this.currentRowIndex = null;
             this.columns.clear();
             this.columns = null;
         } catch (Exception ex) {
