@@ -71,8 +71,10 @@ public abstract class TypeFileWriter implements Closeable {
 
     protected String formatLine(List<?> list, String prefix, String fieldSeparator, String txtIdentifier, String recordSeparator) {
         StringBuilder sb = new StringBuilder();
-        boolean first = true;
         for (Object val : list) {
+            if (fieldSeparator != null) {
+                sb.append(fieldSeparator);
+            }
             if (prefix != null) {
                 sb.append(prefix);
             }
@@ -83,13 +85,11 @@ public abstract class TypeFileWriter implements Closeable {
             if (txtIdentifier != null) {
                 sb.append(txtIdentifier);
             }
-            if (first) {
-                first = false;
-            } else {
-                sb.append(fieldSeparator);
-            }
         }
         sb.append(recordSeparator);
+        if (fieldSeparator != null) {
+            return sb.substring(fieldSeparator.length());
+        }
         return sb.toString();
     }
 
