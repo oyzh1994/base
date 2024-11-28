@@ -1,17 +1,12 @@
 package cn.oyzh.store.file;
 
-import lombok.NonNull;
+import cn.oyzh.common.xml.XMLHelper;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
-import java.io.File;
 import java.io.FileInputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author oyzh
@@ -29,9 +24,13 @@ public class XmlTypeFileReader extends TypeFileReader {
      */
     private FileReadConfig config;
 
-    public XmlTypeFileReader(@NonNull File file, FileReadConfig config) throws Exception {
+    private final FileColumns columns;
+
+    public XmlTypeFileReader(FileReadConfig config, FileColumns columns) throws Exception {
         this.config = config;
-        this.reader = XMLInputFactory.newInstance().createXMLEventReader(new FileInputStream(file), config.charset());
+        this.columns = columns;
+        XMLInputFactory factory = XMLHelper.newFactory();
+        this.reader = factory.createXMLEventReader(new FileInputStream(config.filePath()), config.charset());
         this.init();
     }
 
@@ -46,10 +45,10 @@ public class XmlTypeFileReader extends TypeFileReader {
     }
 
     @Override
-    public Map<String, Object> readObject() throws Exception {
+    public FileRecord readRecord() throws Exception {
         String name = null;
         String value = null;
-        Map<String, Object> map = null;
+        FileRecord record = null;
         boolean objStart = false;
         boolean childStart = false;
         while (this.reader.hasNext()) {
@@ -58,52 +57,36 @@ public class XmlTypeFileReader extends TypeFileReader {
             if (event.isEndElement() && objStart && !childStart) {
                 break;
             }
-            // 属性读取为字段
-            if (this.config.attrToColumn()) {
-                // 读取开始
-                if (event.isStartElement() && !objStart) {
-                    objStart = true;
-                    StartElement element = event.asStartElement();
-                    Iterator<Attribute> attributes = element.getAttributes();
-                    while (attributes.hasNext()) {
-                        Attribute attribute = attributes.next();
-                        if (map == null) {
-                            map = new HashMap<>();
-                        }
-                        map.put(attribute.getName().getLocalPart(), attribute.getValue());
-                    }
+            // 读取开始
+            if (event.isStartElement() && !objStart) {
+                objStart = true;
+                continue;
+            }
+            // 子节点开始
+            if (event.isStartElement() && !childStart) {
+                childStart = true;
+                StartElement element = event.asStartElement();
+                name = element.getName().getLocalPart();
+                continue;
+            }
+            // 子节点结束
+            if (event.isEndElement() && childStart) {
+                childStart = false;
+                if (record == null) {
+                    record = new FileRecord();
                 }
-            } else {// 属性为子节点
-                // 读取开始
-                if (event.isStartElement() && !objStart) {
-                    objStart = true;
-                    continue;
-                }
-                // 子节点开始
-                if (event.isStartElement() && !childStart) {
-                    childStart = true;
-                    StartElement element = event.asStartElement();
-                    name = element.getName().getLocalPart();
-                    continue;
-                }
-                // 子节点结束
-                if (event.isEndElement() && childStart) {
-                    childStart = false;
-                    if (map == null) {
-                        map = new HashMap<>();
-                    }
-                    map.put(name, value);
-                    name = null;
-                    value = null;
-                    continue;
-                }
-                // 子节点数据
-                if (event.isCharacters() && name != null) {
-                    value = event.asCharacters().getData();
-                }
+                FileColumn column = this.columns.column(name);
+                record.put(column.getPosition(), value);
+                name = null;
+                value = null;
+                continue;
+            }
+            // 子节点数据
+            if (event.isCharacters() && name != null) {
+                value = event.asCharacters().getData();
             }
         }
-        return map;
+        return record;
     }
 
     @Override

@@ -41,7 +41,7 @@ public class TxtTypeFileWriter extends TypeFileWriter {
             Object val = this.parameterized(entry.getValue());
             values[index] = val;
         }
-        this.writer.write(this.formatLine(values, this.config.prefix(), " ", null, "\n"));
+        this.writer.write(this.formatLine(values, this.config.prefix(), ' ', null, "\n"));
     }
 
     @Override

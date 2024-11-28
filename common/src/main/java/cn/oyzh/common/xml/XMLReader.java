@@ -27,8 +27,7 @@ public class XMLReader {
     public XMLDocument read(InputStream stream) {
         if (stream != null) {
             try {
-                XMLInputFactory factory = XMLInputFactory.newInstance();
-                factory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+                XMLInputFactory factory = XMLHelper.newFactory();
                 this.reader = factory.createXMLEventReader(stream);
                 return new XMLDocument(this.reader);
             } catch (XMLStreamException ex) {

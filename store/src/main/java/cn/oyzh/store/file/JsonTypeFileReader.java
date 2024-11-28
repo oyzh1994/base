@@ -1,14 +1,13 @@
 package cn.oyzh.store.file;
 
+import cn.oyzh.common.json.JSONObject;
+import cn.oyzh.common.json.JSONUtil;
 import cn.oyzh.common.util.FileUtil;
 import com.alibaba.fastjson.JSONReader;
-import lombok.NonNull;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,9 +26,12 @@ public class JsonTypeFileReader extends TypeFileReader {
      */
     private FileReadConfig config;
 
-    public JsonTypeFileReader(@NonNull File file, FileReadConfig config) throws FileNotFoundException {
+    private FileColumns columns;
+
+    public JsonTypeFileReader(FileReadConfig config, FileColumns columns) throws FileNotFoundException {
         this.config = config;
-        this.reader = new JSONReader(FileUtil.getReader(file, Charset.forName(config.charset())));
+        this.columns = columns;
+        this.reader = new JSONReader(FileUtil.getReader(config.filePath(), Charset.forName(config.charset())));
         this.init();
     }
 
@@ -37,37 +39,52 @@ public class JsonTypeFileReader extends TypeFileReader {
     protected void init() {
         // 初始化
         if (this.reader.hasNext()) {
-            if (this.config.recordLabel() == null) {
-                this.reader.startArray();
-            } else {
-                this.reader.startObject();
-                String key = this.reader.readString();
-                if (key.equalsIgnoreCase(this.config.recordLabel())) {
-                    this.reader.startArray();
-                }
-            }
+            // if (this.config.recordLabel() == null) {
+            this.reader.startArray();
+            // } else {
+            //     this.reader.startObject();
+            //     String key = this.reader.readString();
+            //     if (key.equalsIgnoreCase(this.config.recordLabel())) {
+            //         this.reader.startArray();
+            //     }
+            // }
         }
     }
 
     @Override
-    public Map<String, Object> readObject() {
+    public FileRecord readRecord() {
         if (this.reader.hasNext()) {
-            return this.reader.readObject(HashMap.class);
+            try {
+                String json = this.reader.readString();
+                JSONObject object = JSONUtil.parseObject(json);
+                FileRecord record = new FileRecord();
+                for (Map.Entry<String, Object> entry : object.entrySet()) {
+                    FileColumn column = columns.column(entry.getKey());
+                    record.put(column.getPosition(), entry.getValue());
+                }
+                return record;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return null;
     }
 
     @Override
     public void close() throws IOException {
-        if (this.config.recordLabel() == null) {
+        try {
+            // if (this.config.recordLabel() == null) {
             this.reader.endArray();
-            this.reader.endArray();
-        } else {
-            this.reader.endArray();
-            this.reader.endObject();
+            // this.reader.endArray();
+            // } else {
+            //     this.reader.endArray();
+            // this.reader.endObject();
+            // }
+            this.reader.close();
+            this.reader = null;
+            this.config = null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        this.reader.close();
-        this.reader = null;
-        this.config = null;
     }
 }

@@ -43,4 +43,32 @@ public class FileHelper {
         }
         return null;
     }
+
+    /**
+     * 初始化读取器
+     *
+     * @param fileType 文件类型
+     * @param config   配置
+     * @param columns  字段列表
+     * @return 文件写入器
+     * @throws IOException 异常
+     */
+    public static TypeFileReader initReader(String fileType, FileReadConfig config, FileColumns columns) throws Exception {
+        if (FileNameUtil.isExcelType(fileType)) {
+            return new ExcelTypeFileReader(config, columns);
+        }
+        if (FileNameUtil.isJsonType(fileType)) {
+            return new JsonTypeFileReader(config, columns);
+        }
+        if (FileNameUtil.isXmlType(fileType)) {
+            return new XmlTypeFileReader(config, columns);
+        }
+        if (FileNameUtil.isCsvType(fileType)) {
+            return new CsvTypeFileReader(config, columns);
+        }
+        if (FileNameUtil.isTxtType(fileType)) {
+            return new TxtTypeFileReader(config, columns);
+        }
+        return null;
+    }
 }

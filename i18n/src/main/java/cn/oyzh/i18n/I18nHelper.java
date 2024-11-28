@@ -75,6 +75,8 @@ public class I18nHelper {
 
     public static final String TITLE_EXPORT = "base.title.export";
 
+    public static final String TITLE_IMPORT = "base.title.import";
+
     public static final String DUMP = "base.dump";
 
     public static final String SQL_TYPE = "base.sqlType";
@@ -2857,5 +2859,9 @@ public class I18nHelper {
 
     public static String exportTitle() {
         return I18nResourceBundle.i18nString(TITLE_EXPORT);
+    }
+
+    public static String importTitle() {
+        return I18nResourceBundle.i18nString(TITLE_IMPORT);
     }
 }
