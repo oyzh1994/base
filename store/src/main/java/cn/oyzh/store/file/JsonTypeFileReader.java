@@ -3,10 +3,10 @@ package cn.oyzh.store.file;
 import cn.oyzh.common.json.JSONObject;
 import cn.oyzh.common.json.JSONUtil;
 import cn.oyzh.common.util.FileUtil;
+import cn.oyzh.common.util.IOUtil;
 import com.alibaba.fastjson.JSONReader;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -26,6 +26,9 @@ public class JsonTypeFileReader extends TypeFileReader {
      */
     private FileReadConfig config;
 
+    /**
+     * 字段列表
+     */
     private FileColumns columns;
 
     public JsonTypeFileReader(FileReadConfig config, FileColumns columns) throws FileNotFoundException {
@@ -39,15 +42,7 @@ public class JsonTypeFileReader extends TypeFileReader {
     protected void init() {
         // 初始化
         if (this.reader.hasNext()) {
-            // if (this.config.recordLabel() == null) {
             this.reader.startArray();
-            // } else {
-            //     this.reader.startObject();
-            //     String key = this.reader.readString();
-            //     if (key.equalsIgnoreCase(this.config.recordLabel())) {
-            //         this.reader.startArray();
-            //     }
-            // }
         }
     }
 
@@ -71,18 +66,14 @@ public class JsonTypeFileReader extends TypeFileReader {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         try {
-            // if (this.config.recordLabel() == null) {
             this.reader.endArray();
-            // this.reader.endArray();
-            // } else {
-            //     this.reader.endArray();
-            // this.reader.endObject();
-            // }
-            this.reader.close();
+            IOUtil.close(this.reader);
             this.reader = null;
             this.config = null;
+            this.columns.clear();
+            this.columns = null;
         } catch (Exception ex) {
             ex.printStackTrace();
         }

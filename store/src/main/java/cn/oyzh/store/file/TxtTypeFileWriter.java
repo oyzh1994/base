@@ -1,9 +1,9 @@
 package cn.oyzh.store.file;
 
 import cn.oyzh.common.file.LineFileWriter;
+import cn.oyzh.common.util.IOUtil;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -53,10 +53,15 @@ public class TxtTypeFileWriter extends TypeFileWriter {
     }
 
     @Override
-    public void close() throws IOException {
-        this.writer.close();
-        this.writer = null;
-        this.config = null;
-        this.columns = null;
+    public void close() {
+        try {
+            IOUtil.close(this.writer);
+            this.writer = null;
+            this.config = null;
+            this.columns.clear();
+            this.columns = null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

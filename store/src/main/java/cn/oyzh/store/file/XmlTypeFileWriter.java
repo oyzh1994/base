@@ -37,18 +37,20 @@ public class XmlTypeFileWriter extends TypeFileWriter {
     @Override
     public void writeHeader() throws Exception {
         this.writer.writeLine("<?xml version=\"1.0\" standalone=\"yes\"?>");
-        this.writer.writeLine("<NODES>");
+        this.writer.writeLine("<" + this.config.rootNodeName() + ">");
     }
 
     @Override
     public void writeTrial() throws Exception {
-        this.writer.writeLine("</NODES>");
+        this.writer.writeLine("</" + this.config.rootNodeName() + ">");
     }
 
     @Override
     public void writeRecord(FileRecord record) throws Exception {
         StringBuilder builder;
-        builder = new StringBuilder("  <NODE>\n");
+        builder = new StringBuilder("  <");
+        builder.append(this.config.itemNodeName()).append(">");
+        builder.append("\n");
         for (Map.Entry<Integer, Object> entry : record.entrySet()) {
             String columnName = this.columns.columnName(entry.getKey());
             // 名称
@@ -63,15 +65,20 @@ public class XmlTypeFileWriter extends TypeFileWriter {
             }
             builder.append("\n");
         }
-        builder.append("  </NODE>");
+        builder.append("  </").append(this.config.itemNodeName()).append(">");
         this.writer.writeLine(builder.toString());
     }
 
     @Override
     public void close() throws IOException {
-        IOUtil.close(this.writer);
-        this.writer = null;
-        this.config = null;
-        this.columns = null;
+        try {
+            IOUtil.close(this.writer);
+            this.writer = null;
+            this.config = null;
+            this.columns.clear();
+            this.columns = null;
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

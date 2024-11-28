@@ -1,11 +1,10 @@
 package cn.oyzh.store.file;
 
 import cn.oyzh.common.file.LineFileWriter;
-import cn.oyzh.common.json.JSONUtil;
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.TextUtil;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -27,18 +26,13 @@ public class CsvTypeFileWriter extends TypeFileWriter {
     /**
      * 文件读取器
      */
-    private final LineFileWriter writer;
+    private LineFileWriter writer;
 
     public CsvTypeFileWriter(FileWriteConfig config, FileColumns columns) throws FileNotFoundException {
         this.columns = columns;
         this.config = config;
         this.writer = LineFileWriter.create(config.filePath(), config.charset());
     }
-
-    // @Override
-    // public void writeHeader() throws Exception {
-    //     this.writer.write(this.formatLine(this.columns.columnNames(), null, ",", this.config.txtIdentifier(), "\n"));
-    // }
 
     @Override
     public void writeRecord(FileRecord record) throws Exception {
@@ -52,13 +46,6 @@ public class CsvTypeFileWriter extends TypeFileWriter {
     }
 
     @Override
-    public void close() throws IOException {
-        this.writer.close();
-        this.config = null;
-        this.columns = null;
-    }
-
-    @Override
     public Object parameterized(Object value) {
         if (value == null) {
             return "";
@@ -67,5 +54,18 @@ public class CsvTypeFileWriter extends TypeFileWriter {
             return value;
         }
         return TextUtil.escape(value.toString());
+    }
+
+    @Override
+    public void close() {
+        try {
+            IOUtil.close(this.writer);
+            this.writer = null;
+            this.config = null;
+            this.columns.clear();
+            this.columns = null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -50,4 +50,8 @@ public class FileColumns {
         this.columns.sort(Comparator.comparingInt(FileColumn::getPosition));
         return this.columns;
     }
+
+    public void clear() {
+        this.columns.clear();
+    }
 }

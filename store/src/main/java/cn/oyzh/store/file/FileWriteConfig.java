@@ -38,4 +38,14 @@ public class FileWriteConfig {
      */
     private String prefix;
 
+    /**
+     * 根节点名称，xml需要
+     */
+    private String rootNodeName = "Nodes";
+
+    /**
+     * 节点名称，xml需要
+     */
+    private String itemNodeName = "Node";
+
 }

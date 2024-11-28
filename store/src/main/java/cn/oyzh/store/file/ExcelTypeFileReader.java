@@ -1,5 +1,6 @@
 package cn.oyzh.store.file;
 
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.common.xls.WorkbookHelper;
 import org.apache.poi.ss.usermodel.Cell;
@@ -19,11 +20,11 @@ public class ExcelTypeFileReader extends TypeFileReader {
      * xml读取器
      */
     private Workbook workbook;
-    //
-    // /**
-    //  * 字段列表
-    //  */
-    // private List<String> columns;
+
+    /**
+     * 字段列表
+     */
+    private FileColumns columns;
 
     /**
      * 导入配置
@@ -37,20 +38,11 @@ public class ExcelTypeFileReader extends TypeFileReader {
 
     public ExcelTypeFileReader(FileReadConfig config, FileColumns columns) throws Exception {
         this.config = config;
+        this.columns = columns;
         boolean isXlsx = StringUtil.endWithIgnoreCase(config.filePath(), ".xlsx");
         this.workbook = WorkbookHelper.create(isXlsx, config.filePath());
         this.init();
     }
-
-    // @Override
-    // protected void init() throws Exception {
-    //     this.columns = new ArrayList<>();
-    //     Row row = this.workbook.getSheetAt(0).getRow(this.config.columnIndex());
-    //     for (Cell cell : row) {
-    //         this.columns.add(cell.getStringCellValue());
-    //     }
-    //     this.currentRowIndex = this.config.dataStartIndex();
-    // }
 
     @Override
     public FileRecord readRecord() {
@@ -84,13 +76,14 @@ public class ExcelTypeFileReader extends TypeFileReader {
     @Override
     public void close() {
         try {
-            this.workbook.close();
+            IOUtil.close(this.workbook);
             this.workbook = null;
             this.config = null;
-            // this.columns = null;
             this.currentRowIndex = null;
+            this.columns.clear();
+            this.columns = null;
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            ex.printStackTrace();
         }
     }
 }
