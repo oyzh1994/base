@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class JSONObject extends com.alibaba.fastjson2.JSONObject {
 
+    public JSONObject() {
+    }
+
     public JSONObject(com.alibaba.fastjson2.JSONObject object) {
         super(object);
     }
