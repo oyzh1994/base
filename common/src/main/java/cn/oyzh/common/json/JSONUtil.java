@@ -60,7 +60,6 @@ public class JSONUtil {
     public static String toJson(Object obj) {
         try {
             return JSON.toJSONString(obj);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -85,7 +84,10 @@ public class JSONUtil {
      */
     public static JSONObject parseObject(@NonNull String json) {
         com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
-        return new JSONObject(object);
+        if (object != null) {
+            return new JSONObject(object);
+        }
+        return new JSONObject();
     }
 
     /**
@@ -96,7 +98,10 @@ public class JSONUtil {
      */
     public static JSONArray parseArray(@NonNull String json) {
         com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
-        return new JSONArray(array);
+        if (array != null) {
+            return new JSONArray(array);
+        }
+        return new JSONArray();
     }
 
 
