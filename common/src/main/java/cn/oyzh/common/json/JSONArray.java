@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class JSONArray extends com.alibaba.fastjson2.JSONArray {
 
+    public JSONArray() {
+    }
+
     public JSONArray(com.alibaba.fastjson2.JSONArray array) {
         super(array);
     }
