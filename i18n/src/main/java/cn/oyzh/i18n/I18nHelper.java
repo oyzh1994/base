@@ -529,6 +529,22 @@ public class I18nHelper {
 
     public static final String CLEAR = "base.clear";
 
+    public static final String WINDOW = "base.window";
+
+    public static final String DEPRECATED = "base.deprecated";
+
+    public static final String NORMAL = "base.normal";
+
+    public static final String DESC = "base.desc";
+
+    public static final String STATUS = "base.status";
+
+    public static final String ORDER_NO = "base.orderNo";
+
+    public static final String CONNECT_SUSPENDED = "base.connectSuspended";
+
+    public static final String CONNECT_RECONNECTED = "base.connectReconnected";
+
     public static final String OPEN = "base.open";
 
     public static final String TERMINAL = "base.terminal";
@@ -2863,5 +2879,37 @@ public class I18nHelper {
 
     public static String importTitle() {
         return I18nResourceBundle.i18nString(TITLE_IMPORT);
+    }
+
+    public static String clearWindow() {
+        return I18nResourceBundle.i18nString(CLEAR, WINDOW);
+    }
+
+    public static String deprecated() {
+        return I18nResourceBundle.i18nString(DEPRECATED);
+    }
+
+    public static String normal() {
+        return I18nResourceBundle.i18nString(NORMAL);
+    }
+
+    public static String desc() {
+        return I18nResourceBundle.i18nString(DESC);
+    }
+
+    public static String status() {
+        return I18nResourceBundle.i18nString(STATUS);
+    }
+
+    public static String orderNo() {
+        return I18nResourceBundle.i18nString(ORDER_NO);
+    }
+
+    public static String connectReconnected() {
+        return I18nResourceBundle.i18nString(CONNECT_RECONNECTED);
+    }
+
+    public static String connectSuspended() {
+        return I18nResourceBundle.i18nString(CONNECT_SUSPENDED);
     }
 }
