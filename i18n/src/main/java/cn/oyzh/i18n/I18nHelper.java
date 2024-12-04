@@ -45,6 +45,8 @@ public class I18nHelper {
 
     public static final String NODE = "base.node";
 
+    public static final String NODES = "base.nodes";
+
     public static final String KEY = "base.key";
 
     public static final String ERROR = "base.error";
@@ -2641,24 +2643,24 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PERSISTENT);
     }
 
-    public static String persistentNode() {
-        return I18nResourceBundle.i18nString(PERSISTENT, NODE);
+    public static String persistentNodes() {
+        return I18nResourceBundle.i18nString(PERSISTENT, NODES);
     }
 
     public static String temporary() {
         return I18nResourceBundle.i18nString(TEMPORARY);
     }
 
-    public static String temporaryNode() {
-        return I18nResourceBundle.i18nString(TEMPORARY, NODE);
+    public static String temporaryNodes() {
+        return I18nResourceBundle.i18nString(TEMPORARY, NODES);
     }
 
-    public static String collectNode() {
+    public static String collectNodes() {
         return I18nResourceBundle.i18nString(COLLECT, NODE);
     }
 
-    public static String allNode() {
-        return I18nResourceBundle.i18nString(ALL, NODE);
+    public static String allNodes() {
+        return I18nResourceBundle.i18nString(ALL, NODES);
     }
 
     public static String contains() {
@@ -2911,5 +2913,9 @@ public class I18nHelper {
 
     public static String connectSuspended() {
         return I18nResourceBundle.i18nString(CONNECT_SUSPENDED);
+    }
+
+    public static String allKeys() {
+        return I18nResourceBundle.i18nString(ALL, KEYS);
     }
 }
