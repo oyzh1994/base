@@ -2656,7 +2656,11 @@ public class I18nHelper {
     }
 
     public static String collectNodes() {
-        return I18nResourceBundle.i18nString(COLLECT, NODE);
+        return I18nResourceBundle.i18nString(COLLECT, NODES);
+    }
+
+    public static String collectKeys() {
+        return I18nResourceBundle.i18nString(COLLECT, KEYS);
     }
 
     public static String allNodes() {
