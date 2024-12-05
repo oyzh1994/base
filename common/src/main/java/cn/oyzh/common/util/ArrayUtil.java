@@ -3,6 +3,9 @@ package cn.oyzh.common.util;
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 数组工具类
@@ -80,6 +83,17 @@ public class ArrayUtil {
             return arr;
         }
         return Arrays.copyOfRange(arr, start, end);
+    }
+
+    // public static String[] toArray(Collection<String> elements) {
+    //     if (CollectionUtil.isEmpty(elements)) {
+    //         return new String[0];
+    //     }
+    //     return elements.toArray(new String[0]);
+    // }
+    //
+    public static <T>T[] toArray(Collection<T> elements) {
+        return (T[]) elements.toArray();
     }
 
     // /**
