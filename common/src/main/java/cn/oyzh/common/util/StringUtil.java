@@ -3,6 +3,7 @@ package cn.oyzh.common.util;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -285,5 +286,13 @@ public class StringUtil {
             return false;
         }
         return source.toLowerCase().endsWith(str.toLowerCase());
+    }
+
+    public static String join(String space, Collection<?> collection) {
+        StringBuilder builder = new StringBuilder();
+        for (Object o : collection) {
+            builder.append(space).append(o.toString());
+        }
+        return builder.substring(space.length());
     }
 }

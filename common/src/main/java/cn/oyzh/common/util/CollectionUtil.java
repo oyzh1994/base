@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,19 @@ public class CollectionUtil {
     public static <T> T get(List<T> list, int index) {
         if (list != null && !list.isEmpty() && index > 0 && index < list.size()) {
             return list.get(index);
+        }
+        return null;
+    }
+
+    public static <T> T get(Collection<T> list, int index) {
+        if (list != null && !list.isEmpty() && index > 0 && index < list.size()) {
+            int i = 0;
+            Iterator<T> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                if (i++ == index) {
+                    return iterator.next();
+                }
+            }
         }
         return null;
     }
@@ -76,7 +90,16 @@ public class CollectionUtil {
         return null;
     }
 
-    public static <T>T getLast(List<T> list) {
+    public static <T> T getFirst(Collection<T> collection) {
+        if (collection != null && !collection.isEmpty()) {
+            for (T t : collection) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T getLast(List<T> list) {
         if (list != null && !list.isEmpty()) {
             return list.getLast();
         }
@@ -88,5 +111,17 @@ public class CollectionUtil {
             return null;
         }
         return String.join(lineSeparator, collection);
+    }
+
+    public static List<String> removeBlank(List<String> elements) {
+        elements.removeIf(StringUtil::isBlank);
+        return elements;
+    }
+
+    public static int size(Collection<?> collection) {
+        if (collection == null || collection.isEmpty()) {
+            return 0;
+        }
+        return collection.size();
     }
 }
