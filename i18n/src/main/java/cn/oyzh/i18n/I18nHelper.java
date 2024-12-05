@@ -1175,6 +1175,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, DATA);
     }
 
+    public static String deleteRow() {
+        return I18nResourceBundle.i18nString(DELETE, ROW);
+    }
+
     public static String invalidData() {
         return I18nResourceBundle.i18nString(INVALID, DATA);
     }
