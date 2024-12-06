@@ -2,10 +2,9 @@ package cn.oyzh.common.util;
 
 import lombok.experimental.UtilityClass;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 数组工具类
@@ -85,45 +84,12 @@ public class ArrayUtil {
         return Arrays.copyOfRange(arr, start, end);
     }
 
-    // public static String[] toArray(Collection<String> elements) {
-    //     if (CollectionUtil.isEmpty(elements)) {
-    //         return new String[0];
-    //     }
-    //     return elements.toArray(new String[0]);
-    // }
-    //
-    public static <T>T[] toArray(Collection<T> elements) {
-        return (T[]) elements.toArray();
+    public static <T> T[] toArray(Collection<T> elements, Class<T> clazz) {
+        if (elements == null || clazz == null) {
+            return null;
+        }
+        T[] result = (T[]) Array.newInstance(clazz, 0);
+        return elements.toArray(result);
     }
 
-    // /**
-    //  * 获取子数组
-    //  *
-    //  * @param arr   数组
-    //  * @param start 起始位置
-    //  * @param <T>   数据类型
-    //  * @return 子数组
-    //  */
-    // public static <T> T[] sub(T[] arr, int start) {
-    //     if (arr != null && arr.length > 0) {
-    //         return cn.hutool.core.util.ArrayUtil.sub(arr, start, arr.length);
-    //     }
-    //     return null;
-    // }
-
-    // /**
-    //  * 获取子数组
-    //  *
-    //  * @param arr   数组
-    //  * @param start 起始位置
-    //  * @param end   结束位置
-    //  * @param <T>   数据类型
-    //  * @return 子数组
-    //  */
-    // public static <T> T[] sub(T[] arr, int start, int end) {
-    //     if (arr != null && arr.length > 0) {
-    //         return cn.hutool.core.util.ArrayUtil.sub(arr, start, end);
-    //     }
-    //     return null;
-    // }
 }
