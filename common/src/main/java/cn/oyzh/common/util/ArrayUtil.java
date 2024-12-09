@@ -92,4 +92,13 @@ public class ArrayUtil {
         return elements.toArray(result);
     }
 
+    public static void copy(byte[] source, byte[] target) {
+        System.arraycopy(source, 0, target, 0, source.length);
+    }
+
+    public static byte[] copy(byte[] source, int length) {
+        byte[] target = new byte[length];
+        System.arraycopy(source, 0, target, 0, length);
+        return target;
+    }
 }
