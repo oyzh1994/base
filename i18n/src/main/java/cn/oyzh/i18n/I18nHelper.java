@@ -387,6 +387,8 @@ public class I18nHelper {
 
     public static final String MESSAGE = "base.message";
 
+    public static final String COORDINATE = "base.coordinate";
+
     public static final String COORDINATES = "base.coordinates";
 
     public static final String SCORE = "base.score";
@@ -2929,5 +2931,21 @@ public class I18nHelper {
 
     public static String element() {
         return I18nResourceBundle.i18nString(ELEMENT);
+    }
+
+    public static String deleteElement() {
+        return I18nResourceBundle.i18nString(DELETE, ELEMENT);
+    }
+
+    public static String deleteMessage() {
+        return I18nResourceBundle.i18nString(DELETE, MESSAGE);
+    }
+
+    public static String deleteMember() {
+        return I18nResourceBundle.i18nString(DELETE, MEMBER);
+    }
+
+    public static String deleteCoordinate() {
+        return I18nResourceBundle.i18nString(DELETE, COORDINATE);
     }
 }
