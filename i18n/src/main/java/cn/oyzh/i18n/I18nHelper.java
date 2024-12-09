@@ -2926,4 +2926,8 @@ public class I18nHelper {
     public static String allKeys() {
         return I18nResourceBundle.i18nString(ALL, KEYS);
     }
+
+    public static String element() {
+        return I18nResourceBundle.i18nString(ELEMENT);
+    }
 }
