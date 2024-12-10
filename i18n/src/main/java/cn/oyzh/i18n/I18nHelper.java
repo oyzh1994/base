@@ -2948,4 +2948,12 @@ public class I18nHelper {
     public static String deleteCoordinate() {
         return I18nResourceBundle.i18nString(DELETE, COORDINATE);
     }
+
+    public static String sourceConnectNotConnected() {
+        return I18nResourceBundle.i18nString(SOURCE, CONNECT, NOT, CONNECTED);
+    }
+
+    public static String targetConnectNotConnected() {
+        return I18nResourceBundle.i18nString(TARGET, CONNECT, NOT, CONNECTED);
+    }
 }
