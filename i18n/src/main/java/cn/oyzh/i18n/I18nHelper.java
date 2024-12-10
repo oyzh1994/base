@@ -423,6 +423,8 @@ public class I18nHelper {
 
     public static final String CONNECTIONS_CANNOT_BE_THE_SAME = "base.connectionsCannotBeTheSame";
 
+    public static final String DATABASES_CANNOT_BE_THE_SAME = "base.databasesCannotBeTheSame";
+
     public static final String WAIT = "base.wait";
 
     public static final String DAYS = "base.days";
@@ -2765,6 +2767,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CONNECTIONS_CANNOT_BE_THE_SAME);
     }
 
+    public static String databasesCannotBeTheSame() {
+        return I18nResourceBundle.i18nString(DATABASES_CANNOT_BE_THE_SAME);
+    }
+
     public static String migration() {
         return I18nResourceBundle.i18nString(MIGRATION);
     }
@@ -2955,5 +2961,9 @@ public class I18nHelper {
 
     public static String targetConnectNotConnected() {
         return I18nResourceBundle.i18nString(TARGET, CONNECT, NOT, CONNECTED);
+    }
+
+    public static String notConnected() {
+        return I18nResourceBundle.i18nString(NOT, CONNECTED);
     }
 }
