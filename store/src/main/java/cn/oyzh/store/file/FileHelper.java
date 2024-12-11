@@ -20,9 +20,9 @@ public class FileHelper {
      * @param config   配置
      * @param columns  字段列表
      * @return 文件写入器
-     * @throws IOException 异常
+     * @throws Exception 异常
      */
-    public static TypeFileWriter initWriter(String fileType, FileWriteConfig config, FileColumns columns) throws IOException, InvalidFormatException {
+    public static TypeFileWriter initWriter(String fileType, FileWriteConfig config, FileColumns columns) throws Exception {
         if (FileNameUtil.isExcelType(fileType)) {
             return new ExcelTypeFileWriter(config, columns);
         }
@@ -51,7 +51,7 @@ public class FileHelper {
      * @param config   配置
      * @param columns  字段列表
      * @return 文件写入器
-     * @throws IOException 异常
+     * @throws Exception 异常
      */
     public static TypeFileReader initReader(String fileType, FileReadConfig config, FileColumns columns) throws Exception {
         if (FileNameUtil.isExcelType(fileType)) {

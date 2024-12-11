@@ -24,6 +24,11 @@ public class FileWriteConfig {
     private char txtIdentifier = '"';
 
     /**
+     * 包含标题
+     */
+    private boolean includeTitle;
+
+    /**
      * 字符集
      */
     private String charset = StandardCharsets.UTF_8.name();

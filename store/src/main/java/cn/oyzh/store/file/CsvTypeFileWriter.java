@@ -4,7 +4,6 @@ import cn.oyzh.common.file.LineFileWriter;
 import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.TextUtil;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
 
 /**
@@ -28,10 +27,18 @@ public class CsvTypeFileWriter extends TypeFileWriter {
      */
     private LineFileWriter writer;
 
-    public CsvTypeFileWriter(FileWriteConfig config, FileColumns columns) throws FileNotFoundException {
+    public CsvTypeFileWriter(FileWriteConfig config, FileColumns columns) throws Exception {
         this.columns = columns;
         this.config = config;
         this.writer = LineFileWriter.create(config.filePath(), config.charset());
+        this.init();
+    }
+
+    @Override
+    public void writeHeader() throws Exception {
+        if (this.config.includeTitle()) {
+            this.writer.write(this.formatLine(this.columns.columnDesc(), null, ',', this.config.txtIdentifier(), "\n"));
+        }
     }
 
     @Override

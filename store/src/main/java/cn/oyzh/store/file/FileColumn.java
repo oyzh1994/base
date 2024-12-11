@@ -11,14 +11,17 @@ public class FileColumn {
 
     private String name;
 
+    private String desc;
+
     private int position;
-
-    public FileColumn() {
-
-    }
 
     public FileColumn(String name) {
         this.name = name;
+    }
+
+    public FileColumn(String name, String desc) {
+        this.name = name;
+        this.desc = desc;
     }
 
     public FileColumn(String name, int position) {
