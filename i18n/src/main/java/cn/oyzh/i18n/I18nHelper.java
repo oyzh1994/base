@@ -2974,4 +2974,8 @@ public class I18nHelper {
     public static String ttl() {
         return I18nResourceBundle.i18nString(TTL);
     }
+
+    public static String path() {
+        return I18nResourceBundle.i18nString(PATH);
+    }
 }

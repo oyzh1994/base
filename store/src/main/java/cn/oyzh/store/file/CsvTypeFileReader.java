@@ -28,10 +28,18 @@ public class CsvTypeFileReader extends TypeFileReader {
      */
     private SkipAbleFileReader reader;
 
-    public CsvTypeFileReader(FileReadConfig config, FileColumns columns) throws IOException {
+    public CsvTypeFileReader(FileReadConfig config, FileColumns columns) throws Exception {
         this.config = config;
         this.columns = columns;
         this.reader = new SkipAbleFileReader(config.filePath(), Charset.forName(config.charset()));
+        this.init();
+    }
+
+    @Override
+    protected void init() throws Exception {
+        if (this.config.dataRowStarts() != null) {
+            this.reader.skipLine(this.config.dataRowStarts() - 1);
+        }
     }
 
     @Override

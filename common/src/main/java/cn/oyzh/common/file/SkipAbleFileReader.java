@@ -56,16 +56,16 @@ public class SkipAbleFileReader implements AutoCloseable {
         this.skipLine(1);
     }
 
-    public void skipLine(long lineCount) throws IOException {
+    public void skipLine(int lineCount) throws IOException {
         if (lineCount > 0) {
             long count = lineCount;
-            while (--count > 0) {
+            while (count-- >= 0) {
                 this.readLine();
             }
         }
     }
 
-    public void jumpLine(long toLine) throws IOException {
+    public void jumpLine(int toLine) throws IOException {
         if (this.currentLine != toLine) {
             this.skipLine(toLine - this.currentLine);
         }

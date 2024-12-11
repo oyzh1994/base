@@ -41,7 +41,7 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
     /**
      * xls行记录
      */
-    private int xlsRowIndex = 0;
+    private int xlsRowIndex = 1;
 
     public ExcelTypeFileWriter(FileWriteConfig config, FileColumns columns) throws IOException, InvalidFormatException {
         this.columns = columns;
