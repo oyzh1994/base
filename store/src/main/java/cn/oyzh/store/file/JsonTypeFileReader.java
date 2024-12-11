@@ -54,7 +54,7 @@ public class JsonTypeFileReader extends TypeFileReader {
                 JSONObject object = JSONUtil.parseObject(json);
                 FileRecord record = new FileRecord();
                 for (Map.Entry<String, Object> entry : object.entrySet()) {
-                    FileColumn column = columns.column(entry.getKey());
+                    FileColumn column = this.columns.column(entry.getKey());
                     record.put(column.getPosition(), entry.getValue());
                 }
                 return record;

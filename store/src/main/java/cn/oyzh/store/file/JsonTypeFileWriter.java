@@ -1,8 +1,8 @@
 package cn.oyzh.store.file;
 
 import cn.oyzh.common.file.LineFileWriter;
+import cn.oyzh.common.json.JSONUtil;
 import cn.oyzh.common.util.IOUtil;
-import cn.oyzh.common.util.TextUtil;
 
 import java.io.FileNotFoundException;
 import java.util.Map;
@@ -82,7 +82,7 @@ public class JsonTypeFileWriter extends TypeFileWriter {
         if (value instanceof Number) {
             return value;
         }
-        return "\"" + TextUtil.escape(value.toString()) + "\"";
+        return JSONUtil.toJson(value);
     }
 
     @Override

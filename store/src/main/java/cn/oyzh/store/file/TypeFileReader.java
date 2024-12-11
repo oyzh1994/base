@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author oyzh
@@ -37,6 +36,7 @@ public abstract class TypeFileReader implements Closeable {
         List<String> list = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         boolean txtStart = false;
+        Character lastChar = null;
         try (StringReader reader = new StringReader(line)) {
             while (reader.ready()) {
                 int i = reader.read();
@@ -44,20 +44,26 @@ public abstract class TypeFileReader implements Closeable {
                     break;
                 }
                 char c = (char) i;
-                if (txtStart && c == fieldSeparator) {
-                    txtStart = false;
-                    continue;
-                }
+                // if (txtStart && c == fieldSeparator) {
+                //     txtStart = false;
+                //     continue;
+                // }
                 if (c == txtIdentifier) {
+                    if (lastChar != null && lastChar == '\\') {
+                        sb.append(c);
+                        continue;
+                    }
                     if (txtStart) {
                         list.add(sb.toString());
                         sb.delete(0, sb.length());
+                        txtStart = false;
                     } else {
                         txtStart = true;
                     }
                 } else if (txtStart) {
                     sb.append(c);
                 }
+                lastChar = c;
             }
         }
         return list;
