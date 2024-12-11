@@ -55,11 +55,12 @@ public class XmlTypeFileWriter extends TypeFileWriter {
 
     @Override
     public void writeRecord(FileRecord record) throws Exception {
-        StringBuilder builder = new StringBuilder();
-        if (!this.config.compress()) {
-            builder.append("  ");
+        StringBuilder builder;
+        if (this.config.compress()) {
+            builder = new StringBuilder("<");
+        } else {
+            builder = new StringBuilder("  <");
         }
-        builder.append("<");
         builder.append(this.config.itemNodeName()).append(">");
         if (!this.config.compress()) {
             builder.append("\n");
