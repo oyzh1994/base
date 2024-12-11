@@ -2966,4 +2966,12 @@ public class I18nHelper {
     public static String notConnected() {
         return I18nResourceBundle.i18nString(NOT, CONNECTED);
     }
+
+    public static String type() {
+        return I18nResourceBundle.i18nString(TYPE);
+    }
+
+    public static String ttl() {
+        return I18nResourceBundle.i18nString(TTL);
+    }
 }

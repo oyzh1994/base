@@ -10,6 +10,11 @@ import java.util.List;
  */
 public abstract class TypeFileWriter implements Closeable {
 
+    /**
+     * 初始化
+     *
+     * @throws Exception 异常
+     */
     protected void init() throws Exception {
 
     }

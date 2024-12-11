@@ -19,6 +19,10 @@ public class FileColumns {
         this.columns.add(new FileColumn(name));
     }
 
+    public void addColumn(String name, String desc) {
+        this.columns.add(new FileColumn(name, desc));
+    }
+
     public void addColumn(String name, int position) {
         this.columns.add(new FileColumn(name, position));
     }
@@ -28,8 +32,8 @@ public class FileColumns {
         return column == null ? -1 : this.columns.indexOf(column);
     }
 
-    public List<String> columnNames() {
-        return this.columns.parallelStream().map(FileColumn::getName).collect(Collectors.toList());
+    public List<String> columnDesc() {
+        return this.columns.parallelStream().map(FileColumn::getDesc).collect(Collectors.toList());
     }
 
     public String columnName(int index) {
