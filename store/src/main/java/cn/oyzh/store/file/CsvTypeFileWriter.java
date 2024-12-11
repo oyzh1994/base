@@ -4,6 +4,8 @@ import cn.oyzh.common.file.LineFileWriter;
 import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.TextUtil;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,7 +39,13 @@ public class CsvTypeFileWriter extends TypeFileWriter {
     @Override
     public void writeHeader() throws Exception {
         if (this.config.includeTitle()) {
-            this.writer.write(this.formatLine(this.columns.columnDesc(), null, ',', this.config.txtIdentifier(), "\n"));
+            List<String> cols = new ArrayList<>();
+            List<FileColumn> columnList = this.columns.sortOfPosition();
+            for (FileColumn fileColumn : columnList) {
+                cols.add(fileColumn.getDesc());
+            }
+            // 写入列名
+            this.writer.write(this.formatLine(cols, null, ',', this.config.txtIdentifier(), "\n"));
         }
     }
 
