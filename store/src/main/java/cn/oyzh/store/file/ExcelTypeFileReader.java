@@ -41,6 +41,14 @@ public class ExcelTypeFileReader extends TypeFileReader {
         this.columns = columns;
         boolean isXlsx = StringUtil.endWithIgnoreCase(config.filePath(), ".xlsx");
         this.workbook = WorkbookHelper.create(isXlsx, config.filePath());
+        this.init();
+    }
+
+    @Override
+    protected void init() throws Exception {
+        if (this.config.dataRowStarts() != null) {
+            this.currentRowIndex = this.config.dataRowStarts() - 1;
+        }
     }
 
     @Override
