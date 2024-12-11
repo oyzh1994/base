@@ -1,6 +1,5 @@
 package cn.oyzh.store.file;
 
-import cn.oyzh.common.util.StringUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -34,5 +33,13 @@ public class FileReadConfig {
      */
     private String charset = StandardCharsets.UTF_8.name();
 
+    /**
+     * 文件路径
+     */
     private String filePath;
+
+    /**
+     * 数据行开始索引
+     */
+    private Integer dataRowStarts;
 }
