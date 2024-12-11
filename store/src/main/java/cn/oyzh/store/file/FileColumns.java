@@ -32,10 +32,6 @@ public class FileColumns {
         return column == null ? -1 : this.columns.indexOf(column);
     }
 
-    public List<String> columnDesc() {
-        return this.columns.parallelStream().map(FileColumn::getDesc).collect(Collectors.toList());
-    }
-
     public String columnName(int index) {
         FileColumn column = this.columns.get(index);
         return column == null ? null : column.getName();
