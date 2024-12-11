@@ -37,24 +37,40 @@ public class XmlTypeFileWriter extends TypeFileWriter {
     @Override
     public void writeHeader() throws Exception {
         this.writer.writeLine("<?xml version=\"1.0\" standalone=\"yes\"?>");
-        this.writer.writeLine("<" + this.config.rootNodeName() + ">");
+        if (this.config.compress()) {
+            this.writer.write("<" + this.config.rootNodeName() + ">");
+        } else {
+            this.writer.writeLine("<" + this.config.rootNodeName() + ">");
+        }
     }
 
     @Override
     public void writeTrial() throws Exception {
-        this.writer.writeLine("</" + this.config.rootNodeName() + ">");
+        if (this.config.compress()) {
+            this.writer.write("</" + this.config.rootNodeName() + ">");
+        } else {
+            this.writer.writeLine("</" + this.config.rootNodeName() + ">");
+        }
     }
 
     @Override
     public void writeRecord(FileRecord record) throws Exception {
-        StringBuilder builder;
-        builder = new StringBuilder("  <");
+        StringBuilder builder = new StringBuilder();
+        if (!this.config.compress()) {
+            builder.append("  ");
+        }
+        builder.append("<");
         builder.append(this.config.itemNodeName()).append(">");
-        builder.append("\n");
+        if (!this.config.compress()) {
+            builder.append("\n");
+        }
         for (Map.Entry<Integer, Object> entry : record.entrySet()) {
             String columnName = this.columns.columnName(entry.getKey());
+            if (!this.config.compress()) {
+                builder.append("   ");
+            }
             // 名称
-            builder.append("   <").append(columnName);
+            builder.append("<").append(columnName);
             Object val = entry.getValue();
             if (val != null) {
                 builder.append(">");
@@ -63,10 +79,19 @@ public class XmlTypeFileWriter extends TypeFileWriter {
             } else {
                 builder.append("/>");
             }
-            builder.append("\n");
+            if (!this.config.compress()) {
+                builder.append("\n");
+            }
         }
-        builder.append("  </").append(this.config.itemNodeName()).append(">");
-        this.writer.writeLine(builder.toString());
+        if (!this.config.compress()) {
+            builder.append("  ");
+        }
+        builder.append("</").append(this.config.itemNodeName()).append(">");
+        if (!this.config.compress()) {
+            this.writer.writeLine(builder.toString());
+        } else {
+            this.writer.write(builder.toString());
+        }
     }
 
     @Override
@@ -77,7 +102,7 @@ public class XmlTypeFileWriter extends TypeFileWriter {
             this.config = null;
             this.columns.clear();
             this.columns = null;
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
