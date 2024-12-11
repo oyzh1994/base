@@ -41,35 +41,60 @@ public class JsonTypeFileWriter extends TypeFileWriter {
 
     @Override
     public void writeHeader() throws Exception {
-        this.writer.writeLine("[");
+        if (this.config.compress()) {
+            this.writer.write("[");
+        } else {
+            this.writer.writeLine("[");
+        }
     }
 
     @Override
     public void writeTrial() throws Exception {
-        this.writer.write("\n]");
+        if (this.config.compress()) {
+            this.writer.write("]");
+        } else {
+            this.writer.write("\n]");
+        }
     }
 
     @Override
     public void writeRecord(FileRecord record) throws Exception {
         if (!this.firstWrite) {
-            this.writer.write(",\n");
+            this.writer.write(",");
+            if (!this.config.compress()) {
+                this.writer.write("\n");
+            }
         }
         int size = record.size();
-        StringBuilder builder = new StringBuilder("  {\n");
+        StringBuilder builder;
+        if (this.config.compress()) {
+            builder = new StringBuilder("{");
+        } else {
+            builder = new StringBuilder("  {\n");
+        }
         for (Map.Entry<Integer, Object> entry : record.entrySet()) {
             String columnName = this.columns.columnName(entry.getKey());
             // 名称
-            builder.append("   \"").append(columnName).append("\" : ");
+            if (this.config.compress()) {
+                builder.append("\"").append(columnName).append("\":");
+            } else {
+                builder.append("   \"").append(columnName).append("\" : ");
+            }
             // 值处理
             Object val = this.parameterized(entry.getValue());
             builder.append(val);
             if (--size != 0) {
-                builder.append(",\n");
-            } else {
+                builder.append(",");
+            }
+            if (!this.config.compress()) {
                 builder.append("\n");
             }
         }
-        builder.append("  }");
+        if (this.config.compress()) {
+            builder.append("}");
+        } else {
+            builder.append("  }");
+        }
         this.writer.write(builder.toString());
         this.firstWrite = false;
     }
