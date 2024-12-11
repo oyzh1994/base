@@ -58,4 +58,9 @@ public class FileWriteConfig {
      */
     private String sheetName = "Nodes";
 
+    /**
+     * 压缩内容
+     */
+    private boolean compress ;
+
 }
