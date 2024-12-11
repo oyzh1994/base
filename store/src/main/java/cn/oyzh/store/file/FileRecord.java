@@ -32,6 +32,9 @@ public class FileRecord extends HashMap<Integer, Object> {
             if (clazz.isAssignableFrom(Byte.class)) {
                 return Byte.valueOf(val.toString());
             }
+            if (clazz.isAssignableFrom(Number.class)) {
+                return Double.valueOf(val.toString());
+            }
         }
         return val;
     }
