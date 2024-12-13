@@ -117,6 +117,12 @@ public class NumberUtil {
         return false;
     }
 
+    /**
+     * 解析为Long
+     *
+     * @param str 字符串
+     * @return Long
+     */
     public static Long parseLong(String str) {
         if (str != null) {
             return Long.parseLong(str);
@@ -124,6 +130,25 @@ public class NumberUtil {
         return null;
     }
 
+    /**
+     * 解析为Double
+     *
+     * @param str 字符串
+     * @return Double
+     */
+    public static Double parseDouble(String str) {
+        if (str != null) {
+            return Double.parseDouble(str);
+        }
+        return null;
+    }
+
+    /**
+     * 解析为Number
+     *
+     * @param str 字符串
+     * @return Number
+     */
     public static Number parseNumber(String str) {
         if (RegexUtil.isDecimal(str)) {
             return Double.parseDouble(str);
@@ -131,19 +156,18 @@ public class NumberUtil {
         if (RegexUtil.isNumber(str)) {
             return Long.parseLong(str);
         }
-        return null;
+        return Double.parseDouble(str);
     }
 
-    public static BigDecimal toBigDecimal(String str) {
+    /**
+     * 解析为BigDecimal
+     *
+     * @param str 字符串
+     * @return BigDecimal
+     */
+    public static BigDecimal parseBigDecimal(String str) {
         if (str != null) {
             return new BigDecimal(str);
-        }
-        return null;
-    }
-
-    public static Double parseDouble(String str) {
-        if (str != null) {
-            return Double.parseDouble(str);
         }
         return null;
     }
