@@ -78,7 +78,7 @@ public class ArrayUtil {
     }
 
     public static <T> T[] sub(T[] arr, int start, int end) {
-        if (arr == null || start < 0 || end < start || arr.length <= end) {
+        if (arr == null || start < 0 || end < start || arr.length < end) {
             return arr;
         }
         return Arrays.copyOfRange(arr, start, end);
