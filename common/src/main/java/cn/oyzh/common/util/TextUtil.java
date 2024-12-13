@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 文本工具类
@@ -468,4 +470,58 @@ public class TextUtil {
         return hexString.toString();
     }
 
+    /**
+     * 是否二进制字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isBinaryStr(String str) {
+        if (str != null && !str.isBlank()) {
+            Pattern pattern = Pattern.compile("\\+$");
+            Matcher matcher = pattern.matcher(str);
+            return matcher.matches();
+        }
+        return false;
+    }
+
+    /**
+     * 是否十六进制字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isHexStr(String str) {
+        if (str != null && !str.isBlank()) {
+            Pattern pattern = Pattern.compile("[0-9a-fA-F]+$");
+            Matcher matcher = pattern.matcher(str);
+            return matcher.matches();
+        }
+        return false;
+    }
+
+    /**
+     * 检测类型
+     * 1 json
+     * 2 二进制
+     * 3 字符串
+     * 4 其他
+     *
+     * @return 类型
+     */
+    public static byte detectType(Object rawData) {
+        if (rawData instanceof byte[]) {
+            return 2;
+        }
+        if (rawData instanceof String str) {
+            if (JSONUtil.isJson(str)) {
+                return 1;
+            }
+            if (isBinaryStr(str)) {
+                return 2;
+            }
+            return 3;
+        }
+        return 4;
+    }
 }

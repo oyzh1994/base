@@ -1,6 +1,5 @@
 package cn.oyzh.common.json;
 
-import cn.oyzh.common.util.StringUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONWriter;
 import lombok.NonNull;
@@ -73,7 +72,14 @@ public class JSONUtil {
      * @return 结果
      */
     public static boolean isJson(String json) {
-        return JSON.isValid(json);
+        if (json != null && !json.isBlank() && (json.contains("{") || json.contains("["))) {
+            try {
+                return JSON.isValid(json);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
     }
 
     /**
