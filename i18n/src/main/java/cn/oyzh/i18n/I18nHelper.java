@@ -79,6 +79,10 @@ public class I18nHelper {
 
     public static final String TITLE_IMPORT = "base.title.import";
 
+    public static final String TITLE_CHANGELOG = "base.title.changelog";
+
+    public static final String TITLE_FILTER = "base.title.filter";
+
     public static final String DUMP = "base.dump";
 
     public static final String SQL_TYPE = "base.sqlType";
@@ -2977,5 +2981,13 @@ public class I18nHelper {
 
     public static String path() {
         return I18nResourceBundle.i18nString(PATH);
+    }
+
+    public static String changelogTitle() {
+        return I18nResourceBundle.i18nString(TITLE_CHANGELOG);
+    }
+
+    public static String filterTitle() {
+        return I18nResourceBundle.i18nString(TITLE_FILTER);
     }
 }
