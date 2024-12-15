@@ -86,11 +86,23 @@ public class TaskManager {
      * @param interval 定时时间
      */
     public static void startInterval(@NonNull String key, @NonNull Runnable task, int interval) {
+        startInterval(key, task, interval, 0);
+    }
+
+    /**
+     * 开始定时任务
+     *
+     * @param key      唯一标识
+     * @param task     任务
+     * @param interval 定时时间
+     * @param delay    延迟时间
+     */
+    public static void startInterval(@NonNull String key, @NonNull Runnable task, int interval, int delay) {
         Future<?> future = INTERVAL_TASKS.get(key);
         if (future != null && !future.isDone()) {
             ExecutorUtil.cancel(future);
         }
-        future = ExecutorUtil.start(task, 0, interval);
+        future = ExecutorUtil.start(task, delay, interval);
         INTERVAL_TASKS.put(key, future);
     }
 
@@ -99,7 +111,7 @@ public class TaskManager {
      *
      * @param key 唯一标识
      */
-    public static void cancelInterval(@NonNull String key) {
+    public static  Future<?> cancelInterval(@NonNull String key) {
         Future<?> future = INTERVAL_TASKS.get(key);
         if (future != null) {
             if (!future.isDone()) {
@@ -107,6 +119,7 @@ public class TaskManager {
             }
             INTERVAL_TASKS.remove(key);
         }
+        return future;
     }
 
     /**
