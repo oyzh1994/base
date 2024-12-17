@@ -5,6 +5,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import lombok.experimental.UtilityClass;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,22 +18,23 @@ import java.util.Map;
 /**
  * 二维码生成工兿
  *
- * @author ljheee
+ * @author oyzh
+ * @since 2024-11-08
  */
+@UtilityClass
 public class QRCodeUtil {
-
 
     /**
      * 生成二维砿
      *
-     * @param content      源内宿
-     * @param charset     生成二维码保存的路径
-     * @param imgW 是否要压缿
-     * @return 返回二维码图牿
-     * @throws Exception
+     * @param content 源内宿
+     * @param charset 生成二维码保存的路径
+     * @param imgW    是否要压缿
+     * @return 返回二维码图片
+     * @throws Exception 异常
      */
     public static BufferedImage createImage(String content, String charset, int imgW, int imgH) throws Exception {
-        Map<EncodeHintType,Object> hints = new HashMap<>();
+        Map<EncodeHintType, Object> hints = new HashMap<>();
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
         hints.put(EncodeHintType.CHARACTER_SET, charset);
         hints.put(EncodeHintType.MARGIN, 1);
@@ -51,10 +53,10 @@ public class QRCodeUtil {
     /**
      * 在生成的二维码中插入图片
      *
-     * @param source
-     * @param imgPath
-     * @param needCompress
-     * @throws Exception
+     * @param source       源文件
+     * @param imgPath      文件路径
+     * @param needCompress 是否需要压缩
+     * @throws Exception 异常
      */
     public static void insertImage(BufferedImage source, File imgPath, int imgW, int imgH, boolean needCompress) throws Exception {
         Image src = ImageIO.read(imgPath);
@@ -88,6 +90,4 @@ public class QRCodeUtil {
         graph.draw(shape);
         graph.dispose();
     }
-
-
 }
