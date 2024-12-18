@@ -1,6 +1,6 @@
 package cn.oyzh.store.file;
 
-import cn.oyzh.common.util.FileNameUtil;
+import cn.oyzh.common.file.FileNameUtil;
 import lombok.experimental.UtilityClass;
 
 /**
