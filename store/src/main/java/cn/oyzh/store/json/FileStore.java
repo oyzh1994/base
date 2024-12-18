@@ -1,7 +1,7 @@
 package cn.oyzh.store.json;
 
 import cn.oyzh.common.json.JSONUtil;
-import cn.oyzh.common.util.FileUtil;
+import cn.oyzh.common.file.FileUtil;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

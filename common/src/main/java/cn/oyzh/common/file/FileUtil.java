@@ -1,5 +1,6 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.file;
 
+import cn.oyzh.common.util.StringUtil;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 

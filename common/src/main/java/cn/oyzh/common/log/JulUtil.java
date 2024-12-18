@@ -2,7 +2,7 @@ package cn.oyzh.common.log;
 
 import cn.oyzh.common.SysConst;
 import cn.oyzh.common.date.DateHelper;
-import cn.oyzh.common.util.FileUtil;
+import cn.oyzh.common.file.FileUtil;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;

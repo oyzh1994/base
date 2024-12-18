@@ -1,6 +1,6 @@
 package cn.oyzh.common.xls;
 
-import cn.oyzh.common.util.FileNameUtil;
+import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;

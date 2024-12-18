@@ -1,7 +1,7 @@
 package cn.oyzh.common.date;
 
 import cn.oyzh.common.SysConst;
-import cn.oyzh.common.util.FileUtil;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.util.ReflectUtil;
 
 import java.io.BufferedInputStream;

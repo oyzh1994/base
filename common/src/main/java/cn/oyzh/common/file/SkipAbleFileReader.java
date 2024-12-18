@@ -1,6 +1,5 @@
 package cn.oyzh.common.file;
 
-import cn.oyzh.common.util.FileUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
