@@ -699,6 +699,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(OPERATION, SUCCESS);
     }
 
+    public static String importConnectionFail() {
+        return I18nResourceBundle.i18nString(IMPORT, CONNECTION, FAIL);
+    }
+
+    public static String importConnectionSuccess() {
+        return I18nResourceBundle.i18nString(IMPORT, CONNECTION, SUCCESS);
+    }
+
     public static String operationTimout() {
         return I18nResourceBundle.i18nString(OPERATION, TIMOUT);
     }
