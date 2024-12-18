@@ -18,18 +18,16 @@ public class FileNameUtil {
         return StringUtil.equalsAnyIgnoreCase(ext, types);
     }
 
-    public static String extName( String name) {
-        if (name == null || !name.contains(".") ) {
+    public static String extName(String name) {
+        if (name == null || !name.contains(".")) {
             return "";
         }
-        return  name.substring(name.lastIndexOf(".") + 1);
+        return name.substring(name.lastIndexOf(".") + 1);
     }
 
-    public static String extName( File file) {
-       return file==null?null: extName(file.getName());
+    public static String extName(File file) {
+        return file == null ? null : extName(file.getName());
     }
-
-
 
     /**
      * 是否sql类型
