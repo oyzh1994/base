@@ -152,6 +152,23 @@ public class RuntimeUtil {
         return null;
     }
 
+    /**
+     * 执行命令
+     *
+     * @param cmdArr 命令列表
+     * @return 结果
+     */
+    public static int execAndWait(String[] cmdArr) {
+        try {
+            // 执行命令
+            Process process = Runtime.getRuntime().exec(cmdArr, null);
+            return process.waitFor();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return -1;
+    }
+
     public static int getProcessorCount() {
         return Runtime.getRuntime().availableProcessors();
     }

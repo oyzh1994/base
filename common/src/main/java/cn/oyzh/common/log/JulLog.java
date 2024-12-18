@@ -1,7 +1,7 @@
 package cn.oyzh.common.log;
 
 
-import cn.oyzh.common.util.ClassUtil;
+import cn.oyzh.common.util.JarUtil;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -28,7 +28,7 @@ public class JulLog {
         JulLog.setLevel(JulLevel.DEBUG);
         LOGGER.setUseParentHandlers(false);
         // 控制台日志
-        if (!ClassUtil.isInJar()) {
+        if (!JarUtil.isInJar()) {
             LOGGER.addHandler(new JulConsoleHandler());
         }
         // 文件日志
