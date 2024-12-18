@@ -707,6 +707,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(IMPORT, CONNECTION, SUCCESS);
     }
 
+    public static String exportConnectionFail() {
+        return I18nResourceBundle.i18nString(EXPORT, CONNECTION, FAIL);
+    }
+
+    public static String exportConnectionSuccess() {
+        return I18nResourceBundle.i18nString(EXPORT, CONNECTION, SUCCESS);
+    }
+
     public static String operationTimout() {
         return I18nResourceBundle.i18nString(OPERATION, TIMOUT);
     }
