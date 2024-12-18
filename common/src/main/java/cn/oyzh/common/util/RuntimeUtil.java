@@ -152,6 +152,16 @@ public class RuntimeUtil {
         return null;
     }
 
+    public static String exec(String cmd) {
+        try {
+            // 执行命令
+            Runtime.getRuntime().exec(cmd);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * 执行命令
      *
