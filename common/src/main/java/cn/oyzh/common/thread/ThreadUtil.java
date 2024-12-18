@@ -217,19 +217,15 @@ public class ThreadUtil {
         }
     }
 
+    /**
+     * 执行等待
+     *
+     * @param latch 闭锁对象
+     */
     public static void await(CountDownLatch latch) {
         try {
             latch.await();
         } catch (InterruptedException ignore) {
         }
     }
-
-    // /**
-    //  * 创建单任务线程池
-    //  *
-    //  * @return 单任务线程池
-    //  */
-    // public static ExecutorService newSingleExecutor() {
-    //     return ExecutorBuilder.create().setCorePoolSize(1).setMaxPoolSize(1).setKeepAliveTime(0L).buildFinalizable();
-    // }
 }
