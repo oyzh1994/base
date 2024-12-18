@@ -1,6 +1,5 @@
 package cn.oyzh.event;
 
-import lombok.Getter;
 import lombok.Setter;
 
 /**

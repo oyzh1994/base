@@ -1,6 +1,5 @@
 package cn.oyzh.store.file;
 
-import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.xml.XMLHelper;
 
 import javax.xml.stream.XMLEventReader;
