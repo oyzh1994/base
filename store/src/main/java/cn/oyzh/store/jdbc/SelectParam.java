@@ -16,12 +16,9 @@ public class SelectParam {
 
     private List<String> queryColumns;
 
-    private List<QueryParam> queryParams;
+    private final QueryParams queryParams = new QueryParams();
 
     public void addQueryParam(QueryParam queryParam) {
-        if (this.queryParams == null) {
-            this.queryParams = new ArrayList<>();
-        }
         this.queryParams.add(queryParam);
     }
 
@@ -34,14 +31,5 @@ public class SelectParam {
 
     public SelectParam() {
 
-    }
-
-    public SelectParam(List<QueryParam> queryParams) {
-        this.queryParams = queryParams;
-    }
-
-    public SelectParam(List<QueryParam> queryParams, List<String> queryColumns) {
-        this.queryParams = queryParams;
-        this.queryColumns = queryColumns;
     }
 }
