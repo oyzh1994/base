@@ -103,8 +103,12 @@ public class FileUtil {
     }
 
     public static void writeBytes(byte[] data, String fileName) {
+        writeBytes(data, new File(fileName));
+    }
+
+    public static void writeBytes(byte[] data, File file) {
         try {
-            FileOutputStream fos = new FileOutputStream(fileName);
+            FileOutputStream fos = new FileOutputStream(file);
             fos.write(data);
             fos.close();
         } catch (Exception ex) {
