@@ -1,16 +1,26 @@
 package cn.oyzh.store.jdbc;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class PageParam {
 
     private long limit;
 
     private long start;
 
+    private final QueryParams queryParams = new QueryParams();
+
+    public PageParam() {
+
+    }
+
+    public PageParam(final long limit, final long start) {
+        this.limit = limit;
+        this.start = start;
+    }
+
+    public void addQueryParam(QueryParam queryParam) {
+        this.queryParams.add(queryParam);
+    }
 }

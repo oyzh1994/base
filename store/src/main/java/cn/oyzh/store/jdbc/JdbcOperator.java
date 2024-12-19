@@ -331,11 +331,13 @@ public abstract class JdbcOperator {
         }
     }
 
-    public long selectCount(String kw, List<String> columns) throws SQLException {
+    public long selectCount(String kw, List<String> columns, QueryParams queryParams) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
         sql.append(JdbcUtil.wrap(tableName));
+        boolean kwHandle = false;
         if (StringUtil.isNotBlank(kw) && CollectionUtil.isNotEmpty(columns)) {
+            kwHandle = true;
             boolean first = true;
             for (String column : columns) {
                 if (first) {
@@ -347,6 +349,18 @@ public abstract class JdbcOperator {
                 sql.append(JdbcUtil.wrap(column));
                 sql.append(" LIKE ");
                 sql.append(JdbcUtil.wrapData("%" + kw + "%"));
+            }
+        }
+        if (CollectionUtil.isNotEmpty(queryParams)) {
+            boolean first = true;
+            for (QueryParam queryParam : queryParams) {
+                if (!kwHandle && first) {
+                    first = false;
+                    sql.append(" WHERE ");
+                }
+                sql.append(queryParam.getName())
+                        .append(queryParam.getOperator())
+                        .append(JdbcUtil.wrapData(queryParam.getData()));
             }
         }
         JdbcConn connection = JdbcManager.takeoff();
@@ -367,7 +381,9 @@ public abstract class JdbcOperator {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT * FROM ");
         sql.append(JdbcUtil.wrap(tableName));
+        boolean kwHandle = false;
         if (StringUtil.isNotBlank(kw) && CollectionUtil.isNotEmpty(columns)) {
+            kwHandle = true;
             boolean first = true;
             for (String column : columns) {
                 if (first) {
@@ -379,6 +395,18 @@ public abstract class JdbcOperator {
                 sql.append(JdbcUtil.wrap(column));
                 sql.append(" LIKE ");
                 sql.append(JdbcUtil.wrapData("%" + kw + "%"));
+            }
+        }
+        if (!pageParam.getQueryParams().isEmpty()) {
+            boolean first = true;
+            for (QueryParam queryParam : pageParam.getQueryParams()) {
+                if (!kwHandle && first) {
+                    first = false;
+                    sql.append(" WHERE ");
+                }
+                sql.append(queryParam.getName())
+                        .append(queryParam.getOperator())
+                        .append(JdbcUtil.wrapData(queryParam.getData()));
             }
         }
         sql.append(" LIMIT ")

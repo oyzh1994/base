@@ -188,7 +188,7 @@ public abstract class JdbcStore<M extends Serializable> {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     public long selectCount(QueryParam queryParam) {
@@ -210,8 +210,12 @@ public abstract class JdbcStore<M extends Serializable> {
     }
 
     public long selectCount(String kw, List<String> columns) {
+        return this.selectCount(kw, columns, null);
+    }
+
+    public long selectCount(String kw, List<String> columns, QueryParams queryParams) {
         try {
-            return this.operator.selectCount(kw, columns);
+            return this.operator.selectCount(kw, columns, queryParams);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

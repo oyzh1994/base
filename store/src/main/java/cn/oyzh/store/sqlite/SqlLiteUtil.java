@@ -17,6 +17,9 @@ public class SqlLiteUtil {
     }
 
     public static Object wrapData(Object data) {
+        if (data == null) {
+            return "";
+        }
         if (data instanceof byte[]) {
             return data;
         }
