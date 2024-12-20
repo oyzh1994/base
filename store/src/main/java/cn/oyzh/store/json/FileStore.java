@@ -55,7 +55,7 @@ public abstract class FileStore<T> {
         try {
             if (obj != null) {
                 String content = JSONUtil.toJson(obj);
-                return FileUtil.writeString(content, this.storeFile, this.charset) != null;
+                return FileUtil.writeString(content, this.storeFile, this.charset, false) != null;
             }
         } catch (Exception ex) {
             ex.printStackTrace();
