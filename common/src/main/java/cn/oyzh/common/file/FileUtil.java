@@ -77,13 +77,13 @@ public class FileUtil {
         return new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
     }
 
-    public static File writeString(String content, File file, Charset charset) {
+    public static File writeString(String content, File file, Charset charset, boolean append) {
         try {
             if (content != null && file != null) {
                 if (!file.exists()) {
                     touch(file);
                 }
-                try (FileWriter fileWriter = new FileWriter(file, charset)) {
+                try (FileWriter fileWriter = new FileWriter(file, charset, append)) {
                     fileWriter.write(content);
                 }
                 return file;
@@ -95,11 +95,11 @@ public class FileUtil {
     }
 
     public static void writeUtf8String(String content, File file) {
-        writeString(content, file, StandardCharsets.UTF_8);
+        writeString(content, file, StandardCharsets.UTF_8, false);
     }
 
     public static void writeUtf8String(String content, String file) {
-        writeString(content, new File(file), StandardCharsets.UTF_8);
+        writeString(content, new File(file), StandardCharsets.UTF_8, false);
     }
 
     public static void writeBytes(byte[] data, String fileName) {
