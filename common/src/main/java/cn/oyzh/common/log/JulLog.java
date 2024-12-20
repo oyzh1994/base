@@ -114,7 +114,7 @@ public class JulLog {
         // 获取线程和堆栈信息
         Thread thread = Thread.currentThread();
         StackTraceElement[] trace = thread.getStackTrace();
-        StackTraceElement element = trace[4];
+        StackTraceElement element = trace[Math.min(4, trace.length - 1)];
         // 日志对象
         JulLogRecord logRecord = new JulLogRecord(level, format);
         // 参数
