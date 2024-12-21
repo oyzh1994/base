@@ -65,7 +65,7 @@ public class H2KeyValueOperator extends JdbcKeyValueOperator {
             try (resultSet1) {
                 ColumnDefinition definition = new ColumnDefinition();
                 definition.setColumnName("VALUE");
-                definition.setColumnType("CHARACTER VARYING");
+                definition.setColumnType("VARCHAR");
                 // 字段不存在
                 if (!resultSet1.next()) {
                     addedColumns.add(definition);
