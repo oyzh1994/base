@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class SelectParam {
 
-    public static SelectParam EMPTY = new SelectParam();
+    public static final SelectParam EMPTY = new SelectParam();
 
     private List<String> queryColumns;
 

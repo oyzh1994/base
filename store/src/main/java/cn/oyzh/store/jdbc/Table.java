@@ -13,6 +13,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Table {
 
+    /**
+     * 表名称
+     *
+     * @return 表名称
+     */
     String value() default "";
 
+    /**
+     * 列模式
+     *
+     * @return 列模式
+     */
+    ColumnMode mode() default ColumnMode.STANDARD;
 }
