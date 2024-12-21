@@ -14,21 +14,10 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-09-23
  */
-public abstract class JdbcStandardOperator {
-
-    @Getter
-    protected final TableDefinition tableDefinition;
+public abstract class JdbcStandardOperator extends JdbcOperator {
 
     public JdbcStandardOperator(TableDefinition tableDefinition) {
-        this.tableDefinition = tableDefinition;
-    }
-
-    protected String tableName() {
-        return this.tableDefinition.getTableName();
-    }
-
-    protected List<ColumnDefinition> columns() {
-        return this.tableDefinition.getColumns();
+        super(tableDefinition);
     }
 
     protected PrimaryKeyColumn getPrimaryKeyColumn(Object primaryKey) {
@@ -37,21 +26,6 @@ public abstract class JdbcStandardOperator {
             return null;
         }
         return new PrimaryKeyColumn(columnDefinition.getColumnName(), primaryKey);
-    }
-
-    /**
-     * 执行初始化
-     *
-     * @return 结果
-     */
-    public boolean initTable() throws Exception {
-        return false;
-    }
-
-    protected void alterTable() throws SQLException {
-    }
-
-    protected void createTable() throws SQLException {
     }
 
     public int insert(Map<String, Object> record) throws Exception {

@@ -14,36 +14,10 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-12-21
  */
-public abstract class JdbcKeyValueOperator {
-
-    @Getter
-    protected final TableDefinition tableDefinition;
+public abstract class JdbcKeyValueOperator extends JdbcOperator {
 
     public JdbcKeyValueOperator(TableDefinition tableDefinition) {
-        this.tableDefinition = tableDefinition;
-    }
-
-    protected String tableName() {
-        return this.tableDefinition.getTableName();
-    }
-
-    protected List<ColumnDefinition> columns() {
-        return this.tableDefinition.getColumns();
-    }
-
-    /**
-     * 执行初始化
-     *
-     * @return 结果
-     */
-    public boolean initTable() throws Exception {
-        return false;
-    }
-
-    protected void alterTable() throws SQLException {
-    }
-
-    protected void createTable() throws SQLException {
+        super(tableDefinition);
     }
 
     public int update(Map<String, Object> record) throws Exception {
