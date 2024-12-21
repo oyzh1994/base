@@ -1,13 +1,9 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.common.util.CollectionUtil;
-import cn.oyzh.common.util.ReflectUtil;
 import cn.oyzh.store.jdbc.h2.H2KeyValueOperator;
 import cn.oyzh.store.jdbc.sqlite.SqliteKeyValueOperator;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -46,7 +42,7 @@ public abstract class JdbcKeyValueStore<M extends Serializable> extends JdbcStor
         if (model != null) {
             try {
                 Map<String, Object> record = this.toRecord(model);
-                return this.operator.update(record) > 0;
+                return this.operator.update(record);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

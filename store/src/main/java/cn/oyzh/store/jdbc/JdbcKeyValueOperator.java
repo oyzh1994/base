@@ -1,13 +1,9 @@
 package cn.oyzh.store.jdbc;
 
-import lombok.Getter;
-
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +16,13 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
         super(tableDefinition);
     }
 
-    public int update(Map<String, Object> record) throws Exception {
+    /**
+     * 更新数据
+     * @param record 记录列表
+     * @return 更新结果
+     * @throws Exception
+     */
+    public boolean update(Map<String, Object> record) throws Exception {
         String tableName = this.tableName();
         JdbcConn connection = JdbcManager.takeoff();
         try {
@@ -37,7 +39,7 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
                 statement.close();
             }
             connection.commit();
-            return 1;
+            return true;
         } catch (Exception ex) {
             ex.printStackTrace();
             connection.rollback();
@@ -45,9 +47,15 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
             connection.setAutoCommit(true);
             JdbcManager.giveback(connection);
         }
-        return 0;
+        return false;
     }
 
+    /**
+     * 查询数据
+     *
+     * @return 结果
+     * @throws SQLException 异常
+     */
     public Map<String, Object> select() throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT * FROM ");
@@ -57,12 +65,9 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
             JdbcResultSet resultSet = JdbcHelper.executeQuery(connection, sql.toString());
             Map<String, Object> record = new HashMap<>();
             while (resultSet.next()) {
-                for (ColumnDefinition columnDefinition : this.columns()) {
-                    String columnName = columnDefinition.getColumnName();
-                    if (resultSet.containsColumn(columnName)) {
-                        record.put(columnName, resultSet.getObject(columnName));
-                    }
-                }
+                String key = (String) resultSet.getObject("KEY");
+                Object value = resultSet.getObject("VALUE");
+                record.put(key, value);
             }
             resultSet.close();
             return record;
@@ -71,6 +76,11 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 清除数据
+     * @return 结果
+     * @throws SQLException 异常
+     */
     public boolean clear() throws SQLException {
         String tableName = this.tableName();
         JdbcConn connection = JdbcManager.takeoff();
