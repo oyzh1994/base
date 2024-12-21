@@ -2,18 +2,12 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.ReflectUtil;
-import cn.oyzh.store.h2.H2KeyValueOperator;
-import cn.oyzh.store.h2.H2Operator;
-import cn.oyzh.store.sqlite.SqliteKeyValueOperator;
-import cn.oyzh.store.sqlite.SqliteOperator;
+import cn.oyzh.store.jdbc.h2.H2KeyValueOperator;
+import cn.oyzh.store.jdbc.sqlite.SqliteKeyValueOperator;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

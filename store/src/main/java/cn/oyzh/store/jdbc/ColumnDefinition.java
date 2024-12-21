@@ -1,7 +1,7 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.store.h2.H2Util;
-import cn.oyzh.store.sqlite.SqlLiteUtil;
+import cn.oyzh.store.jdbc.h2.H2Util;
+import cn.oyzh.store.jdbc.sqlite.SqlLiteUtil;
 import lombok.Data;
 
 import java.lang.reflect.Field;
