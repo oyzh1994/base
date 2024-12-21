@@ -3,8 +3,6 @@ package cn.oyzh.store.jdbc;
 import cn.oyzh.common.util.ClassUtil;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.ReflectUtil;
-import cn.oyzh.store.jdbc.h2.H2KeyValueOperator;
-import cn.oyzh.store.jdbc.sqlite.SqliteKeyValueOperator;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

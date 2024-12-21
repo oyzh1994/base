@@ -53,6 +53,9 @@ public class JdbcUtil {
         if (sqlData instanceof Number n) {
             return n.byteValue();
         }
+        if (sqlData instanceof String n) {
+            return Byte.parseByte(n);
+        }
         return null;
     }
 
@@ -94,7 +97,7 @@ public class JdbcUtil {
         if (sqlData instanceof Date n) {
             return n.getTime();
         }
-        return Integer.parseInt(sqlData.toString());
+        return Long.parseLong(sqlData.toString());
     }
 
     public static Long toLongVal(Object sqlData) {
@@ -211,6 +214,15 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为java值
+     *
+     * @param javaType java类型
+     * @param sqlData  数据库数据
+     * @return 数据
+     * @throws SQLException sql异常
+     * @throws IOException  io异常
+     */
     public static Object toJavaValue(Class<?> javaType, Object sqlData) throws SQLException, IOException {
         if (sqlData == null) {
             return null;

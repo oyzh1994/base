@@ -2,7 +2,6 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
-import lombok.Getter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
