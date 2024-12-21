@@ -18,7 +18,7 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-09-23
  */
-public abstract class JdbcStandardStore<M extends Serializable> {
+public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStore<M> {
 
     private final JdbcStandardOperator operator;
 
@@ -38,54 +38,12 @@ public abstract class JdbcStandardStore<M extends Serializable> {
         }
     }
 
-    protected void init() {
-
-    }
-
-    protected abstract M newModel();
-
-    protected abstract Class<M> modelClass();
-
+    @Override
     protected TableDefinition tableDefinition() {
         if (this.operator != null) {
             return this.operator.getTableDefinition();
         }
         return TableDefinition.ofClass(this.modelClass());
-    }
-
-    protected M toModel(Map<String, Object> record) throws Exception {
-        if (CollectionUtil.isEmpty(record)) {
-            return null;
-        }
-        TableDefinition definition = this.tableDefinition();
-        if (definition == null) {
-            return null;
-        }
-        M model = this.newModel();
-        for (ColumnDefinition column : definition.getColumns()) {
-            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true, true);
-            field.setAccessible(true);
-            Object sqlData = record.get(column.getColumnName());
-            Object javaValue = JdbcUtil.toJavaValue(field.getType(), sqlData);
-            if (javaValue != null) {
-                field.set(model, javaValue);
-            }
-        }
-        return model;
-    }
-
-    protected Map<String, Object> toRecord(M model) throws Exception {
-        TableDefinition definition = this.tableDefinition();
-        if (definition == null) {
-            return null;
-        }
-        Map<String, Object> record = new HashMap<>();
-        for (ColumnDefinition column : definition.getColumns()) {
-            Field field = ReflectUtil.getField(model.getClass(), column.getFieldName(), true, true);
-            field.setAccessible(true);
-            record.put(column.getColumnName(), field.get(model));
-        }
-        return record;
     }
 
     public boolean insert(M model) {
