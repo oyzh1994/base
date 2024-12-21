@@ -1,4 +1,4 @@
-package cn.oyzh.store.h2;
+package cn.oyzh.store.jdbc.h2;
 
 import cn.oyzh.store.jdbc.ColumnDefinition;
 import cn.oyzh.store.jdbc.JdbcConn;

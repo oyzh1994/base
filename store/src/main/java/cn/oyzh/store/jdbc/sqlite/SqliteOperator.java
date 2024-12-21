@@ -1,4 +1,4 @@
-package cn.oyzh.store.sqlite;
+package cn.oyzh.store.jdbc.sqlite;
 
 
 import cn.oyzh.common.date.DateUtil;
