@@ -53,7 +53,7 @@ public class JdbcConst {
     }
 
     public static void dbCacheSize(int dbCacheSize) {
-        System.setProperty(DB_CACHE_SIZE, dbCacheSize+"");
+        System.setProperty(DB_CACHE_SIZE, dbCacheSize + "");
     }
 
     public static String dbCacheSize() {

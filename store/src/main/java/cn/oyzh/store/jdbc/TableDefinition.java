@@ -9,6 +9,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author oyzh
+ * @since 2024-09-24
+ */
 @Data
 public class TableDefinition {
 

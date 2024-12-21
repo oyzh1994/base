@@ -7,6 +7,10 @@ import lombok.Data;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+/**
+ * @author oyzh
+ * @since 2024-09-26
+ */
 @Data
 public class ColumnDefinition {
 

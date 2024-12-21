@@ -121,12 +121,24 @@ public class JdbcConn {
         return this.getTables(null, null, tableNamePattern, types);
     }
 
-    public ResultSet getTables(String catalog, String schemaPattern,String tableNamePattern, String[] types) throws SQLException {
+    public ResultSet getTables(String catalog, String schemaPattern, String tableNamePattern, String[] types) throws SQLException {
         if (JdbcManager.isH2Dialect()) {
             if (tableNamePattern != null) {
                 tableNamePattern = tableNamePattern.toUpperCase();
             }
         }
         return this.getMetaData().getTables(catalog, schemaPattern, tableNamePattern, types);
+    }
+
+    public void setAutoCommit(boolean autoCommit) throws SQLException {
+        this.connection.setAutoCommit(autoCommit);
+    }
+
+    public void rollback() throws SQLException {
+        this.connection.rollback();
+    }
+
+    public void commit() throws SQLException {
+        this.connection.commit();
     }
 }
