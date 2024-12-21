@@ -14,12 +14,12 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-09-23
  */
-public abstract class JdbcOperator {
+public abstract class JdbcStandardOperator {
 
     @Getter
     protected final TableDefinition tableDefinition;
 
-    public JdbcOperator(TableDefinition tableDefinition) {
+    public JdbcStandardOperator(TableDefinition tableDefinition) {
         this.tableDefinition = tableDefinition;
     }
 

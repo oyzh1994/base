@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author oyzh
- * @since 2024-09-23
+ * @since 2024-12-21
  */
 public abstract class JdbcKeyValueStore<M extends Serializable> {
 
@@ -82,17 +82,6 @@ public abstract class JdbcKeyValueStore<M extends Serializable> {
             record.put(column.getColumnName(), field.get(model));
         }
         return record;
-    }
-
-    public boolean insert(M model) {
-        if (model != null) {
-            try {
-                return this.operator.insert(this.toRecord(model)) > 0;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-        return false;
     }
 
     public boolean update(M model) {
