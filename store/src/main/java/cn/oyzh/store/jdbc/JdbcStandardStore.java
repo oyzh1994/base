@@ -18,11 +18,11 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-09-23
  */
-public abstract class JdbcStore<M extends Serializable> {
+public abstract class JdbcStandardStore<M extends Serializable> {
 
     private final JdbcStandardOperator operator;
 
-    public JdbcStore() {
+    public JdbcStandardStore() {
         try {
             TableDefinition tableDefinition = this.tableDefinition();
             if (JdbcManager.dialect == JdbcDialect.H2) {
