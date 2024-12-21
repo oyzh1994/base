@@ -9,7 +9,7 @@ import cn.oyzh.store.jdbc.DeleteParam;
 import cn.oyzh.store.jdbc.JdbcConn;
 import cn.oyzh.store.jdbc.JdbcHelper;
 import cn.oyzh.store.jdbc.JdbcManager;
-import cn.oyzh.store.jdbc.JdbcOperator;
+import cn.oyzh.store.jdbc.JdbcStandardOperator;
 import cn.oyzh.store.jdbc.JdbcUtil;
 import cn.oyzh.store.jdbc.QueryParam;
 import cn.oyzh.store.jdbc.TableDefinition;
@@ -23,9 +23,9 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-23
  */
-public class SqliteOperator extends JdbcOperator {
+public class SqliteStandardOperator extends JdbcStandardOperator {
 
-    public SqliteOperator(TableDefinition tableDefinition) {
+    public SqliteStandardOperator(TableDefinition tableDefinition) {
         super(tableDefinition);
     }
 

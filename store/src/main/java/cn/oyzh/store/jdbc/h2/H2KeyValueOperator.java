@@ -13,6 +13,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author oyzh
+ * @since 2024-12-21
+ */
 public class H2KeyValueOperator extends JdbcKeyValueOperator {
 
     public H2KeyValueOperator(TableDefinition tableDefinition) {
@@ -115,5 +119,4 @@ public class H2KeyValueOperator extends JdbcKeyValueOperator {
             JdbcManager.giveback(connection);
         }
     }
-
 }

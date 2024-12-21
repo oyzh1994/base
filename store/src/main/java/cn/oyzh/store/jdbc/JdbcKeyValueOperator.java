@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * @author oyzh
- * @since 2024-09-23
+ * @since 2024-12-21
  */
 public abstract class JdbcKeyValueOperator {
 
@@ -46,26 +46,6 @@ public abstract class JdbcKeyValueOperator {
     protected void createTable() throws SQLException {
     }
 
-    public int insert(Map<String, Object> record) throws Exception {
-        String tableName = this.tableName();
-        StringBuilder sql = new StringBuilder("INSERT INTO ");
-        sql.append(JdbcUtil.wrap(tableName));
-        sql.append("(KEY,VALUE) VALUES(");
-        sql.append("?,".repeat(record.size()));
-        sql.deleteCharAt(sql.length() - 1);
-        sql.append(")");
-        JdbcConn connection = JdbcManager.takeoff();
-        try {
-            List<Object> values = new ArrayList<>();
-            for (String key : record.keySet()) {
-                values.add(record.get(key));
-            }
-            return JdbcHelper.executeUpdate(connection, sql.toString(), values);
-        } finally {
-            JdbcManager.giveback(connection);
-        }
-    }
-
     public int update(Map<String, Object> record) throws Exception {
         String tableName = this.tableName();
         JdbcConn connection = JdbcManager.takeoff();
@@ -92,24 +72,6 @@ public abstract class JdbcKeyValueOperator {
             JdbcManager.giveback(connection);
         }
         return 0;
-    }
-
-    public boolean exist() throws SQLException {
-        String tableName = this.tableName();
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
-        sql.append(JdbcUtil.wrap(tableName));
-        JdbcConn connection = JdbcManager.takeoff();
-        try {
-            JdbcResultSet resultSet = JdbcHelper.executeQuery(connection, sql.toString());
-            boolean exists = false;
-            if (resultSet.next()) {
-                exists = resultSet.getInt(1) > 0;
-            }
-            resultSet.close();
-            return exists;
-        } finally {
-            JdbcManager.giveback(connection);
-        }
     }
 
     public Map<String, Object> select() throws SQLException {
