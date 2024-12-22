@@ -525,6 +525,8 @@ public class I18nHelper {
 
     public static final String LOAD = "base.load";
 
+    public static final String MORE = "base.more";
+
     public static final String AUTHED = "base.authed";
 
     public static final String NO_MORE_RESULT = "base.noMoreResult";
@@ -3005,5 +3007,9 @@ public class I18nHelper {
 
     public static String filterTitle() {
         return I18nResourceBundle.i18nString(TITLE_FILTER);
+    }
+
+    public static String loadMore() {
+        return I18nResourceBundle.i18nString(LOAD,MORE);
     }
 }
