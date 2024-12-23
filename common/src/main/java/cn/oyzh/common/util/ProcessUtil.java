@@ -5,6 +5,7 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import lombok.experimental.UtilityClass;
 
+import java.io.File;
 import java.util.Arrays;
 
 /**
@@ -33,9 +34,11 @@ public class ProcessUtil {
      * @param exitAction    退出操作
      */
     public static void restartApplication(String mainClassName, int timeout, Runnable exitAction) {
-        // 获取当前Java程序的路径和classpath
+        // 运行目录
+        File dir = null;
         // 重启命令
         String[] restartCommand = null;
+        // 获取当前Java程序的路径和classpath
         String javaPath = System.getProperty("java.home");
         if (OSUtil.isWindows()) {
             if (!FileUtil.exist(javaPath + "/bin/javaw.exe")) {
@@ -46,37 +49,28 @@ public class ProcessUtil {
             String classPath = System.getProperty("java.class.path");
             restartCommand = new String[]{javaPath + " -cp \"" + classPath + "\" " + mainClassName};
         } else if (OSUtil.isLinux()) {
+            dir = new File(javaPath).getParentFile();
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
-                javaPath += "/bin/java";
+                javaPath = dir.getPath() + "/./jre/bin/java";
             } else {
-                javaPath += "/bin/javaw";
+                javaPath = dir.getPath() + "/./jre/bin/javaw";
             }
             String classPath = System.getProperty("java.class.path");
-            // restartCommand = new String[]{javaPath, "-cp", classPath, mainClassName};
-            if (JarUtil.isInJar()) {
-                // restartCommand = new String[]{javaPath, "-jar", classPath};
-                restartCommand = new String[]{javaPath, "-jar", "/home/oyzh/Desktop/EasyZK_2.0.0/" + classPath};
-            } else {
-                restartCommand = new String[]{javaPath, "-cp", classPath, mainClassName};
-            }
+            restartCommand = new String[]{javaPath, "-cp", classPath, mainClassName};
         } else if (OSUtil.isMacOS()) {
+            dir = new File(javaPath).getParentFile();
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
-                javaPath += "/bin/java";
+                javaPath = dir.getPath() + "/./jre/bin/java";
             } else {
-                javaPath += "/bin/javaw";
+                javaPath = dir.getPath() + "/./jre/bin/javaw";
             }
             String classPath = System.getProperty("java.class.path");
             restartCommand = new String[]{javaPath, "-cp", classPath, mainClassName};
         }
-        // if (JarUtil.isInJar()) {
-        //     restartCommand = javaPath + " -jar \"" + "/home/oyzh/Desktop/EasyZK_2.0.0/" + classPath + "\"";
-        // } else {
-        //     restartCommand = javaPath + " -cp \"" + classPath + "\" " + mainClassName;
-        // }
         // 打印命令
-        JulLog.info("restartCommand:{}", Arrays.toString(restartCommand));
+        JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
         // 执行重启命令
-        RuntimeUtil.exec(restartCommand);
+        RuntimeUtil.exec(restartCommand, null, dir);
         // 退出当前进程
         TaskManager.startDelay(() -> {
             if (exitAction == null) {
