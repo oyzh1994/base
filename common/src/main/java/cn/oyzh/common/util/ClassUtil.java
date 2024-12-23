@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -32,7 +33,12 @@ public class ClassUtil {
         if (clazz != null) {
             try {
                 Constructor<?>[] constructors = clazz.getConstructors();
-                return (T) constructors[0].newInstance();
+                // 寻找一个public、无参的构造方法去实例化
+                for (Constructor<?> constructor : constructors) {
+                    if (Modifier.isPublic(constructor.getModifiers()) && constructor.getParameterCount() == 0) {
+                        return (T) constructor.newInstance();
+                    }
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
