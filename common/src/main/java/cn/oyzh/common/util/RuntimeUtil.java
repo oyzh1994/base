@@ -163,6 +163,16 @@ public class RuntimeUtil {
         return null;
     }
 
+    public static String exec(String[] cmdArr) {
+        try {
+            // 执行命令
+            Runtime.getRuntime().exec(cmdArr);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * 执行命令
      *
