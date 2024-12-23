@@ -1,5 +1,6 @@
 package cn.oyzh.store.jdbc;
 
+import cn.oyzh.common.log.JulLog;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -37,6 +38,7 @@ public class JdbcConst {
     public String DB_PAGE_SIZE = "db.page.size";
 
     public static void dbFile(String dbFile) {
+        JulLog.info("dbFile: {}", dbFile);
         System.setProperty(DB_FILE, dbFile);
     }
 
@@ -45,6 +47,7 @@ public class JdbcConst {
     }
 
     public static void dbDialect(JdbcDialect dialect) {
+        JulLog.info("dialect: {}", dialect);
         System.setProperty(DB_DIALECT, dialect.toString());
     }
 
@@ -53,6 +56,7 @@ public class JdbcConst {
     }
 
     public static void dbCacheSize(int dbCacheSize) {
+        JulLog.info("dbCacheSize: {}", dbCacheSize);
         System.setProperty(DB_CACHE_SIZE, dbCacheSize + "");
     }
 
