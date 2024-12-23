@@ -259,6 +259,8 @@ public class I18nHelper {
 
     public static final String SCHEMA = "base.schema";
 
+    public static final String DIGEST = "base.digest";
+
     public static final String KEYS = "base.keys";
 
     public static final String DELETED = "base.deleted";
@@ -3010,6 +3012,14 @@ public class I18nHelper {
     }
 
     public static String loadMore() {
-        return I18nResourceBundle.i18nString(LOAD,MORE);
+        return I18nResourceBundle.i18nString(LOAD, MORE);
+    }
+
+    public static String schema() {
+        return I18nResourceBundle.i18nString(SCHEMA);
+    }
+
+    public static String digest() {
+        return I18nResourceBundle.i18nString(DIGEST);
     }
 }
