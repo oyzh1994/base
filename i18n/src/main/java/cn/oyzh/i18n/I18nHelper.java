@@ -3022,4 +3022,8 @@ public class I18nHelper {
     public static String digest() {
         return I18nResourceBundle.i18nString(DIGEST);
     }
+
+    public static String digestAuth() {
+        return I18nResourceBundle.i18nString(DIGEST,AUTH);
+    }
 }

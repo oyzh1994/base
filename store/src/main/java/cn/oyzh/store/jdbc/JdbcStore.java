@@ -1,5 +1,6 @@
 package cn.oyzh.store.jdbc;
 
+import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.ClassUtil;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.ReflectUtil;
@@ -29,7 +30,13 @@ public abstract class JdbcStore<M extends Serializable> {
      */
     protected M newModel() {
         Class<?> modelClass = this.modelClass();
-        return (M) ClassUtil.newInstance(modelClass);
+        try {
+            return (M) ClassUtil.newInstance(modelClass);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JulLog.error("newModel fail, class:{}", modelClass);
+        }
+        return null;
     }
 
     /**
@@ -76,6 +83,7 @@ public abstract class JdbcStore<M extends Serializable> {
 
     /**
      * 转换为记录
+     *
      * @param model 模型
      * @return 记录列表
      * @throws Exception 异常
