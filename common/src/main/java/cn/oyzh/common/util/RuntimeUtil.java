@@ -163,10 +163,34 @@ public class RuntimeUtil {
         return null;
     }
 
-    public static String exec(String[] cmdArr) {
+    public static Process exec(String[] cmdArr) {
+        return exec(cmdArr, null, null);
+    }
+
+    public static Process exec(String[] cmdArr, String[] envp, File dir) {
         try {
             // 执行命令
-            Runtime.getRuntime().exec(cmdArr);
+            Process process = Runtime.getRuntime().exec(cmdArr, envp, dir);
+            String line;
+            // 读取命令的输出
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder input = new StringBuilder();
+            while ((line = inputReader.readLine()) != null) {
+                input.append(line);
+            }
+            if (!input.isEmpty()) {
+                JulLog.info("exec result:{}", input.toString());
+            }
+            // 读取错误的输出
+            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            StringBuilder err = new StringBuilder();
+            while ((line = errReader.readLine()) != null) {
+                err.append(line);
+            }
+            if (!err.isEmpty()) {
+                JulLog.error("exec error:{}", err.toString());
+            }
+            return process;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
