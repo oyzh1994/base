@@ -34,10 +34,6 @@ public class ProcessUtil {
      * @param exitAction    退出操作
      */
     public static void restartApplication(String mainClassName, int timeout, Runnable exitAction) {
-        // 运行目录
-        File dir = null;
-        // 重启命令
-        String[] restartCommand = null;
         // 获取当前Java程序的路径和classpath
         String javaPath = System.getProperty("java.home");
         if (OSUtil.isWindows()) {
@@ -47,9 +43,10 @@ public class ProcessUtil {
                 javaPath += "/bin/javaw.exe";
             }
             String classPath = System.getProperty("java.class.path");
-            restartCommand = new String[]{javaPath + " -cp \"" + classPath + "\" " + mainClassName};
+            String restartCommand = javaPath + " -jar " + classPath;
+            // String restartCommand = javaPath + " -cp \"" + classPath + "\" " + mainClassName;
             // 打印命令
-            JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
+            JulLog.info("restartCommand:{}", restartCommand);
             // 执行重启命令
             RuntimeUtil.exec(restartCommand);
             // 退出当前进程
@@ -61,14 +58,41 @@ public class ProcessUtil {
                 }
             }, timeout);
         } else if (OSUtil.isLinux()) {
-            dir = new File(javaPath).getParentFile();
+            // 运行目录
+            File dir = new File(javaPath).getParentFile();
+            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
+                javaPath = dir.getPath() + "/jre/bin/java";
+                // javaPath = dir.getPath() + "/./jre/bin/java";
+            } else {
+                javaPath = dir.getPath() + "/jre/bin/javaw";
+                // javaPath = dir.getPath() + "/./jre/bin/javaw";
+            }
+            String classPath = System.getProperty("java.class.path");
+            // 重启命令
+            String restartCommand = javaPath + " -jar " + dir.getPath() + "/" + classPath;
+            // 打印命令
+            JulLog.info("restartCommand:{} dir:{}", restartCommand, dir);
+            // 执行重启命令
+            RuntimeUtil.exec(restartCommand, null, dir);
+            // 退出当前进程
+            TaskManager.startDelay(() -> {
+                if (exitAction == null) {
+                    System.exit(0);
+                } else {
+                    exitAction.run();
+                }
+            }, timeout);
+        } else if (OSUtil.isMacOS()) {
+            // 运行目录
+            File dir = new File(javaPath).getParentFile();
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
                 javaPath = dir.getPath() + "/./jre/bin/java";
             } else {
                 javaPath = dir.getPath() + "/./jre/bin/javaw";
             }
             String classPath = System.getProperty("java.class.path");
-            restartCommand = new String[]{javaPath, "-jar", classPath};
+            // 重启命令
+            String[] restartCommand = new String[]{javaPath, "-jar", classPath};
             // 打印命令
             JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
             // 执行重启命令
@@ -86,15 +110,6 @@ public class ProcessUtil {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } else if (OSUtil.isMacOS()) {
-            dir = new File(javaPath).getParentFile();
-            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
-                javaPath = dir.getPath() + "/./jre/bin/java";
-            } else {
-                javaPath = dir.getPath() + "/./jre/bin/javaw";
-            }
-            String classPath = System.getProperty("java.class.path");
-            restartCommand = new String[]{javaPath, "-cp", classPath, mainClassName};
         }
 
 
