@@ -13,43 +13,43 @@ import java.io.IOException;
  * @since 2020/9/14
  */
 @Data
-//@Lazy
-//@Component
-//@PropertySource(value = "/project.properties", encoding = "utf-8")
 public class Project {
 
     /**
      * 名称
      */
-//    @Value("${project.name:}")
     private String name;
 
     /**
      * 类型
      */
-//    @Value("${project.type:build}")
     private String type;
 
     /**
      * 版本号
      */
-//    @Value("${project.version:}")
     private String version;
 
     /**
      * 更新日期
      */
-//    @Value("${project.updateDate:}")
     private String updateDate;
 
     /**
      * copyright
      */
-//    @Value("${project.copyright:}")
     private String copyright;
 
+    /**
+     * 当前实例
+     */
     private static Project instance;
 
+    /**
+     * 加载
+     *
+     * @return 项目对象
+     */
     public static Project load() {
         if (instance == null) {
             try {
@@ -76,7 +76,7 @@ public class Project {
                     project.setCopyright(copyright);
                 }
                 propFile.clear();
-                 instance = project;
+                instance = project;
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
