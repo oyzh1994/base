@@ -1,5 +1,7 @@
 package cn.oyzh.store.jdbc;
 
+import cn.oyzh.common.log.JulLog;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,9 +20,10 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
 
     /**
      * 更新数据
+     *
      * @param record 记录列表
      * @return 更新结果
-     * @throws Exception
+     * @throws Exception 异常
      */
     public boolean update(Map<String, Object> record) throws Exception {
         String tableName = this.tableName();
@@ -32,8 +35,9 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
             clearStatement.close();
             for (Map.Entry<String, Object> entry : record.entrySet()) {
                 StringBuilder sql = new StringBuilder("INSERT INTO ");
-                sql.append(JdbcUtil.wrap(tableName)).append("(`KEY`, `VALUE`) VALUES( ?,?)");
+                sql.append(JdbcUtil.wrap(tableName)).append("(`KEY`, `VALUE`) VALUES( ?, ?)");
                 PreparedStatement statement = connection.prepareStatement(sql.toString());
+                JulLog.debug("{}={}", entry.getKey(), entry.getValue());
                 JdbcHelper.setParams(statement, entry.getKey(), entry.getValue());
                 statement.executeUpdate();
                 statement.close();
@@ -78,6 +82,7 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
 
     /**
      * 清除数据
+     *
      * @return 结果
      * @throws SQLException 异常
      */
