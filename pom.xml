@@ -27,11 +27,12 @@
         <guava.version>33.4.0-jre</guava.version>
         <sqlite.version>3.47.1.0</sqlite.version>
         <fastjson.version>2.0.53</fastjson.version>
-        <maven.compiler.source>23</maven.compiler.source>
-        <maven.compiler.target>23</maven.compiler.target>
-        <maven.compiler.release>23</maven.compiler.release>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
+        <maven.compiler.release>22</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot-maven-plugin.version>3.3.5</spring-boot-maven-plugin.version>
+        <spring-boot-maven-plugin.version>2.7.18</spring-boot-maven-plugin.version>
+        <!-- <spring-boot-maven-plugin.version>3.3.5</spring-boot-maven-plugin.version> -->
     </properties>
 
     <dependencyManagement>
