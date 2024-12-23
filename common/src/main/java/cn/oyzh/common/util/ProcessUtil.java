@@ -48,6 +48,18 @@ public class ProcessUtil {
             }
             String classPath = System.getProperty("java.class.path");
             restartCommand = new String[]{javaPath + " -cp \"" + classPath + "\" " + mainClassName};
+            // 打印命令
+            JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
+            // 执行重启命令
+            RuntimeUtil.exec(restartCommand);
+            // 退出当前进程
+            TaskManager.startDelay(() -> {
+                if (exitAction == null) {
+                    System.exit(0);
+                } else {
+                    exitAction.run();
+                }
+            }, timeout);
         } else if (OSUtil.isLinux()) {
             dir = new File(javaPath).getParentFile();
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
@@ -56,7 +68,24 @@ public class ProcessUtil {
                 javaPath = dir.getPath() + "/./jre/bin/javaw";
             }
             String classPath = System.getProperty("java.class.path");
-            restartCommand = new String[]{javaPath, "-cp", classPath, mainClassName};
+            restartCommand = new String[]{javaPath, "-jar", classPath};
+            // 打印命令
+            JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
+            // 执行重启命令
+            Process process = RuntimeUtil.exec(restartCommand);
+            try {
+                JulLog.info("exitCode:{}", process.waitFor());
+                // 退出当前进程
+                TaskManager.startDelay(() -> {
+                    if (exitAction == null) {
+                        System.exit(0);
+                    } else {
+                        exitAction.run();
+                    }
+                }, timeout);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         } else if (OSUtil.isMacOS()) {
             dir = new File(javaPath).getParentFile();
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
@@ -67,17 +96,7 @@ public class ProcessUtil {
             String classPath = System.getProperty("java.class.path");
             restartCommand = new String[]{javaPath, "-cp", classPath, mainClassName};
         }
-        // 打印命令
-        JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
-        // 执行重启命令
-        RuntimeUtil.exec(restartCommand, null, dir);
-        // 退出当前进程
-        TaskManager.startDelay(() -> {
-            if (exitAction == null) {
-                System.exit(0);
-            } else {
-                exitAction.run();
-            }
-        }, timeout);
+
+
     }
 }
