@@ -1,12 +1,15 @@
 package cn.oyzh.common.util;
 
+import cn.oyzh.common.SysConst;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author oyzh
@@ -111,7 +114,73 @@ public class ProcessUtil {
                 throw new RuntimeException(e);
             }
         }
+    }
 
-
+    /**
+     * 重启应用
+     *
+     * @param timeout    超时时间
+     * @param exitAction 退出操作
+     */
+    public static void restartApplication(int timeout, Runnable exitAction) throws IOException {
+            // 获取当前Java程序的路径和classpath
+            String javaPath = System.getProperty("java.home");
+            // 工作目录
+            File dir = new File(javaPath).getParentFile();
+            // windows平台
+            if (OSUtil.isWindows()) {
+                if (!FileUtil.exist(javaPath + "/bin/javaw.exe")) {
+                    javaPath += "/bin/java.exe";
+                } else {
+                    javaPath += "/bin/javaw.exe";
+                }
+                // 类路径
+                String classPath = System.getProperty("java.class.path");
+                // 构建重启命令
+                ProcessBuilder builder = new ProcessBuilder("cmd", "/c", "start", javaPath, "-jar", classPath);
+                // 设置运行目录
+                builder.directory(dir);
+                // 打印命令
+                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+                // 执行重启命令
+                builder.start();
+            } else if (OSUtil.isLinux()) {
+                if (!FileUtil.exist(javaPath + "/bin/javaw")) {
+                    javaPath += "/bin/java";
+                } else {
+                    javaPath += "/bin/javaw";
+                }
+                // 类路径
+                String classPath = System.getProperty("java.class.path");
+                // 构建重启命令
+                ProcessBuilder builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+                // 设置运行目录
+                builder.directory(dir);
+                // 打印命令
+                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+                // 执行重启命令
+                builder.start();
+            } else if (OSUtil.isMacOS()) {
+                // 可执行程序路径
+                String execPath = SysConst.projectName();
+                File macOS = new File(dir.getParentFile(), "MacOS");
+                File[] files = macOS.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (!file.getName().contains(".")) {
+                            execPath = file.getPath();
+                            break;
+                        }
+                    }
+                }
+                // 构建重启命令
+                ProcessBuilder builder = new ProcessBuilder("nohup", execPath, "&");
+                // 打印命令
+                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+                // 执行重启命令
+                builder.start();
+            }
+            // 退出当前进程
+            TaskManager.startDelay(Objects.requireNonNullElseGet(exitAction, () -> () -> System.exit(0)), timeout);
     }
 }
