@@ -44,7 +44,6 @@ public class OSUtil {
      * @return 结果
      */
     public static boolean isMacOS() {
-        return getOSType().contains("Mac");
-
+        return getOSType().contains("MAC");
     }
 }
