@@ -263,6 +263,8 @@ public class I18nHelper {
 
     public static final String MIN = "base.min";
 
+    public static final String LATENCY = "base.latency";
+
     public static final String MAX = "base.max";
 
     public static final String AVG = "base.avg";
@@ -277,7 +279,11 @@ public class I18nHelper {
 
     public static final String SENT = "base.sent";
 
+    public static final String NODE_COUNT = "base.nodeCount";
+
     public static final String OUTSTANDING = "base.outstanding";
+
+    public static final String CONNECTIONS = "base.connections";
 
     public static final String KEYS = "base.keys";
 
@@ -342,8 +348,6 @@ public class I18nHelper {
     public static final String READONLY_MODE = "base.readonlyMode";
 
     public static final String CONNECTION = "base.connection";
-
-    public static final String CONNECTIONS = "base.connections";
 
     public static final String CONNECTED = "base.connected";
 
@@ -3072,11 +3076,44 @@ public class I18nHelper {
     public static String send() {
         return I18nResourceBundle.i18nString(SEND);
     }
+
     public static String sent() {
         return I18nResourceBundle.i18nString(SENT);
     }
 
     public static String outstanding() {
         return I18nResourceBundle.i18nString(OUTSTANDING);
+    }
+
+    public static String connections() {
+        return I18nResourceBundle.i18nString(CONNECTIONS);
+    }
+
+    public static String minLatency() {
+        return I18nResourceBundle.i18nString(MIN, LATENCY);
+    }
+
+    public static String maxLatency() {
+        return I18nResourceBundle.i18nString(MAX, LATENCY);
+    }
+
+    public static String avgLatency() {
+        return I18nResourceBundle.i18nString(AVG, LATENCY);
+    }
+
+    public static String receivedCommand() {
+        return I18nResourceBundle.i18nString(RECEIVED, CMD);
+    }
+
+    public static String sentCommand() {
+        return I18nResourceBundle.i18nString(SENT, CMD);
+    }
+
+    public static String outstandingCommand() {
+        return I18nResourceBundle.i18nString(OUTSTANDING, CMD);
+    }
+
+    public static String nodeCount() {
+        return I18nResourceBundle.i18nString(NODE_COUNT);
     }
 }
