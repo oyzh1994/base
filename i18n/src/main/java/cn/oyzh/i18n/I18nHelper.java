@@ -261,6 +261,24 @@ public class I18nHelper {
 
     public static final String DIGEST = "base.digest";
 
+    public static final String MIN = "base.min";
+
+    public static final String MAX = "base.max";
+
+    public static final String AVG = "base.avg";
+
+    public static final String UNIT = "base.unit";
+
+    public static final String MILLISECOND = "base.millisecond";
+
+    public static final String RECEIVED = "base.received";
+
+    public static final String SEND = "base.send";
+
+    public static final String SENT = "base.sent";
+
+    public static final String OUTSTANDING = "base.outstanding";
+
     public static final String KEYS = "base.keys";
 
     public static final String DELETED = "base.deleted";
@@ -3024,6 +3042,41 @@ public class I18nHelper {
     }
 
     public static String digestAuth() {
-        return I18nResourceBundle.i18nString(DIGEST,AUTH);
+        return I18nResourceBundle.i18nString(DIGEST, AUTH);
+    }
+
+    public static String min() {
+        return I18nResourceBundle.i18nString(MIN);
+    }
+
+    public static String avg() {
+        return I18nResourceBundle.i18nString(AVG);
+    }
+
+    public static String max() {
+        return I18nResourceBundle.i18nString(MAX);
+    }
+
+    public static String unit() {
+        return I18nResourceBundle.i18nString(UNIT);
+    }
+
+    public static String millisecond() {
+        return I18nResourceBundle.i18nString(MILLISECOND);
+    }
+
+    public static String received() {
+        return I18nResourceBundle.i18nString(RECEIVED);
+    }
+
+    public static String send() {
+        return I18nResourceBundle.i18nString(SEND);
+    }
+    public static String sent() {
+        return I18nResourceBundle.i18nString(SENT);
+    }
+
+    public static String outstanding() {
+        return I18nResourceBundle.i18nString(OUTSTANDING);
     }
 }
