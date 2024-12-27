@@ -3120,4 +3120,8 @@ public class I18nHelper {
     public static String nodeCount() {
         return I18nResourceBundle.i18nString(NODE_COUNT);
     }
+
+    public static String testConnection() {
+        return I18nResourceBundle.i18nString(TEST, CONNECTION);
+    }
 }
