@@ -2113,6 +2113,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NOT, SUPPORT);
     }
 
+    public static String operationNotSupport() {
+        return I18nResourceBundle.i18nString(OPERATION, NOT, SUPPORT);
+    }
+
     public static String cmd() {
         return I18nResourceBundle.i18nString(CMD);
     }
