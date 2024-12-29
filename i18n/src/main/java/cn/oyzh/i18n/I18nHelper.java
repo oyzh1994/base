@@ -567,6 +567,16 @@ public class I18nHelper {
 
     public static final String WINDOW = "base.window";
 
+    public static final String FONT = "base.font";
+
+    public static final String THEME = "base.theme";
+
+    public static final String LOCALE = "base.locale";
+
+    public static final String EDITOR = "base.editor";
+
+    public static final String GENERAL = "base.general";
+
     public static final String DEPRECATED = "base.deprecated";
 
     public static final String NORMAL = "base.normal";
@@ -3123,5 +3133,29 @@ public class I18nHelper {
 
     public static String testConnection() {
         return I18nResourceBundle.i18nString(TEST, CONNECTION);
+    }
+
+    public static String window() {
+        return I18nResourceBundle.i18nString(WINDOW);
+    }
+
+    public static String font() {
+        return I18nResourceBundle.i18nString(FONT);
+    }
+
+    public static String theme() {
+        return I18nResourceBundle.i18nString(THEME);
+    }
+
+    public static String locale() {
+        return I18nResourceBundle.i18nString(LOCALE);
+    }
+
+    public static String general() {
+        return I18nResourceBundle.i18nString(GENERAL);
+    }
+
+    public static String editor() {
+        return I18nResourceBundle.i18nString(EDITOR);
     }
 }
