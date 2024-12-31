@@ -86,8 +86,9 @@ public class ExecutorUtil {
      */
     public static void cancel(Future<?> task) {
         try {
-            if (task != null && !task.isDone() && !task.isCancelled()) {
-                task.cancel(true);
+            if (task != null) {
+//            if (task != null && !task.isDone() && !task.isCancelled()) {
+                task.cancel(false);
             }
         } catch (Exception ignored) {
 
