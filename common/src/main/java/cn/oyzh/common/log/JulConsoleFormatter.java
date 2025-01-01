@@ -126,7 +126,7 @@ public class JulConsoleFormatter extends JulFormatter {
                         continue;
                     }
                     arg = this.pretreatmentArg(arg, true);
-                    message = message.replaceFirst("\\{}", ANSI_WHITE + arg + ANSI_RESET);
+                    message = StringUtil.replaceOneTime(message, "{}", ANSI_WHITE + arg + ANSI_RESET);
                     index++;
                 }
             } else {// jul类型占位符
@@ -137,7 +137,7 @@ public class JulConsoleFormatter extends JulFormatter {
                         continue;
                     }
                     arg = this.pretreatmentArg(arg, true);
-                    message = message.replaceFirst("\\{" + index + "}", ANSI_WHITE + arg + ANSI_RESET);
+                    message = StringUtil.replaceOneTime(message, "{" + index + "}", ANSI_WHITE + arg + ANSI_RESET);
                     index++;
                 }
             }

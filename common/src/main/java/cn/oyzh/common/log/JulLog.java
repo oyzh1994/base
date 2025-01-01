@@ -24,15 +24,15 @@ public class JulLog {
     private static final Logger LOGGER = Logger.getLogger("JulLog");
 
     static {
-        System.setProperty("jansi.passthrough", "true");
-        JulLog.setLevel(JulLevel.DEBUG);
-        LOGGER.setUseParentHandlers(false);
-        // 控制台日志
-        if (!JarUtil.isInJar()) {
-            LOGGER.addHandler(new JulConsoleHandler());
-        }
-        // 文件日志
         try {
+            System.setProperty("jansi.passthrough", "true");
+            JulLog.setLevel(JulLevel.DEBUG);
+            LOGGER.setUseParentHandlers(false);
+            // 控制台日志
+//        if (!JarUtil.isInJar()) {
+            LOGGER.addHandler(new JulConsoleHandler());
+//        }
+            // 文件日志
             File logFile = JulUtil.getLogFile();
             LOGGER.addHandler(new JulFileHandler(logFile));
         } catch (Exception ex) {
