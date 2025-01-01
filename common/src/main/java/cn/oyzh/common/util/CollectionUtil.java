@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 import lombok.experimental.UtilityClass;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author oyzh
@@ -116,6 +118,40 @@ public class CollectionUtil {
     public static List<String> removeBlank(List<String> elements) {
         elements.removeIf(StringUtil::isBlank);
         return elements;
+    }
+
+    public static <T> T removeRandom(Map<?, T> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+        int size = map.size();
+        Random random = new Random();
+        int index = random.nextInt(size);
+        Object key = get(map.keySet(), index);
+        return map.remove(key);
+    }
+
+    public static <T> T removeRandom(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        int size = list.size();
+        Random random = new Random();
+        int index = random.nextInt(size);
+        T value = get(list, index);
+        list.remove(value);
+        return value;
+    }
+
+    public static <T> T getRandom(List<T> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        int size = list.size();
+        Random random = new Random();
+        int index = random.nextInt(size);
+        System.out.println(size + ":" + index);
+        return get(list, index);
     }
 
     public static int size(Collection<?> collection) {
