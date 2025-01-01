@@ -19,6 +19,8 @@ public class JulLogTest {
         JulLog.error("error1-{}", "1");
         JulLog.error("error2-{}", 2);
         JulLog.error("error3-{}", new Object());
+        JulLog.error("{}={}ms", "1", 2L);
+        JulLog.info("{}={}ms", "1", 2L);
 
         try {
             System.out.println(1 / 0);

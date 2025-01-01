@@ -31,7 +31,8 @@ public class CostUtil {
         }
         String fileName = name + "#" + element.getLineNumber();
         long end = System.currentTimeMillis();
-        JulLog.info("{}={}ms", name, end - start);
+        long cost = end - start;
+        JulLog.info("{}={}ms", fileName, cost);
         COST_RECORD.remove(name);
     }
 }

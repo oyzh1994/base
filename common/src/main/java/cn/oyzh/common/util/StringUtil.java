@@ -295,4 +295,39 @@ public class StringUtil {
         }
         return builder.substring(space.length());
     }
+
+    public static String replaceOneTime(String original, String target, String replacement) {
+        return replaceNTimes(original, target, replacement, 1);
+    }
+
+    public static String replaceNTimes(String original, String target, String replacement, int n) {
+        if (n <= 0 || target == null || target.isEmpty() || replacement == null) {
+            return original;
+        }
+        StringBuilder sb = new StringBuilder();
+        int targetLength = target.length();
+        int startIndex = 0;
+        int currentIndex;
+        int replaceCount = 0;
+        while ((currentIndex = original.indexOf(target, startIndex)) != -1) {
+            if (replaceCount < n) {
+                // 添加从上一个索引到当前索引之间的字符串
+                sb.append(original, startIndex, currentIndex);
+                // 添加替换字符串
+                sb.append(replacement);
+                // 更新索引以跳过已替换的部分
+                startIndex = currentIndex + targetLength;
+                replaceCount++;
+            } else {
+                // 如果已达到替换次数，添加剩余部分并退出循环
+                sb.append(original.substring(startIndex));
+                break;
+            }
+        }
+        // 如果没有找到任何匹配项，或者替换次数未达到但字符串已遍历完，添加剩余部分
+        if (currentIndex == -1) {
+            sb.append(original.substring(startIndex));
+        }
+        return sb.toString();
+    }
 }

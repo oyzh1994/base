@@ -65,7 +65,7 @@ public class JulFileFormatter extends JulFormatter {
                         continue;
                     }
                     arg = this.pretreatmentArg(arg, true);
-                    message = message.replaceFirst("\\{}", arg.toString());
+                    message = message.replace("{}", arg.toString());
                     index++;
                 }
             } else {// jul类型占位符
@@ -76,7 +76,7 @@ public class JulFileFormatter extends JulFormatter {
                         continue;
                     }
                     arg = this.pretreatmentArg(arg, true);
-                    message = message.replaceFirst("\\{" + index + "}", arg.toString());
+                    message = message.replace("{" + index + "}", arg.toString());
                     index++;
                 }
             }
