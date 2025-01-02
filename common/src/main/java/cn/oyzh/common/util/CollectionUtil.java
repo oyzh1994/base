@@ -1,7 +1,6 @@
 package cn.oyzh.common.util;
 
 import lombok.experimental.UtilityClass;
-import org.apache.poi.ss.formula.functions.T;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -131,6 +130,13 @@ public class CollectionUtil {
         return map.remove(key);
     }
 
+    /**
+     * 移除随机元素
+     *
+     * @param list 集合
+     * @param <T>  泛型
+     * @return 随机元素
+     */
     public static <T> T removeRandom(List<T> list) {
         if (list == null || list.isEmpty()) {
             return null;
@@ -143,6 +149,13 @@ public class CollectionUtil {
         return value;
     }
 
+    /**
+     * 获取随机元素
+     *
+     * @param list 集合
+     * @param <T>  泛型
+     * @return 随机元素
+     */
     public static <T> T getRandom(List<T> list) {
         if (list == null || list.isEmpty()) {
             return null;
@@ -150,7 +163,6 @@ public class CollectionUtil {
         int size = list.size();
         Random random = new Random();
         int index = random.nextInt(size);
-        System.out.println(size + ":" + index);
         return get(list, index);
     }
 
