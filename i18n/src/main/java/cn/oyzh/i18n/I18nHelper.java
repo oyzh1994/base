@@ -575,6 +575,8 @@ public class I18nHelper {
 
     public static final String EDITOR = "base.editor";
 
+    public static final String UPDATE = "base.update";
+
     public static final String GENERAL = "base.general";
 
     public static final String DEPRECATED = "base.deprecated";
@@ -3161,5 +3163,9 @@ public class I18nHelper {
 
     public static String editor() {
         return I18nResourceBundle.i18nString(EDITOR);
+    }
+
+    public static String updateTtl() {
+        return I18nResourceBundle.i18nString(UPDATE, TTL);
     }
 }
