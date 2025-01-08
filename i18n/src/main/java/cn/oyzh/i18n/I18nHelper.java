@@ -395,6 +395,8 @@ public class I18nHelper {
 
     public static final String TTL = "base.ttl";
 
+    public static final String CALC = "base.calc";
+
     public static final String ROW = "base.row";
 
     public static final String APPLY = "base.apply";
@@ -3167,5 +3169,9 @@ public class I18nHelper {
 
     public static String updateTtl() {
         return I18nResourceBundle.i18nString(UPDATE, TTL);
+    }
+
+    public static String calc() {
+        return I18nResourceBundle.i18nString(CALC);
     }
 }
