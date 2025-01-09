@@ -107,18 +107,18 @@ public class RuntimeUtil {
                 while ((line = reader.readLine()) != null) {
                     JulLog.info(line);
                 }
-                JulLog.info("process input--->start");
+                JulLog.info("process input--->end");
             }
             if (printError && process.getErrorStream().available() > 0) {
-                JulLog.info("process error--->start");
+                JulLog.error("process error--->start");
                 // 获取进程的标准输出流
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), charset));
                 // 读取输出并打印到控制台
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    JulLog.info(line);
+                    JulLog.error(line);
                 }
-                JulLog.info("process error--->end");
+                JulLog.error("process error--->end");
             }
             // 等待进程执行完成
             return code = process.waitFor();
