@@ -2027,6 +2027,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(EDIT, CONNECT);
     }
 
+    public static String editCollection() {
+        return I18nResourceBundle.i18nString(EDIT, COLLATION);
+    }
+
     public static String editGroup() {
         return I18nResourceBundle.i18nString(EDIT, GROUP);
     }
@@ -3173,5 +3177,9 @@ public class I18nHelper {
 
     public static String calc() {
         return I18nResourceBundle.i18nString(CALC);
+    }
+
+    public static String addCollection() {
+        return I18nResourceBundle.i18nString(ADD, COLLATION);
     }
 }
