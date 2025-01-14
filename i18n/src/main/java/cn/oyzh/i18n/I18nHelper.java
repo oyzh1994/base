@@ -377,6 +377,8 @@ public class I18nHelper {
 
     public static final String COLLATION = "base.collation";
 
+    public static final String COLLECTIONS = "base.collections";
+
     public static final String AUTO_INCREMENT = "base.autoIncrement";
 
     public static final String UNSIGNED = "base.unsigned";
@@ -2027,8 +2029,8 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(EDIT, CONNECT);
     }
 
-    public static String editCollection() {
-        return I18nResourceBundle.i18nString(EDIT, COLLATION);
+    public static String editCollections() {
+        return I18nResourceBundle.i18nString(EDIT, COLLECTIONS);
     }
 
     public static String editGroup() {
@@ -2349,6 +2351,10 @@ public class I18nHelper {
 
     public static String collation() {
         return I18nResourceBundle.i18nString(COLLATION);
+    }
+
+    public static String collections() {
+        return I18nResourceBundle.i18nString(COLLECTIONS);
     }
 
     public static String autoIncrement() {
@@ -3179,7 +3185,19 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CALC);
     }
 
-    public static String addCollection() {
-        return I18nResourceBundle.i18nString(ADD, COLLATION);
+    public static String addCollections() {
+        return I18nResourceBundle.i18nString(ADD, COLLECTIONS);
+    }
+
+    public static String collectionsAdded() {
+        return I18nResourceBundle.i18nString(COLLECTIONS, ADDED);
+    }
+
+    public static String collectionsUpdated() {
+        return I18nResourceBundle.i18nString(COLLECTIONS, UPDATED);
+    }
+
+    public static String collectionsDeleted() {
+        return I18nResourceBundle.i18nString(COLLECTIONS, DELETED);
     }
 }
