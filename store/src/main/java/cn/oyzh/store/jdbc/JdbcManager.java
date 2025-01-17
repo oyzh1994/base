@@ -79,10 +79,12 @@ public class JdbcManager {
             if (cacheType != null) {
                 url += ";CACHE_TYPE=" + cacheType;
             }
-            String pageSize = System.getProperty(JdbcConst.DB_PAGE_SIZE);
+            String pageSize = JdbcConst.dbPageSize();
             if (pageSize != null) {
                 url += ";PAGE_SIZE=" + pageSize;
             }
+            // 延迟关闭
+            url += ";DB_CLOSE_DELAY=-1";
         } else {
             url = "jdbc:sqlite:" + dbFile;
         }

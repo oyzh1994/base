@@ -7,14 +7,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * 事件订阅器
+ *
  * @author oyzh
  * @since 2024-12-27
  */
 public class EventSubscriber {
 
     private final Method method;
-
-    private volatile boolean initialized;
 
     private final WeakReference<Object> listener;
 
@@ -27,9 +27,8 @@ public class EventSubscriber {
         if (event != null && !this.isInvalid()) {
             Method method = this.method;
             Object listener = this.listener.get();
-            if (!this.initialized) {
+            if (!method.canAccess(listener)) {
                 method.setAccessible(true);
-                this.initialized = true;
             }
             method.invoke(listener, event);
         }

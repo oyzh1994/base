@@ -63,4 +63,13 @@ public class JdbcConst {
     public static String dbCacheSize() {
         return System.getProperty(DB_CACHE_SIZE);
     }
+
+    public static void dbPageSize(int dbPageSize) {
+        JulLog.info("dbPageSize: {}", dbPageSize);
+        System.setProperty(DB_PAGE_SIZE, dbPageSize + "");
+    }
+
+    public static String dbPageSize() {
+        return System.getProperty(DB_PAGE_SIZE);
+    }
 }
