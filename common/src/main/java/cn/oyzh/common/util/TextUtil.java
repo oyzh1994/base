@@ -44,8 +44,11 @@ public class TextUtil {
             word = word.toLowerCase();
         }
         // 全文匹配
-        if (fullMatch && text.equals(word)) {
-            return 0;
+        if (fullMatch) {
+            if (text.equals(word)) {
+                return 0;
+            }
+            return -1;
         }
         // 搜索索引
         int start;
