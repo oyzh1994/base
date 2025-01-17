@@ -70,7 +70,7 @@ public class JdbcManager {
         Connection connection;
         String url = "";
         if (dialect == JdbcDialect.H2) {
-            url = "jdbc:h2:" + dbFile;
+            url = "jdbc:h2:file:" + dbFile;
             String cacheSize = JdbcConst.dbCacheSize();
             if (cacheSize != null) {
                 url += ";CACHE_SIZE=" + cacheSize;
