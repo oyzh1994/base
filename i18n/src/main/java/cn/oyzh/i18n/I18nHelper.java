@@ -211,6 +211,8 @@ public class I18nHelper {
 
     public static final String CONNECT = "base.connect";
 
+    public static final String CLONE = "base.clone";
+
     public static final String ALL = "base.all";
 
     public static final String CONTAINS = "base.contains";
@@ -3199,5 +3201,13 @@ public class I18nHelper {
 
     public static String collectionsDeleted() {
         return I18nResourceBundle.i18nString(COLLECTIONS, DELETED);
+    }
+
+    public static String cloneConnect() {
+        return I18nResourceBundle.i18nString(CLONE, CONNECT);
+    }
+
+    public static String clone1() {
+        return I18nResourceBundle.i18nString(CLONE);
     }
 }
