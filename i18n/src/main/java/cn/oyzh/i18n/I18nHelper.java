@@ -3210,4 +3210,8 @@ public class I18nHelper {
     public static String clone1() {
         return I18nResourceBundle.i18nString(CLONE);
     }
+
+    public static String cloneNode() {
+        return I18nResourceBundle.i18nString(CLONE, NODE);
+    }
 }
