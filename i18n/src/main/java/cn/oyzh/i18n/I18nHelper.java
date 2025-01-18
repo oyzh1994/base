@@ -3224,4 +3224,8 @@ public class I18nHelper {
     public static String openServer() {
         return I18nResourceBundle.i18nString(OPEN, SERVER);
     }
+
+    public static String server() {
+        return I18nResourceBundle.i18nString(SERVER);
+    }
 }
