@@ -121,6 +121,8 @@ public class I18nHelper {
 
     public static final String DATA = "base.data";
 
+    public static final String SERVER = "base.server";
+
     public static final String PERSISTENT = "base.persistent";
 
     public static final String TEMPORARY = "base.temporary";
@@ -3213,5 +3215,13 @@ public class I18nHelper {
 
     public static String cloneNode() {
         return I18nResourceBundle.i18nString(CLONE, NODE);
+    }
+
+    public static String openData() {
+        return I18nResourceBundle.i18nString(OPEN, DATA);
+    }
+
+    public static String openServer() {
+        return I18nResourceBundle.i18nString(OPEN, SERVER);
     }
 }
