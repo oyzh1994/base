@@ -473,6 +473,8 @@ public class I18nHelper {
 
     public static final String UNNAMED = "base.unnamed";
 
+    public static final String STAT = "base.stat";
+
     public static final String SERVER_INFO = "base.serverInfo";
 
     public static final String EXPIRED = "base.expired";
@@ -3231,5 +3233,9 @@ public class I18nHelper {
 
     public static String unnamedQuery() {
         return I18nResourceBundle.i18nString(UNNAMED, QUERY);
+    }
+
+    public static String stat() {
+        return I18nResourceBundle.i18nString(STAT);
     }
 }
