@@ -3228,4 +3228,8 @@ public class I18nHelper {
     public static String server() {
         return I18nResourceBundle.i18nString(SERVER);
     }
+
+    public static String unnamedQuery() {
+        return I18nResourceBundle.i18nString(UNNAMED, QUERY);
+    }
 }
