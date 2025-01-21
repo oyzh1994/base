@@ -3,8 +3,10 @@ package cn.oyzh.common.util;
 import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 数组工具类
@@ -100,5 +102,19 @@ public class ArrayUtil {
         byte[] target = new byte[length];
         System.arraycopy(source, 0, target, 0, length);
         return target;
+    }
+
+    public static char[] reverse(char[] charArray) {
+        List<Character> list = new ArrayList<>();
+        for (char c : charArray) {
+            list.add(c);
+        }
+        list = list.reversed();
+        char[] chars = new char[charArray.length];
+        for (int i = 0; i < list.size(); i++) {
+            char c = list.get(i);
+            chars[i] = c;
+        }
+        return chars;
     }
 }
