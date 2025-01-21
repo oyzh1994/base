@@ -3238,4 +3238,8 @@ public class I18nHelper {
     public static String stat() {
         return I18nResourceBundle.i18nString(STAT);
     }
+
+    public static String acl() {
+        return I18nResourceBundle.i18nString(ACL);
+    }
 }
