@@ -235,6 +235,8 @@ public class I18nHelper {
 
     public static final String ACL = "base.acl";
 
+    public static final String QUOTA = "base.quota";
+
     public static final String DATABASE = "base.database";
 
     public static final String INIT = "base.init";
@@ -3241,5 +3243,9 @@ public class I18nHelper {
 
     public static String acl() {
         return I18nResourceBundle.i18nString(ACL);
+    }
+
+    public static String quota() {
+        return I18nResourceBundle.i18nString(QUOTA);
     }
 }
