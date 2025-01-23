@@ -145,18 +145,18 @@ class HttpGet {
         }
     }
 
-    static class HttpGet$1 implements X509TrustManager {
-        HttpGet$1() {
-        }
-
-        public X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        }
-
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-        }
-    }
+//    static class HttpGet$1 implements X509TrustManager {
+//        HttpGet$1() {
+//        }
+//
+//        public X509Certificate[] getAcceptedIssuers() {
+//            return null;
+//        }
+//
+//        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+//        }
+//
+//        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+//        }
+//    }
 }

@@ -12,6 +12,12 @@ import java.util.Locale;
 @UtilityClass
 public class TransUtil {
 
+    /**
+     * 获取百度的语言名称
+     *
+     * @param locale 语言
+     * @return 名称
+     */
     public static String localeToName(Locale locale) {
         if (locale == Locale.CHINA || locale == Locale.PRC || locale == Locale.CHINESE) {
             return "zh";
@@ -29,7 +35,13 @@ public class TransUtil {
             return "kor";
         }
         if (locale == Locale.GERMANY || locale == Locale.GERMAN) {
-            return "kor";
+            return "de";
+        }
+        if (locale == Locale.FRANCE || locale == Locale.FRENCH) {
+            return "fra";
+        }
+        if (locale == Locale.ITALY || locale == Locale.ITALIAN) {
+            return "it";
         }
         return "zh";
     }

@@ -80,10 +80,14 @@ public class I18nGenerator {
                 if (object.containsKey("trans_result")) {
                     JSONArray array = object.getJSONArray("trans_result");
                     String dst = array.getJSONObject(0).getString("dst");
-                    JulLog.info("translate {}:{}={}:{} count{}", key, source, key, dst, count++);
+                    JulLog.info("translate {} {}={} count={}", key, source, dst, count++);
                     targetProp.setProperty((String) key, dst);
                 } else {
                     JulLog.warn("translate {}:{} fail", key, source, key);
+                }
+                // 存储数据
+                if (count % 10 == 0) {
+                    targetProp.store(new FileOutputStream(targetI18nFile), null);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

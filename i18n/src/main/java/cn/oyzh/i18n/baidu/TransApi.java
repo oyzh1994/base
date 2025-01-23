@@ -5,6 +5,8 @@
 
 package cn.oyzh.i18n.baidu;
 
+import cn.oyzh.common.util.MD5Util;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +34,8 @@ public class TransApi {
         String salt = String.valueOf(System.currentTimeMillis());
         params.put("salt", salt);
         String src = this.appid + query + salt + this.securityKey;
-        params.put("sign", MD5.md5(src));
+        params.put("sign", MD5Util.md5Hex(src));
+//        params.put("sign", MD5.md5(src));
         return params;
     }
 }

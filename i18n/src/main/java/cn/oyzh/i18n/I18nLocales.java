@@ -24,6 +24,10 @@ public class I18nLocales {
         locales.add(Locale.PRC);
         locales.add(Locale.TAIWAN);
         locales.add(Locale.ENGLISH);
+        locales.add(Locale.JAPAN);
+        locales.add(Locale.GERMAN);
+        locales.add(Locale.FRANCE);
+        locales.add(Locale.ITALY);
         return locales;
     }
 
@@ -42,6 +46,21 @@ public class I18nLocales {
         }
         if (locale == Locale.ENGLISH) {
             return "English";
+        }
+        if (locale == Locale.JAPAN) {
+            return "日本語";
+        }
+        if (locale == Locale.GERMAN) {
+            return "Deutsch";
+        }
+        if (locale == Locale.KOREA) {
+            return "한국어";
+        }
+        if (locale == Locale.FRANCE) {
+            return "Français";
+        }
+        if (locale == Locale.ITALY) {
+            return "Italiano";
         }
         return "中文简体";
     }
@@ -62,6 +81,21 @@ public class I18nLocales {
         if (locale == Locale.ENGLISH) {
             return "en";
         }
+        if (locale == Locale.JAPAN) {
+            return "ja";
+        }
+        if (locale == Locale.GERMAN) {
+            return "de";
+        }
+        if (locale == Locale.KOREA) {
+            return "kor";
+        }
+        if (locale == Locale.FRANCE) {
+            return "fr";
+        }
+        if (locale == Locale.ITALIAN) {
+            return "it";
+        }
         return "zh_cn";
     }
 
@@ -80,6 +114,21 @@ public class I18nLocales {
         }
         if (StringUtil.equals(localeName, "en")) {
             return Locale.ENGLISH;
+        }
+        if (StringUtil.equals(localeName, "ja")) {
+            return Locale.JAPAN;
+        }
+        if (StringUtil.equals(localeName, "de")) {
+            return Locale.GERMAN;
+        }
+        if (StringUtil.equals(localeName, "kor")) {
+            return Locale.KOREA;
+        }
+        if (StringUtil.equals(localeName, "fr")) {
+            return Locale.FRANCE;
+        }
+        if (StringUtil.equals(localeName, "it")) {
+            return Locale.ITALY;
         }
         return Locale.PRC;
     }

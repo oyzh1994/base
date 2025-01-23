@@ -16,12 +16,14 @@
             <groupId>cn.oyzh</groupId>
             <artifactId>common</artifactId>
         </dependency>
+        <!-- json库 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- 测试库 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
