@@ -1,5 +1,6 @@
 package cn.oyzh.i18n;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -194,6 +195,10 @@ public class I18nHelper {
     public static final String PARSE = "base.parse";
 
     public static final String PROCESS = "base.process";
+
+    public static final String PROGRAM = "base.program";
+
+    public static final String PROGRAM_TIP1 = "base.program.tip1";
 
     public static final String FILE_NAME = "base.fileName";
 
@@ -3247,5 +3252,9 @@ public class I18nHelper {
 
     public static String quota() {
         return I18nResourceBundle.i18nString(QUOTA);
+    }
+
+    public static String programTip1() {
+        return I18nResourceBundle.i18nString(PROGRAM_TIP1);
     }
 }
