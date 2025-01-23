@@ -185,6 +185,23 @@ public class FileUtil {
         }
     }
 
+    public static List<String> readLines(InputStream stream, Charset charset) {
+        try {
+            InputStreamReader reader = new InputStreamReader(stream, charset);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            try (reader; bufferedReader) {
+                List<String> list = new ArrayList<>();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    list.add(line);
+                }
+                return list;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static String readString(InputStream stream, Charset charset) {
         try {
             InputStreamReader reader = new InputStreamReader(stream, charset);
