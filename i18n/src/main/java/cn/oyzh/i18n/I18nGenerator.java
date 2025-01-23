@@ -82,11 +82,11 @@ public class I18nGenerator {
                 if (object.containsKey("trans_result")) {
                     JSONArray array = object.getJSONArray("trans_result");
                     String dst = array.getJSONObject(0).getString("dst");
-                    JulLog.info("translate {} {}={} count={}", key, source, dst, count++);
+                    JulLog.info("translate:{} key:{}={}={} count={}", targetLocale.getLanguage(), key, source, dst, count++);
                     targetProp.setProperty((String) key, dst);
                 } else {
                     targetProp.setProperty((String) key, source);
-                    JulLog.warn("translate {} {} fail", key, source);
+                    JulLog.warn("translate:{} key:{}={} fail count={}", targetLocale.getLanguage(), key, source, count);
                 }
                 // 存储数据
                 if (count % 10 == 0) {
