@@ -32,7 +32,7 @@ public class TransUtil {
         if (locale == I18nLocales.ZH_WYW) {
             return "wyw";
         }
-        if (locale == Locale.ENGLISH) {
+        if (locale == Locale.ENGLISH || locale == Locale.US || locale == Locale.UK) {
             return "en";
         }
         if (locale == Locale.JAPAN || locale == Locale.JAPANESE) {
@@ -49,6 +49,9 @@ public class TransUtil {
         }
         if (locale == Locale.ITALY || locale == Locale.ITALIAN) {
             return "it";
+        }
+        if (locale == I18nLocales.RU) {
+            return "ru";
         }
         return "zh";
     }

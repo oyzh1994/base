@@ -33,6 +33,8 @@ public class I18nRedisGenerator {
         tasks.add(this::redis_it);
         tasks.add(this::redis_yue);
         tasks.add(this::redis_wyw);
+        tasks.add(this::redis_ru);
+        tasks.add(this::redis_dan);
         ThreadUtil.submit(tasks);
     }
 
@@ -121,6 +123,26 @@ public class I18nRedisGenerator {
             String cnI18nFile = baseDir + "/i18n_zh_CN.properties";
             String targetI18nFile = baseDir + "/i18n_zh_WYW.properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.ZH_WYW);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void redis_ru() {
+        try {
+            String cnI18nFile = baseDir + "/i18n_zh_CN.properties";
+            String targetI18nFile = baseDir + "/i18n_ru.properties";
+            I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.RU);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void redis_dan() {
+        try {
+            String cnI18nFile = baseDir + "/i18n_zh_CN.properties";
+            String targetI18nFile = baseDir + "/i18n_dan.properties";
+            I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.DAN);
         } catch (IOException ex) {
             ex.printStackTrace();
         }

@@ -18,6 +18,10 @@ public class I18nLocales {
 
     public static Locale ZH_WYW = Locale.of("zh", "wyw");
 
+    public static Locale RU = Locale.of("russian", "ru");
+
+    public static Locale DAN = Locale.of("dan", "dan");
+
     /**
      * 获取区域列表
      *
@@ -35,6 +39,8 @@ public class I18nLocales {
         locales.add(Locale.GERMAN);
         locales.add(Locale.FRANCE);
         locales.add(Locale.ITALY);
+        locales.add(RU);
+        locales.add(DAN);
         return locales;
     }
 
@@ -74,6 +80,12 @@ public class I18nLocales {
         }
         if (locale == Locale.ITALY) {
             return "Italiano";
+        }
+        if (locale == RU) {
+            return "Русский";
+        }
+        if (locale == DAN) {
+            return "Dansk";
         }
         return "中文简体";
     }
@@ -115,6 +127,12 @@ public class I18nLocales {
         if (locale == Locale.ITALIAN) {
             return "it";
         }
+        if (locale == RU) {
+            return "ru";
+        }
+        if (locale == DAN) {
+            return "dan";
+        }
         return "zh_cn";
     }
 
@@ -154,6 +172,12 @@ public class I18nLocales {
         }
         if (StringUtil.equals(localeName, "it")) {
             return Locale.ITALY;
+        }
+        if (StringUtil.equals(localeName, "ru")) {
+            return RU;
+        }
+        if (StringUtil.equals(localeName, "dan")) {
+            return DAN;
         }
         return Locale.PRC;
     }

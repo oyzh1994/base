@@ -34,6 +34,8 @@ public class I18nBaseGenerator {
         tasks.add(this::base_it);
         tasks.add(this::base_yue);
         tasks.add(this::base_wyw);
+        tasks.add(this::base_ru);
+        tasks.add(this::base_dan);
         ThreadUtil.submit(tasks);
     }
 
@@ -122,6 +124,26 @@ public class I18nBaseGenerator {
             String cnI18nFile = baseDir + "/base_i18n_zh_CN.properties";
             String targetI18nFile = baseDir + "/base_i18n_zh_WYW.properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.ZH_WYW);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void base_ru() {
+        try {
+            String cnI18nFile = baseDir + "/base_i18n_zh_CN.properties";
+            String targetI18nFile = baseDir + "/base_i18n_ru.properties";
+            I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.RU);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void base_dan() {
+        try {
+            String cnI18nFile = baseDir + "/base_i18n_zh_CN.properties";
+            String targetI18nFile = baseDir + "/base_i18n_dan.properties";
+            I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.DAN);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
