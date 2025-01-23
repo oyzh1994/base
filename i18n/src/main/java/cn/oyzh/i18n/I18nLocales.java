@@ -14,6 +14,10 @@ import java.util.Locale;
 @UtilityClass
 public class I18nLocales {
 
+    public static Locale ZH_YUE = Locale.of("zh", "yue");
+
+    public static Locale ZH_WYW = Locale.of("zh", "wyw");
+
     /**
      * 获取区域列表
      *
@@ -23,8 +27,11 @@ public class I18nLocales {
         List<Locale> locales = new ArrayList<>();
         locales.add(Locale.PRC);
         locales.add(Locale.TAIWAN);
+        locales.add(ZH_YUE);
+        locales.add(ZH_WYW);
         locales.add(Locale.ENGLISH);
         locales.add(Locale.JAPAN);
+        locales.add(Locale.KOREA);
         locales.add(Locale.GERMAN);
         locales.add(Locale.FRANCE);
         locales.add(Locale.ITALY);
@@ -39,10 +46,16 @@ public class I18nLocales {
      */
     public static String getLocaleDesc(Locale locale) {
         if (locale == Locale.PRC) {
-            return "中文简体";
+            return "中国（简体）";
         }
         if (locale == Locale.TAIWAN) {
-            return "中文繁體";
+            return "中國（臺灣）";
+        }
+        if (locale == ZH_YUE) {
+            return "中国（粵語）";
+        }
+        if (locale == ZH_WYW) {
+            return "中国（文言文）";
         }
         if (locale == Locale.ENGLISH) {
             return "English";
@@ -78,6 +91,12 @@ public class I18nLocales {
         if (locale == Locale.TAIWAN) {
             return "zh_tw";
         }
+        if (locale == ZH_YUE) {
+            return "zh_yue";
+        }
+        if (locale == ZH_WYW) {
+            return "zh_wyw";
+        }
         if (locale == Locale.ENGLISH) {
             return "en";
         }
@@ -111,6 +130,12 @@ public class I18nLocales {
         }
         if (StringUtil.equals(localeName, "zh_tw")) {
             return Locale.TAIWAN;
+        }
+        if (StringUtil.equals(localeName, "zh_yue")) {
+            return ZH_YUE;
+        }
+        if (StringUtil.equals(localeName, "zh_wyw")) {
+            return ZH_WYW;
         }
         if (StringUtil.equals(localeName, "en")) {
             return Locale.ENGLISH;

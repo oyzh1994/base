@@ -2,6 +2,7 @@ package cn.oyzh.i18n.test;
 
 import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.i18n.I18nGenerator;
+import cn.oyzh.i18n.I18nLocales;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -31,6 +32,8 @@ public class I18nBaseGenerator {
         tasks.add(this::base_kor);
         tasks.add(this::base_fr);
         tasks.add(this::base_it);
+        tasks.add(this::base_yue);
+        tasks.add(this::base_wyw);
         ThreadUtil.submit(tasks);
     }
 
@@ -99,6 +102,26 @@ public class I18nBaseGenerator {
             String cnI18nFile = baseDir + "/base_i18n_zh_CN.properties";
             String targetI18nFile = baseDir + "/base_i18n_it.properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, Locale.ITALY);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void base_yue() {
+        try {
+            String cnI18nFile = baseDir + "/base_i18n_zh_CN.properties";
+            String targetI18nFile = baseDir + "/base_i18n_zh_YUE.properties";
+            I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.ZH_YUE);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void base_wyw() {
+        try {
+            String cnI18nFile = baseDir + "/base_i18n_zh_CN.properties";
+            String targetI18nFile = baseDir + "/base_i18n_zh_WYW.properties";
+            I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, I18nLocales.ZH_WYW);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
