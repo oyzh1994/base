@@ -26,12 +26,12 @@ public class TransUtil {
         if (locale == Locale.TAIWAN || locale == Locale.TRADITIONAL_CHINESE) {
             return "cht";
         }
-        if (locale == I18nLocales.ZH_YUE) {
-            return "yue";
-        }
-        if (locale == I18nLocales.ZH_WYW) {
-            return "wyw";
-        }
+//        if (locale == I18nLocales.ZH_YUE) {
+//            return "yue";
+//        }
+//        if (locale == I18nLocales.ZH_WYW) {
+//            return "wyw";
+//        }
         if (locale == Locale.ENGLISH || locale == Locale.US || locale == Locale.UK) {
             return "en";
         }
@@ -50,9 +50,22 @@ public class TransUtil {
         if (locale == Locale.ITALY || locale == Locale.ITALIAN) {
             return "it";
         }
-        if (locale == I18nLocales.RU) {
-            return "ru";
-        }
-        return "zh";
+//        if (locale == I18nLocales.RU) {
+//            return "ru";
+//        }
+//        if (locale == I18nLocales.PT) {
+//            return "pt";
+//        }
+//        if (locale == I18nLocales.TH) {
+//            return "th";
+//        }
+//        if (locale == I18nLocales.EL) {
+//            return "el";
+//        }
+//        if (locale == I18nLocales.FIN) {
+//            return "fin";
+//        }
+//        return "zh";
+        return locale.getCountry().toLowerCase();
     }
 }

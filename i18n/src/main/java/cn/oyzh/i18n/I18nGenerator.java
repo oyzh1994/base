@@ -47,9 +47,9 @@ public class I18nGenerator {
         if (!FileUtil.exist(cnI18nFile)) {
             throw new RuntimeException("invalid file : " + cnI18nFile);
         }
-        if (!FileUtil.exist(targetI18nFile)) {
-            throw new RuntimeException("invalid file : " + targetI18nFile);
-        }
+//        if (!FileUtil.exist(targetI18nFile)) {
+//            throw new RuntimeException("invalid file : " + targetI18nFile);
+//        }
         // 初始化百度信息
         String appid = list.getFirst();
         String securityKey = list.get(1);
@@ -62,22 +62,32 @@ public class I18nGenerator {
 
         // 目标属性
         Properties targetProp = new Properties();
+        // 目标文件不存在就创建
+        if (!FileUtil.exist(targetI18nFile)) {
+            FileUtil.touch(targetI18nFile);
+        }
         targetProp.load(new FileInputStream(targetI18nFile));
 
         int count = 0;
         // 遍历中文key
         for (Object key : cnKeys) {
             try {
+                // 检查是否为空
                 String source = (String) cnProp.get(key);
                 if (StringUtil.isBlank(source)) {
                     continue;
                 }
+                // 检查是否不为空
                 String target = (String) targetProp.get(key);
                 if (StringUtil.isNotBlank(target)) {
                     continue;
                 }
+                // 获取名称
                 String targetName = TransUtil.localeToName(targetLocale);
-                String result = api.getTransResult(source, "zh", targetName);
+                // 执行翻译
+                String result = api.trans(source, "zh", targetName);
+                JulLog.info("translate result:{}", result);
+                // 解析数据
                 JSONObject object = JSONUtil.parseObject(result);
                 if (object.containsKey("trans_result")) {
                     JSONArray array = object.getJSONArray("trans_result");
@@ -85,7 +95,7 @@ public class I18nGenerator {
                     JulLog.info("translate:{} key:{}={}={} count={}", targetLocale.getLanguage(), key, source, dst, count++);
                     targetProp.setProperty((String) key, dst);
                 } else {
-                    targetProp.setProperty((String) key, source);
+//                    targetProp.setProperty((String) key, source);
                     JulLog.warn("translate:{} key:{}={} fail count={}", targetLocale.getLanguage(), key, source, count);
                 }
                 // 存储数据

@@ -4,8 +4,10 @@ import cn.oyzh.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author oyzh
@@ -22,26 +24,42 @@ public class I18nLocales {
 
     public static Locale DAN = Locale.of("dan", "dan");
 
+    public static Locale PT = Locale.of("pt", "pt");
+
+    public static Locale TH = Locale.of("th", "th");
+
+    public static Locale EL = Locale.of("el", "el");
+
+    public static Locale FIN = Locale.of("fin", "fin");
+
+    private static final List<I1n8Locale> locales = new ArrayList<>();
+
+    static {
+        locales.add(new I1n8Locale("zh_cn", Locale.PRC, "中国（简体）","中文简体"));
+        locales.add(new I1n8Locale("zh_tw", Locale.TAIWAN, "中國（臺灣）","中文繁体"));
+        locales.add(new I1n8Locale("zh_yue", ZH_YUE, "中國（粵語）","中文粤语"));
+        locales.add(new I1n8Locale("zh_wyw", ZH_WYW, "中國（文言文）","中文文言文"));
+        locales.add(new I1n8Locale("en", Locale.ENGLISH, "English","英语"));
+        locales.add(new I1n8Locale("ja", Locale.JAPAN, "日本語","日语"));
+        locales.add(new I1n8Locale("de", Locale.GERMAN, "Deutsch","德语"));
+        locales.add(new I1n8Locale("kor", Locale.KOREA, "한국어","韩语"));
+        locales.add(new I1n8Locale("fr", Locale.FRANCE, "Français","法语"));
+        locales.add(new I1n8Locale("it", Locale.ITALY, "Italiano","意大利语"));
+        locales.add(new I1n8Locale("ru", RU, "Русский","俄语"));
+        locales.add(new I1n8Locale("dan", DAN, "Dansk","丹麦语"));
+        locales.add(new I1n8Locale("pt", PT, "Português","葡萄牙语"));
+        locales.add(new I1n8Locale("th", TH, "ไทย","台语"));
+        locales.add(new I1n8Locale("el", EL, "Ελληνικά","希腊语"));
+        locales.add(new I1n8Locale("fin", FIN, "Suomi","芬兰语"));
+    }
+
     /**
      * 获取区域列表
      *
      * @return 区域列表
      */
     public static List<Locale> locales() {
-        List<Locale> locales = new ArrayList<>();
-        locales.add(Locale.PRC);
-        locales.add(Locale.TAIWAN);
-        locales.add(ZH_YUE);
-        locales.add(ZH_WYW);
-        locales.add(Locale.ENGLISH);
-        locales.add(Locale.JAPAN);
-        locales.add(Locale.KOREA);
-        locales.add(Locale.GERMAN);
-        locales.add(Locale.FRANCE);
-        locales.add(Locale.ITALY);
-        locales.add(RU);
-        locales.add(DAN);
-        return locales;
+        return locales.parallelStream().map(I1n8Locale::getLocale).toList();
     }
 
     /**
@@ -51,43 +69,12 @@ public class I18nLocales {
      * @return 区域描述
      */
     public static String getLocaleDesc(Locale locale) {
-        if (locale == Locale.PRC) {
-            return "中国（简体）";
+        for (I1n8Locale i1n8Locale : locales) {
+            if (i1n8Locale.getLocale() == locale) {
+                return i1n8Locale.getDisplayName();
+            }
         }
-        if (locale == Locale.TAIWAN) {
-            return "中國（臺灣）";
-        }
-        if (locale == ZH_YUE) {
-            return "中国（粵語）";
-        }
-        if (locale == ZH_WYW) {
-            return "中国（文言文）";
-        }
-        if (locale == Locale.ENGLISH) {
-            return "English";
-        }
-        if (locale == Locale.JAPAN) {
-            return "日本語";
-        }
-        if (locale == Locale.GERMAN) {
-            return "Deutsch";
-        }
-        if (locale == Locale.KOREA) {
-            return "한국어";
-        }
-        if (locale == Locale.FRANCE) {
-            return "Français";
-        }
-        if (locale == Locale.ITALY) {
-            return "Italiano";
-        }
-        if (locale == RU) {
-            return "Русский";
-        }
-        if (locale == DAN) {
-            return "Dansk";
-        }
-        return "中文简体";
+        return locales.getFirst().getDisplayName();
     }
 
     /**
@@ -97,43 +84,12 @@ public class I18nLocales {
      * @return 区域名称
      */
     public static String getLocaleName(Locale locale) {
-        if (locale == Locale.PRC) {
-            return "zh_cn";
+        for (I1n8Locale i1n8Locale : locales) {
+            if (i1n8Locale.getLocale() == locale) {
+                return i1n8Locale.getName();
+            }
         }
-        if (locale == Locale.TAIWAN) {
-            return "zh_tw";
-        }
-        if (locale == ZH_YUE) {
-            return "zh_yue";
-        }
-        if (locale == ZH_WYW) {
-            return "zh_wyw";
-        }
-        if (locale == Locale.ENGLISH) {
-            return "en";
-        }
-        if (locale == Locale.JAPAN) {
-            return "ja";
-        }
-        if (locale == Locale.GERMAN) {
-            return "de";
-        }
-        if (locale == Locale.KOREA) {
-            return "kor";
-        }
-        if (locale == Locale.FRANCE) {
-            return "fr";
-        }
-        if (locale == Locale.ITALIAN) {
-            return "it";
-        }
-        if (locale == RU) {
-            return "ru";
-        }
-        if (locale == DAN) {
-            return "dan";
-        }
-        return "zh_cn";
+        return locales.getFirst().getName();
     }
 
     /**
@@ -143,42 +99,11 @@ public class I18nLocales {
      * @return 区域
      */
     public static Locale getLocale(String localeName) {
-        if (StringUtil.equals(localeName, "zh_cn")) {
-            return Locale.PRC;
+        for (I1n8Locale i1n8Locale : locales) {
+            if (StringUtil.equalsIgnoreCase(localeName, i1n8Locale.getName())) {
+                return i1n8Locale.getLocale();
+            }
         }
-        if (StringUtil.equals(localeName, "zh_tw")) {
-            return Locale.TAIWAN;
-        }
-        if (StringUtil.equals(localeName, "zh_yue")) {
-            return ZH_YUE;
-        }
-        if (StringUtil.equals(localeName, "zh_wyw")) {
-            return ZH_WYW;
-        }
-        if (StringUtil.equals(localeName, "en")) {
-            return Locale.ENGLISH;
-        }
-        if (StringUtil.equals(localeName, "ja")) {
-            return Locale.JAPAN;
-        }
-        if (StringUtil.equals(localeName, "de")) {
-            return Locale.GERMAN;
-        }
-        if (StringUtil.equals(localeName, "kor")) {
-            return Locale.KOREA;
-        }
-        if (StringUtil.equals(localeName, "fr")) {
-            return Locale.FRANCE;
-        }
-        if (StringUtil.equals(localeName, "it")) {
-            return Locale.ITALY;
-        }
-        if (StringUtil.equals(localeName, "ru")) {
-            return RU;
-        }
-        if (StringUtil.equals(localeName, "dan")) {
-            return DAN;
-        }
-        return Locale.PRC;
+        return locales.getFirst().getLocale();
     }
 }
