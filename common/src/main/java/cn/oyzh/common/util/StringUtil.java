@@ -137,6 +137,10 @@ public class StringUtil {
         return false;
     }
 
+    public static boolean notContains(String source, String target) {
+        return !contains(source, target);
+    }
+
     public static boolean containsAny(String source, String... strings) {
         if (source != null && strings != null) {
             for (String string : strings) {
