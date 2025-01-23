@@ -44,10 +44,12 @@ public class I18nGenerator {
         if (list.size() < 2) {
             throw new RuntimeException("invalid baidu app!");
         }
-        if (!FileUtil.exist(cnI18nFile) || !FileUtil.exist(targetI18nFile)) {
-            throw new RuntimeException("invalid file!");
+        if (!FileUtil.exist(cnI18nFile)) {
+            throw new RuntimeException("invalid file : " + cnI18nFile);
         }
-
+        if (!FileUtil.exist(targetI18nFile)) {
+            throw new RuntimeException("invalid file : " + targetI18nFile);
+        }
         // 初始化百度信息
         String appid = list.getFirst();
         String securityKey = list.get(1);
@@ -83,7 +85,8 @@ public class I18nGenerator {
                     JulLog.info("translate {} {}={} count={}", key, source, dst, count++);
                     targetProp.setProperty((String) key, dst);
                 } else {
-                    JulLog.warn("translate {}:{} fail", key, source, key);
+                    targetProp.setProperty((String) key, source);
+                    JulLog.warn("translate {} {} fail", key, source);
                 }
                 // 存储数据
                 if (count % 10 == 0) {
