@@ -16,9 +16,9 @@ import java.util.Map;
 @UtilityClass
 public class I18nLocales {
 
-    public static Locale ZH_YUE = Locale.of("zh", "yue");
+    public static Locale ZH_YUE = Locale.of("chinese", "yue");
 
-    public static Locale ZH_WYW = Locale.of("zh", "wyw");
+    public static Locale ZH_WYW = Locale.of("chinese", "wyw");
 
     public static Locale RU = Locale.of("russian", "ru");
 
@@ -57,10 +57,10 @@ public class I18nLocales {
     private static final List<I1n8Locale> locales = new ArrayList<>();
 
     static {
-        locales.add(new I1n8Locale("zh_cn", Locale.PRC, "中国（简体）", "中文简体"));
-        locales.add(new I1n8Locale("zh_tw", Locale.TAIWAN, "中國（臺灣）", "中文繁体"));
-        locales.add(new I1n8Locale("zh_yue", ZH_YUE, "中國（粵語）", "中文粤语"));
-        locales.add(new I1n8Locale("zh_wyw", ZH_WYW, "中國（文言文）", "中文文言文"));
+        locales.add(new I1n8Locale("zh_cn", Locale.PRC, "中文（简体）", "中文简体"));
+        locales.add(new I1n8Locale("zh_tw", Locale.TAIWAN, "中文（繁体）", "中文繁体"));
+        locales.add(new I1n8Locale("zh_yue", ZH_YUE, "中文（粵語）", "中文粤语"));
+        locales.add(new I1n8Locale("zh_wyw", ZH_WYW, "中文（文言文）", "中文文言文"));
         locales.add(new I1n8Locale("en", Locale.ENGLISH, "English", "英语"));
         locales.add(new I1n8Locale("ja", Locale.JAPAN, "日本語", "日语"));
         locales.add(new I1n8Locale("de", Locale.GERMAN, "Deutsch", "德语"));
