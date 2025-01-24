@@ -10,17 +10,13 @@ import cn.oyzh.i18n.baidu.TransApi;
 import cn.oyzh.i18n.baidu.TransUtil;
 import lombok.experimental.UtilityClass;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author oyzh
@@ -36,8 +32,8 @@ public class I18nGenerator {
      * @param cnI18nFile     中文i18n文件
      * @param targetI18nFile 目标i18n文件
      * @param targetLocale   目标语言
-     * @return
-     * @throws IOException
+     * @return 完成翻译的键数量
+     * @throws IOException 异常
      */
     public static int i18nTranslate(String skFilePath, String cnI18nFile, String targetI18nFile, Locale targetLocale) throws IOException {
         List<String> list = FileUtil.readLines(new FileInputStream(skFilePath), StandardCharsets.UTF_8);
@@ -58,7 +54,6 @@ public class I18nGenerator {
         // 中文属性
         Properties cnProp = new Properties();
         cnProp.load(new FileInputStream(cnI18nFile));
-        Set<Object> cnKeys = cnProp.keySet();
 
         // 目标属性
         Properties targetProp = new Properties();
@@ -70,7 +65,7 @@ public class I18nGenerator {
 
         int count = 0;
         // 遍历中文key
-        for (Object key : cnKeys) {
+        for (Object key : cnProp.keySet()) {
             try {
                 // 检查是否为空
                 String source = (String) cnProp.get(key);
@@ -111,4 +106,95 @@ public class I18nGenerator {
         return count;
     }
 
+    /**
+     * 执行i18n修正
+     *
+     * @param cnI18nFile     中文i18n文件
+     * @param targetI18nFile 目标i18n文件
+     * @param targetLocale   目标语言
+     * @throws IOException 异常
+     */
+    public static void i18nCorrection(String cnI18nFile, String targetI18nFile, Locale targetLocale) throws IOException {
+        if (!FileUtil.exist(cnI18nFile)) {
+            throw new RuntimeException("invalid file : " + cnI18nFile);
+        }
+        if (!FileUtil.exist(targetI18nFile)) {
+            throw new RuntimeException("invalid file : " + targetI18nFile);
+        }
+        // 中文属性
+        Properties cnProp = new Properties();
+        cnProp.load(new FileInputStream(cnI18nFile));
+
+        // 目标属性
+        Properties targetProp = new Properties();
+        targetProp.load(new FileInputStream(targetI18nFile));
+
+        // 遍历中文key
+        for (Object key : cnProp.keySet()) {
+            try {
+                // 检查是否为空
+                String source = (String) cnProp.get(key);
+                if (StringUtil.isBlank(source)) {
+                    continue;
+                }
+                // 检查是否不为空
+                String target = (String) targetProp.get(key);
+                if (StringUtil.isBlank(target)) {
+                    continue;
+                }
+                // 句号
+                if (!source.contains("。") && target.contains("。")) {
+                    target = target.replaceAll("。", ".");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 逗号
+                if (!source.contains("，") && target.contains("，")) {
+                    target = target.replaceAll("，", ",");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 冒号1
+                if (!source.contains("：") && target.contains("：")) {
+                    target = target.replaceAll("：", ":");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 冒号2
+                if (!source.contains(": ") && target.contains(": ")) {
+                    target = target.replaceAll(": ", ":");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 除号1
+                if (!source.contains(" / ") && target.contains(" / ")) {
+                    target = target.replaceAll(" / ", "/");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 分号1
+                if (!source.contains("; ") && target.contains("; ")) {
+                    target = target.replaceAll("; ", ";");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 分号2
+                if (!source.contains("； ") && target.contains("； ")) {
+                    target = target.replaceAll("； ", ";");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 分号3
+                if (!source.contains("；") && target.contains("；")) {
+                    target = target.replaceAll("；", ";");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        // 存储数据
+        targetProp.store(new FileOutputStream(targetI18nFile), null);
+    }
 }

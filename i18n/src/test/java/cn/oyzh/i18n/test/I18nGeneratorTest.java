@@ -20,14 +20,17 @@ import java.util.Locale;
  */
 public class I18nGeneratorTest {
 
-    //    private final String skFile = "/Users/oyzh/Desktop/个人/baidu_trans.sk";
-    private final String skFile = "C:\\Users\\Administrator\\Desktop\\baidu_trans.sk";
+        private final String skFile = "/Users/oyzh/Desktop/个人/baidu_trans.sk";
+//    private final String skFile = "C:\\Users\\Administrator\\Desktop\\baidu_trans.sk";
 
-    private final String baseDir1 = "C:\\Users\\Administrator\\IdeaProjects\\base\\i18n\\src\\main\\resources";
+    private final String baseDir1 = "/Users/oyzh/IdeaProjects/oyzh/base/i18n/src/main/resources";
+//    private final String baseDir1 = "C:\\Users\\Administrator\\IdeaProjects\\base\\i18n\\src\\main\\resources";
 
-    private final String baseDir2 = "C:\\Users\\Administrator\\IdeaProjects\\easyredis\\src\\main\\resources";
+    private final String baseDir2 = "/Users/oyzh/IdeaProjects/oyzh/easyredis/src/main/resources";
+//    private final String baseDir2 = "C:\\Users\\Administrator\\IdeaProjects\\easyredis\\src\\main\\resources";
 
-    private final String baseDir3 = "C:\\Users\\Administrator\\IdeaProjects\\easyzk\\src\\main\\resources";
+    private final String baseDir3 = "/Users/oyzh/IdeaProjects/oyzh/easyzk/src/main/resources";
+//    private final String baseDir3 = "C:\\Users\\Administrator\\IdeaProjects\\easyzk\\src\\main\\resources";
 
     @Test
     public void test_base() {
@@ -47,6 +50,7 @@ public class I18nGeneratorTest {
             String cnI18nFile = path + "/base_i18n_zh_cn.properties";
             String targetI18nFile = path + "/base_i18n_" + name + ".properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
+            I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -82,6 +86,7 @@ public class I18nGeneratorTest {
             String cnI18nFile = path + "/i18n_zh_cn.properties";
             String targetI18nFile = path + "/i18n_" + name + ".properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
+            I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
