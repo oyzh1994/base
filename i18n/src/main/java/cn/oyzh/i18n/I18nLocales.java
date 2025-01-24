@@ -32,25 +32,58 @@ public class I18nLocales {
 
     public static Locale FIN = Locale.of("fin", "fin");
 
+    public static Locale SLO = Locale.of("slo", "slo");
+
+    public static Locale ARA = Locale.of("ara", "ara");
+
+    public static Locale NL = Locale.of("nl", "nl");
+
+    public static Locale EST = Locale.of("est", "est");
+
+    public static Locale CS = Locale.of("cs", "cs");
+
+    public static Locale SWE = Locale.of("swe", "swe");
+
+    public static Locale VIE = Locale.of("vie", "vie");
+
+    public static Locale SPA = Locale.of("spa", "spa");
+
+    public static Locale PL = Locale.of("pl", "pl");
+
+    public static Locale ROM = Locale.of("rom", "rom");
+
+    public static Locale HU = Locale.of("hu", "hu");
+
     private static final List<I1n8Locale> locales = new ArrayList<>();
 
     static {
-        locales.add(new I1n8Locale("zh_cn", Locale.PRC, "中国（简体）","中文简体"));
-        locales.add(new I1n8Locale("zh_tw", Locale.TAIWAN, "中國（臺灣）","中文繁体"));
-        locales.add(new I1n8Locale("zh_yue", ZH_YUE, "中國（粵語）","中文粤语"));
-        locales.add(new I1n8Locale("zh_wyw", ZH_WYW, "中國（文言文）","中文文言文"));
-        locales.add(new I1n8Locale("en", Locale.ENGLISH, "English","英语"));
-        locales.add(new I1n8Locale("ja", Locale.JAPAN, "日本語","日语"));
-        locales.add(new I1n8Locale("de", Locale.GERMAN, "Deutsch","德语"));
-        locales.add(new I1n8Locale("kor", Locale.KOREA, "한국어","韩语"));
-        locales.add(new I1n8Locale("fr", Locale.FRANCE, "Français","法语"));
-        locales.add(new I1n8Locale("it", Locale.ITALY, "Italiano","意大利语"));
-        locales.add(new I1n8Locale("ru", RU, "Русский","俄语"));
-        locales.add(new I1n8Locale("dan", DAN, "Dansk","丹麦语"));
-        locales.add(new I1n8Locale("pt", PT, "Português","葡萄牙语"));
-        locales.add(new I1n8Locale("th", TH, "ไทย","台语"));
-        locales.add(new I1n8Locale("el", EL, "Ελληνικά","希腊语"));
-        locales.add(new I1n8Locale("fin", FIN, "Suomi","芬兰语"));
+        locales.add(new I1n8Locale("zh_cn", Locale.PRC, "中国（简体）", "中文简体"));
+        locales.add(new I1n8Locale("zh_tw", Locale.TAIWAN, "中國（臺灣）", "中文繁体"));
+        locales.add(new I1n8Locale("zh_yue", ZH_YUE, "中國（粵語）", "中文粤语"));
+        locales.add(new I1n8Locale("zh_wyw", ZH_WYW, "中國（文言文）", "中文文言文"));
+        locales.add(new I1n8Locale("en", Locale.ENGLISH, "English", "英语"));
+        locales.add(new I1n8Locale("ja", Locale.JAPAN, "日本語", "日语"));
+        locales.add(new I1n8Locale("de", Locale.GERMAN, "Deutsch", "德语"));
+        locales.add(new I1n8Locale("kor", Locale.KOREA, "한국어", "韩语"));
+        locales.add(new I1n8Locale("fr", Locale.FRANCE, "Français", "法语"));
+        locales.add(new I1n8Locale("it", Locale.ITALY, "Italiano", "意大利语"));
+        locales.add(new I1n8Locale(RU.getCountry(), RU, "Русский", "俄语"));
+        locales.add(new I1n8Locale(DAN.getCountry(), DAN, "Dansk", "丹麦语"));
+        locales.add(new I1n8Locale(PT.getCountry(), PT, "Português", "葡萄牙语"));
+        locales.add(new I1n8Locale(TH.getCountry(), TH, "ไทย", "台语"));
+        locales.add(new I1n8Locale(EL.getCountry(), EL, "Ελληνικά", "希腊语"));
+        locales.add(new I1n8Locale(FIN.getCountry(), FIN, "Suomi", "芬兰语"));
+        locales.add(new I1n8Locale(SLO.getCountry(), SLO, "slovenski jezik", "斯洛文尼亚语"));
+        locales.add(new I1n8Locale(ARA.getCountry(), ARA, "بالعربية", "阿拉伯语"));
+        locales.add(new I1n8Locale(NL.getCountry(), NL, "Nederlands", "荷兰语"));
+        locales.add(new I1n8Locale(EST.getCountry(), EST, "Eesti keel", "爱沙尼亚语"));
+        locales.add(new I1n8Locale(CS.getCountry(), CS, "Čeština", "捷克语"));
+        locales.add(new I1n8Locale(SWE.getCountry(), SWE, "Svenska språket", "瑞典语"));
+        locales.add(new I1n8Locale(VIE.getCountry(), VIE, "Tiếng Việt", "越南语"));
+        locales.add(new I1n8Locale(SPA.getCountry(), SPA, "Español", "西班牙语"));
+        locales.add(new I1n8Locale(PL.getCountry(), PL, "Język polski", "波兰语"));
+        locales.add(new I1n8Locale(ROM.getCountry(), ROM, "română", "罗马尼亚语"));
+        locales.add(new I1n8Locale(HU.getCountry(), HU, "Magyar nyelv", "匈牙利语"));
     }
 
     /**
@@ -86,10 +119,10 @@ public class I18nLocales {
     public static String getLocaleName(Locale locale) {
         for (I1n8Locale i1n8Locale : locales) {
             if (i1n8Locale.getLocale() == locale) {
-                return i1n8Locale.getName();
+                return i1n8Locale.getName().toLowerCase();
             }
         }
-        return locales.getFirst().getName();
+        return locales.getFirst().getName().toLowerCase();
     }
 
     /**

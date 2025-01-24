@@ -190,6 +190,24 @@ public class I18nGenerator {
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
+                // 特殊情况1
+                if (!source.contains("\\") && target.contains("\\")) {
+                    target = target.replaceAll("\\\\", "");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 特殊情况2
+                if (!source.contains("\\:") && target.contains("\\:")) {
+                    target = target.replaceAll("\\\\:", ":");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
+                // 特殊情况3
+                if (!source.contains("\\!") && target.contains("\\!")) {
+                    target = target.replaceAll("\\\\!", "!");
+                    JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
+                    targetProp.setProperty((String) key, target);
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
