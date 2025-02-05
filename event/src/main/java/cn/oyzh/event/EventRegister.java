@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -24,8 +25,9 @@ public class EventRegister {
      * 注册
      *
      * @param listener 监听器
+     * @return 结果
      */
-    public void register(Object listener) {
+    public boolean register(Object listener) {
         if (listener != null) {
             Optional<EventSubscriber> optional = subscribers.parallelStream().filter(f -> f.getListener() == listener).findAny();
             if (optional.isPresent()) {
@@ -50,13 +52,12 @@ public class EventRegister {
                 this.subscribers.removeIf(EventSubscriber::isInvalid);
             }
         }
+        return false;
     }
 
-    public void unregister(Object listener) {
-        if (listener != null) {
-            synchronized (this.subscribers) {
-                this.subscribers.removeIf(s -> s.isInvalid() || listener.equals(s.getListener()));
-            }
+    public boolean unregister(Object listener) {
+        synchronized (this.subscribers) {
+            return this.subscribers.removeIf(s -> s.isInvalid() || Objects.equals(listener, s.getListener()));
         }
     }
 

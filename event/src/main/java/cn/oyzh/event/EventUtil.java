@@ -31,18 +31,20 @@ public class EventUtil {
      * 注册
      *
      * @param listener 监听器
+     * @return 结果
      */
-    public static void register(EventListener listener) {
-        EVENT_BUS.register(listener);
+    public static boolean register(EventListener listener) {
+        return EVENT_BUS.register(listener);
     }
 
     /**
      * 取消注册
      *
      * @param listener 监听器
+     * @return 结果
      */
-    public static void unregister(EventListener listener) {
-        EVENT_BUS.unregister(listener);
+    public static boolean unregister(EventListener listener) {
+        return EVENT_BUS.unregister(listener);
     }
 
     /**

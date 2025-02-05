@@ -23,11 +23,10 @@ public class EventBus {
     private final EventRegister register = new EventRegister();
 
     private final EventDispatcher dispatcher = new EventDispatcher();
-    ;
 
-    public void register(Object listener) {
+    public boolean register(Object listener) {
         try {
-            this.register.register(listener);
+            return this.register.register(listener);
         } catch (Exception ex) {
             if (this.exceptionHandler != null) {
                 this.exceptionHandler.accept(ex);
@@ -35,11 +34,12 @@ public class EventBus {
                 ex.printStackTrace();
             }
         }
+        return false;
     }
 
-    public void unregister(Object listener) {
+    public boolean unregister(Object listener) {
         try {
-            this.register.unregister(listener);
+            return this.register.unregister(listener);
         } catch (Exception ex) {
             if (this.exceptionHandler != null) {
                 this.exceptionHandler.accept(ex);
@@ -47,6 +47,7 @@ public class EventBus {
                 ex.printStackTrace();
             }
         }
+        return false;
     }
 
     public <C extends EventConfig> void post(Object event, C config, Integer delayMillis) {
