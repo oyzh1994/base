@@ -636,6 +636,8 @@ public class I18nHelper {
 
     public static final String QUERY = "base.query";
 
+    public static final String QUERIES = "base.queries";
+
     public static final String TIME = "base.time";
 
     public static final String TOTAL_DATA = "base.totalData";
@@ -2696,6 +2698,10 @@ public class I18nHelper {
 
     public static String query() {
         return I18nResourceBundle.i18nString(QUERY);
+    }
+
+    public static String queries() {
+        return I18nResourceBundle.i18nString(QUERIES);
     }
 
     public static String editSchema() {
