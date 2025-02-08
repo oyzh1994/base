@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author oyzh
  * @since 2024-09-29
  */
-public class TimedCache<K, V> extends Cache<K, V> {
+public class TimedCache<K, V> implements Cache<K, V> {
 
     private static class TimedValue<V> {
         private V value;

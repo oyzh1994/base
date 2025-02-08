@@ -4,15 +4,15 @@ package cn.oyzh.common.cache;
  * @author oyzh
  * @since 2024-09-29
  */
-public abstract class Cache<K,V> {
+public interface Cache<K, V> {
 
-    public abstract V get(K key) ;
+    V get(K key);
 
-    public abstract void clear() ;
+    void clear();
 
-    public abstract void put(K key,V value) ;
+    void put(K key, V value);
 
-    public abstract void remove(K key) ;
+    void remove(K key);
 
-    public abstract boolean containsKey(K key) ;
+    boolean containsKey(K key);
 }

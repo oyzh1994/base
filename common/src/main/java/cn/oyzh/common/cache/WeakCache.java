@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author oyzh
  * @since 2024-09-29
  */
-public class WeakCache<K, V> extends Cache<K, V> {
+public class WeakCache<K, V> implements Cache<K, V> {
 
     private final Map<K, WeakReference<V>> cache;
 
