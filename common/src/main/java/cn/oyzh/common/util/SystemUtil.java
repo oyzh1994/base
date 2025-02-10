@@ -36,20 +36,29 @@ public class SystemUtil {
         properties.remove("debugger.agent.enable.coroutines");
     }
 
+    private static MemoryMXBean memoryMXBean;
+
+    private static MemoryMXBean getMemoryMXBean() {
+        if (memoryMXBean == null) {
+            memoryMXBean = ManagementFactory.getMemoryMXBean();
+        }
+        return memoryMXBean;
+    }
+
     /**
      * 执行gc
      */
     public static void gc() {
         try {
             // 获取 MemoryMXBean 实例
-            MemoryMXBean mxBean = ManagementFactory.getMemoryMXBean();
+            MemoryMXBean mxBean = getMemoryMXBean();
             // 获取堆内存信息
             MemoryUsage heapMemoryUsage = mxBean.getHeapMemoryUsage();
             // 获取非堆内存信息
             MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
             long usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
             JulLog.info("gc之前预估使用内存:{}Mb", usedMemory / 1024 / 1024.0);
-            System.gc();
+            mxBean.gc();
             usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
             JulLog.info("gc之后预估使用内存:{}Mb", usedMemory / 1024 / 1024.0);
         } catch (Exception ex) {
@@ -74,7 +83,7 @@ public class SystemUtil {
     }
 
     public static double getUsedMemory() {
-        MemoryMXBean mxBean = ManagementFactory.getMemoryMXBean();
+        MemoryMXBean mxBean = getMemoryMXBean();
         MemoryUsage heapMemoryUsage = mxBean.getHeapMemoryUsage();
         MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
         long usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
