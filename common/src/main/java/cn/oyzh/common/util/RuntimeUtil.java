@@ -6,9 +6,9 @@ import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author oyzh
@@ -68,64 +68,178 @@ public class RuntimeUtil {
         } else {
             charset = Charset.defaultCharset();
         }
-        return execAndWait(cmd, dir, true, true, charset);
+        return execAndWait(cmd, dir, true, true, charset, 15_000);
     }
 
     /**
      * 执行并等待
      *
-     * @param cmd        命令
-     * @param dir        执行目录
-     * @param printInput 打印输入内容
-     * @param printError 打印异常内容
-     * @param charset    流打印字符集
+     * @param cmd         命令
+     * @param dir         执行目录
+     * @param printInput  打印输入内容
+     * @param printError  打印异常内容
+     * @param charset     流字符集
+     * @param execTimeout 执行超时
      * @return 执行结果
      * @throws Exception 异常
      */
-    public static int execAndWait(String cmd, File dir, boolean printInput, boolean printError, Charset charset) throws Exception {
+    public static int execAndWait(String cmd, File dir, boolean printInput, boolean printError, Charset charset, int execTimeout) throws Exception {
         int code = 0;
         try {
-            if (charset == null) {
-                charset = Charset.defaultCharset();
-            }
+            Charset streamCharset = charset == null ? Charset.defaultCharset() : charset;
             JulLog.info("execAndWait start cmd:{} dir:{} printInput:{} printError:{}", cmd, dir, printInput, printError);
+            // ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", cmd);
+            // if (FileUtil.isDirectory(dir)) {
+            //     builder.directory(dir);
+            // } else {
+            //     builder.directory(null);
+            // }
+            // builder.redirectErrorStream(true);
+            // Process process = builder.start();
             Process process;
             if (FileUtil.isDirectory(dir)) {
                 process = Runtime.getRuntime().exec(cmd, null, dir);
             } else {
                 process = Runtime.getRuntime().exec(cmd, null);
             }
-            if (process.getInputStream().available() <= 0) {
-                process.waitFor(1000, TimeUnit.MILLISECONDS);
+            // if (process.getInputStream().available() <= 0) {
+            //     process.waitFor(1000, TimeUnit.MILLISECONDS);
+            // }
+            Thread inputThread = null, errorThread = null;
+            if (printInput) {
+                inputThread = new Thread(() -> {
+                    try {
+                        if (process.getInputStream().available() > 0) {
+                            JulLog.info("process input--->start");
+                            // 获取进程的标准输出流
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), streamCharset));
+                            // 读取输出并打印到控制台
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                JulLog.info(line);
+                            }
+                            JulLog.info("process input--->end");
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                inputThread.start();
             }
-            if (printInput && process.getInputStream().available() > 0) {
-                JulLog.info("process input--->start");
-                // 获取进程的标准输出流
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), charset));
-                // 读取输出并打印到控制台
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    JulLog.info(line);
-                }
-                JulLog.info("process input--->end");
-            }
-            if (printError && process.getErrorStream().available() > 0) {
-                JulLog.error("process error--->start");
-                // 获取进程的标准输出流
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), charset));
-                // 读取输出并打印到控制台
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    JulLog.error(line);
-                }
-                JulLog.error("process error--->end");
+            if (printError) {
+                errorThread = new Thread(() -> {
+                    try {
+                        if (process.getErrorStream().available() > 0) {
+                            JulLog.error("process error--->start");
+                            // 获取进程的标准输出流
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), streamCharset));
+                            // 读取输出并打印到控制台
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                JulLog.error(line);
+                            }
+                            JulLog.error("process error--->end");
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                errorThread.start();
             }
             // 等待进程执行完成
-            return code = process.waitFor();
+            code = process.waitFor();
+            if (inputThread != null) {
+                inputThread.join();
+            }
+            if (errorThread != null) {
+                errorThread.join();
+            }
         } finally {
             JulLog.info("execAndWait finish code:{}", code);
         }
+        return code;
     }
+
+    // /**
+    //  * 执行并等待
+    //  *
+    //  * @param cmd        命令
+    //  * @param dir        执行目录
+    //  * @param printInput 打印输入内容
+    //  * @param printError 打印异常内容
+    //  * @param charset    流打印字符集
+    //  * @return 执行结果
+    //  * @throws Exception 异常
+    //  */
+    // public static int execAndWait1(String cmd, File dir, boolean printInput, boolean printError, Charset charset) throws Exception {
+    //     int code = 0;
+    //     try {
+    //         if (charset == null) {
+    //             charset = Charset.defaultCharset();
+    //         }
+    //
+    //         ProcessBuilder builder = new ProcessBuilder(cmd);
+    //         if(FileUtil.isDirectory(dir)) {
+    //             builder.directory(dir);
+    //         }
+    //         builder.redirectErrorStream(true);
+    //         JulLog.info("execAndWait start cmd:{} dir:{} printInput:{} printError:{}", cmd, dir, printInput, printError);
+    //         Process process=builder.start();
+    //         if (printInput) {
+    //             Charset finalCharset = charset;
+    //             inputThread = new Thread(() -> {
+    //                 try {
+    //                     if (process.getInputStream().available() > 0) {
+    //                         JulLog.info("process input--->start");
+    //                         // 获取进程的标准输出流
+    //                         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), finalCharset));
+    //                         // 读取输出并打印到控制台
+    //                         String line;
+    //                         while ((line = reader.readLine()) != null) {
+    //                             JulLog.info(line);
+    //                         }
+    //                         JulLog.info("process input--->end");
+    //                     }
+    //                 } catch (IOException e) {
+    //                     throw new RuntimeException(e);
+    //                 }
+    //             });
+    //             inputThread.start();
+    //         }
+    //         if (printError) {
+    //             Charset finalCharset1 = charset;
+    //             errorThread = new Thread(() -> {
+    //                 try {
+    //                     if (process.getErrorStream().available() > 0) {
+    //                         JulLog.error("process error--->start");
+    //                         // 获取进程的标准输出流
+    //                         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), finalCharset1));
+    //                         // 读取输出并打印到控制台
+    //                         String line;
+    //                         while ((line = reader.readLine()) != null) {
+    //                             JulLog.error(line);
+    //                         }
+    //                         JulLog.error("process error--->end");
+    //                     }
+    //                 } catch (IOException e) {
+    //                     throw new RuntimeException(e);
+    //                 }
+    //             });
+    //             errorThread.start();
+    //         }
+    //         // 等待进程执行完成
+    //         code = process.waitFor();
+    //         if (inputThread != null) {
+    //             inputThread.join();
+    //         }
+    //         if (errorThread != null) {
+    //             errorThread.join();
+    //         }
+    //     } finally {
+    //         JulLog.info("execAndWait finish code:{}", code);
+    //     }
+    //     return code;
+    // }
 
     public static String execForStr(String... cmdArr) {
         try {
