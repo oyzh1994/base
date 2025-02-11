@@ -163,8 +163,13 @@ public class ProcessExecBuilder {
             if (waitFor) {
                 code = process.exitValue();
             } else {
-                process.destroy();
+                process.destroyForcibly();
                 execResult.setTimedOut(true);
+            }
+            try {
+                code = process.exitValue();
+            } catch (Exception ignore) {
+
             }
         } else {// 未设置超时时间
             code = process.waitFor();
