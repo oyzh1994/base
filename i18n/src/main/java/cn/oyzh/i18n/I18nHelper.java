@@ -1,6 +1,5 @@
 package cn.oyzh.i18n;
 
-import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -199,6 +198,12 @@ public class I18nHelper {
     public static final String PROGRAM = "base.program";
 
     public static final String PROGRAM_TIP1 = "base.program.tip1";
+
+    public static final String TITLE_CONNECT_ADD = "base.title.connect.add";
+
+    public static final String TITLE_CONNECT_UPDATE = "base.title.connect.update";
+
+    public static final String TITLE_CONNECT_TRANSPORT = "base.title.connect.transport";
 
     public static final String FILE_NAME = "base.fileName";
 
@@ -3262,5 +3267,17 @@ public class I18nHelper {
 
     public static String programTip1() {
         return I18nResourceBundle.i18nString(PROGRAM_TIP1);
+    }
+
+    public static String connectAddTitle() {
+        return I18nResourceBundle.i18nString(TITLE_CONNECT_ADD);
+    }
+
+    public static String connectUpdateTitle() {
+        return I18nResourceBundle.i18nString(TITLE_CONNECT_UPDATE);
+    }
+
+    public static String connectTransportTitle() {
+        return I18nResourceBundle.i18nString(TITLE_CONNECT_TRANSPORT);
     }
 }
