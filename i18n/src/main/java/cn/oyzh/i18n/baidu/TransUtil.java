@@ -44,6 +44,7 @@ public class TransUtil {
         if (locale == Locale.ITALY || locale == Locale.ITALIAN) {
             return "it";
         }
-        return locale.getCountry().toLowerCase();
+//        return locale.getCountry().toLowerCase();
+        return locale.toString();
     }
 }

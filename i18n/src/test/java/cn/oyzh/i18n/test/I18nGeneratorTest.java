@@ -47,7 +47,7 @@ public class I18nGeneratorTest {
     private void trans_base(String path, Locale locale) {
         try {
             String name = I18nLocales.getLocaleName(locale);
-            String cnI18nFile = path + "/base_i18n_zh_cn.properties";
+            String cnI18nFile = path + "/base_i18n_zh_CN.properties";
             String targetI18nFile = path + "/base_i18n_" + name + ".properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
             I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
@@ -83,7 +83,7 @@ public class I18nGeneratorTest {
     private void trans_program(String path, Locale locale) {
         try {
             String name = I18nLocales.getLocaleName(locale);
-            String cnI18nFile = path + "/i18n_zh_cn.properties";
+            String cnI18nFile = path + "/i18n_zh_CN.properties";
             String targetI18nFile = path + "/i18n_" + name + ".properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
             I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
