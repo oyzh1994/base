@@ -3280,4 +3280,8 @@ public class I18nHelper {
     public static String connectTransportTitle() {
         return I18nResourceBundle.i18nString(TITLE_CONNECT_TRANSPORT);
     }
+
+    public static String updateDatabase() {
+        return I18nResourceBundle.i18nString(UPDATE, DATABASE);
+    }
 }
