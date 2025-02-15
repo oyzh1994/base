@@ -108,81 +108,78 @@ public class ProcessExecBuilder {
     public ProcessExecResult exec() throws IOException, InterruptedException {
         Process process = this.build();
         ProcessExecResult execResult = new ProcessExecResult();
-        Thread inputThread = null, errorThread = null;
         if (this.catchInput) {
-            inputThread = new Thread(() -> {
-                try {
-                    if (process.getInputStream().available() > 0) {
-                        JulLog.info("process input--->start");
-                        // 获取进程的标准输出流
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), this.charset));
-                        StringBuilder builder = new StringBuilder();
-                        // 读取输出并打印到控制台
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            JulLog.info(line);
-                            builder.append(line);
-                        }
-                        execResult.setInput(builder.toString());
-                        JulLog.info("process input--->end");
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            try {
+                if (process.getInputStream().available() <= 0) {
+                    process.waitFor(1, TimeUnit.SECONDS);
                 }
-            });
-            inputThread.start();
+                if (process.getInputStream().available() > 0) {
+                    JulLog.info("process input--->start");
+                    // 获取进程的标准输出流
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), this.charset));
+                    StringBuilder builder = new StringBuilder();
+                    // 读取输出并打印到控制台
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        JulLog.info(line);
+                        builder.append(line);
+                    }
+                    execResult.setInput(builder.toString());
+                    JulLog.info("process input--->end");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         if (this.catchError) {
-            errorThread = new Thread(() -> {
-                try {
-                    if (process.getErrorStream().available() > 0) {
-                        JulLog.error("process error--->start");
-                        // 获取进程的标准输出流
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), this.charset));
-                        StringBuilder builder = new StringBuilder();
-                        // 读取输出并打印到控制台
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            JulLog.error(line);
-                            builder.append(line);
-                        }
-                        execResult.setError(builder.toString());
-                        JulLog.error("process error--->end");
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            try {
+                if (process.getErrorStream().available() <= 0) {
+                    process.waitFor(1, TimeUnit.SECONDS);
                 }
-            });
-            errorThread.start();
+                if (process.getErrorStream().available() > 0) {
+                    JulLog.error("process error--->start");
+                    // 获取进程的标准输出流
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), this.charset));
+                    StringBuilder builder = new StringBuilder();
+                    // 读取输出并打印到控制台
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        JulLog.error(line);
+                        builder.append(line);
+                    }
+                    execResult.setError(builder.toString());
+                    JulLog.error("process error--->end");
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         // 等待进程执行完成
-        Integer code = null;
         // 已设置超时时间
         if (this.timeout > 0) {
             boolean waitFor = process.waitFor(this.timeout, TimeUnit.MILLISECONDS);
             if (waitFor) {
-                code = process.exitValue();
+                int code = process.exitValue();
+                // 设置执行结果
+                execResult.setExitCode(code);
             } else {
                 process.destroyForcibly();
                 execResult.setTimedOut(true);
-            }
-            try {
-                code = process.exitValue();
-            } catch (Exception ignore) {
-
+                int code = process.exitValue();
+                // 设置执行结果
+                execResult.setExitCode(code);
             }
         } else {// 未设置超时时间
-            code = process.waitFor();
-        }
-        // 设置执行结果
-        execResult.setExitCode(code);
-        if (inputThread != null) {
-            inputThread.join();
-        }
-        if (errorThread != null) {
-            errorThread.join();
+            int code = process.waitFor();
+            // 设置执行结果
+            execResult.setExitCode(code);
         }
         return execResult;
+    }
+
+    public String execForInput() throws IOException, InterruptedException {
+        ProcessExecResult execResult = this.exec();
+        return execResult == null ? null : execResult.getInput();
     }
 
     public void execAsync() throws IOException {
@@ -199,6 +196,10 @@ public class ProcessExecBuilder {
 
     public static ProcessExecBuilder newBuilder() {
         return new ProcessExecBuilder();
+    }
+
+    public static ProcessExecBuilder newBuilder(StringBuilder command) {
+        return newBuilder(command.toString());
     }
 
     public static ProcessExecBuilder newBuilder(String command) {
