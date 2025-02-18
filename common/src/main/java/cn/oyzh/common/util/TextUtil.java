@@ -275,6 +275,66 @@ public class TextUtil {
     }
 
     /**
+     * 获取xml数据
+     *
+     * @return xml数据
+     */
+    public String getXmlData(Object rawData) {
+        if (rawData == null) {
+            return null;
+        }
+        String data = null;
+        try {
+            if (rawData instanceof byte[] bytes) {
+                data = new String(bytes);
+            }
+            if (rawData instanceof CharSequence sequence) {
+                data = sequence.toString();
+            }
+            if (data == null) {
+                return null;
+            }
+            if (!data.contains("{") && !data.contains("[")) {
+                return data;
+            }
+            return data;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    /**
+     * 获取html数据
+     *
+     * @return html数据
+     */
+    public String getHtmlData(Object rawData) {
+        if (rawData == null) {
+            return null;
+        }
+        String data = null;
+        try {
+            if (rawData instanceof byte[] bytes) {
+                data = new String(bytes);
+            }
+            if (rawData instanceof CharSequence sequence) {
+                data = sequence.toString();
+            }
+            if (data == null) {
+                return null;
+            }
+            if (!data.contains("{") && !data.contains("[")) {
+                return data;
+            }
+            return JSONUtil.toPretty(data);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return data;
+    }
+
+    /**
      * 获取二进制数据
      *
      * @return 二进制数据
@@ -474,6 +534,35 @@ public class TextUtil {
     }
 
     /**
+     * 是否xml字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isXmlStr(String str) {
+        if (str != null && !str.isBlank()) {
+            String[] array = str.trim().lines().toArray(String[]::new);
+            return StringUtil.startWithIgnoreCase(ArrayUtil.first(array), "<?xml")
+                    || StringUtil.startWithIgnoreCase(ArrayUtil.first(array), "xmlns:xsi=");
+        }
+        return false;
+    }
+
+    /**
+     * 是否html字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isHtmlStr(String str) {
+        if (str != null && !str.isBlank()) {
+            String[] array = str.trim().lines().toArray(String[]::new);
+            return StringUtil.endWith(ArrayUtil.last(array), "</html>");
+        }
+        return false;
+    }
+
+    /**
      * 是否二进制字符串
      *
      * @param str 字符串
@@ -507,8 +596,10 @@ public class TextUtil {
      * 检测类型
      * 1 json
      * 2 二进制
-     * 3 字符串
-     * 4 其他
+     * 3 xml
+     * 4 html
+     * 5 字符串
+     * 6 其他
      *
      * @return 类型
      */
@@ -523,8 +614,14 @@ public class TextUtil {
             if (isBinaryStr(str)) {
                 return 2;
             }
-            return 3;
+            if (isXmlStr(str)) {
+                return 3;
+            }
+            if (isHtmlStr(str)) {
+                return 4;
+            }
+            return 5;
         }
-        return 4;
+        return 6;
     }
 }
