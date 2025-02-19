@@ -3302,4 +3302,8 @@ public class I18nHelper {
     public static String bugfixes() {
         return I18nResourceBundle.i18nString(BUGFIXES);
     }
+
+    public static String openInfo() {
+        return I18nResourceBundle.i18nString(OPEN, INFO);
+    }
 }
