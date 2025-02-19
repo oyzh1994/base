@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
  * @author oyzh
  * @since 2022/8/26
  */
+@Deprecated
 @Data
 @Accessors(chain = true, fluent = true)
 public abstract class FileStore<T> {

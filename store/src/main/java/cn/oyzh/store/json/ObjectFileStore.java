@@ -8,6 +8,7 @@ import lombok.NonNull;
  * @author oyzh
  * @since 2023/10/26
  */
+@Deprecated
 public abstract class ObjectFileStore<T> extends FileStore<T> {
 
     /**

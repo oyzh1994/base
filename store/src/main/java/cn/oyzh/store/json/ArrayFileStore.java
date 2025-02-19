@@ -15,6 +15,7 @@ import java.util.Map;
  * @author oyzh
  * @since 2023/10/26
  */
+@Deprecated
 public abstract class ArrayFileStore<T extends ObjectComparator<T>> extends FileStore<T> {
 
     /**
