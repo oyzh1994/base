@@ -69,7 +69,7 @@ public class RegexHelper {
 
     public static Pattern xmlCommentPattern() {
         if (Xml_Comment_Pattern == null) {
-            Xml_Comment_Pattern = Pattern.compile("<!--.*?-->",Pattern.DOTALL);
+            Xml_Comment_Pattern = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
         }
         return Xml_Comment_Pattern;
     }
@@ -93,7 +93,7 @@ public class RegexHelper {
 
     public static Pattern htmlCommentPattern() {
         if (Html_Comment_Pattern == null) {
-            Html_Comment_Pattern = Pattern.compile("<!--.*?-->",Pattern.DOTALL);
+            Html_Comment_Pattern = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
         }
         return Html_Comment_Pattern;
     }

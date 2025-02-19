@@ -1,4 +1,4 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.system;
 
 import lombok.experimental.UtilityClass;
 

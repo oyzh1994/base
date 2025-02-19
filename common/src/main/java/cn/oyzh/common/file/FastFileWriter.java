@@ -1,4 +1,4 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.file;
 
 import java.io.Closeable;
 import java.io.File;

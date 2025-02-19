@@ -1,6 +1,6 @@
 package cn.oyzh.common.dto;
 
-import cn.oyzh.common.util.PropertiesFile;
+import cn.oyzh.common.file.PropertiesFile;
 import cn.oyzh.common.util.StringUtil;
 import lombok.Data;
 

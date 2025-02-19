@@ -2,7 +2,7 @@ package cn.oyzh.common.thread;
 
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.util.OSUtil;
+import cn.oyzh.common.system.OSUtil;
 
 import java.io.BufferedReader;
 import java.io.File;

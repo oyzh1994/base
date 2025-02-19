@@ -2,7 +2,7 @@ package cn.oyzh.store.json;
 
 import cn.oyzh.common.dto.Paging;
 import cn.oyzh.common.util.CollectionUtil;
-import cn.oyzh.common.util.ObjectComparator;
+import cn.oyzh.common.object.ObjectComparator;
 import lombok.NonNull;
 
 import java.util.ArrayList;

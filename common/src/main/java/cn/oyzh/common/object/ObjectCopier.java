@@ -1,4 +1,4 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.object;
 
 /**
  * 对象复制器

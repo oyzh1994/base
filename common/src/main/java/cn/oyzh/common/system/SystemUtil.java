@@ -1,4 +1,4 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.system;
 
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
