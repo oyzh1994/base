@@ -4,7 +4,6 @@ package cn.oyzh.common.util;
 import cn.oyzh.common.log.JulLog;
 import lombok.experimental.UtilityClass;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

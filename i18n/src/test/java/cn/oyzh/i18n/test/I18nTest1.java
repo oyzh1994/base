@@ -1,6 +1,5 @@
 package cn.oyzh.i18n.test;
 
-import cn.oyzh.i18n.I18nLocales;
 import org.junit.Test;
 
 import java.util.Locale;

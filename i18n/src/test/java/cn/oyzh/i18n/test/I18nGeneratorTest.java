@@ -1,12 +1,8 @@
 package cn.oyzh.i18n.test;
 
-import cn.oyzh.common.thread.IRunnable;
-import cn.oyzh.common.thread.Task;
-import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.i18n.I18nGenerator;
 import cn.oyzh.i18n.I18nLocales;
-import lombok.SneakyThrows;
 import org.junit.Test;
 
 import java.io.IOException;

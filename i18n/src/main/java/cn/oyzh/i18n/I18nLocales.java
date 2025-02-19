@@ -4,10 +4,8 @@ import cn.oyzh.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author oyzh

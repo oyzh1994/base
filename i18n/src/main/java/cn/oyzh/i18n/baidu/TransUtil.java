@@ -1,6 +1,5 @@
 package cn.oyzh.i18n.baidu;
 
-import cn.oyzh.i18n.I18nLocales;
 import lombok.experimental.UtilityClass;
 
 import java.util.Locale;

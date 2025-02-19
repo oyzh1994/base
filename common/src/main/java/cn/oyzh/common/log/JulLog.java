@@ -1,7 +1,6 @@
 package cn.oyzh.common.log;
 
 
-import cn.oyzh.common.util.JarUtil;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;

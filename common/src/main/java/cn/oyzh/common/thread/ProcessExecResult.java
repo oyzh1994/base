@@ -2,8 +2,6 @@ package cn.oyzh.common.thread;
 
 import lombok.Data;
 
-import java.util.List;
-
 /**
  *
  * @author oyzh
