@@ -249,6 +249,12 @@ public class I18nHelper {
 
     public static final String DATABASE = "base.database";
 
+    public static final String FEATURES = "base.features";
+
+    public static final String OPTIMIZE = "base.optimize";
+
+    public static final String BUGFIXES = "base.bugfixes";
+
     public static final String INIT = "base.init";
 
     public static final String CONFIG = "base.config";
@@ -3283,5 +3289,17 @@ public class I18nHelper {
 
     public static String updateDatabase() {
         return I18nResourceBundle.i18nString(UPDATE, DATABASE);
+    }
+
+    public static String features() {
+        return I18nResourceBundle.i18nString(FEATURES);
+    }
+
+    public static String optimize() {
+        return I18nResourceBundle.i18nString(OPTIMIZE);
+    }
+
+    public static String bugfixes() {
+        return I18nResourceBundle.i18nString(BUGFIXES);
     }
 }

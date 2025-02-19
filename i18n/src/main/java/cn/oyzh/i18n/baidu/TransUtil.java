@@ -1,5 +1,6 @@
 package cn.oyzh.i18n.baidu;
 
+import cn.oyzh.i18n.I18nLocales;
 import lombok.experimental.UtilityClass;
 
 import java.util.Locale;
@@ -42,6 +43,12 @@ public class TransUtil {
         }
         if (locale == Locale.ITALY || locale == Locale.ITALIAN) {
             return "it";
+        }
+        if (locale == I18nLocales.ZH_WYW) {
+            return "wyw";
+        }
+        if (locale == I18nLocales.ZH_YUE) {
+            return "yue";
         }
 //        return locale.getCountry().toLowerCase();
         return locale.toString();
