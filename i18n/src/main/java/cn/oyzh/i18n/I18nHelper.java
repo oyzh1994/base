@@ -559,6 +559,8 @@ public class I18nHelper {
 
     public static final String DATA_TOO_LARGE = "base.dataTooLarge";
 
+    public static final String TOO_LARGE = "base.tooLarge";
+
     public static final String ENABLE = "base.enable";
 
     public static final String CLOSE = "base.close";
@@ -1745,6 +1747,10 @@ public class I18nHelper {
 
     public static String dataTooLarge() {
         return I18nResourceBundle.i18nString(DATA_TOO_LARGE);
+    }
+
+    public static String contentTooLarge() {
+        return I18nResourceBundle.i18nString(CONTENT, TOO_LARGE);
     }
 
     public static String close() {
