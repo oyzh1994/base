@@ -201,21 +201,31 @@ public class ProcessUtil {
         File dir = new File(javaPath).getParentFile();
         // windows平台
         if (OSUtil.isWindows()) {
-            if (!FileUtil.exist(javaPath + "/bin/javaw.exe")) {
-                javaPath += "/bin/java.exe";
-            } else {
-                javaPath += "/bin/javaw.exe";
+            // 可执行程序路径
+            String execPath = null;
+            int index = 0;
+            File pFile = dir;
+            while (pFile != null && index <= 5) {
+                File file = new File(pFile, SysConst.projectName() + ".exe");
+                if (file.exists()) {
+                    execPath = file.getPath();
+                    break;
+                }
+                index++;
+                pFile = pFile.getParentFile();
             }
-            // 类路径
-            String classPath = System.getProperty("java.class.path");
-            // 构建重启命令
-            ProcessBuilder builder = new ProcessBuilder("cmd", "/c", "start", javaPath, "-jar", classPath);
-            // 设置运行目录
-            builder.directory(dir);
-            // 打印命令
-            JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
-            // 执行重启命令
-            builder.start();
+            if (execPath != null) {
+                // 构建重启命令
+                ProcessBuilder builder = new ProcessBuilder("cmd", "/c", execPath);
+                // 设置运行目录
+                builder.directory(dir);
+                // 打印命令
+                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+                // 执行重启命令
+                builder.start();
+            } else {
+                JulLog.warn("未找到程序路径，执行重启失败！");
+            }
         } else if (OSUtil.isLinux()) {
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
                 javaPath += "/bin/java";
@@ -235,14 +245,16 @@ public class ProcessUtil {
         } else if (OSUtil.isMacOS()) {
             // 可执行程序路径
             String execPath = null;
+            int index = 0;
             File pFile = dir.getParentFile();
-            while (pFile != null) {
+            while (pFile != null && index <= 5) {
                 File file = new File(pFile, "MacOS");
                 File file1 = new File(file, SysConst.projectName());
                 if (file.exists() && file1.exists()) {
                     execPath = file1.getPath();
                     break;
                 }
+                index++;
                 pFile = pFile.getParentFile();
             }
             if (execPath != null) {
