@@ -5,6 +5,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.google.zxing.qrcode.decoder.Version;
 import lombok.experimental.UtilityClass;
 
 import javax.imageio.ImageIO;
@@ -35,9 +36,10 @@ public class QRCodeUtil {
      */
     public static BufferedImage createImage(String content, String charset, int imgW, int imgH) throws Exception {
         Map<EncodeHintType, Object> hints = new HashMap<>();
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
-        hints.put(EncodeHintType.CHARACTER_SET, charset);
         hints.put(EncodeHintType.MARGIN, 1);
+        hints.put(EncodeHintType.CHARACTER_SET, charset);
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.Q);
+        hints.put(EncodeHintType.QR_VERSION, Version.getVersionForNumber(40));
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, imgW, imgH, hints);
         int width = bitMatrix.getWidth();
         int height = bitMatrix.getHeight();
