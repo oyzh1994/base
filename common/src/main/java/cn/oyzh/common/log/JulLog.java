@@ -1,6 +1,7 @@
 package cn.oyzh.common.log;
 
 
+import cn.oyzh.common.util.JarUtil;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -25,12 +26,12 @@ public class JulLog {
     static {
         try {
             System.setProperty("jansi.passthrough", "true");
-            JulLog.setLevel(JulLevel.DEBUG);
             LOGGER.setUseParentHandlers(false);
+            JulLog.setLevel(JulLevel.DEBUG);
             // 控制台日志
-//        if (!JarUtil.isInJar()) {
-            LOGGER.addHandler(new JulConsoleHandler());
-//        }
+            if (!JarUtil.isInJar()) {
+                LOGGER.addHandler(new JulConsoleHandler());
+            }
             // 文件日志
             File logFile = JulUtil.getLogFile();
             LOGGER.addHandler(new JulFileHandler(logFile));

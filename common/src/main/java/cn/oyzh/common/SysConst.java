@@ -21,7 +21,7 @@ public class SysConst {
     }
 
     public static void storeDir(String storeDir) {
-        JulLog.info("storeDir: {}", storeDir);
+//        JulLog.info("storeDir: {}", storeDir);
         System.setProperty(STORE_DIR, storeDir);
     }
 
@@ -30,7 +30,7 @@ public class SysConst {
     }
 
     public static void cacheDir(String cacheDir) {
-        JulLog.info("cacheDir: {}", cacheDir);
+//        JulLog.info("cacheDir: {}", cacheDir);
         System.setProperty(CACHE_DIR, cacheDir);
     }
 
@@ -39,7 +39,7 @@ public class SysConst {
     }
 
     public static void projectName(String projectName) {
-        JulLog.info("projectName: {}", projectName);
+//        JulLog.info("projectName: {}", projectName);
         System.setProperty(PROJECT_NAME, projectName);
     }
 }
