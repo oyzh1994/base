@@ -3312,4 +3312,8 @@ public class I18nHelper {
     public static String openInfo() {
         return I18nResourceBundle.i18nString(OPEN, INFO);
     }
+
+    public static String authInfo() {
+        return I18nResourceBundle.i18nString(AUTH, INFO);
+    }
 }
