@@ -605,7 +605,7 @@ public class TextUtil {
      */
     public static byte detectType(Object rawData) {
         if (rawData instanceof byte[]) {
-            return 2;
+            return 5;
         }
         if (rawData instanceof String str) {
             if (JSONUtil.isJson(str)) {
