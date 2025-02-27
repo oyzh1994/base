@@ -813,6 +813,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CONTENT, IS, EMPTY);
     }
 
+    public static String isEmpty() {
+        return I18nResourceBundle.i18nString(IS, EMPTY);
+    }
+
     public static String alreadyExists() {
         return I18nResourceBundle.i18nString(ALREADY_EXISTS);
     }
