@@ -124,11 +124,33 @@ public class ReflectUtil {
         return allMethods;
     }
 
-    public static Object invoke(Object obj, Method method) throws InvocationTargetException, IllegalAccessException {
+//    public static Object invoke(Object obj, Method method) throws InvocationTargetException, IllegalAccessException {
+//        if (method == null) {
+//            return null;
+//        }
+//        method.setAccessible(true);
+//        return method.invoke(obj);
+//    }
+
+    public static Object invoke(Object obj, String methodName, Object... params) throws InvocationTargetException, IllegalAccessException {
+        Method method;
+        if (params == null || params.length == 0) {
+            method = getMethod(obj.getClass(), methodName, true, true);
+        } else {
+            Class<?>[] paramTypes = new Class[params.length];
+            for (int i = 0; i < params.length; i++) {
+                paramTypes[i] = params[i].getClass();
+            }
+            method = getMethod(obj.getClass(), methodName, true, true, paramTypes);
+        }
+        return invoke(obj, method, params);
+    }
+
+    public static Object invoke(Object obj, Method method, Object... params) throws InvocationTargetException, IllegalAccessException {
         if (method == null) {
             return null;
         }
         method.setAccessible(true);
-        return method.invoke(obj);
+        return method.invoke(obj, params);
     }
 }
