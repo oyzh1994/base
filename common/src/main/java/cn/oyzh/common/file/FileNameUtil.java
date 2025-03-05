@@ -150,6 +150,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否终端类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTerminalType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "bash_history", "bashrc", "profile", "zshrc");
+    }
+
+    /**
      * 是否markdown类型
      *
      * @param fileType 文件类型
