@@ -53,6 +53,8 @@ public class I18nHelper {
 
     public static final String INFO = "base.info";
 
+    public static final String FILES = "base.files";
+
     public static final String VIEW = "base.view";
 
     public static final String TABLE = "base.table";
@@ -178,6 +180,8 @@ public class I18nHelper {
     public static final String SPACE = "base.space";
 
     public static final String FILE = "base.file";
+
+    public static final String DIR = "base.dir";
 
     public static final String NOT = "base.not";
 
@@ -3319,5 +3323,16 @@ public class I18nHelper {
 
     public static String authInfo() {
         return I18nResourceBundle.i18nString(AUTH, INFO);
+    }
+
+    public static String deleteFiles() {
+        return I18nResourceBundle.i18nString(DELETE, FILES);
+    }
+
+    public static String deleteFile() {
+        return I18nResourceBundle.i18nString(DELETE, FILE);
+    }
+    public static String deleteDir() {
+        return I18nResourceBundle.i18nString(DELETE, DIR);
     }
 }
