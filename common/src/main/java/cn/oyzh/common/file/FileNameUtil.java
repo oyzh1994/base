@@ -70,6 +70,106 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否word类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWordType(String fileType) {
+        return isDocType(fileType) || isDocxType(fileType);
+    }
+
+    /**
+     * 是否doc类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDocType(String fileType) {
+        return "doc".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否docx类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDocxType(String fileType) {
+        return "docx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ppt类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPptType(String fileType) {
+        return "ppt".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否pptx类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPptxType(String fileType) {
+        return "pptx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否pdf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPdfType(String fileType) {
+        return "pdf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否图片类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isImageType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "jpg", "jpeg", "png", "gif", "bmp");
+    }
+
+    /**
+     * 是否压缩类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCompressType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "zip", "rar", "7z", "tar.gz", "xz", "gzip");
+    }
+
+    /**
+     * 是否markdown类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMarkdownType(String fileType) {
+        return "md".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否htm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isHtmType(String fileType) {
+        return "htm".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否xls类型
      *
      * @param fileType 文件类型
@@ -117,6 +217,26 @@ public class FileNameUtil {
      */
     public static boolean isTxtType(String fileType) {
         return "txt".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否text类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTextType(String fileType) {
+        return "text".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否log类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLogType(String fileType) {
+        return "log".equalsIgnoreCase(fileType);
     }
 
     /**
