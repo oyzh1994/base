@@ -3353,4 +3353,8 @@ public class I18nHelper {
     public static String copyFilePath() {
         return I18nResourceBundle.i18nString(COPY, FILE_PATH);
     }
+
+    public static String fileInfo() {
+        return I18nResourceBundle.i18nString(FILE, INFO);
+    }
 }
