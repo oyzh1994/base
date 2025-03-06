@@ -1,5 +1,6 @@
 package cn.oyzh.i18n;
 
+import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -280,6 +281,8 @@ public class I18nHelper {
     public static final String EXPIRE = "base.expire";
 
     public static final String DELETE = "base.delete";
+
+    public static final String TOO_MANY_FILES = "base.tooManyFiles";
 
     public static final String DROP = "base.drop";
 
@@ -3332,7 +3335,12 @@ public class I18nHelper {
     public static String deleteFile() {
         return I18nResourceBundle.i18nString(DELETE, FILE);
     }
+
     public static String deleteDir() {
         return I18nResourceBundle.i18nString(DELETE, DIR);
+    }
+
+    public static  String tooManyFiles() {
+        return I18nResourceBundle.i18nString(TOO_MANY_FILES);
     }
 }
