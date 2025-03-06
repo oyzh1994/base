@@ -212,6 +212,8 @@ public class I18nHelper {
 
     public static final String FILE_NAME = "base.fileName";
 
+    public static final String FILE_PATH = "base.filePath";
+
     public static final String CHARSET = "base.charset";
 
     public static final String PLATFORM = "base.platform";
@@ -3346,5 +3348,9 @@ public class I18nHelper {
 
     public static String renameFile() {
         return I18nResourceBundle.i18nString(RENAME, FILE);
+    }
+
+    public static String copyFilePath() {
+        return I18nResourceBundle.i18nString(COPY, FILE_PATH);
     }
 }
