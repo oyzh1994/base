@@ -130,6 +130,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否jpg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJpgType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "jpg", "jpeg");
+    }
+
+    /**
      * 是否图片类型
      *
      * @param fileType 文件类型
