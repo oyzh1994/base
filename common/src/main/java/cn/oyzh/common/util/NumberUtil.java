@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 /**
  * @author oyzh
@@ -19,16 +20,40 @@ public class NumberUtil {
      * @return 结果
      */
     public static String formatSize(long size) {
+        return formatSize(size, null);
+    }
+
+    /**
+     * 格式化大小
+     *
+     * @param size 大小
+     * @param scale 小数位
+     * @return 结果
+     */
+    public static String formatSize(long size, Integer scale) {
+        double result = size;
+        String suffix = "";
         if (size < 1024) {
-            return size + "B";
+            result = size;
+            suffix = "B";
         } else if (size < 1024 * 1024) {
-            return size / 1024.d + "KB";
+            result = size / 1024.d;
+            suffix = "KB";
         } else if (size < 1024 * 1024 * 1024) {
-            return size / 1024.d / 1024 + "MB";
+            result = size / 1024.d / 1024.d;
+            suffix = "MB";
         } else if (size < 1024 * 1024 * 1024 * 1024L) {
-            return size / 1024.d / 1024 / 1024 + "GB";
+            result = size / 1024.d / 1024.d / 1024D;
+            suffix = "GB";
+        } else {
+            result = size / 1024.d / 1024 / 1024 / 1024;
+            suffix = "TB";
         }
-        return size / 1024.d / 1024 / 1024 / 1024 + "TB";
+        if (scale != null && scale >= 0) {
+            DecimalFormat df = new DecimalFormat("#." + "0".repeat(scale));
+            return df.format(result) + suffix;
+        }
+        return result + suffix;
     }
 
     public static boolean isLT(Number n1, Number n2) {

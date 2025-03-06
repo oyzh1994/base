@@ -180,6 +180,26 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否js类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJsType(String fileType) {
+        return "js".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否jsp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJspType(String fileType) {
+        return "jsp".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否htm类型
      *
      * @param fileType 文件类型
