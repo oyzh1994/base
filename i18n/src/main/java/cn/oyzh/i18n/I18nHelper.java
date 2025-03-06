@@ -3340,7 +3340,11 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, DIR);
     }
 
-    public static  String tooManyFiles() {
+    public static String tooManyFiles() {
         return I18nResourceBundle.i18nString(TOO_MANY_FILES);
+    }
+
+    public static String renameFile() {
+        return I18nResourceBundle.i18nString(RENAME, FILE);
     }
 }
