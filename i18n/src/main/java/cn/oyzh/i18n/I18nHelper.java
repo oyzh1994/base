@@ -3338,6 +3338,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, FILE);
     }
 
+    public static String directory() {
+        return I18nResourceBundle.i18nString(DIR);
+    }
+
     public static String deleteDir() {
         return I18nResourceBundle.i18nString(DELETE, DIR);
     }
