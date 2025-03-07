@@ -270,6 +270,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否gif类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGifType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "gif");
+    }
+
+    /**
      * 是否7z类型
      *
      * @param fileType 文件类型
