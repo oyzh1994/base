@@ -297,4 +297,10 @@ public class FileUtil {
     }
 
 
+    public static boolean mkdir(File dir) {
+        if (dir != null && !dir.exists()) {
+            return dir.mkdirs();
+        }
+        return false;
+    }
 }
