@@ -20,6 +20,8 @@ public class I18nHelper {
 
     public static final String FAIL = "base.fail";
 
+    public static final String FAILED = "base.failed";
+
     public static final String SUCCESS = "base.success";
 
     public static final String SUCCESSFUL = "base.successful";
@@ -3382,11 +3384,11 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DOWNLOAD, FILE);
     }
 
-    public static String uploadFail() {
-        return I18nResourceBundle.i18nString(UPLOAD, FAIL);
+    public static String uploadFailed() {
+        return I18nResourceBundle.i18nString(UPLOAD, FAILED);
     }
 
-    public static String downloadFail() {
-        return I18nResourceBundle.i18nString(DOWNLOAD, FAIL);
+    public static String downloadFailed() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, FAILED);
     }
 }
