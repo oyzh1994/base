@@ -1542,6 +1542,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NAME);
     }
 
+    public static String pleaseInputDirName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, DIR, NAME);
+    }
+
+    public static String pleaseInputFileName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, FILE, NAME);
+    }
+
     public static String pleaseInputTableName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, TABLE, NAME);
     }
