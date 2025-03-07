@@ -190,13 +190,53 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否zip类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isZipType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "zip");
+    }
+
+    /**
+     * 是否gz类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGzType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "gz");
+    }
+
+    /**
+     * 是否7z类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean is7zType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "7z");
+    }
+
+    /**
+     * 是否rar类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRarType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "rar");
+    }
+
+    /**
      * 是否压缩类型
      *
      * @param fileType 文件类型
      * @return 结果
      */
     public static boolean isCompressType(String fileType) {
-        return StringUtil.equalsAnyIgnoreCase(fileType, "zip", "rar", "7z", "tar.gz", "xz", "gzip");
+        return StringUtil.equalsAnyIgnoreCase(fileType, "zip", "rar", "7z", "tar.gz", "xz", "gz");
     }
 
     /**
