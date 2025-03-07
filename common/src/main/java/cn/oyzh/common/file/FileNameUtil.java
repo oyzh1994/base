@@ -200,6 +200,66 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否jar类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJarType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "jar");
+    }
+
+    /**
+     * 是否tar类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTarType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "tar");
+    }
+
+    /**
+     * 是否swf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSwfType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "swf");
+    }
+
+    /**
+     * 是否rmvb类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRmvbType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "rmvb");
+    }
+
+    /**
+     * 是否bmp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBmpType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "bmp");
+    }
+
+    /**
+     * 是否ts类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTsType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "ts");
+    }
+
+    /**
      * 是否gz类型
      *
      * @param fileType 文件类型
