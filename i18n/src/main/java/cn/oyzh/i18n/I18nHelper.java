@@ -182,6 +182,8 @@ public class I18nHelper {
 
     public static final String FILE = "base.file";
 
+    public static final String DOWNLOAD = "base.download";
+
     public static final String DIR = "base.dir";
 
     public static final String NOT = "base.not";
@@ -2402,6 +2404,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, FILE);
     }
 
+    public static String pleaseSelectDirectory() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, DIR);
+    }
+
     public static String collation() {
         return I18nResourceBundle.i18nString(COLLATION);
     }
@@ -3368,5 +3374,9 @@ public class I18nHelper {
 
     public static String fileInfo() {
         return I18nResourceBundle.i18nString(FILE, INFO);
+    }
+
+    public static String downloadFile() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, FILE);
     }
 }
