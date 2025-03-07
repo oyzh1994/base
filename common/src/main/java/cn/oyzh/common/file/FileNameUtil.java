@@ -140,6 +140,46 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否exe类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isExeType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "exe");
+    }
+
+    /**
+     * 是否mp3类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMp3Type(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "mp3");
+    }
+
+    /**
+     * 是否mp4类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMp4Type(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "mp4");
+    }
+
+    /**
+     * 是否dmg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDmgType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "dmg");
+    }
+
+    /**
      * 是否图片类型
      *
      * @param fileType 文件类型
