@@ -184,6 +184,8 @@ public class I18nHelper {
 
     public static final String DOWNLOAD = "base.download";
 
+    public static final String UPLOAD = "base.upload";
+
     public static final String DIR = "base.dir";
 
     public static final String NOT = "base.not";
@@ -3378,5 +3380,13 @@ public class I18nHelper {
 
     public static String downloadFile() {
         return I18nResourceBundle.i18nString(DOWNLOAD, FILE);
+    }
+
+    public static String uploadFail() {
+        return I18nResourceBundle.i18nString(UPLOAD, FAIL);
+    }
+
+    public static String downloadFail() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, FAIL);
     }
 }
