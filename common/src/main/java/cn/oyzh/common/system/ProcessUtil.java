@@ -290,7 +290,6 @@ public class ProcessUtil {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
                     // 检查当前行是否包含指定的进程名
                     if (line.contains(processName)) {
                         reader.close();
