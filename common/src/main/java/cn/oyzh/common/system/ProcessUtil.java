@@ -4,6 +4,7 @@ import cn.oyzh.common.SysConst;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
+import cn.oyzh.common.util.StringUtil;
 import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;
@@ -280,7 +281,7 @@ public class ProcessUtil {
      * @param processName 要检查的进程名，需包含 .exe 后缀
      * @return 如果进程正在运行返回 true，否则返回 false
      */
-    public static boolean isProcessRunning(String processName) {
+    public static boolean isProcessRunning(String...processName) {
         try {
             if (OSUtil.isWindows()) {
                 // 创建 ProcessBuilder 来执行 tasklist 命令
@@ -291,7 +292,7 @@ public class ProcessUtil {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     // 检查当前行是否包含指定的进程名
-                    if (line.contains(processName)) {
+                    if (StringUtil.containsAny(line, processName)) {
                         reader.close();
                         return true;
                     }
