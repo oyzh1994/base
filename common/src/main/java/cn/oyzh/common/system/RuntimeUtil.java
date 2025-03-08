@@ -355,4 +355,8 @@ public class RuntimeUtil {
     public static int getProcessorCount() {
         return Runtime.getRuntime().availableProcessors();
     }
+
+    public static void addShutdownHook(Thread thread) {
+         Runtime.getRuntime().addShutdownHook(thread);
+    }
 }

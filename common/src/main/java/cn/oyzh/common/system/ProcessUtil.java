@@ -6,8 +6,10 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import lombok.experimental.UtilityClass;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -270,5 +272,69 @@ public class ProcessUtil {
         }
         // 退出当前进程
         TaskManager.startDelay(Objects.requireNonNullElseGet(exitAction, () -> () -> System.exit(0)), timeout);
+    }
+
+    /**
+     * 检查指定名称的进程是否正在运行
+     *
+     * @param processName 要检查的进程名，需包含 .exe 后缀
+     * @return 如果进程正在运行返回 true，否则返回 false
+     */
+    public static boolean isProcessRunning(String processName) {
+        try {
+            if (OSUtil.isWindows()) {
+                // 创建 ProcessBuilder 来执行 tasklist 命令
+                ProcessBuilder processBuilder = new ProcessBuilder("tasklist");
+                Process process = processBuilder.start();
+                // 获取命令执行结果的输入流
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                    // 检查当前行是否包含指定的进程名
+                    if (line.contains(processName)) {
+                        reader.close();
+                        return true;
+                    }
+                }
+                // 关闭 BufferedReader
+                reader.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 关闭指定名称的进程
+     *
+     * @param processName 要关闭的进程名，需包含 .exe 后缀
+     * @return 如果成功关闭进程返回 true，否则返回 false
+     */
+    public static boolean killProcess(String processName) {
+        try {
+            if (OSUtil.isWindows()) {
+                // 创建 ProcessBuilder 来执行 taskkill 命令强制终止进程
+                ProcessBuilder processBuilder = new ProcessBuilder("taskkill", "/F", "/IM", processName);
+                Process process = processBuilder.start();
+//                // 获取命令执行结果的输入流
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//                String line;
+//                StringBuilder output = new StringBuilder();
+//                while ((line = reader.readLine()) != null) {
+//                    output.append(line).append("\n");
+//                }
+//                // 关闭 BufferedReader
+//                reader.close();
+                // 等待命令执行完成并获取退出状态码
+                int exitCode = process.waitFor();
+                // 退出状态码为 0 表示命令执行成功
+                return exitCode == 0;
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
