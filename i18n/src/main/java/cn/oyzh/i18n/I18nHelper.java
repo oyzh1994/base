@@ -3399,4 +3399,12 @@ public class I18nHelper {
     public static  String testFailed() {
         return I18nResourceBundle.i18nString(TEST, FAILED);
     }
+
+    public static String fileDeleted() {
+        return I18nResourceBundle.i18nString(FILE, DELETED);
+    }
+
+    public static String fileDeleteIng() {
+        return I18nResourceBundle.i18nString(FILE,DELETE, ING);
+    }
 }
