@@ -3391,4 +3391,12 @@ public class I18nHelper {
     public static String downloadFailed() {
         return I18nResourceBundle.i18nString(DOWNLOAD, FAILED);
     }
+
+    public static  String testSuccess() {
+        return I18nResourceBundle.i18nString(TEST, SUCCESS);
+    }
+
+    public static  String testFailed() {
+        return I18nResourceBundle.i18nString(TEST, FAILED);
+    }
 }

@@ -281,7 +281,7 @@ public class ProcessUtil {
      * @param processName 要检查的进程名，需包含 .exe 后缀
      * @return 如果进程正在运行返回 true，否则返回 false
      */
-    public static boolean isProcessRunning(String...processName) {
+    public static boolean isProcessRunning(String... processName) {
         try {
             if (OSUtil.isWindows()) {
                 // 创建 ProcessBuilder 来执行 tasklist 命令
@@ -298,6 +298,26 @@ public class ProcessUtil {
                     }
                 }
                 // 关闭 BufferedReader
+                reader.close();
+            } else if (OSUtil.isMacOS()) {
+                // 创建 ProcessBuilder 实例，执行 ps -ef 命令
+                ProcessBuilder processBuilder = new ProcessBuilder("ps", "-ef");
+                // 启动进程
+                Process process = processBuilder.start();
+                // 获取进程的输入流，用于读取命令输出
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                // 逐行读取命令输出
+                while ((line = reader.readLine()) != null) {
+                    // 检查当前行是否包含指定的进程名
+                    if (StringUtil.containsAny(line, processName)) {
+                        // 排除 ps -ef 命令本身和 grep 命令的输出，避免误判
+                        if (!line.contains("ps -ef") && !line.contains("grep")) {
+                            return true;
+                        }
+                    }
+                }
+                // 关闭输入流
                 reader.close();
             }
         } catch (IOException e) {
