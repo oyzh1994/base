@@ -3392,11 +3392,11 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DOWNLOAD, FAILED);
     }
 
-    public static  String testSuccess() {
+    public static String testSuccess() {
         return I18nResourceBundle.i18nString(TEST, SUCCESS);
     }
 
-    public static  String testFailed() {
+    public static String testFailed() {
         return I18nResourceBundle.i18nString(TEST, FAILED);
     }
 
@@ -3405,6 +3405,23 @@ public class I18nHelper {
     }
 
     public static String fileDeleteIng() {
-        return I18nResourceBundle.i18nString(FILE,DELETE, ING);
+        return I18nResourceBundle.i18nString(FILE, DELETE, ING);
     }
+
+    public static String fileUploadFinished() {
+        return I18nResourceBundle.i18nString(FILE, UPLOAD, FINISHED);
+    }
+
+    public String fileUploadFailed() {
+        return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
+    }
+
+    public static String fileDownloadFinished() {
+        return I18nResourceBundle.i18nString(FILE, DOWNLOAD, FINISHED);
+    }
+
+    public String fileDownloadFailed() {
+        return I18nResourceBundle.i18nString(FILE, DOWNLOAD, FAILED);
+    }
+
 }
