@@ -3477,4 +3477,8 @@ public class I18nHelper {
     public static String restartContainer() {
         return I18nResourceBundle.i18nString(RESTART, CONTAINER);
     }
+
+    public static String imageInfo() {
+        return I18nResourceBundle.i18nString(IMAGE, INFO);
+    }
 }
