@@ -3,6 +3,8 @@ package cn.oyzh.i18n;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 
+import java.util.List;
+
 /**
  * @author oyzh
  * @since 2024/5/13
@@ -193,6 +195,10 @@ public class I18nHelper {
     public static final String CONTAINER = "base.container";
 
     public static final String FORCE = "base.force";
+
+    public static final String RUNNING = "base.running";
+
+    public static final String STOPPED = "base.stopped";
 
     public static final String NOT = "base.not";
 
@@ -3438,5 +3444,13 @@ public class I18nHelper {
 
     public static String forceDeleteContainer() {
         return I18nResourceBundle.i18nString(FORCE, DELETE, CONTAINER);
+    }
+
+    public static String stopped() {
+        return I18nResourceBundle.i18nString(STOPPED);
+    }
+
+    public static String running() {
+        return I18nResourceBundle.i18nString(RUNNING);
     }
 }
