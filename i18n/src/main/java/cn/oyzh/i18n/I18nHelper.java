@@ -194,6 +194,10 @@ public class I18nHelper {
 
     public static final String CONTAINER = "base.container";
 
+    public static final String LOG = "base.log";
+
+    public static final String LOGS = "base.logs";
+
     public static final String IMAGE = "base.image";
 
     public static final String FORCE = "base.force";
@@ -3480,5 +3484,22 @@ public class I18nHelper {
 
     public static String imageInfo() {
         return I18nResourceBundle.i18nString(IMAGE, INFO);
+    }
+
+    public static String containerInfo() {
+        return I18nResourceBundle.i18nString(CONTAINER, INFO);
+
+    }
+
+    public static String log() {
+        return I18nResourceBundle.i18nString(LOG);
+    }
+
+    public static String containerLogs() {
+        return I18nResourceBundle.i18nString(CONTAINER, LOGS);
+    }
+
+    public static String logs() {
+        return I18nResourceBundle.i18nString(LOGS);
     }
 }
