@@ -198,6 +198,8 @@ public class I18nHelper {
 
     public static final String UNPAUSE = "base.unpause";
 
+    public static final String RESOURCE = "base.resource";
+
     public static final String LOG = "base.log";
 
     public static final String LOGS = "base.logs";
@@ -3513,5 +3515,13 @@ public class I18nHelper {
 
     public static String unpauseContainer() {
         return I18nResourceBundle.i18nString(UNPAUSE, CONTAINER);
+    }
+
+    public static String containerResource() {
+        return I18nResourceBundle.i18nString(CONTAINER, RESOURCE);
+    }
+
+    public static String resource() {
+        return I18nResourceBundle.i18nString(RESOURCE);
     }
 }
