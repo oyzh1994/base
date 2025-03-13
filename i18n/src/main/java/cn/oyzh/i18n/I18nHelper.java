@@ -194,6 +194,8 @@ public class I18nHelper {
 
     public static final String CONTAINER = "base.container";
 
+    public static final String IMAGE = "base.image";
+
     public static final String FORCE = "base.force";
 
     public static final String RUNNING = "base.running";
@@ -3380,6 +3382,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, CONTAINER);
     }
 
+    public String deleteImage() {
+        return I18nResourceBundle.i18nString(DELETE, IMAGE);
+    }
+
     public static String tooManyFiles() {
         return I18nResourceBundle.i18nString(TOO_MANY_FILES);
     }
@@ -3446,6 +3452,10 @@ public class I18nHelper {
 
     public static String forceDeleteContainer() {
         return I18nResourceBundle.i18nString(FORCE, DELETE, CONTAINER);
+    }
+
+    public static String forceDeleteImage() {
+        return I18nResourceBundle.i18nString(FORCE, DELETE, IMAGE);
     }
 
     public static String stopped() {
