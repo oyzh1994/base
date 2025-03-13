@@ -190,6 +190,10 @@ public class I18nHelper {
 
     public static final String DIR = "base.dir";
 
+    public static final String CONTAINER = "base.container";
+
+    public static final String FORCE = "base.force";
+
     public static final String NOT = "base.not";
 
     public static final String EXISTS = "base.exists";
@@ -3364,6 +3368,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, DIR);
     }
 
+    public String deleteContainer() {
+        return I18nResourceBundle.i18nString(DELETE, CONTAINER);
+    }
+
     public static String tooManyFiles() {
         return I18nResourceBundle.i18nString(TOO_MANY_FILES);
     }
@@ -3424,4 +3432,11 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FILE, DOWNLOAD, FAILED);
     }
 
+    public static String deleteContainerFailed() {
+        return I18nResourceBundle.i18nString(DELETE, CONTAINER, FAILED);
+    }
+
+    public static String forceDeleteContainer() {
+        return I18nResourceBundle.i18nString(FORCE, DELETE, CONTAINER);
+    }
 }
