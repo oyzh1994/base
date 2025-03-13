@@ -660,6 +660,8 @@ public class I18nHelper {
 
     public static final String STOP = "base.stop";
 
+    public static final String RESTART = "base.restart";
+
     public static final String SUBMIT = "base.submit";
 
     public static final String ABOUT = "base.about";
@@ -3452,5 +3454,17 @@ public class I18nHelper {
 
     public static String running() {
         return I18nResourceBundle.i18nString(RUNNING);
+    }
+
+    public static String startContainer() {
+        return I18nResourceBundle.i18nString(START, CONTAINER);
+    }
+
+    public static String stopContainer() {
+        return I18nResourceBundle.i18nString(STOP, CONTAINER);
+    }
+
+    public static String restartContainer() {
+        return I18nResourceBundle.i18nString(RESTART, CONTAINER);
     }
 }
