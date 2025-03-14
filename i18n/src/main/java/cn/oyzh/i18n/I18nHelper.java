@@ -3544,4 +3544,8 @@ public class I18nHelper {
     public static String dockerPorts() {
         return "Docker " + I18nResourceBundle.i18nString(PORTS);
     }
+
+    public static String imageHistory() {
+        return I18nResourceBundle.i18nString(IMAGE, HISTORY);
+    }
 }
