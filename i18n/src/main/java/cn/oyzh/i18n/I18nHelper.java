@@ -3524,4 +3524,8 @@ public class I18nHelper {
     public static String resource() {
         return I18nResourceBundle.i18nString(RESOURCE);
     }
+
+    public static String renameContainer() {
+        return I18nResourceBundle.i18nString(RENAME, CONTAINER);
+    }
 }
