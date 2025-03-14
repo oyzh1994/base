@@ -718,6 +718,8 @@ public class I18nHelper {
 
     public static final String RENAME = "base.rename";
 
+    public static final String KILL = "base.kill";
+
     public static final String SETTING = "base.setting";
 
     public static final String UNDO = "base.undo";
@@ -3527,5 +3529,9 @@ public class I18nHelper {
 
     public static String renameContainer() {
         return I18nResourceBundle.i18nString(RENAME, CONTAINER);
+    }
+
+    public static String killContainer() {
+        return I18nResourceBundle.i18nString(KILL, CONTAINER);
     }
 }
