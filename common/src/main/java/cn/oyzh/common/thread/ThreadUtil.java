@@ -192,6 +192,16 @@ public class ThreadUtil {
     }
 
     /**
+     * 线程是否活跃
+     *
+     * @param thread 线程
+     * @return 结果
+     */
+    public static boolean isAlive(Thread thread) {
+        return thread != null && thread.isAlive();
+    }
+
+    /**
      * 结束线程
      *
      * @param thread 线程
