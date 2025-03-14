@@ -402,6 +402,8 @@ public class I18nHelper {
 
     public static final String PORT = "base.port";
 
+    public static final String PORTS = "base.ports";
+
     public static final String READONLY = "base.readonly";
 
     public static final String READONLY_MODE = "base.readonlyMode";
@@ -3533,5 +3535,13 @@ public class I18nHelper {
 
     public static String killContainer() {
         return I18nResourceBundle.i18nString(KILL, CONTAINER);
+    }
+
+    public static String containerPorts() {
+        return I18nResourceBundle.i18nString(CONTAINER, PORTS);
+    }
+
+    public static String dockerPorts() {
+        return "Docker " + I18nResourceBundle.i18nString(PORTS);
     }
 }
