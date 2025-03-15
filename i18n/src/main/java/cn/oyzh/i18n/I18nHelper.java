@@ -736,6 +736,8 @@ public class I18nHelper {
 
     public static final String HISTORY = "base.history";
 
+    public static final String MANAGE = "base.manage";
+
     public static final String QR_CODE = "base.qrCode";
 
     public static final String SORT_ASC = "base.sortAsc";
@@ -3444,6 +3446,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(UPLOAD, ING);
     }
 
+    public static String downloadIng() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, ING);
+    }
+
     public static String inPreparation() {
         return I18nResourceBundle.i18nString(IN_PREPARATION);
     }
@@ -3571,5 +3577,13 @@ public class I18nHelper {
 
     public static String imageHistory() {
         return I18nResourceBundle.i18nString(IMAGE, HISTORY);
+    }
+
+    public static String uploadManage() {
+        return I18nResourceBundle.i18nString(UPLOAD, MANAGE);
+    }
+
+    public static String downloadManage() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, MANAGE);
     }
 }
