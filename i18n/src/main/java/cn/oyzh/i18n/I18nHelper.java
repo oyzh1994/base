@@ -156,6 +156,8 @@ public class I18nHelper {
 
     public static final String CANCEL = "base.cancel";
 
+    public static final String CANCELED = "base.canceled";
+
     public static final String TIMOUT = "base.timout";
 
     public static final String EXCEPTION = "base.exception";
@@ -189,6 +191,8 @@ public class I18nHelper {
     public static final String DOWNLOAD = "base.download";
 
     public static final String UPLOAD = "base.upload";
+
+    public static final String IN_PREPARATION = "base.inPreparation";
 
     public static final String DIR = "base.dir";
 
@@ -1000,6 +1004,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CANCEL);
     }
 
+    public static String canceled() {
+        return I18nResourceBundle.i18nString(CANCELED);
+    }
+
     public static String timout() {
         return I18nResourceBundle.i18nString(TIMOUT);
     }
@@ -1034,6 +1042,14 @@ public class I18nHelper {
 
     public static String finish() {
         return I18nResourceBundle.i18nString(FINISH);
+    }
+
+    public static String finished() {
+        return I18nResourceBundle.i18nString(FINISHED);
+    }
+
+    public static String failed() {
+        return I18nResourceBundle.i18nString(FAILED);
     }
 
     public static String is() {
@@ -3422,6 +3438,14 @@ public class I18nHelper {
 
     public static String uploadFailed() {
         return I18nResourceBundle.i18nString(UPLOAD, FAILED);
+    }
+
+    public static String uploadIng() {
+        return I18nResourceBundle.i18nString(UPLOAD, ING);
+    }
+
+    public static String inPreparation() {
+        return I18nResourceBundle.i18nString(IN_PREPARATION);
     }
 
     public static String downloadFailed() {
