@@ -738,6 +738,8 @@ public class I18nHelper {
 
     public static final String MANAGE = "base.manage";
 
+    public static final String CPU_USAGE = "base.cpuUsage";
+
     public static final String QR_CODE = "base.qrCode";
 
     public static final String SORT_ASC = "base.sortAsc";
@@ -3585,5 +3587,9 @@ public class I18nHelper {
 
     public static String downloadManage() {
         return I18nResourceBundle.i18nString(DOWNLOAD, MANAGE);
+    }
+
+    public static String cpuUsage() {
+        return I18nResourceBundle.i18nString(CPU_USAGE);
     }
 }
