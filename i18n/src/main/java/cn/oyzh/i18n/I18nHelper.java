@@ -3612,4 +3612,12 @@ public class I18nHelper {
     public static String diskWriteSpeed() {
         return I18nResourceBundle.i18nString(DISK, WRITE, SPEED);
     }
+
+    public static String networkBandwidthInflow() {
+        return I18nResourceBundle.i18nString("base.networkBandwidthInflow");
+    }
+
+    public static String networkBandwidthOutflow() {
+        return I18nResourceBundle.i18nString("base.networkBandwidthOutflow");
+    }
 }
