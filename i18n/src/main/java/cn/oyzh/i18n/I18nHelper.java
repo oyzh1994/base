@@ -740,6 +740,10 @@ public class I18nHelper {
 
     public static final String CPU_USAGE = "base.cpuUsage";
 
+    public static final String SPEED = "base.speed";
+
+    public static final String DISK = "base.disk";
+
     public static final String QR_CODE = "base.qrCode";
 
     public static final String SORT_ASC = "base.sortAsc";
@@ -3591,5 +3595,21 @@ public class I18nHelper {
 
     public static String cpuUsage() {
         return I18nResourceBundle.i18nString(CPU_USAGE);
+    }
+
+    public static String readSpeed() {
+        return I18nResourceBundle.i18nString(READ, SPEED);
+    }
+
+    public static String writeSpeed() {
+        return I18nResourceBundle.i18nString(WRITE, SPEED);
+    }
+
+    public static String diskReadSpeed() {
+        return I18nResourceBundle.i18nString(DISK, READ, SPEED);
+    }
+
+    public static String diskWriteSpeed() {
+        return I18nResourceBundle.i18nString(DISK, WRITE, SPEED);
     }
 }
