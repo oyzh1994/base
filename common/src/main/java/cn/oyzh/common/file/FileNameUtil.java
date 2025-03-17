@@ -306,7 +306,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isCompressType(String fileType) {
-        return StringUtil.equalsAnyIgnoreCase(fileType, "zip", "rar", "7z", "tar.gz", "xz", "gz");
+        return StringUtil.equalsAnyIgnoreCase(fileType, "zip", "rar", "7z", "tar.gz", "xz", "gz", "tgz");
     }
 
     /**
