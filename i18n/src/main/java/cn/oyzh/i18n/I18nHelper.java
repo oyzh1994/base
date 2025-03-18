@@ -690,6 +690,8 @@ public class I18nHelper {
 
     public static final String EDIT = "base.edit";
 
+    public static final String CERTIFICATE = "base.certificate";
+
     public static final String DESIGN = "base.design";
 
     public static final String QUERY = "base.query";
@@ -3623,5 +3625,9 @@ public class I18nHelper {
 
     public static String editFile() {
         return I18nResourceBundle.i18nString(EDIT, FILE);
+    }
+
+    public static String certificate() {
+        return I18nResourceBundle.i18nString(CERTIFICATE);
     }
 }
