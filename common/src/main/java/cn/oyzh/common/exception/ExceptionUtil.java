@@ -14,7 +14,7 @@ public class ExceptionUtil {
         throw new RuntimeException(message);
     }
 
-    public static boolean hasMessage(Exception ex, String... message) throws RuntimeException {
+    public static boolean hasMessage(Throwable ex, String... message) throws RuntimeException {
         if (ex == null) {
             return false;
         }
