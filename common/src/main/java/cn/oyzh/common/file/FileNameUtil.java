@@ -330,6 +330,136 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否css类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCssType(String fileType) {
+        return "css".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否conf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isConfType(String fileType) {
+        return "conf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否bat类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBatType(String fileType) {
+        return "bat".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否yaml类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isYamlType(String fileType) {
+        return "yaml".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ini类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isIniType(String fileType) {
+        return "ini".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ico类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isIcoType(String fileType) {
+        return "ico".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ttf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTtfType(String fileType) {
+        return "ttf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否svg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSvgType(String fileType) {
+        return "svg".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否py类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPyType(String fileType) {
+        return "py".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否bin类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBinType(String fileType) {
+        return "bin".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否psd类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPsdType(String fileType) {
+        return "psd".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否yml类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isYmlType(String fileType) {
+        return "yml".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否sh类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isShType(String fileType) {
+        return "sh".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否js类型
      *
      * @param fileType 文件类型
