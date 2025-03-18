@@ -3620,4 +3620,8 @@ public class I18nHelper {
     public static String networkBandwidthOutflow() {
         return I18nResourceBundle.i18nString("base.networkBandwidthOutflow");
     }
+
+    public static String editFile() {
+        return I18nResourceBundle.i18nString(EDIT, FILE);
+    }
 }

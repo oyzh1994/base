@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -25,6 +26,15 @@ public class IOUtil {
             } catch (Exception ignored) {
 
             }
+        }
+        return null;
+    }
+
+    public static byte[] readBytes(String filePath) {
+        try {
+            return readBytes(new FileInputStream(filePath));
+        } catch (Exception ignored) {
+
         }
         return null;
     }

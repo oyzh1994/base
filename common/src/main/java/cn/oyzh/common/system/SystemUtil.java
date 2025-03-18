@@ -89,4 +89,8 @@ public class SystemUtil {
         long usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
         return usedMemory / 1024.0 / 1024;
     }
+
+    public static String tmpdir() {
+        return System.getProperty("java.io.tmpdir");
+    }
 }
