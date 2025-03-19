@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * @author oyzh
  * @since 2024/7/5
  */
-@UtilityClass
+//@UtilityClass
 public class RegexHelper {
 
     /**

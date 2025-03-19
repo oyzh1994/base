@@ -12,7 +12,7 @@ import java.util.List;
  * @author oyzh
  * @since 2023/08/12 0024 18:16
  */
-@UtilityClass
+//@UtilityClass
 public class StringUtil {
 
     /**

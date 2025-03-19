@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
  * @author oyzh
  * @since 2023/11/14
  */
-@UtilityClass
+//@UtilityClass
 public class RuntimeUtil {
 
     /**

@@ -20,7 +20,7 @@ import java.io.IOException;
  * @author oyzh
  * @since 2024/8/29
  */
-@UtilityClass
+//@UtilityClass
 public class WorkbookHelper {
 
     public static Workbook create(boolean isXlsx) throws IOException {

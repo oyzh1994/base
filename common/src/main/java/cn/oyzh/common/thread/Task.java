@@ -16,35 +16,35 @@ public class Task implements Runnable {
     /**
      * 开始操作
      */
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private IRunnable start;
 
     /**
      * 结束操作
      */
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private IRunnable finish;
 
     /**
      * 成功操作
      */
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private IRunnable success;
 
     /**
      * 错误操作
      */
-    @Setter
-    @Getter
+//    @Setter
+//    @Getter
     private Consumer<Exception> error;
 
     /**
      * 异常
      */
-    @Getter
+//    @Getter
     private Exception exception;
 
     public void onStart() throws Exception {
@@ -90,6 +90,46 @@ public class Task implements Runnable {
 
     public boolean hasException() {
         return this.exception != null;
+    }
+
+    public IRunnable getStart() {
+        return start;
+    }
+
+    public void setStart(IRunnable start) {
+        this.start = start;
+    }
+
+    public IRunnable getFinish() {
+        return finish;
+    }
+
+    public void setFinish(IRunnable finish) {
+        this.finish = finish;
+    }
+
+    public IRunnable getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(IRunnable success) {
+        this.success = success;
+    }
+
+    public Consumer<Exception> getError() {
+        return error;
+    }
+
+    public void setError(Consumer<Exception> error) {
+        this.error = error;
+    }
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public void setException(Exception exception) {
+        this.exception = exception;
     }
 
     public void throwRuntimeException() {

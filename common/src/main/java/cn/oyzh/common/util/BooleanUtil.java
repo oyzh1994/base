@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
  * @author oyzh
  * @since 2024-09-29
  */
-@UtilityClass
+//@UtilityClass
 public class BooleanUtil {
 
     public static boolean isTrue(Boolean bool) {

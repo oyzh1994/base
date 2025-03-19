@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @since 2025/01/01
  */
-@UtilityClass
+//@UtilityClass
 public class CostUtil {
 
     private static final Map<String, Long> COST_RECORD = new ConcurrentHashMap<>();

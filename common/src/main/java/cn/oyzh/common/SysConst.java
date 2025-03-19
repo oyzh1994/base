@@ -7,14 +7,14 @@ import lombok.experimental.UtilityClass;
  * @author oyzh
  * @since 2024-09-27
  */
-@UtilityClass
+//@UtilityClass
 public class SysConst {
 
-    public String CACHE_DIR = "cache.dir";
+    public static String CACHE_DIR = "cache.dir";
 
-    public String STORE_DIR = "store.dir";
+    public static String STORE_DIR = "store.dir";
 
-    public String PROJECT_NAME = "project.name";
+    public static String PROJECT_NAME = "project.name";
 
     public static String storeDir() {
         return System.getProperty(STORE_DIR);

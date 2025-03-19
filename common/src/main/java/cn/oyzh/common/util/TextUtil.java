@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
  * @author oyzh
  * @since 2023/3/30
  */
-@UtilityClass
+//@UtilityClass
 public class TextUtil {
 
     /**

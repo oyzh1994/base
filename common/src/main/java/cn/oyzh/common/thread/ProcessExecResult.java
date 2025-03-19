@@ -7,7 +7,7 @@ import lombok.Data;
  * @author oyzh
  * @since 2025-02-11
  */
-@Data
+//@Data
 public class ProcessExecResult {
 
     private String input;
@@ -18,4 +18,35 @@ public class ProcessExecResult {
 
     private boolean timedOut;
 
+    public String getInput() {
+        return input;
+    }
+
+    public void setInput(String input) {
+        this.input = input;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public Integer getExitCode() {
+        return exitCode;
+    }
+
+    public void setExitCode(Integer exitCode) {
+        this.exitCode = exitCode;
+    }
+
+    public boolean isTimedOut() {
+        return timedOut;
+    }
+
+    public void setTimedOut(boolean timedOut) {
+        this.timedOut = timedOut;
+    }
 }

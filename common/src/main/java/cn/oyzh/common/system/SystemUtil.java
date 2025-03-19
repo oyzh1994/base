@@ -16,7 +16,7 @@ import java.util.Properties;
  * @author oyzh
  * @since 2023/04/05
  */
-@UtilityClass
+//@UtilityClass
 public class SystemUtil {
 
     /**

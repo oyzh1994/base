@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @author oyzh
  * @since 2023/1/3
  */
-@UtilityClass
+//@UtilityClass
 public class ThreadLocalUtil {
 
     private static final ThreadLocal<Object> LOCAL = new ThreadLocal<>();
@@ -35,7 +35,7 @@ public class ThreadLocalUtil {
         return null;
     }
 
-    private class ThreadLocalMap extends HashMap<String, Object> {
+    private static class ThreadLocalMap extends HashMap<String, Object> {
 
     }
 }

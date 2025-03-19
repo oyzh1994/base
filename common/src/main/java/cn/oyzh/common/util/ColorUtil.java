@@ -9,7 +9,7 @@ import lombok.experimental.UtilityClass;
  * @author oyzh
  * @since 2024/08/17
  */
-@UtilityClass
+//@UtilityClass
 public class ColorUtil {
 
     /**

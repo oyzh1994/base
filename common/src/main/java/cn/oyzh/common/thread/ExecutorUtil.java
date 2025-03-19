@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @author oyzh
  * @since 2023/9/27
  */
-@UtilityClass
+//@UtilityClass
 public class ExecutorUtil {
 
     /**

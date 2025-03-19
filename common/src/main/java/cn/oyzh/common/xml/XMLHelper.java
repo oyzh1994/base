@@ -8,7 +8,7 @@ import javax.xml.stream.XMLInputFactory;
  * @author oyzh
  * @since 2024-11-28
  */
-@UtilityClass
+//@UtilityClass
 public class XMLHelper {
 
     public static XMLInputFactory newFactory() {

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeoutException;
  * @author oyzh
  * @since 2023/9/27
  */
-@UtilityClass
+//@UtilityClass
 public class TaskManager {
 
     /**

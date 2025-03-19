@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 import lombok.experimental.UtilityClass;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
  * @author oyzh
  * @since 2022/5/7
  */
-@UtilityClass
+//@UtilityClass
 public class ArrayUtil {
 
     /**
@@ -53,7 +54,7 @@ public class ArrayUtil {
         return result;
     }
 
-    public <T> boolean isEmpty(T[] arr) {
+    public static <T> boolean isEmpty(T[] arr) {
         return arr == null || arr.length == 0;
     }
 

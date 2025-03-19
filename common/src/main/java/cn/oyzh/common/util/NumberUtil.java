@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
  * @author oyzh
  * @since 2023/8/29
  */
-@UtilityClass
+//@UtilityClass
 public class NumberUtil {
 
     /**

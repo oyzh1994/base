@@ -22,7 +22,7 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-11-08
  */
-@UtilityClass
+//@UtilityClass
 public class QRCodeUtil {
 
     /**

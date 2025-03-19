@@ -19,7 +19,7 @@ import java.util.concurrent.Future;
  * @author oyzh
  * @since 2023/1/3
  */
-@UtilityClass
+//@UtilityClass
 public class ThreadUtil {
 
     /**
