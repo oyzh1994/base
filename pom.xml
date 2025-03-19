@@ -72,13 +72,13 @@
                 <artifactId>json</artifactId>
                 <version>${base.version}</version>
             </dependency>
-            <!--  lombok-->
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <scope>compile</scope>
-                <version>${lombok.version}</version>
-            </dependency>
+<!--            &lt;!&ndash;  lombok&ndash;&gt;-->
+<!--            <dependency>-->
+<!--                <groupId>org.projectlombok</groupId>-->
+<!--                <artifactId>lombok</artifactId>-->
+<!--                <scope>compile</scope>-->
+<!--                <version>${lombok.version}</version>-->
+<!--            </dependency>-->
             <!-- ssh类库 -->
             <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
             <dependency>
