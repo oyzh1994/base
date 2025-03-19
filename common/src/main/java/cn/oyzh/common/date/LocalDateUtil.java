@@ -11,7 +11,7 @@ import java.util.Date;
  * @author oyzh
  * @since 2024-09-25
  */
-@UtilityClass
+//@UtilityClass
 public class LocalDateUtil {
 
     public static LocalDate of(@NonNull Date date) {

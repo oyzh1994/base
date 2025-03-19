@@ -12,7 +12,7 @@ import java.io.File;
  * @author oyzh
  * @since 2024-11-21
  */
-@UtilityClass
+//@UtilityClass
 public class JulUtil {
 
     /**

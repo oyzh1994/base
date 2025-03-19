@@ -12,7 +12,7 @@ import java.util.Date;
  * @author oyzh
  * @since 2024-09-25
  */
-@UtilityClass
+//@UtilityClass
 public class LocalTimeUtil {
 
     public static LocalTime of(@NonNull Date date) {

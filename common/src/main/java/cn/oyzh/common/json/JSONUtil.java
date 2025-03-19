@@ -12,7 +12,7 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-29
  */
-@UtilityClass
+//@UtilityClass
 public class JSONUtil {
 
     /**

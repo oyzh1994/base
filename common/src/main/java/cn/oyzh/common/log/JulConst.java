@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
  * @author oyzh
  * @since 2024-11-19
  */
-@UtilityClass
+//@UtilityClass
 public class JulConst {
 
     public static final String ENABLE_THREAD_ID = "jul.enable.thread.id";

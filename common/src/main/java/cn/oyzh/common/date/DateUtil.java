@@ -10,7 +10,7 @@ import java.util.Date;
  * @author oyzh
  * @since 2024/7/2
  */
-@UtilityClass
+//@UtilityClass
 public class DateUtil {
 
     public static Date of(@NonNull Number n) {

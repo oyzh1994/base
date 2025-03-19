@@ -12,7 +12,7 @@ import java.util.Date;
  * @author oyzh
  * @since 2024-09-25
  */
-@UtilityClass
+//@UtilityClass
 public class ZonedDateTimeUtil {
 
     public static ZonedDateTime of(@NonNull Date date) {

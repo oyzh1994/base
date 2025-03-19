@@ -8,7 +8,7 @@ import lombok.experimental.UtilityClass;
  * @author oyzh
  * @since 2024/7/11
  */
-@UtilityClass
+//@UtilityClass
 public class CacheHelper {
 
     private static final TimedCache<String, Object> CACHE = CacheUtil.newTimedCache(-1);

@@ -12,7 +12,6 @@ import java.util.logging.LogRecord;
  * @author oyzh
  * @since 2024-11-15
  */
-
 public class JulConsoleFormatter extends JulFormatter {
     /**
      * 重置
