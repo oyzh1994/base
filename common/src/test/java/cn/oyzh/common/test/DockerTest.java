@@ -40,7 +40,7 @@ public class DockerTest {
                 String url1 = "http://" + text;
                 try {
                     HttpRequest request1 = HttpUtil.createGet(url1);
-                    request1.timeout(1500);
+                    request1.timeout(1000);
                     HttpResponse response1 = request1.execute();
                     response1.close();
                     if (response1.contentLength() > 0) {
@@ -55,7 +55,7 @@ public class DockerTest {
                 String url2 = "https://" + text;
                 try {
                     HttpRequest request2 = HttpUtil.createGet(url1);
-                    request2.timeout(3000);
+                    request2.timeout(1000);
                     HttpResponse response2 = request2.execute();
                     response2.close();
                     if (response2.contentLength() > 0) {
