@@ -1,7 +1,6 @@
 package cn.oyzh.common.exception;
 
 import cn.oyzh.common.util.StringUtil;
-import lombok.experimental.UtilityClass;
 
 /**
  * @author oyzh

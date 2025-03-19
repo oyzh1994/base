@@ -2,7 +2,6 @@ package cn.oyzh.common.system;
 
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
-import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;
 import java.io.File;

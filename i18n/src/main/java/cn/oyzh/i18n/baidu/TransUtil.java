@@ -1,7 +1,6 @@
 package cn.oyzh.i18n.baidu;
 
 import cn.oyzh.i18n.I18nLocales;
-import lombok.experimental.UtilityClass;
 
 import java.util.Locale;
 
@@ -10,7 +9,7 @@ import java.util.Locale;
  * @author oyzh
  * @since 2025-01-23
  */
-@UtilityClass
+//@UtilityClass
 public class TransUtil {
 
     /**

@@ -2,8 +2,6 @@ package cn.oyzh.common.json;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONWriter;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.util.Collections;
 import java.util.List;
@@ -88,7 +86,7 @@ public class JSONUtil {
      * @param json json串
      * @return json对象
      */
-    public static JSONObject parseObject(@NonNull String json) {
+    public static JSONObject parseObject(String json) {
         com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
         if (object != null) {
             return new JSONObject(object);
@@ -102,7 +100,7 @@ public class JSONUtil {
      * @param json json串
      * @return json树组
      */
-    public static JSONArray parseArray(@NonNull String json) {
+    public static JSONArray parseArray(String json) {
         com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
         if (array != null) {
             return new JSONArray(array);

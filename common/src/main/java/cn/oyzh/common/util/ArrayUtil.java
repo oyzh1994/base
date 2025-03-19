@@ -1,8 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.experimental.UtilityClass;
-import org.apache.poi.ss.formula.functions.T;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +55,7 @@ public class ArrayUtil {
         return arr == null || arr.length == 0;
     }
 
-    public <T> boolean isNotEmpty(T[] arr) {
+    public static  <T> boolean isNotEmpty(T[] arr) {
         return !isEmpty(arr);
     }
 

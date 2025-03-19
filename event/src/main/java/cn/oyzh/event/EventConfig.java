@@ -1,12 +1,11 @@
 package cn.oyzh.event;
 
-import lombok.Setter;
 
 /**
  * @author oyzh
  * @since 2024/3/29
  */
-@Setter
+//@Setter
 public class EventConfig {
 
     protected Boolean async;

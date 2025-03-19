@@ -1,7 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -42,7 +40,7 @@ public class ReflectUtil {
         return getField(beanClass, fieldName, true, false);
     }
 
-    public static Field getField(@NonNull Class<?> beanClass, String fieldName, boolean withDeclared, boolean withSuper) throws SecurityException {
+    public static Field getField(Class<?> beanClass, String fieldName, boolean withDeclared, boolean withSuper) throws SecurityException {
         Class<?> searchType = beanClass;
         Field field = null;
         while (searchType != null) {
@@ -61,7 +59,7 @@ public class ReflectUtil {
         return field;
     }
 
-    public static Field[] getFields(@NonNull Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
+    public static Field[] getFields(Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
         Field[] allFields = null;
         Class<?> searchType = beanClass;
         Field[] fields;
@@ -85,7 +83,7 @@ public class ReflectUtil {
         return getMethod(beanClass, methodName, true, false, paramTypes);
     }
 
-    public static Method getMethod(@NonNull Class<?> beanClass, String methodName, boolean withDeclared, boolean withSuper, Class<?>... paramTypes) throws SecurityException {
+    public static Method getMethod(Class<?> beanClass, String methodName, boolean withDeclared, boolean withSuper, Class<?>... paramTypes) throws SecurityException {
         Class<?> searchType = beanClass;
         Method method = null;
         while (searchType != null) {
@@ -104,7 +102,7 @@ public class ReflectUtil {
         return method;
     }
 
-    public static Method[] getMethods(@NonNull Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
+    public static Method[] getMethods(Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
         Method[] allMethods = null;
         Class<?> searchType = beanClass;
         Method[] methods;

@@ -6,7 +6,6 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.google.zxing.qrcode.decoder.Version;
-import lombok.experimental.UtilityClass;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

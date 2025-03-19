@@ -1,8 +1,5 @@
 package cn.oyzh.common.dto;
 
-import lombok.Getter;
-import lombok.experimental.Accessors;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -17,36 +14,36 @@ public class Paging<T> {
     /**
      * 每页显示数量
      */
-    @Getter
-    @Accessors(fluent = true, chain = true)
+//    @Getter
+//    @Accessors(fluent = true, chain = true)
     private long limit = 10;
 
     /**
      * 数据总数
      */
-    @Getter
-    @Accessors(fluent = true, chain = true)
+//    @Getter
+//    @Accessors(fluent = true, chain = true)
     private long count;
 
     /**
      * 总页数
      */
-    @Getter
-    @Accessors(fluent = true, chain = true)
+//    @Getter
+//    @Accessors(fluent = true, chain = true)
     private long countPage;
 
     /**
      * 当前页
      */
-    @Getter
-    @Accessors(fluent = true, chain = true)
+//    @Getter
+//    @Accessors(fluent = true, chain = true)
     private long currentPage;
 
     /**
      * 数据列表
      */
-    @Getter
-    @Accessors(fluent = true, chain = true)
+//    @Getter
+//    @Accessors(fluent = true, chain = true)
     private List<T> dataList;
 
     /**
@@ -272,5 +269,13 @@ public class Paging<T> {
             pageNo = 0;
         }
         return pageNo;
+    }
+
+    public long countPage() {
+        return this.countPage;
+    }
+
+    public long currentPage() {
+        return this.currentPage;
     }
 }

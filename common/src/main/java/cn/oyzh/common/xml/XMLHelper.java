@@ -1,7 +1,5 @@
 package cn.oyzh.common.xml;
 
-import lombok.experimental.UtilityClass;
-
 import javax.xml.stream.XMLInputFactory;
 
 /**

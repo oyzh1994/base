@@ -1,8 +1,6 @@
 package cn.oyzh.common.util;
 
 import cn.oyzh.common.log.JulLog;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -25,7 +23,7 @@ public class ResourceUtil {
      * @param url 地址
      * @return URL
      */
-    public static URL getResource(@NonNull String url) {
+    public static URL getResource(String url) {
         URL u = null;
         try {
             u = ResourceUtil.class.getResource(url);
@@ -47,7 +45,7 @@ public class ResourceUtil {
      * @param url 地址
      * @return InputStream
      */
-    public static InputStream getResourceAsStream(@NonNull String url) {
+    public static InputStream getResourceAsStream(String url) {
         InputStream stream = null;
         try {
             stream = ResourceUtil.class.getResourceAsStream(url);
@@ -69,7 +67,7 @@ public class ResourceUtil {
      * @param url 地址
      * @return 物理地址
      */
-    public static String toExternalUrl(@NonNull String url) {
+    public static String toExternalUrl(String url) {
         JulLog.info("url:{}", url);
         URL u = getResource(url);
         return u == null ? null : u.toExternalForm();
@@ -81,7 +79,7 @@ public class ResourceUtil {
      * @param url 地址
      * @return 物理地址
      */
-    public static String toExternalFile(@NonNull String url) {
+    public static String toExternalFile(String url) {
         JulLog.debug("url:{}", url);
         URL u = getResource(url);
         if (u == null) {
@@ -103,7 +101,7 @@ public class ResourceUtil {
      * @param urls 地址列表
      * @return 物理地址列表
      */
-    public static List<String> toExternalUrl(@NonNull String[] urls) {
+    public static List<String> toExternalUrl(String[] urls) {
         return toExternalUrl(Arrays.asList(urls));
     }
 
@@ -113,7 +111,7 @@ public class ResourceUtil {
      * @param urls 地址列表
      * @return 物理地址列表
      */
-    public static List<String> toExternalUrl(@NonNull List<String> urls) {
+    public static List<String> toExternalUrl(List<String> urls) {
         List<String> urlList = new ArrayList<>(urls.size());
         for (String url : urls) {
             urlList.add(toExternalUrl(url));

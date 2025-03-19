@@ -1,8 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.experimental.UtilityClass;
-
-
 /**
  * 颜色工具类
  *

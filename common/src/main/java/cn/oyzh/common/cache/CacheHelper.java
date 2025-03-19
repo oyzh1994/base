@@ -1,7 +1,5 @@
 package cn.oyzh.common.cache;
 
-import lombok.experimental.UtilityClass;
-
 /**
  * 缓存辅助类
  *

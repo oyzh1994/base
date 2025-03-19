@@ -1,16 +1,15 @@
 package cn.oyzh.store.file;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 /**
  * @author oyzh
  * @since 2024/09/02
  */
-@Data
-@Accessors(chain = true, fluent = true)
+//@Data
+//@Accessors(chain = true, fluent = true)
 public class FileReadConfig {
 
     /**
@@ -42,4 +41,48 @@ public class FileReadConfig {
      * 数据行开始索引
      */
     private Integer dataRowStarts;
+
+    public String filePath() {
+        return this.filePath;
+    }
+
+    public FileReadConfig filePath(String filePath) {
+        this.filePath = filePath;
+        return this;
+    }
+
+    public String charset() {
+        return this.charset;
+    }
+
+    public final FileReadConfig charset(String charset) {
+        this.charset = charset;
+        return this;
+    }
+
+    public String recordSeparator() {
+        return this.recordSeparator;
+    }
+
+    public char txtIdentifier() {
+        return this.txtIdentifier;
+    }
+
+    public FileReadConfig txtIdentifier(char txtIdentifier) {
+        this.txtIdentifier = txtIdentifier;
+        return this;
+    }
+
+    public char fieldSeparator() {
+        return this.fieldSeparator;
+    }
+
+    public Integer dataRowStarts() {
+        return this.dataRowStarts;
+    }
+
+    public FileReadConfig dataRowStarts(Integer dataRowStarts) {
+        this.dataRowStarts = dataRowStarts;
+        return this;
+    }
 }

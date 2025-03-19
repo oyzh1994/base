@@ -1,8 +1,5 @@
 package cn.oyzh.common.log;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 

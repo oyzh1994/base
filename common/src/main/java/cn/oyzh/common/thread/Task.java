@@ -1,8 +1,5 @@
 package cn.oyzh.common.thread;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.function.Consumer;
 
 /**

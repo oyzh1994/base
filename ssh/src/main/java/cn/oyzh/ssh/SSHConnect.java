@@ -1,7 +1,6 @@
 package cn.oyzh.ssh;
 
 import cn.oyzh.store.jdbc.Column;
-import lombok.Data;
 
 /**
  * ssh连接信息
@@ -9,7 +8,6 @@ import lombok.Data;
  * @author oyzh
  * @since 2023/12/15
  */
-@Data
 public class SSHConnect {
 
     /**
@@ -41,4 +39,44 @@ public class SSHConnect {
      */
     @Column
     private int timeout = 5000;
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 }

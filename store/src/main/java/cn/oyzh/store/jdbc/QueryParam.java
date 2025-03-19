@@ -1,12 +1,11 @@
 package cn.oyzh.store.jdbc;
 
-import lombok.Data;
 
 /**
  * @author oyzh
  * @since 2024-09-26
  */
-@Data
+//@Data
 public class QueryParam {
 
     private String name;
@@ -36,5 +35,29 @@ public class QueryParam {
 
     public static QueryParam of(String name, Object data, String operator) {
         return new QueryParam(name, data, operator);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }

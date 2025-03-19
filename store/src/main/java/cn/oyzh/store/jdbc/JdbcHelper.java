@@ -2,7 +2,6 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.ArrayUtil;
-import lombok.experimental.UtilityClass;
 
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
@@ -15,7 +14,6 @@ import java.util.Collection;
  * @author oyzh
  * @since 2024-09-25
  */
-@UtilityClass
 public class JdbcHelper {
 
     public static void execute(JdbcConn connection, String sql) throws SQLException {

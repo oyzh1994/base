@@ -1,7 +1,5 @@
 package cn.oyzh.common.thread;
 
-import lombok.Data;
-
 /**
  *
  * @author oyzh

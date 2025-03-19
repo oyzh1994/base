@@ -1,7 +1,6 @@
 package cn.oyzh.common.util;
 
 import cn.oyzh.common.json.JSONUtil;
-import lombok.experimental.UtilityClass;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -242,7 +241,7 @@ public class TextUtil {
      *
      * @return json数据
      */
-    public String getJsonData(Object rawData) {
+    public static String getJsonData(Object rawData) {
         if (rawData == null) {
             return null;
         }
@@ -279,7 +278,7 @@ public class TextUtil {
      *
      * @return xml数据
      */
-    public String getXmlData(Object rawData) {
+    public static String getXmlData(Object rawData) {
         if (rawData == null) {
             return null;
         }
@@ -309,7 +308,7 @@ public class TextUtil {
      *
      * @return html数据
      */
-    public String getHtmlData(Object rawData) {
+    public static String getHtmlData(Object rawData) {
         if (rawData == null) {
             return null;
         }
@@ -339,7 +338,7 @@ public class TextUtil {
      *
      * @return 二进制数据
      */
-    public String getBinaryData(Object rawData) {
+    public static String getBinaryData(Object rawData) {
         if (rawData == null) {
             return null;
         }
@@ -360,7 +359,7 @@ public class TextUtil {
      *
      * @return 十六进制数据
      */
-    public String getHexData(Object rawData) {
+    public static String getHexData(Object rawData) {
         if (rawData == null) {
             return "";
         }
@@ -378,7 +377,7 @@ public class TextUtil {
      *
      * @return 十字符串数据
      */
-    public String getStringData(Object rawData) {
+    public static String getStringData(Object rawData) {
         if (rawData == null) {
             return "";
         }

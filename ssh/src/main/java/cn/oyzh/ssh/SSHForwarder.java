@@ -4,7 +4,6 @@ import cn.oyzh.common.log.JulLog;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class SSHForwarder {
      */
     private final List<SSHForwardConfig> forwardInfos = new ArrayList<>();
 
-    public SSHForwarder(@NonNull SSHConnect connect) {
+    public SSHForwarder( SSHConnect connect) {
         this.connect = connect;
     }
 

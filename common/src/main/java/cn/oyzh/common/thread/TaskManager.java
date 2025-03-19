@@ -2,8 +2,6 @@ package cn.oyzh.common.thread;
 
 import cn.oyzh.common.cache.CacheUtil;
 import cn.oyzh.common.cache.WeakCache;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -37,7 +35,7 @@ public class TaskManager {
      * @param task  任务
      * @param delay 延迟时间
      */
-    public static void startDelay(@NonNull String key, @NonNull IRunnable task, int delay) {
+    public static void startDelay(String key, IRunnable task, int delay) {
         Future<?> future = DELAY_TASKS.get(key);
         if (future != null && !future.isDone()) {
             ExecutorUtil.cancel(future);
@@ -68,7 +66,7 @@ public class TaskManager {
      *
      * @param key 唯一标识
      */
-    public static void cancelDelay(@NonNull String key) {
+    public static void cancelDelay(String key) {
         Future<?> future = DELAY_TASKS.get(key);
         if (future != null) {
             if (!future.isDone()) {
@@ -85,7 +83,7 @@ public class TaskManager {
      * @param task     任务
      * @param interval 定时时间
      */
-    public static void startInterval(@NonNull String key, @NonNull Runnable task, int interval) {
+    public static void startInterval(String key, Runnable task, int interval) {
         startInterval(key, task, interval, 0);
     }
 
@@ -97,7 +95,7 @@ public class TaskManager {
      * @param interval 定时时间
      * @param delay    延迟时间
      */
-    public static void startInterval(@NonNull String key, @NonNull Runnable task, int interval, int delay) {
+    public static void startInterval(String key, Runnable task, int interval, int delay) {
         Future<?> future = INTERVAL_TASKS.get(key);
         if (future != null && !future.isDone()) {
             ExecutorUtil.cancel(future);
@@ -111,7 +109,7 @@ public class TaskManager {
      *
      * @param key 唯一标识
      */
-    public static  Future<?> cancelInterval(@NonNull String key) {
+    public static Future<?> cancelInterval(String key) {
         Future<?> future = INTERVAL_TASKS.get(key);
         if (future != null) {
             if (!future.isDone()) {

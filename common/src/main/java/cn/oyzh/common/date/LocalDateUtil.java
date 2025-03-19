@@ -1,8 +1,5 @@
 package cn.oyzh.common.date;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -14,7 +11,7 @@ import java.util.Date;
 //@UtilityClass
 public class LocalDateUtil {
 
-    public static LocalDate of(@NonNull Date date) {
+    public static LocalDate of( Date date) {
         return LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }
 }

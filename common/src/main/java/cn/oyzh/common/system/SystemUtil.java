@@ -3,7 +3,6 @@ package cn.oyzh.common.system;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
-import lombok.experimental.UtilityClass;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;

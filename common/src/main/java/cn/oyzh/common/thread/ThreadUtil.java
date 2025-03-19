@@ -1,8 +1,6 @@
 package cn.oyzh.common.thread;
 
 import cn.oyzh.common.util.CollectionUtil;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +27,7 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
-    public static Thread startVirtual(@NonNull Runnable task) {
+    public static Thread startVirtual(Runnable task) {
         return Thread.ofVirtual().start(task);
     }
 
@@ -82,7 +80,7 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
-    public static Thread start(@NonNull Runnable task) {
+    public static Thread start(Runnable task) {
         ThreadExt thread = new ThreadExt(task);
         thread.start();
         return thread;

@@ -17,6 +17,4 @@ public class PropertiesFile extends Properties {
         InputStream stream = ResourceUtil.getResourceAsStream(fileName);
         this.load(stream);
     }
-
-
 }

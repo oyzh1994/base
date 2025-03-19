@@ -1,7 +1,5 @@
 package cn.oyzh.store.jdbc;
 
-import lombok.Getter;
-import lombok.NonNull;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -27,10 +25,9 @@ public class JdbcConn {
     /**
      * 连接
      */
-    @Getter
     private final Connection connection;
 
-    public JdbcConn(@NonNull Connection connection) {
+    public JdbcConn(Connection connection) {
         this.connection = connection;
         this.status = new AtomicInteger(0);
     }
@@ -140,5 +137,9 @@ public class JdbcConn {
 
     public void commit() throws SQLException {
         this.connection.commit();
+    }
+
+    public Connection getConnection() {
+        return this.connection;
     }
 }

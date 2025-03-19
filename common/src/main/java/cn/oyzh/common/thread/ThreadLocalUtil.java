@@ -1,7 +1,5 @@
 package cn.oyzh.common.thread;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.HashMap;
 
 /**

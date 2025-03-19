@@ -1,7 +1,5 @@
 package cn.oyzh.i18n;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
@@ -9,7 +7,7 @@ import java.util.List;
  * @author oyzh
  * @since 2024/5/13
  */
-@UtilityClass
+//@UtilityClass
 public class I18nHelper {
 
     public static final String CMD = "base.cmd";
@@ -3418,11 +3416,11 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, DIR);
     }
 
-    public String deleteContainer() {
+    public static String deleteContainer() {
         return I18nResourceBundle.i18nString(DELETE, CONTAINER);
     }
 
-    public String deleteImage() {
+    public static String deleteImage() {
         return I18nResourceBundle.i18nString(DELETE, IMAGE);
     }
 

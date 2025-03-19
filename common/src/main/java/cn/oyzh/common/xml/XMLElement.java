@@ -1,9 +1,6 @@
 package cn.oyzh.common.xml;
 
 import cn.oyzh.common.util.StringUtil;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,15 +19,15 @@ public class XMLElement {
     /**
      * 文本内容
      */
-    @Getter
-    @Setter(AccessLevel.PACKAGE)
+//    @Getter
+//    @Setter(AccessLevel.PACKAGE)
     private String text;
 
     /**
      * 标签名称
      */
-    @Getter
-    @Setter(AccessLevel.PACKAGE)
+//    @Getter
+//    @Setter(AccessLevel.PACKAGE)
     private String tagName;
 
     /**
@@ -89,5 +86,9 @@ public class XMLElement {
         } else {
             this.text += text;
         }
+    }
+
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
 }

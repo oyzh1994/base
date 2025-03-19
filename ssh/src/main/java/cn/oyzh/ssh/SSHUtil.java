@@ -1,6 +1,5 @@
 package cn.oyzh.ssh;
 
-import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,7 +14,6 @@ import java.util.Set;
  * @author oyzh
  * @since 2023/12/15
  */
-@UtilityClass
 public class SSHUtil {
 
     /**

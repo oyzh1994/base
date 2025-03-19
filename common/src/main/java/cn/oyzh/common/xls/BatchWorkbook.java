@@ -1,7 +1,6 @@
 package cn.oyzh.common.xls;
 
 import cn.oyzh.common.util.IOUtil;
-import lombok.NonNull;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.SpreadsheetVersion;
@@ -58,15 +57,15 @@ public class BatchWorkbook implements Workbook {
         this(false, file);
     }
 
-    public BatchWorkbook(@NonNull String filePath) throws IOException {
+    public BatchWorkbook(String filePath) throws IOException {
         this(false, new File(filePath));
     }
 
-    public BatchWorkbook(boolean isXlsx, @NonNull String filePath) throws IOException {
+    public BatchWorkbook(boolean isXlsx, String filePath) throws IOException {
         this(isXlsx, new File(filePath));
     }
 
-    public BatchWorkbook(boolean isXlsx, @NonNull File file) throws IOException {
+    public BatchWorkbook(boolean isXlsx, File file) throws IOException {
         this.isXlsx = isXlsx;
         this.file = file;
         this.initWorkbook();

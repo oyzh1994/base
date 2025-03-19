@@ -1,7 +1,6 @@
 package cn.oyzh.i18n;
 
 import cn.oyzh.common.util.StringUtil;
-import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.Locale;
  * @author oyzh
  * @since 2024/4/7
  */
-@UtilityClass
+//@UtilityClass
 public class I18nLocales {
 
     public static Locale ZH_YUE = Locale.of("zh", "yue");

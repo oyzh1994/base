@@ -1,6 +1,5 @@
 package cn.oyzh.event;
 
-import lombok.experimental.UtilityClass;
 
 import java.util.function.Consumer;
 
@@ -10,7 +9,7 @@ import java.util.function.Consumer;
  * @author oyzh
  * @since 2023/4/10
  */
-@UtilityClass
+//@UtilityClass
 public class EventUtil {
 
     /**

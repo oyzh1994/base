@@ -2,9 +2,6 @@ package cn.oyzh.event;
 
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -15,9 +12,9 @@ import java.util.function.Consumer;
  */
 public class EventBus {
 
-    @Setter
-    @Getter
-    @Accessors(chain = false, fluent = true)
+//    @Setter
+//    @Getter
+//    @Accessors(chain = false, fluent = true)
     private Consumer<Exception> exceptionHandler;
 
     private final EventRegister register = new EventRegister();
@@ -93,4 +90,7 @@ public class EventBus {
         }
     }
 
+    public void exceptionHandler(Consumer<Exception> exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
+    }
 }

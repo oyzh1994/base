@@ -1,7 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.regex.Pattern;
 
 /**

@@ -1,7 +1,5 @@
 package cn.oyzh.common;
 
-import lombok.experimental.UtilityClass;
-
 import java.text.SimpleDateFormat;
 
 /**

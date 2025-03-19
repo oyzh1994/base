@@ -8,7 +8,6 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.i18n.baidu.TransApi;
 import cn.oyzh.i18n.baidu.TransUtil;
-import lombok.experimental.UtilityClass;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,7 +21,7 @@ import java.util.Properties;
  * @author oyzh
  * @since 2025-01-23
  */
-@UtilityClass
+//@UtilityClass
 public class I18nGenerator {
 
     /**

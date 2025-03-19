@@ -1,16 +1,15 @@
 package cn.oyzh.store.file;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 /**
  * @author oyzh
  * @since 2024/09/02
  */
-@Data
-@Accessors(chain = true, fluent = true)
+//@Data
+//@Accessors(chain = true, fluent = true)
 public class FileWriteConfig {
 
     /**
@@ -61,6 +60,71 @@ public class FileWriteConfig {
     /**
      * 压缩内容
      */
-    private boolean compress ;
+    private boolean compress;
 
+    public String filePath() {
+        return this.filePath;
+    }
+
+    public FileWriteConfig filePath(String filePath) {
+        this.filePath = filePath;
+        return this;
+    }
+
+    public String charset() {
+        return this.charset;
+    }
+
+    public FileWriteConfig charset(String charset) {
+        this.charset = charset;
+        return this;
+    }
+
+    public boolean compress() {
+        return this.compress;
+    }
+
+    public FileWriteConfig compress(boolean compress) {
+        this.compress = compress;
+        return this;
+    }
+
+    public String prefix() {
+        return this.prefix;
+    }
+
+    public FileWriteConfig prefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+    public String rootNodeName() {
+        return this.rootNodeName;
+    }
+
+    public String itemNodeName() {
+        return this.itemNodeName;
+    }
+
+    public boolean includeTitle() {
+        return this.includeTitle;
+    }
+
+    public FileWriteConfig includeTitle(boolean includeTitle) {
+        this.includeTitle = includeTitle;
+        return this;
+    }
+
+    public String sheetName() {
+        return this.sheetName;
+    }
+
+    public Character txtIdentifier() {
+        return this.txtIdentifier;
+    }
+
+    public FileWriteConfig txtIdentifier(Character txtIdentifier) {
+        this.txtIdentifier = txtIdentifier;
+        return this;
+    }
 }

@@ -3,7 +3,6 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.ReflectUtil;
 import cn.oyzh.common.util.StringUtil;
-import lombok.Data;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-24
  */
-@Data
 public class TableDefinition {
 
     private String tableName;
@@ -109,5 +107,21 @@ public class TableDefinition {
             return definition;
         }
         return null;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
+
+    public List<ColumnDefinition> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<ColumnDefinition> columns) {
+        this.columns = columns;
     }
 }

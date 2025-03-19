@@ -9,7 +9,6 @@ import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.h2.H2Util;
 import cn.oyzh.store.jdbc.sqlite.SqlLiteUtil;
-import lombok.experimental.UtilityClass;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +24,6 @@ import java.util.Date;
  * @author oyzh
  * @since 2024-09-25
  */
-@UtilityClass
 public class JdbcUtil {
 
     public static Boolean toBool(Object sqlData) {

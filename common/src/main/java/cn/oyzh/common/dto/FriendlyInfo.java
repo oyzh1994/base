@@ -1,16 +1,13 @@
 package cn.oyzh.common.dto;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
-
 /**
  * 友好信息对象
  *
  * @author oyzh
  * @since 2020/3/26
  */
-@Data
-@Accessors(fluent = true, chain = true)
+//@Data
+//@Accessors(fluent = true, chain = true)
 public class FriendlyInfo<T> {
 
     /**
@@ -56,5 +53,69 @@ public class FriendlyInfo<T> {
      */
     public Object getValue(boolean friendly) {
         return friendly ? this.friendlyValue : this.value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
+    public T getOriginalValue() {
+        return originalValue;
+    }
+
+    public void setOriginalValue(T originalValue) {
+        this.originalValue = originalValue;
+    }
+
+    public String getFriendlyName() {
+        return friendlyName;
+    }
+
+    public void setFriendlyName(String friendlyName) {
+        this.friendlyName = friendlyName;
+    }
+
+    public Object getFriendlyValue() {
+        return friendlyValue;
+    }
+
+    public void setFriendlyValue(Object friendlyValue) {
+        this.friendlyValue = friendlyValue;
+    }
+
+    public Object friendlyValue() {
+        return this.friendlyValue;
+    }
+
+    public Object value() {
+        return this.value;
+    }
+
+    public void name(String name) {
+        this.name = name;
+    }
+
+    public void friendlyValue(Object friendlyValue) {
+        this.friendlyValue = friendlyValue;
+    }
+
+    public void value(Object value) {
+        this.value = value;
+    }
+
+    public void friendlyName(String friendlyName) {
+        this.friendlyName = friendlyName;
     }
 }

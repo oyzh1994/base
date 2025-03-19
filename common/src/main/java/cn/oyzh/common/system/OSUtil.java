@@ -1,7 +1,5 @@
 package cn.oyzh.common.system;
 
-import lombok.experimental.UtilityClass;
-
 /**
  * 系统工具类
  *

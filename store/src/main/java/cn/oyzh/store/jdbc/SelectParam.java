@@ -1,6 +1,5 @@
 package cn.oyzh.store.jdbc;
 
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-26
  */
-@Data
 public class SelectParam {
 
     public static final SelectParam EMPTY = new SelectParam();
@@ -31,5 +29,13 @@ public class SelectParam {
 
     public SelectParam() {
 
+    }
+
+    public List<String> getQueryColumns() {
+        return this.queryColumns;
+    }
+
+    public QueryParams getQueryParams() {
+        return this.queryParams;
     }
 }

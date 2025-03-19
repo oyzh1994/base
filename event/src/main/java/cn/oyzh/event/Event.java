@@ -1,7 +1,5 @@
 package cn.oyzh.event;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * 事件
@@ -9,8 +7,8 @@ import lombok.experimental.Accessors;
  * @author oyzh
  * @since 2023/4/10
  */
-@Data
-@Accessors(fluent = true, chain = false)
+//@Data
+//@Accessors(fluent = true, chain = false)
 public class Event<D> {
 
     /**
@@ -36,4 +34,16 @@ public class Event<D> {
         this.extra = data;
     }
 
+    public D data() {
+        return data;
+    }
+
+    public Event<D> data(D data) {
+        this.data = data;
+        return this;
+    }
+
+    public Object extra() {
+        return extra;
+    }
 }
