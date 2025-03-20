@@ -7,6 +7,7 @@ import cn.oyzh.common.system.OSUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -110,13 +111,11 @@ public class ProcessExecBuilder {
         ProcessExecResult execResult = new ProcessExecResult();
         if (this.catchInput) {
             try {
-                if (process.getInputStream().available() <= 0) {
-                    process.waitFor(1, TimeUnit.SECONDS);
-                }
-                if (process.getInputStream().available() > 0) {
+                InputStream stream = process.getInputStream();
+                if (OSUtil.isWindows() || stream.available() > 0) {
                     JulLog.info("process input--->start");
                     // 获取进程的标准输出流
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), this.charset));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
                     StringBuilder builder = new StringBuilder();
                     // 读取输出并打印到控制台
                     String line;
@@ -124,6 +123,8 @@ public class ProcessExecBuilder {
                         JulLog.info(line);
                         builder.append(line);
                     }
+                    stream.close();
+                    reader.close();
                     execResult.setInput(builder.toString());
                     JulLog.info("process input--->end");
                 }
@@ -133,13 +134,11 @@ public class ProcessExecBuilder {
         }
         if (this.catchError) {
             try {
-                if (process.getErrorStream().available() <= 0) {
-                    process.waitFor(1, TimeUnit.SECONDS);
-                }
-                if (process.getErrorStream().available() > 0) {
+                InputStream stream = process.getErrorStream();
+                if (OSUtil.isWindows() || stream.available() > 0) {
                     JulLog.error("process error--->start");
                     // 获取进程的标准输出流
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), this.charset));
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
                     StringBuilder builder = new StringBuilder();
                     // 读取输出并打印到控制台
                     String line;
@@ -147,6 +146,8 @@ public class ProcessExecBuilder {
                         JulLog.error(line);
                         builder.append(line);
                     }
+                    stream.close();
+                    reader.close();
                     execResult.setError(builder.toString());
                     JulLog.error("process error--->end");
                 }

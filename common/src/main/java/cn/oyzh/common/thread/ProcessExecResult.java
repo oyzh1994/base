@@ -47,4 +47,14 @@ public class ProcessExecResult {
     public void setTimedOut(boolean timedOut) {
         this.timedOut = timedOut;
     }
+
+    @Override
+    public String toString() {
+        return "ProcessExecResult{" +
+                "input='" + input + '\'' +
+                ", error='" + error + '\'' +
+                ", exitCode=" + exitCode +
+                ", timedOut=" + timedOut +
+                '}';
+    }
 }
