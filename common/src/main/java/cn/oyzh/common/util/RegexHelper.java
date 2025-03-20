@@ -95,4 +95,14 @@ public class RegexHelper {
         }
         return Html_Comment_Pattern;
     }
+
+    private static Pattern YAML_Pattern;
+
+    public static Pattern yamlPattern() {
+        if (YAML_Pattern == null) {
+            String regex = "^\\s*(#.*)|(\\s*)(([^:#\\s]+):\\s*(.*?)(?:\\s*#(.*))?)$";
+            YAML_Pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        }
+        return YAML_Pattern;
+    }
 }

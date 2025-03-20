@@ -334,6 +334,21 @@ public class TextUtil {
     }
 
     /**
+     * 获取yaml数据
+     *
+     * @return yaml数据
+     */
+    public static String getYamlData(Object rawData) {
+        if (rawData instanceof byte[] bytes) {
+            return new String(bytes);
+        }
+        if (rawData instanceof CharSequence sequence) {
+            return sequence.toString();
+        }
+        return null;
+    }
+
+    /**
      * 获取二进制数据
      *
      * @return 二进制数据
