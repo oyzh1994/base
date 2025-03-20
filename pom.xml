@@ -18,9 +18,9 @@
 
     <properties>
         <h2.version>2.3.232</h2.version>
-        <poi.version>5.3.0</poi.version>
+        <poi.version>5.4.0</poi.version>
         <base.version>1.0.1</base.version>
-        <jsch.version>0.2.23</jsch.version>
+        <jsch.version>0.2.24</jsch.version>
         <zxing.version>3.5.3</zxing.version>
         <junit.version>4.13.2</junit.version>
 <!--        <lombok.version>1.18.36</lombok.version>-->
