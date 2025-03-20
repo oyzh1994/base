@@ -26,9 +26,13 @@ public class ReflectUtil {
         }
     }
 
-    public static void setFieldValue(Field field, Object value, Object object) throws SecurityException, IllegalAccessException {
-        field.setAccessible(true);
-        field.set(object, value);
+    public static void setFieldValue(Field field, Object value, Object object) {
+        try {
+            field.setAccessible(true);
+            field.set(object, value);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void clearFieldValue(Field field, Object object) throws SecurityException, IllegalAccessException {

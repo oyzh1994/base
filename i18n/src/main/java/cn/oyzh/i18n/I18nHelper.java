@@ -3484,6 +3484,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FINISHED);
     }
 
+    public static String fontSize() {
+        return I18nResourceBundle.i18nString(FONT, SIZE);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
