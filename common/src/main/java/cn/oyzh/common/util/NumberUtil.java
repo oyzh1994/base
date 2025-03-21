@@ -24,13 +24,13 @@ public class NumberUtil {
     /**
      * 格式化大小
      *
-     * @param size 大小
+     * @param size  大小
      * @param scale 小数位
      * @return 结果
      */
-    public static String formatSize(long size, Integer scale) {
-        double result = size;
-        String suffix = "";
+    public static String formatSize(double size, Integer scale) {
+        double result;
+        String suffix;
         if (size < 1024) {
             result = size;
             suffix = "B";
@@ -52,6 +52,18 @@ public class NumberUtil {
             return df.format(result) + suffix;
         }
         return result + suffix;
+    }
+
+    /**
+     * 保留小数
+     *
+     * @param size  大小
+     * @param scale 小数位
+     * @return 结果
+     */
+    public static double scale(double size, Integer scale) {
+        DecimalFormat df = new DecimalFormat("#." + "0".repeat(scale));
+        return Double.parseDouble(df.format(size));
     }
 
     public static boolean isLT(Number n1, Number n2) {
