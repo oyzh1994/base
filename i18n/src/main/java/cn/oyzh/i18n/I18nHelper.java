@@ -154,6 +154,8 @@ public class I18nHelper {
 
     public static final String CANCEL = "base.cancel";
 
+    public static final String REMOVE = "base.remove";
+
     public static final String CANCELED = "base.canceled";
 
     public static final String TIMOUT = "base.timout";
@@ -3490,6 +3492,14 @@ public class I18nHelper {
 
     public static String transportFile() {
         return I18nResourceBundle.i18nString(TRANSPORT, FILE);
+    }
+
+    public static String cancelTransport() {
+        return I18nResourceBundle.i18nString(CANCEL, TRANSPORT);
+    }
+
+    public static String removeTransport() {
+        return I18nResourceBundle.i18nString(REMOVE, TRANSPORT);
     }
 
     public String fileUploadFailed() {
