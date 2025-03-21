@@ -3488,6 +3488,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FONT, SIZE);
     }
 
+    public static String transportFile() {
+        return I18nResourceBundle.i18nString(TRANSPORT, FILE);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
