@@ -3502,6 +3502,22 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(REMOVE, TRANSPORT);
     }
 
+    public static String removeDownload() {
+        return I18nResourceBundle.i18nString(REMOVE, DOWNLOAD);
+    }
+
+    public static String removeUpload() {
+        return I18nResourceBundle.i18nString(REMOVE, UPLOAD);
+    }
+
+    public static String cancelDownload() {
+        return I18nResourceBundle.i18nString(CANCEL, DOWNLOAD);
+    }
+
+    public static String cancelUpload() {
+        return I18nResourceBundle.i18nString(CANCEL, UPLOAD);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
