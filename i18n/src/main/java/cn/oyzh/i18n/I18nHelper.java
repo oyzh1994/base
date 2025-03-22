@@ -780,6 +780,8 @@ public class I18nHelper {
 
     public static final String SECONDS = "base.seconds";
 
+    public static final String SECOND = "base.second";
+
     public static final String AUTH = "base.auth";
 
     public static final String LIST = "base.list";
@@ -2216,6 +2218,10 @@ public class I18nHelper {
 
     public static String open() {
         return I18nResourceBundle.i18nString(OPEN);
+    }
+
+    public static String second() {
+        return I18nResourceBundle.i18nString(SECOND);
     }
 
     public static String seconds() {
