@@ -169,6 +169,17 @@ public class StringUtil {
         return false;
     }
 
+    public static boolean startWithAnyIgnoreCase(String source, String...target) {
+        if (source != null && target != null) {
+            for (String s : target) {
+                if(startWithIgnoreCase(source, s)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static String[] split(String str, int len) {
         if (str == null) {
             return null;
