@@ -48,6 +48,19 @@ public class RegexHelper {
         return Json_Value_Pattern;
     }
 
+//    /**
+//     * json正则模式
+//     */
+//    private static Pattern Json_Pattern;
+//
+//    public static Pattern jsonPattern() {
+//        if (Json_Pattern == null) {
+//            String regex = "\"([^\"]+)\":\\s*(\\[(?:(?:\"(?:\\\\.|[^\"\\\\])*\"|[0-9]+|true|false|null|\\{[^{}]*+(?:\\{[^{}]*+\\}[^{}]*+)*+\\})(?:,\\s*(?:\"(?:\\\\.|[^\"\\\\])*\"|[0-9]+|true|false|null|\\{[^{}]*+(?:\\{[^{}]*+\\}[^{}]*+)*+\\}))*)?\\]|\\{[^{}]*+(?:\\{[^{}]*+\\}[^{}]*+)*+\\}|\"(?:\\\\.|[^\"\\\\])*\"|[0-9]+|true|false|null)|([{}\\[\\],:])";
+//            Json_Pattern = Pattern.compile(regex);
+//        }
+//        return Json_Pattern;
+//    }
+
     /**
      * xml标签正则模式
      */
