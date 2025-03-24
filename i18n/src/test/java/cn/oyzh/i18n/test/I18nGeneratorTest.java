@@ -19,14 +19,17 @@ public class I18nGeneratorTest {
 //        private final String skFile = "/Users/oyzh/Desktop/个人/baidu_trans.sk";
     private final String skFile = "C:\\Users\\Administrator\\Desktop\\baidu_trans.sk";
 
-    private final String baseDir1 = "/Users/oyzh/IdeaProjects/oyzh/base/i18n/src/main/resources";
-//    private final String baseDir1 = "C:\\Users\\Administrator\\IdeaProjects\\base\\i18n\\src\\main\\resources";
+//    private final String baseDir1 = "/Users/oyzh/IdeaProjects/oyzh/base/i18n/src/main/resources";
+    private final String baseDir1 = "C:\\Users\\Administrator\\IdeaProjects\\base\\i18n\\src\\main\\resources";
 
 //    private final String baseDir2 = "/Users/oyzh/IdeaProjects/oyzh/easyredis/src/main/resources";
     private final String baseDir2 = "C:\\Users\\Administrator\\IdeaProjects\\easyredis\\src\\main\\resources";
 
 //    private final String baseDir3 = "/Users/oyzh/IdeaProjects/oyzh/easyzk/src/main/resources";
     private final String baseDir3 = "C:\\Users\\Administrator\\IdeaProjects\\easyzk\\src\\main\\resources";
+
+    //    private final String baseDir4 = "/Users/oyzh/IdeaProjects/oyzh/easyshell/src/main/resources";
+    private final String baseDir4 = "C:\\Users\\Administrator\\IdeaProjects\\easyshell\\src\\main\\resources";
 
     @Test
     public void test_base() {
@@ -72,6 +75,18 @@ public class I18nGeneratorTest {
                 continue;
             }
             tasks.add(() -> trans_program(baseDir3, locale));
+        }
+        ThreadUtil.submit(tasks);
+    }
+
+    @Test
+    public void test_shell() {
+        List<Runnable> tasks = new ArrayList<>();
+        for (Locale locale : I18nLocales.locales()) {
+            if (locale == Locale.PRC) {
+                continue;
+            }
+            tasks.add(() -> trans_program(baseDir4, locale));
         }
         ThreadUtil.submit(tasks);
     }
