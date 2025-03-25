@@ -188,6 +188,22 @@ public class I18nHelper {
 
     public static final String FILE = "base.file";
 
+    public static final String FIND = "base.find";
+
+    public static final String LINE_DOWN = "base.lineDown";
+
+    public static final String LINE_UP = "base.lineUp";
+
+    public static final String PAGE_DOWN = "base.pageDown";
+
+    public static final String CLEAR_BUFFER = "base.clearBuffer";
+
+    public static final String OPEN_AS_URL = "base.openAsUrl";
+
+    public static final String PAGE_UP = "base.pageUp";
+
+    public static final String SELECT_ALL = "base.selectAll";
+
     public static final String DOWNLOAD = "base.download";
 
     public static final String UPLOAD = "base.upload";
@@ -3524,6 +3540,38 @@ public class I18nHelper {
 
     public static String cancelUpload() {
         return I18nResourceBundle.i18nString(CANCEL, UPLOAD);
+    }
+
+    public static String selectAll() {
+        return I18nResourceBundle.i18nString(SELECT_ALL);
+    }
+
+    public static String find() {
+        return I18nResourceBundle.i18nString(FIND);
+    }
+
+    public static String lineUp() {
+        return I18nResourceBundle.i18nString(LINE_UP);
+    }
+
+    public static String lineDown() {
+        return I18nResourceBundle.i18nString(LINE_DOWN);
+    }
+
+    public static String pageUp() {
+        return I18nResourceBundle.i18nString(PAGE_UP);
+    }
+
+    public static String pageDown() {
+        return I18nResourceBundle.i18nString(PAGE_DOWN);
+    }
+
+    public static String clearBuffer() {
+        return I18nResourceBundle.i18nString(CLEAR_BUFFER);
+    }
+
+    public static String openAsUrl() {
+        return I18nResourceBundle.i18nString(OPEN_AS_URL);
     }
 
     public String fileUploadFailed() {
