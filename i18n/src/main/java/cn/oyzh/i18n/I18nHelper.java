@@ -200,6 +200,8 @@ public class I18nHelper {
 
     public static final String OPEN_AS_URL = "base.openAsUrl";
 
+    public static final String IGNORE_CASE = "base.ignoreCase";
+
     public static final String PAGE_UP = "base.pageUp";
 
     public static final String SELECT_ALL = "base.selectAll";
@@ -3572,6 +3574,10 @@ public class I18nHelper {
 
     public static String openAsUrl() {
         return I18nResourceBundle.i18nString(OPEN_AS_URL);
+    }
+
+    public static String ignoreCase() {
+        return I18nResourceBundle.i18nString(IGNORE_CASE);
     }
 
     public String fileUploadFailed() {

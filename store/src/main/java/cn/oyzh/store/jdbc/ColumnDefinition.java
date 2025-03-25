@@ -25,7 +25,7 @@ public class ColumnDefinition {
     public static ColumnDefinition ofField(Field field) {
         if (field != null) {
             int modifiers = field.getModifiers();
-            if (!Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers)) {
+            if (Modifier.isStatic(modifiers) || Modifier.isNative(modifiers)) {
                 return null;
             }
             Column column = field.getAnnotation(Column.class);
