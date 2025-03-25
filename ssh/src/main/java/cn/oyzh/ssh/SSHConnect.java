@@ -1,5 +1,6 @@
 package cn.oyzh.ssh;
 
+import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;
 
 /**
@@ -35,10 +36,46 @@ public class SSHConnect {
     private String password;
 
     /**
-     * 连接超时
+     * 连接超时，单位毫秒
      */
     @Column
     private int timeout = 5000;
+
+    /**
+     * 认证方式
+     */
+    @Column
+    private String authMethod;
+
+    /**
+     * 证书路径
+     */
+    @Column
+    private String certificatePath;
+
+    public String getAuthMethod() {
+        return authMethod;
+    }
+
+    public void setAuthMethod(String authMethod) {
+        this.authMethod = authMethod;
+    }
+
+    public String getCertificatePath() {
+        return certificatePath;
+    }
+
+    public void setCertificatePath(String certificatePath) {
+        this.certificatePath = certificatePath;
+    }
+
+    public boolean isPasswordAuth() {
+        return StringUtil.isBlank(this.authMethod) || StringUtil.equalsAnyIgnoreCase(this.authMethod, "password");
+    }
+
+    public boolean isCertificateAuth() {
+        return  StringUtil.equalsAnyIgnoreCase(this.authMethod, "certificate");
+    }
 
     public int getPort() {
         return port;
@@ -78,5 +115,9 @@ public class SSHConnect {
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+
+    public int getTimeoutSecond() {
+        return this.timeout == 0 ? 0 : this.timeout / 1000;
     }
 }

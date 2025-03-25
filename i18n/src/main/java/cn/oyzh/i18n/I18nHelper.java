@@ -364,6 +364,8 @@ public class I18nHelper {
 
     public static final String START = "base.start";
 
+    public static final String START1 = "base.start1";
+
     public static final String STARTING = "base.starting";
 
     public static final String COPY = "base.copy";
@@ -3556,7 +3558,7 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RUNNING);
     }
 
-    public static String startContainer() {
+    public static String start1Container() {
         return I18nResourceBundle.i18nString(START, CONTAINER);
     }
 
