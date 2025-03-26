@@ -148,11 +148,15 @@ public class ReflectUtil {
         return invoke(obj, method, params);
     }
 
-    public static Object invoke(Object obj, Method method, Object... params) throws InvocationTargetException, IllegalAccessException {
-        if (method == null) {
-            return null;
+    public static Object invoke(Object obj, Method method, Object... params) {
+        if (method != null) {
+            try {
+                method.setAccessible(true);
+                return method.invoke(obj, params);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
-        method.setAccessible(true);
-        return method.invoke(obj, params);
+        return null;
     }
 }

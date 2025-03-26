@@ -254,7 +254,7 @@ public class RuntimeUtil {
             String line;
             StringBuilder sb = new StringBuilder();
             while ((line = reader.readLine()) != null) {
-                sb.append(line);
+                sb.append(line).append(System.lineSeparator());
             }
             // 等待命令执行完成
             int exitCode = process.waitFor();
