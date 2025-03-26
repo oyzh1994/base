@@ -690,6 +690,10 @@ public class I18nHelper {
 
     public static final String TERMINAL = "base.terminal";
 
+    public static final String LOCAL = "base.local";
+
+    public static final String INSPECT = "base.inspect";
+
     public static final String APPLICATION_SETTING = "base.applicationSetting";
 
     public static final String RESET = "base.reset";
@@ -2054,6 +2058,18 @@ public class I18nHelper {
 
     public static String terminal() {
         return I18nResourceBundle.i18nString(TERMINAL);
+    }
+
+    public static String localTerminal() {
+        return I18nResourceBundle.i18nString(LOCAL, TERMINAL);
+    }
+
+    public static String containerInspect() {
+        return I18nResourceBundle.i18nString(CONTAINER, INSPECT);
+    }
+
+    public static String imageInspect() {
+        return I18nResourceBundle.i18nString(IMAGE, INSPECT);
     }
 
     public static String undo() {
