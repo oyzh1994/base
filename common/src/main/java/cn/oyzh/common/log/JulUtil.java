@@ -4,6 +4,7 @@ import cn.oyzh.common.SysConst;
 import cn.oyzh.common.date.DateHelper;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.util.JarUtil;
+import cn.oyzh.common.util.StringUtil;
 
 import java.io.File;
 
@@ -29,7 +30,7 @@ public class JulUtil {
         } else {// 开发环境
             filePath = System.getProperty("user.dir") + File.separator + "logs" + File.separator;
         }
-        if (projectName != null) {
+        if (StringUtil.isNotBlank(projectName)) {
             filePath += projectName + "-";
         }
         filePath += fileName;
