@@ -3476,6 +3476,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RENAME, FILE);
     }
 
+    public static String copyPath() {
+        return I18nResourceBundle.i18nString(COPY, PATH);
+    }
+
     public static String copyFilePath() {
         return I18nResourceBundle.i18nString(COPY, FILE_PATH);
     }
