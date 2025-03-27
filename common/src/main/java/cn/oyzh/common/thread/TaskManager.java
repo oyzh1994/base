@@ -94,14 +94,16 @@ public class TaskManager {
      * @param task     任务
      * @param interval 定时时间
      * @param delay    延迟时间
+     * @return Future<?>
      */
-    public static void startInterval(String key, Runnable task, int interval, int delay) {
+    public static Future<?> startInterval(String key, Runnable task, int interval, int delay) {
         Future<?> future = INTERVAL_TASKS.get(key);
         if (future != null && !future.isDone()) {
             ExecutorUtil.cancel(future);
         }
         future = ExecutorUtil.start(task, delay, interval);
         INTERVAL_TASKS.put(key, future);
+        return future;
     }
 
     /**

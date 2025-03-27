@@ -370,4 +370,8 @@ public class StringUtil {
         int maxLength = Math.max(s1.length(), s2.length());
         return 1 - ((double) distance / maxLength);
     }
+
+    public static boolean endsWith(String str,String endText) {
+        return endWith(str, endText);
+    }
 }
