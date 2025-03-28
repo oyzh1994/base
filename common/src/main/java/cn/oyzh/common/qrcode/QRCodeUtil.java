@@ -5,7 +5,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import lombok.experimental.UtilityClass;
+import com.google.zxing.qrcode.decoder.Version;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -16,28 +16,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 二维码生成工兿
+ * 二维码生成工具
  *
  * @author oyzh
  * @since 2024-11-08
  */
-@UtilityClass
+//@UtilityClass
 public class QRCodeUtil {
 
     /**
-     * 生成二维砿
+     * 生成二维码
      *
      * @param content 源内宿
      * @param charset 生成二维码保存的路径
-     * @param imgW    是否要压缿
+     * @param imgW    图片宽
+     * @param imgH    图片高
      * @return 返回二维码图片
      * @throws Exception 异常
      */
     public static BufferedImage createImage(String content, String charset, int imgW, int imgH) throws Exception {
         Map<EncodeHintType, Object> hints = new HashMap<>();
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+        hints.put(EncodeHintType.MARGIN, 0);
         hints.put(EncodeHintType.CHARACTER_SET, charset);
-        hints.put(EncodeHintType.MARGIN, 1);
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+        hints.put(EncodeHintType.QR_VERSION, Version.getVersionForNumber(40));
         BitMatrix bitMatrix = new MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, imgW, imgH, hints);
         int width = bitMatrix.getWidth();
         int height = bitMatrix.getHeight();
@@ -55,6 +57,8 @@ public class QRCodeUtil {
      *
      * @param source       源文件
      * @param imgPath      文件路径
+     * @param imgW         logo宽
+     * @param imgH         logo高
      * @param needCompress 是否需要压缩
      * @throws Exception 异常
      */

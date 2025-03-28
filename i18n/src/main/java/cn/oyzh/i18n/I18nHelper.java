@@ -1,13 +1,13 @@
 package cn.oyzh.i18n;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
+
+import java.util.List;
 
 /**
  * @author oyzh
  * @since 2024/5/13
  */
-@UtilityClass
+//@UtilityClass
 public class I18nHelper {
 
     public static final String CMD = "base.cmd";
@@ -19,6 +19,8 @@ public class I18nHelper {
     public static final String ALREADY_EXISTS = "base.alreadyExists";
 
     public static final String FAIL = "base.fail";
+
+    public static final String FAILED = "base.failed";
 
     public static final String SUCCESS = "base.success";
 
@@ -53,6 +55,8 @@ public class I18nHelper {
     public static final String ERROR = "base.error";
 
     public static final String INFO = "base.info";
+
+    public static final String FILES = "base.files";
 
     public static final String VIEW = "base.view";
 
@@ -106,6 +110,14 @@ public class I18nHelper {
 
     public static final String JSON_TYPE = "base.jsonType";
 
+    public static final String PNG_TYPE = "base.pngType";
+
+    public static final String JPG_TYPE = "base.jpgType";
+
+    public static final String JPEG_TYPE = "base.jpegType";
+
+    public static final String GIF_TYPE = "base.gifType";
+
     public static final String NEXT_STEP = "base.nextStep";
 
     public static final String PREV_STEP = "base.prevStep";
@@ -150,6 +162,10 @@ public class I18nHelper {
 
     public static final String CANCEL = "base.cancel";
 
+    public static final String REMOVE = "base.remove";
+
+    public static final String CANCELED = "base.canceled";
+
     public static final String TIMOUT = "base.timout";
 
     public static final String EXCEPTION = "base.exception";
@@ -180,6 +196,52 @@ public class I18nHelper {
 
     public static final String FILE = "base.file";
 
+    public static final String FIND = "base.find";
+
+    public static final String LINE_DOWN = "base.lineDown";
+
+    public static final String LINE_UP = "base.lineUp";
+
+    public static final String PAGE_DOWN = "base.pageDown";
+
+    public static final String CLEAR_BUFFER = "base.clearBuffer";
+
+    public static final String OPEN_AS_URL = "base.openAsUrl";
+
+    public static final String IGNORE_CASE = "base.ignoreCase";
+
+    public static final String PAGE_UP = "base.pageUp";
+
+    public static final String SELECT_ALL = "base.selectAll";
+
+    public static final String DOWNLOAD = "base.download";
+
+    public static final String UPLOAD = "base.upload";
+
+    public static final String IN_PREPARATION = "base.inPreparation";
+
+    public static final String DIR = "base.dir";
+
+    public static final String CONTAINER = "base.container";
+
+    public static final String PAUSE = "base.pause";
+
+    public static final String UNPAUSE = "base.unpause";
+
+    public static final String RESOURCE = "base.resource";
+
+    public static final String LOG = "base.log";
+
+    public static final String LOGS = "base.logs";
+
+    public static final String IMAGE = "base.image";
+
+    public static final String FORCE = "base.force";
+
+    public static final String RUNNING = "base.running";
+
+    public static final String STOPPED = "base.stopped";
+
     public static final String NOT = "base.not";
 
     public static final String EXISTS = "base.exists";
@@ -200,7 +262,15 @@ public class I18nHelper {
 
     public static final String PROGRAM_TIP1 = "base.program.tip1";
 
+    public static final String TITLE_CONNECT_ADD = "base.title.connect.add";
+
+    public static final String TITLE_CONNECT_UPDATE = "base.title.connect.update";
+
+    public static final String TITLE_CONNECT_TRANSPORT = "base.title.connect.transport";
+
     public static final String FILE_NAME = "base.fileName";
+
+    public static final String FILE_PATH = "base.filePath";
 
     public static final String CHARSET = "base.charset";
 
@@ -244,6 +314,12 @@ public class I18nHelper {
 
     public static final String DATABASE = "base.database";
 
+    public static final String FEATURES = "base.features";
+
+    public static final String OPTIMIZE = "base.optimize";
+
+    public static final String BUGFIXES = "base.bugfixes";
+
     public static final String INIT = "base.init";
 
     public static final String CONFIG = "base.config";
@@ -265,6 +341,8 @@ public class I18nHelper {
     public static final String EXPIRE = "base.expire";
 
     public static final String DELETE = "base.delete";
+
+    public static final String TOO_MANY_FILES = "base.tooManyFiles";
 
     public static final String DROP = "base.drop";
 
@@ -312,6 +390,8 @@ public class I18nHelper {
 
     public static final String START = "base.start";
 
+    public static final String START1 = "base.start1";
+
     public static final String STARTING = "base.starting";
 
     public static final String COPY = "base.copy";
@@ -353,6 +433,8 @@ public class I18nHelper {
     public static final String HOST = "base.host";
 
     public static final String PORT = "base.port";
+
+    public static final String PORTS = "base.ports";
 
     public static final String READONLY = "base.readonly";
 
@@ -548,6 +630,8 @@ public class I18nHelper {
 
     public static final String DATA_TOO_LARGE = "base.dataTooLarge";
 
+    public static final String TOO_LARGE = "base.tooLarge";
+
     public static final String ENABLE = "base.enable";
 
     public static final String CLOSE = "base.close";
@@ -614,6 +698,10 @@ public class I18nHelper {
 
     public static final String TERMINAL = "base.terminal";
 
+    public static final String LOCAL = "base.local";
+
+    public static final String INSPECT = "base.inspect";
+
     public static final String APPLICATION_SETTING = "base.applicationSetting";
 
     public static final String RESET = "base.reset";
@@ -621,6 +709,8 @@ public class I18nHelper {
     public static final String RESULT = "base.result";
 
     public static final String STOP = "base.stop";
+
+    public static final String RESTART = "base.restart";
 
     public static final String SUBMIT = "base.submit";
 
@@ -631,6 +721,8 @@ public class I18nHelper {
     public static final String COLLECT = "base.collect";
 
     public static final String EDIT = "base.edit";
+
+    public static final String CERTIFICATE = "base.certificate";
 
     public static final String DESIGN = "base.design";
 
@@ -666,6 +758,8 @@ public class I18nHelper {
 
     public static final String RENAME = "base.rename";
 
+    public static final String KILL = "base.kill";
+
     public static final String SETTING = "base.setting";
 
     public static final String UNDO = "base.undo";
@@ -675,6 +769,14 @@ public class I18nHelper {
     public static final String HIS = "base.his";
 
     public static final String HISTORY = "base.history";
+
+    public static final String MANAGE = "base.manage";
+
+    public static final String CPU_USAGE = "base.cpuUsage";
+
+    public static final String SPEED = "base.speed";
+
+    public static final String DISK = "base.disk";
 
     public static final String QR_CODE = "base.qrCode";
 
@@ -709,6 +811,8 @@ public class I18nHelper {
     public static final String PROCESSED = "base.processed";
 
     public static final String SECONDS = "base.seconds";
+
+    public static final String SECOND = "base.second";
 
     public static final String AUTH = "base.auth";
 
@@ -798,6 +902,10 @@ public class I18nHelper {
 
     public static String contentIsEmpty() {
         return I18nResourceBundle.i18nString(CONTENT, IS, EMPTY);
+    }
+
+    public static String isEmpty() {
+        return I18nResourceBundle.i18nString(IS, EMPTY);
     }
 
     public static String alreadyExists() {
@@ -940,6 +1048,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CANCEL);
     }
 
+    public static String canceled() {
+        return I18nResourceBundle.i18nString(CANCELED);
+    }
+
     public static String timout() {
         return I18nResourceBundle.i18nString(TIMOUT);
     }
@@ -974,6 +1086,14 @@ public class I18nHelper {
 
     public static String finish() {
         return I18nResourceBundle.i18nString(FINISH);
+    }
+
+    public static String finished() {
+        return I18nResourceBundle.i18nString(FINISHED);
+    }
+
+    public static String failed() {
+        return I18nResourceBundle.i18nString(FAILED);
     }
 
     public static String is() {
@@ -1516,6 +1636,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NAME);
     }
 
+    public static String pleaseInputDirName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, DIR, NAME);
+    }
+
+    public static String pleaseInputFileName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, FILE, NAME);
+    }
+
     public static String pleaseInputTableName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, TABLE, NAME);
     }
@@ -1736,6 +1864,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DATA_TOO_LARGE);
     }
 
+    public static String contentTooLarge() {
+        return I18nResourceBundle.i18nString(CONTENT, TOO_LARGE);
+    }
+
     public static String close() {
         return I18nResourceBundle.i18nString(CLOSE);
     }
@@ -1936,6 +2068,18 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(TERMINAL);
     }
 
+    public static String localTerminal() {
+        return I18nResourceBundle.i18nString(LOCAL, TERMINAL);
+    }
+
+    public static String containerInspect() {
+        return I18nResourceBundle.i18nString(CONTAINER, INSPECT);
+    }
+
+    public static String imageInspect() {
+        return I18nResourceBundle.i18nString(IMAGE, INSPECT);
+    }
+
     public static String undo() {
         return I18nResourceBundle.i18nString(UNDO);
     }
@@ -2118,6 +2262,10 @@ public class I18nHelper {
 
     public static String open() {
         return I18nResourceBundle.i18nString(OPEN);
+    }
+
+    public static String second() {
+        return I18nResourceBundle.i18nString(SECOND);
     }
 
     public static String seconds() {
@@ -2362,6 +2510,10 @@ public class I18nHelper {
 
     public static String pleaseSelectFile() {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, FILE);
+    }
+
+    public static String pleaseSelectDirectory() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, DIR);
     }
 
     public static String collation() {
@@ -3262,5 +3414,362 @@ public class I18nHelper {
 
     public static String programTip1() {
         return I18nResourceBundle.i18nString(PROGRAM_TIP1);
+    }
+
+    public static String connectAddTitle() {
+        return I18nResourceBundle.i18nString(TITLE_CONNECT_ADD);
+    }
+
+    public static String connectUpdateTitle() {
+        return I18nResourceBundle.i18nString(TITLE_CONNECT_UPDATE);
+    }
+
+    public static String connectTransportTitle() {
+        return I18nResourceBundle.i18nString(TITLE_CONNECT_TRANSPORT);
+    }
+
+    public static String updateDatabase() {
+        return I18nResourceBundle.i18nString(UPDATE, DATABASE);
+    }
+
+    public static String features() {
+        return I18nResourceBundle.i18nString(FEATURES);
+    }
+
+    public static String optimize() {
+        return I18nResourceBundle.i18nString(OPTIMIZE);
+    }
+
+    public static String bugfixes() {
+        return I18nResourceBundle.i18nString(BUGFIXES);
+    }
+
+    public static String openInfo() {
+        return I18nResourceBundle.i18nString(OPEN, INFO);
+    }
+
+    public static String authInfo() {
+        return I18nResourceBundle.i18nString(AUTH, INFO);
+    }
+
+    public static String deleteFiles() {
+        return I18nResourceBundle.i18nString(DELETE, FILES);
+    }
+
+    public static String deleteFile() {
+        return I18nResourceBundle.i18nString(DELETE, FILE);
+    }
+
+    public static String directory() {
+        return I18nResourceBundle.i18nString(DIR);
+    }
+
+    public static String deleteDir() {
+        return I18nResourceBundle.i18nString(DELETE, DIR);
+    }
+
+    public static String deleteContainer() {
+        return I18nResourceBundle.i18nString(DELETE, CONTAINER);
+    }
+
+    public static String deleteImage() {
+        return I18nResourceBundle.i18nString(DELETE, IMAGE);
+    }
+
+    public static String tooManyFiles() {
+        return I18nResourceBundle.i18nString(TOO_MANY_FILES);
+    }
+
+    public static String renameFile() {
+        return I18nResourceBundle.i18nString(RENAME, FILE);
+    }
+
+    public static String copyPath() {
+        return I18nResourceBundle.i18nString(COPY, PATH);
+    }
+
+    public static String copyFilePath() {
+        return I18nResourceBundle.i18nString(COPY, FILE_PATH);
+    }
+
+    public static String fileInfo() {
+        return I18nResourceBundle.i18nString(FILE, INFO);
+    }
+
+    public static String downloadFile() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, FILE);
+    }
+
+    public static String uploadFailed() {
+        return I18nResourceBundle.i18nString(UPLOAD, FAILED);
+    }
+
+    public static String uploadIng() {
+        return I18nResourceBundle.i18nString(UPLOAD, ING);
+    }
+
+    public static String downloadIng() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, ING);
+    }
+
+    public static String inPreparation() {
+        return I18nResourceBundle.i18nString(IN_PREPARATION);
+    }
+
+    public static String downloadFailed() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, FAILED);
+    }
+
+    public static String testSuccess() {
+        return I18nResourceBundle.i18nString(TEST, SUCCESS);
+    }
+
+    public static String testFailed() {
+        return I18nResourceBundle.i18nString(TEST, FAILED);
+    }
+
+    public static String fileDeleted() {
+        return I18nResourceBundle.i18nString(FILE, DELETED);
+    }
+
+    public static String fileDeleteIng() {
+        return I18nResourceBundle.i18nString(FILE, DELETE, ING);
+    }
+
+    public static String fileUploadFinished() {
+        return I18nResourceBundle.i18nString(FILE, UPLOAD, FINISHED);
+    }
+
+    public static String fontSize() {
+        return I18nResourceBundle.i18nString(FONT, SIZE);
+    }
+
+    public static String transportFile() {
+        return I18nResourceBundle.i18nString(TRANSPORT, FILE);
+    }
+
+    public static String cancelTransport() {
+        return I18nResourceBundle.i18nString(CANCEL, TRANSPORT);
+    }
+
+    public static String removeTransport() {
+        return I18nResourceBundle.i18nString(REMOVE, TRANSPORT);
+    }
+
+    public static String removeDownload() {
+        return I18nResourceBundle.i18nString(REMOVE, DOWNLOAD);
+    }
+
+    public static String removeUpload() {
+        return I18nResourceBundle.i18nString(REMOVE, UPLOAD);
+    }
+
+    public static String cancelDownload() {
+        return I18nResourceBundle.i18nString(CANCEL, DOWNLOAD);
+    }
+
+    public static String cancelUpload() {
+        return I18nResourceBundle.i18nString(CANCEL, UPLOAD);
+    }
+
+    public static String selectAll() {
+        return I18nResourceBundle.i18nString(SELECT_ALL);
+    }
+
+    public static String find() {
+        return I18nResourceBundle.i18nString(FIND);
+    }
+
+    public static String lineUp() {
+        return I18nResourceBundle.i18nString(LINE_UP);
+    }
+
+    public static String lineDown() {
+        return I18nResourceBundle.i18nString(LINE_DOWN);
+    }
+
+    public static String pageUp() {
+        return I18nResourceBundle.i18nString(PAGE_UP);
+    }
+
+    public static String pageDown() {
+        return I18nResourceBundle.i18nString(PAGE_DOWN);
+    }
+
+    public static String clearBuffer() {
+        return I18nResourceBundle.i18nString(CLEAR_BUFFER);
+    }
+
+    public static String openAsUrl() {
+        return I18nResourceBundle.i18nString(OPEN_AS_URL);
+    }
+
+    public static String ignoreCase() {
+        return I18nResourceBundle.i18nString(IGNORE_CASE);
+    }
+
+    public static String pngType() {
+        return I18nResourceBundle.i18nString(PNG_TYPE);
+    }
+
+    public static String jpgType() {
+        return I18nResourceBundle.i18nString(JPG_TYPE);
+    }
+
+    public static String jpegType() {
+        return I18nResourceBundle.i18nString(JPEG_TYPE);
+    }
+
+    public static String gifType() {
+        return I18nResourceBundle.i18nString(GIF_TYPE);
+    }
+
+    public static String filePermission() {
+        return I18nResourceBundle.i18nString(FILE, PERMS);
+    }
+
+    public String fileUploadFailed() {
+        return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
+    }
+
+    public static String fileDownloadFinished() {
+        return I18nResourceBundle.i18nString(FILE, DOWNLOAD, FINISHED);
+    }
+
+    public String fileDownloadFailed() {
+        return I18nResourceBundle.i18nString(FILE, DOWNLOAD, FAILED);
+    }
+
+    public static String deleteContainerFailed() {
+        return I18nResourceBundle.i18nString(DELETE, CONTAINER, FAILED);
+    }
+
+    public static String forceDeleteContainer() {
+        return I18nResourceBundle.i18nString(FORCE, DELETE, CONTAINER);
+    }
+
+    public static String forceDeleteImage() {
+        return I18nResourceBundle.i18nString(FORCE, DELETE, IMAGE);
+    }
+
+    public static String stopped() {
+        return I18nResourceBundle.i18nString(STOPPED);
+    }
+
+    public static String running() {
+        return I18nResourceBundle.i18nString(RUNNING);
+    }
+
+    public static String start1Container() {
+        return I18nResourceBundle.i18nString(START, CONTAINER);
+    }
+
+    public static String stopContainer() {
+        return I18nResourceBundle.i18nString(STOP, CONTAINER);
+    }
+
+    public static String restartContainer() {
+        return I18nResourceBundle.i18nString(RESTART, CONTAINER);
+    }
+
+    public static String imageInfo() {
+        return I18nResourceBundle.i18nString(IMAGE, INFO);
+    }
+
+    public static String containerInfo() {
+        return I18nResourceBundle.i18nString(CONTAINER, INFO);
+
+    }
+
+    public static String log() {
+        return I18nResourceBundle.i18nString(LOG);
+    }
+
+    public static String containerLogs() {
+        return I18nResourceBundle.i18nString(CONTAINER, LOGS);
+    }
+
+    public static String logs() {
+        return I18nResourceBundle.i18nString(LOGS);
+    }
+
+    public static String pauseContainer() {
+        return I18nResourceBundle.i18nString(PAUSE, CONTAINER);
+    }
+
+    public static String unpauseContainer() {
+        return I18nResourceBundle.i18nString(UNPAUSE, CONTAINER);
+    }
+
+    public static String containerResource() {
+        return I18nResourceBundle.i18nString(CONTAINER, RESOURCE);
+    }
+
+    public static String resource() {
+        return I18nResourceBundle.i18nString(RESOURCE);
+    }
+
+    public static String renameContainer() {
+        return I18nResourceBundle.i18nString(RENAME, CONTAINER);
+    }
+
+    public static String killContainer() {
+        return I18nResourceBundle.i18nString(KILL, CONTAINER);
+    }
+
+    public static String containerPorts() {
+        return I18nResourceBundle.i18nString(CONTAINER, PORTS);
+    }
+
+    public static String dockerPorts() {
+        return "Docker " + I18nResourceBundle.i18nString(PORTS);
+    }
+
+    public static String imageHistory() {
+        return I18nResourceBundle.i18nString(IMAGE, HISTORY);
+    }
+
+    public static String uploadManage() {
+        return I18nResourceBundle.i18nString(UPLOAD, MANAGE);
+    }
+
+    public static String downloadManage() {
+        return I18nResourceBundle.i18nString(DOWNLOAD, MANAGE);
+    }
+
+    public static String cpuUsage() {
+        return I18nResourceBundle.i18nString(CPU_USAGE);
+    }
+
+    public static String readSpeed() {
+        return I18nResourceBundle.i18nString(READ, SPEED);
+    }
+
+    public static String writeSpeed() {
+        return I18nResourceBundle.i18nString(WRITE, SPEED);
+    }
+
+    public static String diskReadSpeed() {
+        return I18nResourceBundle.i18nString(DISK, READ, SPEED);
+    }
+
+    public static String diskWriteSpeed() {
+        return I18nResourceBundle.i18nString(DISK, WRITE, SPEED);
+    }
+
+    public static String networkBandwidthInflow() {
+        return I18nResourceBundle.i18nString("base.networkBandwidthInflow");
+    }
+
+    public static String networkBandwidthOutflow() {
+        return I18nResourceBundle.i18nString("base.networkBandwidthOutflow");
+    }
+
+    public static String editFile() {
+        return I18nResourceBundle.i18nString(EDIT, FILE);
+    }
+
+    public static String certificate() {
+        return I18nResourceBundle.i18nString(CERTIFICATE);
     }
 }

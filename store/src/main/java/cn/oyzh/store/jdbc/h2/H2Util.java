@@ -1,7 +1,6 @@
 package cn.oyzh.store.jdbc.h2;
 
 import cn.oyzh.common.util.CollectionUtil;
-import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
@@ -9,7 +8,6 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-24
  */
-@UtilityClass
 public class H2Util {
 
     public static String wrap(String obj) {

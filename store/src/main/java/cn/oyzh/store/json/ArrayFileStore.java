@@ -1,9 +1,8 @@
 package cn.oyzh.store.json;
 
 import cn.oyzh.common.dto.Paging;
+import cn.oyzh.common.object.ObjectComparator;
 import cn.oyzh.common.util.CollectionUtil;
-import cn.oyzh.common.util.ObjectComparator;
-import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.Map;
  * @author oyzh
  * @since 2023/10/26
  */
+@Deprecated
 public abstract class ArrayFileStore<T extends ObjectComparator<T>> extends FileStore<T> {
 
     /**
@@ -50,7 +50,7 @@ public abstract class ArrayFileStore<T extends ObjectComparator<T>> extends File
      * @param t 数据
      * @return 结果
      */
-    public synchronized boolean add(@NonNull T t) {
+    public synchronized boolean add(T t) {
         // 加载数据
         List<T> list = this.load();
         if (list == null) {
@@ -73,7 +73,7 @@ public abstract class ArrayFileStore<T extends ObjectComparator<T>> extends File
      * @param t 数据
      * @return 结果
      */
-    public synchronized boolean update(@NonNull T t) {
+    public synchronized boolean update(T t) {
         // 加载数据
         List<T> list = this.load();
         if (CollectionUtil.isNotEmpty(list)) {
@@ -92,7 +92,7 @@ public abstract class ArrayFileStore<T extends ObjectComparator<T>> extends File
      * @param t 数据
      * @return 结果
      */
-    public synchronized boolean delete(@NonNull T t) {
+    public synchronized boolean delete(T t) {
         // 加载数据
         List<T> list = this.load();
         if (CollectionUtil.isNotEmpty(list)) {

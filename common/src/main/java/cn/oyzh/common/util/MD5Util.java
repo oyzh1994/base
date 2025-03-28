@@ -1,7 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -10,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
  * @author oyzh
  * @since 2024-12-17
  */
-@UtilityClass
+//@UtilityClass
 public class MD5Util {
 
     /**

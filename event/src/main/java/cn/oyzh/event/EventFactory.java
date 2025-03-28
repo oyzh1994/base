@@ -1,13 +1,12 @@
 package cn.oyzh.event;
 
 import cn.oyzh.common.util.ClassUtil;
-import lombok.experimental.UtilityClass;
 
 /**
  * @author oyzh
  * @since 2024-11-14
  */
-@UtilityClass
+//@UtilityClass
 public class EventFactory {
 
     private static Class<? extends EventBus> eventBusClass;

@@ -1,7 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,7 +12,7 @@ import java.util.Random;
  * @author oyzh
  * @since 2024/7/1
  */
-@UtilityClass
+//@UtilityClass
 public class CollectionUtil {
 
     public static <T> T indexOf(Collection<T> collection, int index) {

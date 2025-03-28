@@ -1,9 +1,5 @@
 package cn.oyzh.common.file;
 
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,28 +18,23 @@ public class SkipAbleFileReader implements AutoCloseable {
 
     protected BufferedReader reader;
 
-    @Getter
-    @Accessors(fluent = true, chain = true)
     private int currentLine = 0;
 
-    @Getter
-    @Setter
-    @Accessors(fluent = true, chain = true)
     private String lineBreak;
 
-    public SkipAbleFileReader(@NonNull String filePath) throws FileNotFoundException {
+    public SkipAbleFileReader(String filePath) throws FileNotFoundException {
         this(new File(filePath), StandardCharsets.UTF_8);
     }
 
-    public SkipAbleFileReader(@NonNull File file) throws FileNotFoundException {
+    public SkipAbleFileReader(File file) throws FileNotFoundException {
         this(file, StandardCharsets.UTF_8);
     }
 
-    public SkipAbleFileReader(@NonNull String filePath, Charset charset) throws FileNotFoundException {
+    public SkipAbleFileReader(String filePath, Charset charset) throws FileNotFoundException {
         this(new File(filePath), charset);
     }
 
-    public SkipAbleFileReader(@NonNull File file, Charset charset) throws FileNotFoundException {
+    public SkipAbleFileReader(File file, Charset charset) throws FileNotFoundException {
         this.reader = FileUtil.getReader(file, charset);
     }
 
@@ -139,5 +130,9 @@ public class SkipAbleFileReader implements AutoCloseable {
 
     public int read() throws IOException {
         return this.reader.read();
+    }
+
+    public void lineBreak(String lineBreak) {
+        this.lineBreak = lineBreak;
     }
 }

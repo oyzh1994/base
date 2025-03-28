@@ -1,15 +1,12 @@
 package cn.oyzh.common.util;
 
-import lombok.experimental.UtilityClass;
-
-
 /**
  * 颜色工具类
  *
  * @author oyzh
  * @since 2024/08/17
  */
-@UtilityClass
+//@UtilityClass
 public class ColorUtil {
 
     /**
@@ -20,7 +17,7 @@ public class ColorUtil {
      * @param b 颜色
      * @return 16进制值
      */
-    public static String rgbToHex(int r,int g,int b) {
+    public static String rgbToHex(int r, int g, int b) {
         // 将归一化的RGB值缩放到0-255范围
         int scaledRed = r;
         int scaledGreen = g;

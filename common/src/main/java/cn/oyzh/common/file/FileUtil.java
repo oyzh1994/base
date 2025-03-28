@@ -1,8 +1,6 @@
 package cn.oyzh.common.file;
 
 import cn.oyzh.common.util.StringUtil;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -28,7 +26,7 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-29
  */
-@UtilityClass
+//@UtilityClass
 public class FileUtil {
 
     /**
@@ -69,11 +67,11 @@ public class FileUtil {
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append), charset));
     }
 
-    public static BufferedReader getReader(@NonNull String filePath, Charset charset) throws FileNotFoundException {
+    public static BufferedReader getReader(String filePath, Charset charset) throws FileNotFoundException {
         return getReader(new File(filePath), charset);
     }
 
-    public static BufferedReader getReader(@NonNull File file, Charset charset) throws FileNotFoundException {
+    public static BufferedReader getReader(File file, Charset charset) throws FileNotFoundException {
         return new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
     }
 
@@ -237,11 +235,11 @@ public class FileUtil {
         return null;
     }
 
-    public static String readUtf8String(@NonNull String file) {
+    public static String readUtf8String(String file) {
         return readUtf8String(new File(file));
     }
 
-    public static String readUtf8String(@NonNull File file) {
+    public static String readUtf8String(File file) {
         return readString(file, StandardCharsets.UTF_8);
     }
 
@@ -297,4 +295,14 @@ public class FileUtil {
     }
 
 
+    public static boolean mkdir(File dir) {
+        if (dir != null && !dir.exists()) {
+            return dir.mkdirs();
+        }
+        return false;
+    }
+
+    public static boolean exists(String file) {
+        return exist(new File(file));
+    }
 }

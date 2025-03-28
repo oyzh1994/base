@@ -1,13 +1,12 @@
 package cn.oyzh.store.file;
 
 import cn.oyzh.common.file.FileNameUtil;
-import lombok.experimental.UtilityClass;
 
 /**
  * @author oyzh
  * @since 2024-11-27
  */
-@UtilityClass
+//@UtilityClass
 public class FileHelper {
 
     /**

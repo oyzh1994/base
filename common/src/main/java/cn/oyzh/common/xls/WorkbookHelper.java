@@ -2,7 +2,6 @@ package cn.oyzh.common.xls;
 
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.util.StringUtil;
-import lombok.experimental.UtilityClass;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,7 +19,7 @@ import java.io.IOException;
  * @author oyzh
  * @since 2024/8/29
  */
-@UtilityClass
+//@UtilityClass
 public class WorkbookHelper {
 
     public static Workbook create(boolean isXlsx) throws IOException {

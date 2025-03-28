@@ -1,6 +1,5 @@
 package cn.oyzh.store.jdbc;
 
-import lombok.Getter;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -14,7 +13,6 @@ public abstract class JdbcOperator {
     /**
      * 表定义
      */
-    @Getter
     protected final TableDefinition tableDefinition;
 
     public JdbcOperator(TableDefinition tableDefinition) {
@@ -63,5 +61,9 @@ public abstract class JdbcOperator {
      * @throws SQLException 异常
      */
     protected void createTable() throws SQLException {
+    }
+
+    public TableDefinition getTableDefinition() {
+        return this.tableDefinition;
     }
 }

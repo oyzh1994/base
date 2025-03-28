@@ -2,7 +2,6 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.store.jdbc.h2.H2Util;
 import cn.oyzh.store.jdbc.sqlite.SqlLiteUtil;
-import lombok.Data;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,7 +10,6 @@ import java.lang.reflect.Modifier;
  * @author oyzh
  * @since 2024-09-26
  */
-@Data
 public class ColumnDefinition {
 
     private String fieldName;
@@ -27,7 +25,7 @@ public class ColumnDefinition {
     public static ColumnDefinition ofField(Field field) {
         if (field != null) {
             int modifiers = field.getModifiers();
-            if (!Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers)) {
+            if (Modifier.isStatic(modifiers) || Modifier.isNative(modifiers)) {
                 return null;
             }
             Column column = field.getAnnotation(Column.class);
@@ -67,5 +65,41 @@ public class ColumnDefinition {
             return this.columnName.toUpperCase();
         }
         return this.columnName;
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public void setFieldName(String fieldName) {
+        this.fieldName = fieldName;
+    }
+
+    public void setColumnName(String columnName) {
+        this.columnName = columnName;
+    }
+
+    public String getColumnType() {
+        return columnType;
+    }
+
+    public void setColumnType(String columnType) {
+        this.columnType = columnType;
+    }
+
+    public boolean isPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(boolean primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public boolean isAutoGeneration() {
+        return autoGeneration;
+    }
+
+    public void setAutoGeneration(boolean autoGeneration) {
+        this.autoGeneration = autoGeneration;
     }
 }

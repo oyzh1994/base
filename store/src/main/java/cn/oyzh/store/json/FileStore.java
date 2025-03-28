@@ -2,8 +2,6 @@ package cn.oyzh.store.json;
 
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.json.JSONUtil;
-import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -15,8 +13,7 @@ import java.nio.charset.StandardCharsets;
  * @author oyzh
  * @since 2022/8/26
  */
-@Data
-@Accessors(chain = true, fluent = true)
+@Deprecated
 public abstract class FileStore<T> {
 
     /**

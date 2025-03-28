@@ -1,7 +1,5 @@
 package cn.oyzh.common.property;
 
-import lombok.Setter;
-
 import java.lang.ref.WeakReference;
 
 /**
@@ -12,8 +10,12 @@ public class ObjectProperty<T> {
 
     private WeakReference<T> reference;
 
-    @Setter
+//    @Setter
     private PropertyListener<T> listener;
+
+    public void setListener(PropertyListener<T> listener) {
+        this.listener = listener;
+    }
 
     public ObjectProperty() {
         this(null, null);

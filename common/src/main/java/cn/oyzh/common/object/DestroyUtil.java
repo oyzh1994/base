@@ -1,4 +1,4 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.object;
 
 import java.util.Collection;
 

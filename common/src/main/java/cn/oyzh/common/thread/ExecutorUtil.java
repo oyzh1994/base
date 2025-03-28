@@ -1,7 +1,5 @@
 package cn.oyzh.common.thread;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -15,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * @author oyzh
  * @since 2023/9/27
  */
-@UtilityClass
+//@UtilityClass
 public class ExecutorUtil {
 
     /**

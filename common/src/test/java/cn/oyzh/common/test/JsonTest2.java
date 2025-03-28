@@ -1,7 +1,6 @@
 package cn.oyzh.common.test;
 
 import cn.oyzh.common.json.JSONUtil;
-import lombok.Data;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -121,7 +120,6 @@ public class JsonTest2 {
         System.out.println(o);
     }
 
-    @Data
     public static class JsonBean1 {
         private String param1;
         private boolean param2;
@@ -129,7 +127,6 @@ public class JsonTest2 {
         private List<JsonBean2> param4;
     }
 
-    @Data
     public static class JsonBean2 {
         private String param1;
         private boolean param2;

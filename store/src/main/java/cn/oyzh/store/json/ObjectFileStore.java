@@ -1,6 +1,5 @@
 package cn.oyzh.store.json;
 
-import lombok.NonNull;
 
 /**
  * 对象文件保存
@@ -8,6 +7,7 @@ import lombok.NonNull;
  * @author oyzh
  * @since 2023/10/26
  */
+@Deprecated
 public abstract class ObjectFileStore<T> extends FileStore<T> {
 
     /**
@@ -23,7 +23,7 @@ public abstract class ObjectFileStore<T> extends FileStore<T> {
      * @param obj 数据
      * @return 结果
      */
-    public synchronized boolean update(@NonNull T obj) {
+    public synchronized boolean update(T obj) {
         return this.saveData(obj);
     }
 }

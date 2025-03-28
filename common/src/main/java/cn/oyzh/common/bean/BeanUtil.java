@@ -3,7 +3,6 @@ package cn.oyzh.common.bean;
 import cn.oyzh.common.exception.InvalidParamException;
 import cn.oyzh.common.exception.PropertyNotFoundException;
 import cn.oyzh.common.util.StringUtil;
-import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,7 +11,7 @@ import java.lang.reflect.Method;
  * @author oyzh
  * @since 2024-09-24
  */
-@UtilityClass
+//@UtilityClass
 public class BeanUtil {
 
     public static <T> T getValue(Object bean, String name) {

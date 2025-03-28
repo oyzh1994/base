@@ -1,7 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +9,7 @@ import java.lang.reflect.Method;
  * @author oyzh
  * @since 2024-09-24
  */
-@UtilityClass
+//@UtilityClass
 public class ReflectUtil {
 
     public static <T> T getFieldValue(Object object, String fieldName) {
@@ -28,9 +26,13 @@ public class ReflectUtil {
         }
     }
 
-    public static void setFieldValue(Field field, Object value, Object object) throws SecurityException, IllegalAccessException {
-        field.setAccessible(true);
-        field.set(object, value);
+    public static void setFieldValue(Field field, Object value, Object object) {
+        try {
+            field.setAccessible(true);
+            field.set(object, value);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public static void clearFieldValue(Field field, Object object) throws SecurityException, IllegalAccessException {
@@ -42,7 +44,7 @@ public class ReflectUtil {
         return getField(beanClass, fieldName, true, false);
     }
 
-    public static Field getField(@NonNull Class<?> beanClass, String fieldName, boolean withDeclared, boolean withSuper) throws SecurityException {
+    public static Field getField(Class<?> beanClass, String fieldName, boolean withDeclared, boolean withSuper) throws SecurityException {
         Class<?> searchType = beanClass;
         Field field = null;
         while (searchType != null) {
@@ -61,7 +63,7 @@ public class ReflectUtil {
         return field;
     }
 
-    public static Field[] getFields(@NonNull Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
+    public static Field[] getFields(Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
         Field[] allFields = null;
         Class<?> searchType = beanClass;
         Field[] fields;
@@ -85,7 +87,7 @@ public class ReflectUtil {
         return getMethod(beanClass, methodName, true, false, paramTypes);
     }
 
-    public static Method getMethod(@NonNull Class<?> beanClass, String methodName, boolean withDeclared, boolean withSuper, Class<?>... paramTypes) throws SecurityException {
+    public static Method getMethod(Class<?> beanClass, String methodName, boolean withDeclared, boolean withSuper, Class<?>... paramTypes) throws SecurityException {
         Class<?> searchType = beanClass;
         Method method = null;
         while (searchType != null) {
@@ -104,7 +106,7 @@ public class ReflectUtil {
         return method;
     }
 
-    public static Method[] getMethods(@NonNull Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
+    public static Method[] getMethods(Class<?> beanClass, boolean withDeclared, boolean withSuper) throws SecurityException {
         Method[] allMethods = null;
         Class<?> searchType = beanClass;
         Method[] methods;
@@ -124,11 +126,37 @@ public class ReflectUtil {
         return allMethods;
     }
 
-    public static Object invoke(Object obj, Method method) throws InvocationTargetException, IllegalAccessException {
-        if (method == null) {
-            return null;
+//    public static Object invoke(Object obj, Method method) throws InvocationTargetException, IllegalAccessException {
+//        if (method == null) {
+//            return null;
+//        }
+//        method.setAccessible(true);
+//        return method.invoke(obj);
+//    }
+
+    public static Object invoke(Object obj, String methodName, Object... params) throws InvocationTargetException, IllegalAccessException {
+        Method method;
+        if (params == null || params.length == 0) {
+            method = getMethod(obj.getClass(), methodName, true, true);
+        } else {
+            Class<?>[] paramTypes = new Class[params.length];
+            for (int i = 0; i < params.length; i++) {
+                paramTypes[i] = params[i].getClass();
+            }
+            method = getMethod(obj.getClass(), methodName, true, true, paramTypes);
         }
-        method.setAccessible(true);
-        return method.invoke(obj);
+        return invoke(obj, method, params);
+    }
+
+    public static Object invoke(Object obj, Method method, Object... params) {
+        if (method != null) {
+            try {
+                method.setAccessible(true);
+                return method.invoke(obj, params);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return null;
     }
 }

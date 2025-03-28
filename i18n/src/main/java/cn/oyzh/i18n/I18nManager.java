@@ -1,6 +1,5 @@
 package cn.oyzh.i18n;
 
-import lombok.experimental.UtilityClass;
 
 import java.util.Locale;
 
@@ -10,7 +9,7 @@ import java.util.Locale;
  * @author oyzh
  * @since 2024/04/07
  */
-@UtilityClass
+//@UtilityClass
 public class I18nManager {
 
     /**

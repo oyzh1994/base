@@ -1,7 +1,5 @@
 package cn.oyzh.common.file;
 
-import lombok.NonNull;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -17,15 +15,15 @@ public class LineFileWriter implements AutoCloseable {
 
     protected BufferedWriter writer;
 
-    public LineFileWriter(@NonNull String filePath) throws FileNotFoundException {
+    public LineFileWriter(String filePath) throws FileNotFoundException {
         this(new File(filePath), StandardCharsets.UTF_8);
     }
 
-    public LineFileWriter(@NonNull File file) throws FileNotFoundException {
+    public LineFileWriter(File file) throws FileNotFoundException {
         this(file, StandardCharsets.UTF_8);
     }
 
-    public LineFileWriter(@NonNull File file, Charset charset) throws FileNotFoundException {
+    public LineFileWriter(File file, Charset charset) throws FileNotFoundException {
         this.writer = FileUtil.getWriter(file, charset, false);
     }
 
@@ -56,19 +54,19 @@ public class LineFileWriter implements AutoCloseable {
         }
     }
 
-    public static LineFileWriter create(@NonNull String filePath, String charset) throws FileNotFoundException {
+    public static LineFileWriter create(String filePath, String charset) throws FileNotFoundException {
         return new LineFileWriter(new File(filePath), Charset.forName(charset));
     }
 
-    public static LineFileWriter create(@NonNull String filePath, Charset charset) throws FileNotFoundException {
+    public static LineFileWriter create(String filePath, Charset charset) throws FileNotFoundException {
         return new LineFileWriter(new File(filePath), charset);
     }
 
-    public static LineFileWriter create(@NonNull File file, String charset) throws FileNotFoundException {
+    public static LineFileWriter create(File file, String charset) throws FileNotFoundException {
         return new LineFileWriter(file, Charset.forName(charset));
     }
 
-    public static LineFileWriter create(@NonNull File file, Charset charset) throws FileNotFoundException {
+    public static LineFileWriter create(File file, Charset charset) throws FileNotFoundException {
         return new LineFileWriter(file, charset);
     }
 }

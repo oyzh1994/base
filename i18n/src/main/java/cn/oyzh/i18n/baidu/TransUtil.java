@@ -1,7 +1,6 @@
 package cn.oyzh.i18n.baidu;
 
 import cn.oyzh.i18n.I18nLocales;
-import lombok.experimental.UtilityClass;
 
 import java.util.Locale;
 
@@ -10,7 +9,7 @@ import java.util.Locale;
  * @author oyzh
  * @since 2025-01-23
  */
-@UtilityClass
+//@UtilityClass
 public class TransUtil {
 
     /**
@@ -26,12 +25,6 @@ public class TransUtil {
         if (locale == Locale.TAIWAN || locale == Locale.TRADITIONAL_CHINESE) {
             return "cht";
         }
-//        if (locale == I18nLocales.ZH_YUE) {
-//            return "yue";
-//        }
-//        if (locale == I18nLocales.ZH_WYW) {
-//            return "wyw";
-//        }
         if (locale == Locale.ENGLISH || locale == Locale.US || locale == Locale.UK) {
             return "en";
         }
@@ -50,22 +43,13 @@ public class TransUtil {
         if (locale == Locale.ITALY || locale == Locale.ITALIAN) {
             return "it";
         }
-//        if (locale == I18nLocales.RU) {
-//            return "ru";
-//        }
-//        if (locale == I18nLocales.PT) {
-//            return "pt";
-//        }
-//        if (locale == I18nLocales.TH) {
-//            return "th";
-//        }
-//        if (locale == I18nLocales.EL) {
-//            return "el";
-//        }
-//        if (locale == I18nLocales.FIN) {
-//            return "fin";
-//        }
-//        return "zh";
-        return locale.getCountry().toLowerCase();
+        if (locale == I18nLocales.ZH_WYW) {
+            return "wyw";
+        }
+        if (locale == I18nLocales.ZH_YUE) {
+            return "yue";
+        }
+//        return locale.getCountry().toLowerCase();
+        return locale.toString();
     }
 }

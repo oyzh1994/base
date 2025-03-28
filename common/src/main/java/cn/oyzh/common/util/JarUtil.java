@@ -1,7 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.experimental.UtilityClass;
-
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
@@ -10,7 +8,7 @@ import java.security.ProtectionDomain;
  * @author oyzh
  * @since 2024-12-17
  */
-@UtilityClass
+//@UtilityClass
 public class JarUtil {
 
     /**

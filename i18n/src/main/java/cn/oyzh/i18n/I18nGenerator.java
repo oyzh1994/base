@@ -8,7 +8,6 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.i18n.baidu.TransApi;
 import cn.oyzh.i18n.baidu.TransUtil;
-import lombok.experimental.UtilityClass;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,7 +21,7 @@ import java.util.Properties;
  * @author oyzh
  * @since 2025-01-23
  */
-@UtilityClass
+//@UtilityClass
 public class I18nGenerator {
 
     /**
@@ -64,6 +63,7 @@ public class I18nGenerator {
         targetProp.load(new FileInputStream(targetI18nFile));
 
         int count = 0;
+        int failCount = 0;
         // 遍历中文key
         for (Object key : cnProp.keySet()) {
             try {
@@ -87,11 +87,11 @@ public class I18nGenerator {
                 if (object.containsKey("trans_result")) {
                     JSONArray array = object.getJSONArray("trans_result");
                     String dst = array.getJSONObject(0).getString("dst");
-                    JulLog.info("translate:{} key:{}={}={} count={}", targetLocale.getLanguage(), key, source, dst, count++);
+                    JulLog.info("translate:{} key:{}={}={} count={}", targetLocale.getLanguage(), key, source, dst, ++count);
                     targetProp.setProperty((String) key, dst);
                 } else {
 //                    targetProp.setProperty((String) key, source);
-                    JulLog.warn("translate:{} key:{}={} fail count={}", targetLocale.getLanguage(), key, source, count);
+                    JulLog.warn("translate:{} key:{}={} fail, failCount:{} count={}", targetLocale.getLanguage(), key, source, ++failCount, count);
                 }
                 // 存储数据
                 if (count % 10 == 0) {

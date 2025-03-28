@@ -2,16 +2,14 @@ package cn.oyzh.common.util;
 
 
 import cn.oyzh.common.log.JulLog;
-import lombok.experimental.UtilityClass;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @since 2025/01/01
  */
-@UtilityClass
+//@UtilityClass
 public class CostUtil {
 
     private static final Map<String, Long> COST_RECORD = new ConcurrentHashMap<>();

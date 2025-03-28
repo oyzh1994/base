@@ -1,8 +1,5 @@
 package cn.oyzh.common.date;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -10,10 +7,10 @@ import java.util.Date;
  * @author oyzh
  * @since 2024/7/2
  */
-@UtilityClass
+//@UtilityClass
 public class DateUtil {
 
-    public static Date of(@NonNull Number n) {
+    public static Date of(Number n) {
         return of(n.longValue());
     }
 

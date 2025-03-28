@@ -1,7 +1,6 @@
 package cn.oyzh.store.jdbc.sqlite;
 
 import cn.oyzh.common.util.CollectionUtil;
-import lombok.experimental.UtilityClass;
 
 import java.util.List;
 
@@ -9,7 +8,6 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-24
  */
-@UtilityClass
 public class SqlLiteUtil {
 
     public static String wrap(String obj) {

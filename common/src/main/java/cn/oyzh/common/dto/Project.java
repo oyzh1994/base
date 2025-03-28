@@ -1,8 +1,7 @@
 package cn.oyzh.common.dto;
 
-import cn.oyzh.common.util.PropertiesFile;
+import cn.oyzh.common.file.PropertiesFile;
 import cn.oyzh.common.util.StringUtil;
-import lombok.Data;
 
 import java.io.IOException;
 
@@ -12,7 +11,7 @@ import java.io.IOException;
  * @author oyzh
  * @since 2020/9/14
  */
-@Data
+//@Data
 public class Project {
 
     /**
@@ -82,5 +81,45 @@ public class Project {
             }
         }
         return instance;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getCopyright() {
+        return copyright;
+    }
+
+    public void setCopyright(String copyright) {
+        this.copyright = copyright;
     }
 }

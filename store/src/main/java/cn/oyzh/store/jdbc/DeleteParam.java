@@ -1,6 +1,5 @@
 package cn.oyzh.store.jdbc;
 
-import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +8,7 @@ import java.util.List;
  * @author oyzh
  * @since 2024-09-26
  */
-@Data
+//@Data
 public class DeleteParam {
 
     private Long limit;
@@ -39,4 +38,27 @@ public class DeleteParam {
         this.orderByParams.add(orderByParam);
     }
 
+    public Long getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Long limit) {
+        this.limit = limit;
+    }
+
+    public List<QueryParam> getQueryParams() {
+        return queryParams;
+    }
+
+    public void setQueryParams(List<QueryParam> queryParams) {
+        this.queryParams = queryParams;
+    }
+
+    public List<OrderByParam> getOrderByParams() {
+        return orderByParams;
+    }
+
+    public void setOrderByParams(List<OrderByParam> orderByParams) {
+        this.orderByParams = orderByParams;
+    }
 }

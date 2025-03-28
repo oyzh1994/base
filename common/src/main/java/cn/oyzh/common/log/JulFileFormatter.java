@@ -12,7 +12,6 @@ import java.util.logging.LogRecord;
  * @author oyzh
  * @since 2024-09-27
  */
-
 public class JulFileFormatter extends JulFormatter {
 
     @Override

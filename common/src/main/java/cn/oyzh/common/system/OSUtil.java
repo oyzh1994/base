@@ -1,6 +1,4 @@
-package cn.oyzh.common.util;
-
-import lombok.experimental.UtilityClass;
+package cn.oyzh.common.system;
 
 /**
  * 系统工具类
@@ -8,7 +6,7 @@ import lombok.experimental.UtilityClass;
  * @author oyzh
  * @since 2023/3/9
  */
-@UtilityClass
+//@UtilityClass
 public class OSUtil {
 
     /**

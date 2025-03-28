@@ -1,7 +1,5 @@
 package cn.oyzh.common.util;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +24,7 @@ import java.util.jar.JarFile;
  * @author oyzh
  * @since 2023/05/18
  */
-@UtilityClass
+//@UtilityClass
 public class ClassUtil {
 
     public static <T> T newInstance(Class<T> clazz) {
@@ -52,7 +50,7 @@ public class ClassUtil {
      * @param clazz 类
      * @return 接口列表
      */
-    public static List<Class<?>> getInterfaces(@NonNull Class<?> clazz) {
+    public static List<Class<?>> getInterfaces(Class<?> clazz) {
         Set<Class<?>> interfaces = new HashSet<>();
         do {
             getInterfaces(clazz, interfaces);

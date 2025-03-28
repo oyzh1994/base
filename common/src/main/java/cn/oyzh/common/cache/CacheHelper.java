@@ -1,14 +1,12 @@
 package cn.oyzh.common.cache;
 
-import lombok.experimental.UtilityClass;
-
 /**
  * 缓存辅助类
  *
  * @author oyzh
  * @since 2024/7/11
  */
-@UtilityClass
+//@UtilityClass
 public class CacheHelper {
 
     private static final TimedCache<String, Object> CACHE = CacheUtil.newTimedCache(-1);

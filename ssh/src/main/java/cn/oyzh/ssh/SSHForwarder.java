@@ -4,7 +4,6 @@ import cn.oyzh.common.log.JulLog;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
-import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ public class SSHForwarder {
      */
     private final List<SSHForwardConfig> forwardInfos = new ArrayList<>();
 
-    public SSHForwarder(@NonNull SSHConnect connect) {
+    public SSHForwarder(SSHConnect connect) {
         this.connect = connect;
     }
 
@@ -45,12 +44,16 @@ public class SSHForwarder {
      */
     protected void initSession() throws JSchException {
         if (this.session == null || !this.session.isConnected()) {
-            JSch jsch = new JSch();
             // 登陆跳板机
-            this.session = jsch.getSession(this.connect.getUser(), this.connect.getHost(), this.connect.getPort());
+            if (this.connect.isPasswordAuth()) {
+                this.session = SSHHolder.JSCH.getSession(this.connect.getUser(), this.connect.getHost(), this.connect.getPort());
+                this.session.setPassword(this.connect.getPassword());
+            } else {
+                SSHHolder.JSCH.addIdentity(this.connect.getCertificatePath());
+                this.session = SSHHolder.JSCH.getSession(this.connect.getUser(), this.connect.getHost(), this.connect.getPort());
+            }
             this.session.setConfig("StrictHostKeyChecking", "no");
             this.session.setTimeout(this.connect.getTimeout());
-            this.session.setPassword(this.connect.getPassword());
             this.session.connect();
             JulLog.info("ssh连接成功 connectInfo:{}", this.connect);
         }

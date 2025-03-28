@@ -1,9 +1,8 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.system;
 
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
-import lombok.experimental.UtilityClass;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -16,7 +15,7 @@ import java.util.Properties;
  * @author oyzh
  * @since 2023/04/05
  */
-@UtilityClass
+//@UtilityClass
 public class SystemUtil {
 
     /**
@@ -88,5 +87,9 @@ public class SystemUtil {
         MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
         long usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
         return usedMemory / 1024.0 / 1024;
+    }
+
+    public static String tmpdir() {
+        return System.getProperty("java.io.tmpdir");
     }
 }

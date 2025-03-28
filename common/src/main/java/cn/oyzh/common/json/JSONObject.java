@@ -24,6 +24,10 @@ public class JSONObject extends com.alibaba.fastjson2.JSONObject {
 
     @Override
     public JSONArray getJSONArray(String key) {
+        com.alibaba.fastjson2.JSONArray array = super.getJSONArray(key);
+        if (array == null) {
+            return new JSONArray();
+        }
         return new JSONArray(super.getJSONArray(key));
     }
 

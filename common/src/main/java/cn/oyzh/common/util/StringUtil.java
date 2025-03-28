@@ -1,8 +1,6 @@
 package cn.oyzh.common.util;
 
 
-import lombok.experimental.UtilityClass;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -12,7 +10,7 @@ import java.util.List;
  * @author oyzh
  * @since 2023/08/12 0024 18:16
  */
-@UtilityClass
+//@UtilityClass
 public class StringUtil {
 
     /**
@@ -171,6 +169,17 @@ public class StringUtil {
         return false;
     }
 
+    public static boolean startWithAnyIgnoreCase(String source, String...target) {
+        if (source != null && target != null) {
+            for (String s : target) {
+                if(startWithIgnoreCase(source, s)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static String[] split(String str, int len) {
         if (str == null) {
             return null;
@@ -292,6 +301,17 @@ public class StringUtil {
         return source.toLowerCase().endsWith(str.toLowerCase());
     }
 
+    public static boolean endWithAnyIgnoreCase(String source, String...target) {
+        if (source != null && target != null) {
+            for (String s : target) {
+                if(endWithIgnoreCase(source, s)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static String join(String space, Collection<?> collection) {
         StringBuilder builder = new StringBuilder();
         for (Object o : collection) {
@@ -360,5 +380,9 @@ public class StringUtil {
         int distance = levenshteinDistance(s1, s2);
         int maxLength = Math.max(s1.length(), s2.length());
         return 1 - ((double) distance / maxLength);
+    }
+
+    public static boolean endsWith(String str,String endText) {
+        return endWith(str, endText);
     }
 }

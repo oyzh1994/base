@@ -1,8 +1,6 @@
 package cn.oyzh.common.thread;
 
 import cn.oyzh.common.util.CollectionUtil;
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,7 +17,7 @@ import java.util.concurrent.Future;
  * @author oyzh
  * @since 2023/1/3
  */
-@UtilityClass
+//@UtilityClass
 public class ThreadUtil {
 
     /**
@@ -29,7 +27,7 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
-    public static Thread startVirtual(@NonNull Runnable task) {
+    public static Thread startVirtual(Runnable task) {
         return Thread.ofVirtual().start(task);
     }
 
@@ -82,7 +80,7 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
-    public static Thread start(@NonNull Runnable task) {
+    public static Thread start(Runnable task) {
         ThreadExt thread = new ThreadExt(task);
         thread.start();
         return thread;
@@ -189,6 +187,16 @@ public class ThreadUtil {
      */
     public static boolean isInterrupted(Thread thread) {
         return thread == null || thread.isInterrupted();
+    }
+
+    /**
+     * 线程是否活跃
+     *
+     * @param thread 线程
+     * @return 结果
+     */
+    public static boolean isAlive(Thread thread) {
+        return thread != null && thread.isAlive();
     }
 
     /**

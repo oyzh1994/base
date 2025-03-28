@@ -1,7 +1,5 @@
 package cn.oyzh.common.date;
 
-import lombok.experimental.UtilityClass;
-
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -10,7 +8,7 @@ import java.util.Date;
  * @author oyzh
  * @since 2024/7/2
  */
-@UtilityClass
+//@UtilityClass
 public class DateHelper {
 
     /**

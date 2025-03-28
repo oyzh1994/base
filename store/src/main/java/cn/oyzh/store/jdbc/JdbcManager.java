@@ -2,7 +2,6 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
-import lombok.experimental.UtilityClass;
 
 import java.io.File;
 import java.sql.Connection;
@@ -16,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author oyzh
  * @since 2024-09-25
  */
-@UtilityClass
+//@UtilityClass
 public class JdbcManager {
 
     /**

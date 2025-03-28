@@ -70,6 +70,426 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否word类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWordType(String fileType) {
+        return isDocType(fileType) || isDocxType(fileType);
+    }
+
+    /**
+     * 是否doc类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDocType(String fileType) {
+        return "doc".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否docx类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDocxType(String fileType) {
+        return "docx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ppt类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPptType(String fileType) {
+        return "ppt".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否pptx类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPptxType(String fileType) {
+        return "pptx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否pdf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPdfType(String fileType) {
+        return "pdf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否jpg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJpgType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "jpg", "jpeg");
+    }
+
+    /**
+     * 是否exe类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isExeType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "exe");
+    }
+
+    /**
+     * 是否mp3类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMp3Type(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "mp3");
+    }
+
+    /**
+     * 是否mp4类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMp4Type(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "mp4");
+    }
+
+    /**
+     * 是否dmg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDmgType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "dmg");
+    }
+
+    /**
+     * 是否图片类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isImageType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "jpg", "jpeg", "png", "gif", "bmp");
+    }
+
+    /**
+     * 是否zip类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isZipType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "zip");
+    }
+
+    /**
+     * 是否jar类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJarType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "jar");
+    }
+
+    /**
+     * 是否tar类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTarType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "tar");
+    }
+
+    /**
+     * 是否swf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSwfType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "swf");
+    }
+
+    /**
+     * 是否rmvb类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRmvbType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "rmvb");
+    }
+
+    /**
+     * 是否bmp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBmpType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "bmp");
+    }
+
+    /**
+     * 是否ts类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTsType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "ts");
+    }
+
+    /**
+     * 是否gz类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGzType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "gz");
+    }
+
+    /**
+     * 是否gif类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGifType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "gif");
+    }
+
+    /**
+     * 是否7z类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean is7zType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "7z");
+    }
+
+    /**
+     * 是否rar类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRarType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "rar");
+    }
+
+    /**
+     * 是否压缩类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCompressType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "zip", "rar", "7z", "tar.gz", "xz", "gz", "tgz");
+    }
+
+    /**
+     * 是否终端类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTerminalType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "bash_history", "bashrc", "profile", "zshrc");
+    }
+
+    /**
+     * 是否markdown类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMarkdownType(String fileType) {
+        return "md".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否css类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCssType(String fileType) {
+        return "css".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否conf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isConfType(String fileType) {
+        return "conf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否bat类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBatType(String fileType) {
+        return "bat".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否yaml类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isYamlType(String fileType) {
+        return "yaml".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ini类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isIniType(String fileType) {
+        return "ini".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ico类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isIcoType(String fileType) {
+        return "ico".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ttf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTtfType(String fileType) {
+        return "ttf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否svg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSvgType(String fileType) {
+        return "svg".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否py类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPyType(String fileType) {
+        return "py".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否bin类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBinType(String fileType) {
+        return "bin".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否psd类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPsdType(String fileType) {
+        return "psd".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否yml类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isYmlType(String fileType) {
+        return "yml".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否sh类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isShType(String fileType) {
+        return "sh".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否js类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJsType(String fileType) {
+        return "js".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否jsp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJspType(String fileType) {
+        return "jsp".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否htm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isHtmType(String fileType) {
+        return "htm".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否xls类型
      *
      * @param fileType 文件类型
@@ -117,6 +537,26 @@ public class FileNameUtil {
      */
     public static boolean isTxtType(String fileType) {
         return "txt".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否text类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTextType(String fileType) {
+        return "text".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否log类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLogType(String fileType) {
+        return "log".equalsIgnoreCase(fileType);
     }
 
     /**

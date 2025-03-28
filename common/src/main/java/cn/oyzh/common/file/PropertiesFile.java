@@ -1,4 +1,6 @@
-package cn.oyzh.common.util;
+package cn.oyzh.common.file;
+
+import cn.oyzh.common.util.ResourceUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +17,4 @@ public class PropertiesFile extends Properties {
         InputStream stream = ResourceUtil.getResourceAsStream(fileName);
         this.load(stream);
     }
-
-
 }

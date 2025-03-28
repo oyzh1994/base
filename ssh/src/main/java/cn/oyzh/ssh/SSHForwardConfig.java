@@ -1,6 +1,5 @@
 package cn.oyzh.ssh;
 
-import lombok.Data;
 
 /**
  * ssh转发信息
@@ -8,7 +7,6 @@ import lombok.Data;
  * @author oyzh
  * @since 2023/12/15
  */
-@Data
 public class SSHForwardConfig {
 
     /**
@@ -26,4 +24,27 @@ public class SSHForwardConfig {
      */
     private int localPort;
 
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getLocalPort() {
+        return localPort;
+    }
+
+    public void setLocalPort(int localPort) {
+        this.localPort = localPort;
+    }
 }
