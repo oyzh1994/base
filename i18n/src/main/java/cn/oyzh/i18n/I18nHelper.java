@@ -3624,6 +3624,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(GIF_TYPE);
     }
 
+    public static String filePermission() {
+        return I18nResourceBundle.i18nString(FILE, PERMS);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
