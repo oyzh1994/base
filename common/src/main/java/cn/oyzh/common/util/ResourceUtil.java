@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.system.OSUtil;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -117,5 +118,18 @@ public class ResourceUtil {
             urlList.add(toExternalUrl(url));
         }
         return urlList;
+    }
+
+    /**
+     * 获取本地文件地址
+     *
+     * @param url 地址
+     * @return 本地文件地址
+     */
+    public static String getLocalFileUrl(String url) {
+        if (OSUtil.isWindows()) {
+            return "file:/" + url;
+        }
+        return "file:" + url;
     }
 }

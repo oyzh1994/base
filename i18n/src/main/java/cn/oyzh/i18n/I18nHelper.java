@@ -110,6 +110,14 @@ public class I18nHelper {
 
     public static final String JSON_TYPE = "base.jsonType";
 
+    public static final String PNG_TYPE = "base.pngType";
+
+    public static final String JPG_TYPE = "base.jpgType";
+
+    public static final String JPEG_TYPE = "base.jpegType";
+
+    public static final String GIF_TYPE = "base.gifType";
+
     public static final String NEXT_STEP = "base.nextStep";
 
     public static final String PREV_STEP = "base.prevStep";
@@ -3598,6 +3606,22 @@ public class I18nHelper {
 
     public static String ignoreCase() {
         return I18nResourceBundle.i18nString(IGNORE_CASE);
+    }
+
+    public static String pngType() {
+        return I18nResourceBundle.i18nString(PNG_TYPE);
+    }
+
+    public static String jpgType() {
+        return I18nResourceBundle.i18nString(JPG_TYPE);
+    }
+
+    public static String jpegType() {
+        return I18nResourceBundle.i18nString(JPEG_TYPE);
+    }
+
+    public static String gifType() {
+        return I18nResourceBundle.i18nString(GIF_TYPE);
     }
 
     public String fileUploadFailed() {

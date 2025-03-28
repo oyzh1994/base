@@ -301,4 +301,8 @@ public class FileUtil {
         }
         return false;
     }
+
+    public static boolean exists(String file) {
+        return exist(new File(file));
+    }
 }

@@ -301,6 +301,17 @@ public class StringUtil {
         return source.toLowerCase().endsWith(str.toLowerCase());
     }
 
+    public static boolean endWithAnyIgnoreCase(String source, String...target) {
+        if (source != null && target != null) {
+            for (String s : target) {
+                if(endWithIgnoreCase(source, s)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static String join(String space, Collection<?> collection) {
         StringBuilder builder = new StringBuilder();
         for (Object o : collection) {
