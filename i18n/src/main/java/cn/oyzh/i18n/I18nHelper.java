@@ -258,6 +258,10 @@ public class I18nHelper {
 
     public static final String PROCESS = "base.process";
 
+    public static final String PROCESS1 = "base.process1";
+
+    public static final String USER = "base.user";
+
     public static final String PROGRAM = "base.program";
 
     public static final String PROGRAM_TIP1 = "base.program.tip1";
@@ -3626,6 +3630,18 @@ public class I18nHelper {
 
     public static String filePermission() {
         return I18nResourceBundle.i18nString(FILE, PERMS);
+    }
+
+    public static String killProcess() {
+        return I18nResourceBundle.i18nString(KILL, PROCESS1);
+    }
+
+    public static String allUser() {
+        return I18nResourceBundle.i18nString(ALL, USER);
+    }
+
+    public static String currentUser() {
+        return I18nResourceBundle.i18nString(CURRENT, USER);
     }
 
     public String fileUploadFailed() {
