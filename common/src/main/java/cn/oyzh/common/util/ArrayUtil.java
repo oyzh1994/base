@@ -55,6 +55,13 @@ public class ArrayUtil {
         return arr == null || arr.length == 0;
     }
 
+    public static <T> T indexOf(T[] arr,int index) {
+        if(index < 0 || index >= arr.length) {
+            return null;
+        }
+        return arr[index];
+    }
+
     public static  <T> boolean isNotEmpty(T[] arr) {
         return !isEmpty(arr);
     }
