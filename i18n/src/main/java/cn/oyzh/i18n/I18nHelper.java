@@ -3640,6 +3640,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(KILL, PROCESS1);
     }
 
+    public static String forceKillProcess() {
+        return I18nResourceBundle.i18nString(FORCE, KILL, PROCESS1);
+    }
+
     public static String allUser() {
         return I18nResourceBundle.i18nString(ALL, USER);
     }
