@@ -248,6 +248,10 @@ public class I18nHelper {
 
     public static final String FOLDER = "base.folder";
 
+    public static final String TOUCH_FILE = "base.touchFile";
+
+    public static final String MKDIR = "base.mkdir";
+
     public static final String SUPPORT = "base.support";
 
     public static final String FORMAT = "base.format";
@@ -3642,6 +3646,22 @@ public class I18nHelper {
 
     public static String currentUser() {
         return I18nResourceBundle.i18nString(CURRENT, USER);
+    }
+
+    public static String uploadFile() {
+        return I18nResourceBundle.i18nString(UPLOAD, FILE);
+    }
+
+    public static String uploadFolder() {
+        return I18nResourceBundle.i18nString(UPLOAD, FOLDER);
+    }
+
+    public static String touchFile() {
+        return I18nResourceBundle.i18nString(TOUCH_FILE);
+    }
+
+    public static String mkdir() {
+        return I18nResourceBundle.i18nString(MKDIR);
     }
 
     public String fileUploadFailed() {
