@@ -396,6 +396,8 @@ public class I18nHelper {
 
     public static final String CURRENT = "base.current";
 
+    public static final String TASK = "base.task";
+
     public static final String START = "base.start";
 
     public static final String START1 = "base.start1";
@@ -783,6 +785,10 @@ public class I18nHelper {
     public static final String CPU_USAGE = "base.cpuUsage";
 
     public static final String SPEED = "base.speed";
+
+    public static final String SRC = "base.src";
+
+    public static final String DEST = "base.dest";
 
     public static final String DISK = "base.disk";
 
@@ -3666,6 +3672,26 @@ public class I18nHelper {
 
     public static String mkdir() {
         return I18nResourceBundle.i18nString(MKDIR);
+    }
+
+    public static String speed() {
+        return I18nResourceBundle.i18nString(SPEED);
+    }
+
+    public static String src() {
+        return I18nResourceBundle.i18nString(SRC);
+    }
+
+    public static String dest() {
+        return I18nResourceBundle.i18nString(DEST);
+    }
+
+    public static String current() {
+        return I18nResourceBundle.i18nString(CURRENT);
+    }
+
+    public static String task() {
+        return I18nResourceBundle.i18nString(TASK);
     }
 
     public String fileUploadFailed() {
