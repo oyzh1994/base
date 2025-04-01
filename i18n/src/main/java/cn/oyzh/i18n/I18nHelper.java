@@ -3550,6 +3550,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FILE, DELETE, ING);
     }
 
+    public static String deleteIng() {
+        return I18nResourceBundle.i18nString(DELETE, ING);
+    }
+
     public static String fileUploadFinished() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FINISHED);
     }
