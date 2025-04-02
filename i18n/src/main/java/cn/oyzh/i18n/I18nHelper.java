@@ -1506,6 +1506,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(READONLY_MODE);
     }
 
+    public static String doNotShowHiddenFiles() {
+        return I18nResourceBundle.i18nString("base.doNotShowHiddenFiles");
+    }
+
+    public static String showHiddenFiles() {
+        return I18nResourceBundle.i18nString("base.showHiddenFiles");
+    }
+
     public static String connectionConnected() {
         return I18nResourceBundle.i18nString(CONNECTION, CONNECTED);
     }
