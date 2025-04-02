@@ -416,6 +416,10 @@ public class I18nHelper {
 
     public static final String PASSWORD = "base.password";
 
+    public static final String SHOW = "base.show";
+
+    public static final String HIDDEN = "base.hidden";
+
     public static final String PERMS = "base.perms";
 
     public static final String NOT_SUPPORT = "base.notSupport";
@@ -1512,6 +1516,14 @@ public class I18nHelper {
 
     public static String showHiddenFiles() {
         return I18nResourceBundle.i18nString("base.showHiddenFiles");
+    }
+
+    public static String showPassword() {
+        return I18nResourceBundle.i18nString(SHOW, PASSWORD);
+    }
+
+    public static String hiddenPassword() {
+        return I18nResourceBundle.i18nString(HIDDEN, PASSWORD);
     }
 
     public static String connectionConnected() {
