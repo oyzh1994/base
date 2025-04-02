@@ -3718,6 +3718,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(TASK);
     }
 
+    public static String hostList() {
+        return I18nResourceBundle.i18nString(HOST, LIST);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
