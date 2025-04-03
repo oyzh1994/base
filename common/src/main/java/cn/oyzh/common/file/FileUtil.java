@@ -92,6 +92,10 @@ public class FileUtil {
         return null;
     }
 
+    public static void writeString(String content, File file) {
+        writeString(content, file, Charset.defaultCharset(), false);
+    }
+
     public static void writeUtf8String(String content, File file) {
         writeString(content, file, StandardCharsets.UTF_8, false);
     }
