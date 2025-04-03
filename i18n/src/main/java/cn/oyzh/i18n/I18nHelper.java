@@ -528,6 +528,8 @@ public class I18nHelper {
 
     public static final String CLOSE_AND_CONTINUE = "base.closeAndContinue";
 
+    public static final String FILE_EXISTS_AND_CONTINUE = "base.fileExistsAndContinue";
+
     public static final String MESSAGE = "base.message";
 
     public static final String COORDINATE = "base.coordinate";
@@ -1032,6 +1034,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(EXPORT, KEY);
     }
 
+    public static String exportKey1() {
+        return I18nResourceBundle.i18nString(EXPORT, KEY1);
+    }
+
     public static String exportIng() {
         return I18nResourceBundle.i18nString(EXPORT, ING);
     }
@@ -1378,6 +1384,10 @@ public class I18nHelper {
 
     public static String deleteKey() {
         return I18nResourceBundle.i18nString(DELETE, KEY);
+    }
+
+    public static String deleteKey1() {
+        return I18nResourceBundle.i18nString(DELETE, KEY1);
     }
 
     public static String deleteKeys() {
@@ -1798,6 +1808,10 @@ public class I18nHelper {
 
     public static String closeAndContinue() {
         return I18nResourceBundle.i18nString(CLOSE_AND_CONTINUE);
+    }
+
+   public static String fileExistsAndContinue() {
+        return I18nResourceBundle.i18nString(FILE_EXISTS_AND_CONTINUE);
     }
 
     public static String messageId() {
@@ -2270,6 +2284,10 @@ public class I18nHelper {
 
     public static String renameKey() {
         return I18nResourceBundle.i18nString(RENAME, KEY);
+    }
+
+    public static String renameKey1() {
+        return I18nResourceBundle.i18nString(RENAME, KEY1);
     }
 
     public static String renameNode() {
