@@ -18,11 +18,31 @@ public class FileNameUtil {
         return StringUtil.equalsAnyIgnoreCase(ext, types);
     }
 
+    /**
+     * 获取扩展名
+     *
+     * @param name 名称
+     * @return 扩展名
+     */
     public static String extName(String name) {
         if (name == null || !name.contains(".")) {
             return "";
         }
         return name.substring(name.lastIndexOf(".") + 1);
+    }
+
+    /**
+     * 移除扩展名
+     *
+     * @param name 名称
+     * @return 结果
+     */
+    public static String removeExtName(String name) {
+        String extName = FileNameUtil.extName(name);
+        if(extName.isEmpty()){
+            return name;
+        }
+        return name.substring(0, name.lastIndexOf("."));
     }
 
     public static String extName(File file) {

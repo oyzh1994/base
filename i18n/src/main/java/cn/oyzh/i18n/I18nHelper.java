@@ -1166,6 +1166,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(INVALID, FORMAT);
     }
 
+    public static String invalidFile() {
+        return I18nResourceBundle.i18nString(INVALID, FILE);
+    }
+
     public static String parse() {
         return I18nResourceBundle.i18nString(PARSE);
     }
