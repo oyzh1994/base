@@ -52,6 +52,10 @@ public class I18nHelper {
 
     public static final String KEY = "base.key";
 
+    public static final String KEY1 = "base.key1";
+
+    public static final String GENERATE = "base.generate";
+
     public static final String ERROR = "base.error";
 
     public static final String INFO = "base.info";
@@ -785,6 +789,8 @@ public class I18nHelper {
     public static final String HISTORY = "base.history";
 
     public static final String MANAGE = "base.manage";
+
+    public static final String MANAGER = "base.manager";
 
     public static final String CPU_USAGE = "base.cpuUsage";
 
@@ -1552,6 +1558,14 @@ public class I18nHelper {
 
     public static String key() {
         return I18nResourceBundle.i18nString(KEY);
+    }
+
+    public static String key1() {
+        return I18nResourceBundle.i18nString(KEY1);
+    }
+
+    public static String key1Manager() {
+        return I18nResourceBundle.i18nString(KEY1, MANAGER);
     }
 
     public static String field() {
@@ -3720,6 +3734,14 @@ public class I18nHelper {
 
     public static String hostList() {
         return I18nResourceBundle.i18nString(HOST, LIST);
+    }
+
+    public static String addKey1() {
+        return I18nResourceBundle.i18nString(ADD, KEY1);
+    }
+
+    public static String generate() {
+        return I18nResourceBundle.i18nString(GENERATE);
     }
 
     public String fileUploadFailed() {
