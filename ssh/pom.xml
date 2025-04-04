@@ -12,24 +12,41 @@
     <artifactId>ssh</artifactId>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bouncycastle.version>1.80</bouncycastle.version>
     </properties>
 
     <dependencies>
+        <!-- 存储库 -->
         <dependency>
             <groupId>cn.oyzh</groupId>
             <artifactId>store</artifactId>
             <scope>compile</scope>
         </dependency>
-        <!-- ssh类库 -->
+
+        <!-- ssh库 -->
         <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
         <dependency>
             <groupId>com.github.mwiede</groupId>
             <artifactId>jsch</artifactId>
             <version>${jsch.version}</version>
         </dependency>
+
+        <!-- ssh密钥库 -->
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

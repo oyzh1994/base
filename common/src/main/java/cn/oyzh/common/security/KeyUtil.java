@@ -38,22 +38,22 @@ public class KeyUtil {
         return -1;
     }
 
-
-    public static String[] toSSHKey(KeyPair keyPair) {
-
-        // 获取公钥
-        PublicKey publicKey = keyPair.getPublic();
-        // 获取私钥
-        PrivateKey privateKey = keyPair.getPrivate();
-        byte[] publicKeyBytes = publicKey.getEncoded();
-        byte[] privateKeyBytes = privateKey.getEncoded();
-        String publicKeyBase64 = Base64.getMimeEncoder().encodeToString(publicKeyBytes);
-        StringBuilder sb = new StringBuilder();
-        sb.append("-----BEGIN PRIVATE KEY-----").append("\n");
-        String privateKeyBase64 = Base64.getMimeEncoder().encodeToString(privateKeyBytes);
-        sb.append(privateKeyBase64).append("\n");
-        sb.append("-----END PRIVATE KEY-----");
-        return new String[]{publicKeyBase64, sb.toString()};
-    }
+//
+//    public static String[] toSSHKey(KeyPair keyPair) {
+//
+//        // 获取公钥
+//        PublicKey publicKey = keyPair.getPublic();
+//        // 获取私钥
+//        PrivateKey privateKey = keyPair.getPrivate();
+//        byte[] publicKeyBytes = publicKey.getEncoded();
+//        byte[] privateKeyBytes = privateKey.getEncoded();
+//        String publicKeyBase64 = Base64.getMimeEncoder().encodeToString(publicKeyBytes);
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("-----BEGIN PRIVATE KEY-----").append("\n");
+//        String privateKeyBase64 = Base64.getMimeEncoder().encodeToString(privateKeyBytes);
+//        sb.append(privateKeyBase64).append("\n");
+//        sb.append("-----END PRIVATE KEY-----");
+//        return new String[]{publicKeyBase64, sb.toString()};
+//    }
 
 }
