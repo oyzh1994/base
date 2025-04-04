@@ -54,6 +54,10 @@ public class I18nHelper {
 
     public static final String KEY1 = "base.key1";
 
+    public static final String KEYS1 = "base.keys1";
+
+    public static final String TO = "base.to";
+
     public static final String GENERATE = "base.generate";
 
     public static final String ERROR = "base.error";
@@ -914,6 +918,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(OPERATION, ING);
     }
 
+    public static String execute() {
+        return I18nResourceBundle.i18nString(EXECUTE);
+    }
+
     public static String executeIng() {
         return I18nResourceBundle.i18nString(EXECUTE, ING);
     }
@@ -1394,6 +1402,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, KEY1);
     }
 
+    public static String copyKeys1ToHost() {
+        return I18nResourceBundle.i18nString(COPY, KEYS1, TO, HOST);
+    }
+
     public static String deleteKeys() {
         return I18nResourceBundle.i18nString(DELETE, KEYS);
     }
@@ -1814,7 +1826,7 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLOSE_AND_CONTINUE);
     }
 
-   public static String fileExistsAndContinue() {
+    public static String fileExistsAndContinue() {
         return I18nResourceBundle.i18nString(FILE_EXISTS_AND_CONTINUE);
     }
 
@@ -2556,6 +2568,10 @@ public class I18nHelper {
 
     public static String pleaseSelectContent() {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, CONTENT);
+    }
+
+    public static String pleaseSelectConnect() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, CONNECT);
     }
 
     public static String pleaseSelectType() {
@@ -3764,6 +3780,10 @@ public class I18nHelper {
 
     public static String generate() {
         return I18nResourceBundle.i18nString(GENERATE);
+    }
+
+    public static String copyKeys1() {
+        return I18nResourceBundle.i18nString(COPY, KEYS1);
     }
 
     public String fileUploadFailed() {

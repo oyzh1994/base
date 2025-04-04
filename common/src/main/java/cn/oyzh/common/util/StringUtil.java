@@ -169,10 +169,10 @@ public class StringUtil {
         return false;
     }
 
-    public static boolean startWithAnyIgnoreCase(String source, String...target) {
+    public static boolean startWithAnyIgnoreCase(String source, String... target) {
         if (source != null && target != null) {
             for (String s : target) {
-                if(startWithIgnoreCase(source, s)){
+                if (startWithIgnoreCase(source, s)) {
                     return true;
                 }
             }
@@ -268,6 +268,18 @@ public class StringUtil {
         return str != null && str.endsWith(endText);
     }
 
+    public static boolean endWithAny(String str, String... endText) {
+        if (str == null || endText == null) {
+            return false;
+        }
+        for (String s : endText) {
+            if (endWith(str, s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean contains(String source, String target) {
         return source != null && target != null && source.contains(target);
     }
@@ -301,10 +313,10 @@ public class StringUtil {
         return source.toLowerCase().endsWith(str.toLowerCase());
     }
 
-    public static boolean endWithAnyIgnoreCase(String source, String...target) {
+    public static boolean endWithAnyIgnoreCase(String source, String... target) {
         if (source != null && target != null) {
             for (String s : target) {
-                if(endWithIgnoreCase(source, s)){
+                if (endWithIgnoreCase(source, s)) {
                     return true;
                 }
             }
@@ -382,7 +394,7 @@ public class StringUtil {
         return 1 - ((double) distance / maxLength);
     }
 
-    public static boolean endsWith(String str,String endText) {
+    public static boolean endsWith(String str, String endText) {
         return endWith(str, endText);
     }
 }
