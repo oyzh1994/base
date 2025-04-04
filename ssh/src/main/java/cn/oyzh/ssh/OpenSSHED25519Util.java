@@ -20,7 +20,7 @@ import java.util.Base64;
  * @author oyzh
  * @since 2025/04/04
  */
-public class OpenSSHED25519KeyGenerator {
+public class OpenSSHED25519Util {
 
     public static void main(String[] args) throws Exception {
         // 生成Ed25519密钥对

@@ -1406,6 +1406,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(COPY, KEYS1, TO, HOST);
     }
 
+    public static String copyToHost() {
+        return I18nResourceBundle.i18nString(COPY, TO, HOST);
+    }
+
     public static String deleteKeys() {
         return I18nResourceBundle.i18nString(DELETE, KEYS);
     }
@@ -3776,6 +3780,14 @@ public class I18nHelper {
 
     public static String addKey1() {
         return I18nResourceBundle.i18nString(ADD, KEY1);
+    }
+
+    public static String updateKey1() {
+        return I18nResourceBundle.i18nString(UPDATE, KEY1);
+    }
+
+    public static String importKey1() {
+        return I18nResourceBundle.i18nString(IMPORT, KEY1);
     }
 
     public static String generate() {

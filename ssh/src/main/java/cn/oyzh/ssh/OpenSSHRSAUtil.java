@@ -4,10 +4,13 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 import org.bouncycastle.util.io.pem.PemObject;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -23,7 +26,7 @@ import java.util.Base64;
  * @author oyzh
  * @since 2025/04/04
  */
-public class OpenSSHRSAKeyGenerator {
+public class OpenSSHRSAUtil {
 
     public static void main(String[] args) throws Exception {
         // 生成RSA密钥对（2048位）
@@ -58,6 +61,52 @@ public class OpenSSHRSAKeyGenerator {
             ex.printStackTrace();
         }
         return new String[]{"", ""};
+    }
+
+    /**
+     * 获取键长度
+     *
+     * @param publicKey 公钥
+     * @return 长度
+     */
+    public static int getKeyLength(String publicKey) {
+        try {
+            String[] arr = publicKey.split(" ");
+            byte[] publicKeyBytes;
+            if (arr.length == 1) {
+                publicKeyBytes = Base64.getDecoder().decode(publicKey);
+            } else if (arr.length == 2) {
+                publicKeyBytes = Base64.getDecoder().decode(arr[0]);
+            } else {
+                publicKeyBytes = Base64.getDecoder().decode(arr[1]);
+            }
+            // 解析SSH编码结构
+            try (ByteArrayInputStream bis = new ByteArrayInputStream(publicKeyBytes);
+                 DataInputStream dis = new DataInputStream(bis)) {
+
+                // 读取算法类型
+                int typeLen = dis.readInt();
+                byte[] typeBytes = new byte[typeLen];
+                dis.readFully(typeBytes);
+
+                // 读取指数e
+                int eLen = dis.readInt();
+                byte[] eBytes = new byte[eLen];
+                dis.readFully(eBytes);
+
+                // 读取模数n
+                int nLen = dis.readInt();
+                byte[] nBytes = new byte[nLen];
+                dis.readFully(nBytes);
+
+                // 转换为BigInteger计算位数
+                BigInteger n = new BigInteger(1, nBytes);
+                return n.bitLength();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return -1;
     }
 
     private static KeyPair generateRSAKeyPair(int keySize) throws NoSuchAlgorithmException {
