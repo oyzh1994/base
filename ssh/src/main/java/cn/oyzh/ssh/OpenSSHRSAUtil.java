@@ -75,8 +75,6 @@ public class OpenSSHRSAUtil {
             byte[] publicKeyBytes;
             if (arr.length == 1) {
                 publicKeyBytes = Base64.getDecoder().decode(publicKey);
-            } else if (arr.length == 2) {
-                publicKeyBytes = Base64.getDecoder().decode(arr[0]);
             } else {
                 publicKeyBytes = Base64.getDecoder().decode(arr[1]);
             }
