@@ -418,6 +418,8 @@ public class I18nHelper {
 
     public static final String SLOW = "base.slow";
 
+    public static final String AUTO = "base.auto";
+
     public static final String FAST = "base.fast";
 
     public static final String TEST = "base.test";
@@ -3818,6 +3820,10 @@ public class I18nHelper {
 
     public static String slow() {
         return I18nResourceBundle.i18nString(SLOW);
+    }
+
+    public static String auto() {
+        return I18nResourceBundle.i18nString(AUTO);
     }
 
     public String fileUploadFailed() {
