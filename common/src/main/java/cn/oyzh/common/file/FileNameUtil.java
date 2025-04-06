@@ -39,7 +39,7 @@ public class FileNameUtil {
      */
     public static String removeExtName(String name) {
         String extName = FileNameUtil.extName(name);
-        if(extName.isEmpty()){
+        if (extName.isEmpty()) {
             return name;
         }
         return name.substring(0, name.lastIndexOf("."));
@@ -527,6 +527,157 @@ public class FileNameUtil {
      */
     public static boolean isXlsxType(String fileType) {
         return "xlsx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否so类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSoType(String fileType) {
+        return "so".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否dylib类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDylibType(String fileType) {
+        return "dylib".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否dll类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDllType(String fileType) {
+        return "dll".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否iso类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isIsoType(String fileType) {
+        return "iso".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否rss类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRssType(String fileType) {
+        return "rss".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否asp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isAspType(String fileType) {
+        return "asp".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否wav类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWavType(String fileType) {
+        return "wav".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否rtf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRtfType(String fileType) {
+        return "rtf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否mkv类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMkvType(String fileType) {
+        return "mkv".equalsIgnoreCase(fileType);
+    }
+
+
+    /**
+     * 是否dot类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDotType(String fileType) {
+        return "dot".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否rm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRmType(String fileType) {
+        return "rm".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否mov类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMovType(String fileType) {
+        return "mov".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否cmd类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCmdType(String fileType) {
+        return "cmd".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否srt类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSrtType(String fileType) {
+        return "srt".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否rtf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isStfType(String fileType) {
+        return "srt".equalsIgnoreCase(fileType);
     }
 
     /**
