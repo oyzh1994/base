@@ -414,6 +414,12 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String VERY = "base.very";
+
+    public static final String SLOW = "base.slow";
+
+    public static final String FAST = "base.fast";
+
     public static final String TEST = "base.test";
 
     public static final String RESTORE = "base.restore";
@@ -3796,6 +3802,22 @@ public class I18nHelper {
 
     public static String copyKeys1() {
         return I18nResourceBundle.i18nString(COPY, KEYS1);
+    }
+
+    public static String verySlow() {
+        return I18nResourceBundle.i18nString(VERY, SLOW);
+    }
+
+    public static String veryFast() {
+        return I18nResourceBundle.i18nString(VERY, FAST);
+    }
+
+    public static String fast() {
+        return I18nResourceBundle.i18nString(FAST);
+    }
+
+    public static String slow() {
+        return I18nResourceBundle.i18nString(SLOW);
     }
 
     public String fileUploadFailed() {
