@@ -3826,6 +3826,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(AUTO);
     }
 
+    public static String copyNodePath() {
+        return I18nResourceBundle.i18nString(COPY, NODE, PATH);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
