@@ -1,6 +1,7 @@
 package cn.oyzh.event;
 
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.util.ReflectUtil;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class EventRegister {
                 throw new EventListenerAlreadyExistsException(listener);
             }
             Class<?> clazz = listener.getClass();
-            Method[] methods = clazz.getDeclaredMethods();
+            Method[] methods = ReflectUtil.getMethods(clazz, true, true);
             for (Method method : methods) {
                 EventSubscribe subscribe = method.getAnnotation(EventSubscribe.class);
                 if (subscribe != null) {
@@ -44,7 +45,7 @@ public class EventRegister {
                             this.subscribers.add(subscriber);
                         }
                     } else {
-                        JulLog.error("EventSubscribe is found, but parameterCount is not 1");
+                        JulLog.error("EventSubscribe is found, but parameterCount is not 1,class:{} method:{}", clazz, method.getName());
                     }
                 }
             }
