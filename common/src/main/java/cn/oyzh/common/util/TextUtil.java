@@ -279,28 +279,13 @@ public class TextUtil {
      * @return xml数据
      */
     public static String getXmlData(Object rawData) {
-        if (rawData == null) {
-            return null;
+        if (rawData instanceof byte[] bytes) {
+            return new String(bytes);
         }
-        String data = null;
-        try {
-            if (rawData instanceof byte[] bytes) {
-                data = new String(bytes);
-            }
-            if (rawData instanceof CharSequence sequence) {
-                data = sequence.toString();
-            }
-            if (data == null) {
-                return null;
-            }
-            if (!data.contains("{") && !data.contains("[")) {
-                return data;
-            }
-            return data;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (rawData instanceof CharSequence sequence) {
+            return sequence.toString();
         }
-        return data;
+        return "";
     }
 
     /**
@@ -309,28 +294,13 @@ public class TextUtil {
      * @return html数据
      */
     public static String getHtmlData(Object rawData) {
-        if (rawData == null) {
-            return null;
+        if (rawData instanceof byte[] bytes) {
+            return new String(bytes);
         }
-        String data = null;
-        try {
-            if (rawData instanceof byte[] bytes) {
-                data = new String(bytes);
-            }
-            if (rawData instanceof CharSequence sequence) {
-                data = sequence.toString();
-            }
-            if (data == null) {
-                return null;
-            }
-            if (!data.contains("{") && !data.contains("[")) {
-                return data;
-            }
-            return JSONUtil.toPretty(data);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (rawData instanceof CharSequence sequence) {
+            return sequence.toString();
         }
-        return data;
+        return "";
     }
 
     /**
@@ -345,7 +315,7 @@ public class TextUtil {
         if (rawData instanceof CharSequence sequence) {
             return sequence.toString();
         }
-        return null;
+        return "";
     }
 
     /**
@@ -354,19 +324,13 @@ public class TextUtil {
      * @return 二进制数据
      */
     public static String getBinaryData(Object rawData) {
-        if (rawData == null) {
-            return null;
-        }
-        // if (rawData instanceof Byte[] bytes) {
-        //     return StringUtil.toBinary(bytes);
-        // }
         if (rawData instanceof byte[] bytes) {
             return StringUtil.toBinary(bytes);
         }
         if (rawData instanceof CharSequence sequence) {
             return StringUtil.toBinary(sequence.toString());
         }
-        return null;
+        return "";
     }
 
     /**
@@ -375,16 +339,13 @@ public class TextUtil {
      * @return 十六进制数据
      */
     public static String getHexData(Object rawData) {
-        if (rawData == null) {
-            return "";
-        }
         if (rawData instanceof CharSequence sequence) {
             return HexUtil.bytesToHex(sequence.toString().getBytes(), false);
         }
         if (rawData instanceof byte[] bytes) {
             return HexUtil.bytesToHex(bytes, false);
         }
-        return null;
+        return "";
     }
 
     /**
@@ -393,16 +354,13 @@ public class TextUtil {
      * @return 十字符串数据
      */
     public static String getStringData(Object rawData) {
-        if (rawData == null) {
-            return "";
-        }
         if (rawData instanceof CharSequence sequence) {
             return sequence.toString();
         }
         if (rawData instanceof byte[] bytes) {
             return new String(bytes);
         }
-        return null;
+        return "";
     }
 
     /**
