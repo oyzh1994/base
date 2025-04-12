@@ -109,58 +109,49 @@ public class JulConsoleFormatter extends JulFormatter {
         return builder.toString();
     }
 
-    @Override
-    public String formatMessage(LogRecord record) {
-        String message = record.getMessage();
-        Throwable throwable = record.getThrown();
-        Object[] args = record.getParameters();
-        if (StringUtil.isNotBlank(message) && ArrayUtil.isNotEmpty(args)) {
-            int index = 0;
-            // 兼容其他日志库的占位符
-            if (message.contains("{}")) {
-                while (message.contains("{}") && index < args.length) {
-                    Object arg = args[index];
-                    if (arg instanceof Throwable t && record.getThrown() == null) {
-                        throwable = t;
-                        continue;
-                    }
-                    arg = this.pretreatmentArg(arg, true);
-                    message = StringUtil.replaceOneTime(message, "{}", ANSI_WHITE + arg + ANSI_RESET);
-                    index++;
-                }
-            } else {// jul类型占位符
-                while (index < args.length) {
-                    Object arg = args[index];
-                    if (arg instanceof Throwable t && record.getThrown() == null) {
-                        throwable = t;
-                        continue;
-                    }
-                    arg = this.pretreatmentArg(arg, true);
-                    message = StringUtil.replaceOneTime(message, "{" + index + "}", ANSI_WHITE + arg + ANSI_RESET);
-                    index++;
-                }
-            }
-        }
-        if (throwable != null) {
-            if (record instanceof JulLogRecord logRecord) {
-                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), logRecord.getLineNumber());
-            } else {
-                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), -1);
-            }
-        }
-        return message;
-    }
+//    @Override
+//    public String formatMessage(LogRecord record) {
+//        String message = record.getMessage();
+//        Throwable throwable = record.getThrown();
+//        Object[] args = record.getParameters();
+//        if (StringUtil.isNotBlank(message) && ArrayUtil.isNotEmpty(args)) {
+//            int index = 0;
+//            // 兼容其他日志库的占位符
+//            if (message.contains("{}")) {
+//                while (message.contains("{}") && index < args.length) {
+//                    Object arg = args[index];
+//                    if (arg instanceof Throwable t && record.getThrown() == null) {
+//                        throwable = t;
+//                        continue;
+//                    }
+//                    arg = this.pretreatmentArg(arg, true);
+//                    message = StringUtil.replaceOneTime(message, "{}", ANSI_WHITE + arg + ANSI_RESET);
+//                    index++;
+//                }
+//            } else {// jul类型占位符
+//                while (index < args.length) {
+//                    Object arg = args[index];
+//                    if (arg instanceof Throwable t && record.getThrown() == null) {
+//                        throwable = t;
+//                        continue;
+//                    }
+//                    arg = this.pretreatmentArg(arg, true);
+//                    message = StringUtil.replaceOneTime(message, "{" + index + "}", ANSI_WHITE + arg + ANSI_RESET);
+//                    index++;
+//                }
+//            }
+//        }
+//        if (throwable != null) {
+//            if (record instanceof JulLogRecord logRecord) {
+//                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), logRecord.getLineNumber());
+//            } else {
+//                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), -1);
+//            }
+//        }
+//        return message;
+//    }
 
-    /**
-     * 格式化消息
-     *
-     * @param message          消息
-     * @param throwable        异常
-     * @param sourceClassName  消息类
-     * @param sourceMethodName 消息方法
-     * @param lineNumber       消息行号
-     * @return 结果
-     */
+    @Override
     public String formatThrow(String message, Throwable throwable, String sourceClassName, String sourceMethodName, int lineNumber) {
         if (StringUtil.isNotBlank(message) && throwable != null) {
             StringBuilder builder = new StringBuilder(message);

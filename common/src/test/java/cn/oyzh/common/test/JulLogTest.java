@@ -19,9 +19,46 @@ public class JulLogTest {
         JulLog.error("error1-{}", "1");
         JulLog.error("error2-{}", 2);
         JulLog.error("error3-{}", new Object());
-        JulLog.error("{}={}ms", "1", 2L);
-        JulLog.info("{}={}ms", "1", 2L);
+        JulLog.error("{}={}ms", "test1", 2L);
+        JulLog.info("{}={}ms", "test1", 3L);
+        try {
+            System.out.println(1 / 0);
+        } catch (Exception ex) {
+            JulLog.error("error3", ex);
+        }
+    }
 
+    @Test
+    public void test1() {
+        JulLog.trace("trace");
+        JulLog.debug("debug");
+        JulLog.info("info");
+        JulLog.warn("warn");
+        JulLog.error("error");
+        JulLog.error("error1-{}", "1");
+        JulLog.error("error2-{}", 2);
+        JulLog.error("error3-{}", new Object());
+        JulLog.error("{0}={1}ms", "test1", 2L);
+        JulLog.info("{0}={1}ms", "test1", 3L);
+        try {
+            System.out.println(1 / 0);
+        } catch (Exception ex) {
+            JulLog.error("error3", ex);
+        }
+    }
+
+    @Test
+    public void test2() {
+        JulLog.trace("trace");
+        JulLog.debug("debug");
+        JulLog.info("info");
+        JulLog.warn("warn");
+        JulLog.error("error");
+        JulLog.error("error1-{}", "1");
+        JulLog.error("error2-{}", 2);
+        JulLog.error("error3-{}", new Object());
+        JulLog.error("%s=%dms", "test1", 2L);
+        JulLog.info("%s=%dms", "test1", 3L);
         try {
             System.out.println(1 / 0);
         } catch (Exception ex) {
