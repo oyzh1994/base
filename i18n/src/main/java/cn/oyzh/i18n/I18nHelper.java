@@ -414,6 +414,10 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String SHORTCUT = "base.shortcut";
+
+    public static final String SHORTCUT_KEY = "base.shortcutKey";
+
     public static final String VERY = "base.very";
 
     public static final String SLOW = "base.slow";
@@ -3828,6 +3832,14 @@ public class I18nHelper {
 
     public static String copyNodePath() {
         return I18nResourceBundle.i18nString(COPY, NODE, PATH);
+    }
+
+    public static String shortcut() {
+        return I18nResourceBundle.i18nString(SHORTCUT);
+    }
+
+    public static String shortcutKey() {
+        return I18nResourceBundle.i18nString(SHORTCUT_KEY);
     }
 
     public String fileUploadFailed() {
