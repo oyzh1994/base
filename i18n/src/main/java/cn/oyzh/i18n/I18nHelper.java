@@ -3842,6 +3842,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(SHORTCUT_KEY);
     }
 
+    public static String refreshFile() {
+        return I18nResourceBundle.i18nString(REFRESH, FILE);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
