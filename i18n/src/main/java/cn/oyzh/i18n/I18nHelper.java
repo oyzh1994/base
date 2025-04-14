@@ -788,6 +788,8 @@ public class I18nHelper {
 
     public static final String REFRESH = "base.refresh";
 
+    public static final String NONE = "base.none";
+
     public static final String MOVE_UP = "base.moveUp";
 
     public static final String MOVE_DOWN = "base.moveDown";
@@ -3844,6 +3846,10 @@ public class I18nHelper {
 
     public static String refreshFile() {
         return I18nResourceBundle.i18nString(REFRESH, FILE);
+    }
+
+    public static String none() {
+        return I18nResourceBundle.i18nString(NONE);
     }
 
     public String fileUploadFailed() {
