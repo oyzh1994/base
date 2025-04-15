@@ -1,5 +1,6 @@
 package cn.oyzh.ssh.domain;
 
+import cn.oyzh.common.object.ObjectCopier;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;
 
@@ -9,7 +10,19 @@ import cn.oyzh.store.jdbc.Column;
  * @author oyzh
  * @since 2023/12/15
  */
-public class SSHConnect {
+public class SSHConnect implements ObjectCopier<SSHConnect> {
+
+    /**
+     * 名称
+     */
+    @Column
+    private String name;
+
+    /**
+     * 顺序
+     */
+    @Column
+    private int order;
 
     /**
      * 连接端口，默认22
@@ -74,7 +87,7 @@ public class SSHConnect {
     }
 
     public boolean isCertificateAuth() {
-        return  StringUtil.equalsAnyIgnoreCase(this.authMethod, "certificate");
+        return StringUtil.equalsAnyIgnoreCase(this.authMethod, "certificate");
     }
 
     public int getPort() {
@@ -119,5 +132,49 @@ public class SSHConnect {
 
     public int getTimeoutSecond() {
         return this.timeout == 0 ? 0 : this.timeout / 1000;
+    }
+
+    public String getName() {
+        return name == null ? "untitled" : name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    @Override
+    public void copy(SSHConnect t1) {
+        this.name = t1.getName();
+        this.host = t1.getHost();
+        this.port = t1.getPort();
+        this.user = t1.getUser();
+        this.order = t1.getOrder();
+        this.timeout = t1.getTimeout();
+        this.password = t1.getPassword();
+        this.authMethod = t1.getAuthMethod();
+        this.certificatePath = t1.getCertificatePath();
+    }
+
+    @Override
+    public String toString() {
+        return "SSHConnect{" +
+                "name='" + name + '\'' +
+                ", order=" + order +
+                ", port=" + port +
+                ", host='" + host + '\'' +
+                ", user='" + user + '\'' +
+                ", password='" + password + '\'' +
+                ", timeout=" + timeout +
+                ", authMethod='" + authMethod + '\'' +
+                ", certificatePath='" + certificatePath + '\'' +
+                '}';
     }
 }

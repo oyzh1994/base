@@ -1,21 +1,25 @@
 package cn.oyzh.ssh.jump;
 
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.ssh.SSHException;
 import cn.oyzh.ssh.domain.SSHConnect;
-import cn.oyzh.ssh.domain.SSHForwardConfig;
+import cn.oyzh.ssh.domain.SSHJumpConfig;
 import cn.oyzh.ssh.util.SSHHolder;
 import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ssh跳板机
+ * ssh跳板
  *
  * @author oyzh
  * @since 2023/12/15
@@ -23,89 +27,64 @@ import java.util.stream.Collectors;
 public class SSHJumper {
 
     /**
-     * ssh会话
-     */
-    private Session session;
-
-    /**
-     * ssh连接信息
-     */
-    private final SSHConnect connect;
-
-    /**
      * 转发信息
      */
-    private final List<SSHForwardConfig> forwardInfos = new ArrayList<>();
-
-    public SSHJumper(SSHConnect connect) {
-        this.connect = connect;
-    }
+    private final Map<SSHJumpConfig, Session> jumpSessions = new HashMap<>();
 
     /**
      * 初始化ssh会话
      *
      * @throws JSchException 异常
      */
-    protected void initSession() throws JSchException {
-        if (this.session == null || !this.session.isConnected()) {
-            // 登陆跳板机
-            if (this.connect.isPasswordAuth()) {
-                this.session = SSHHolder.JSCH.getSession(this.connect.getUser(), this.connect.getHost(), this.connect.getPort());
-                this.session.setPassword(this.connect.getPassword());
-            } else {
-                SSHHolder.JSCH.addIdentity(this.connect.getCertificatePath());
-                this.session = SSHHolder.JSCH.getSession(this.connect.getUser(), this.connect.getHost(), this.connect.getPort());
-            }
-            this.session.setConfig("StrictHostKeyChecking", "no");
-            this.session.setTimeout(this.connect.getTimeout());
-            this.session.connect();
-            JulLog.info("ssh连接成功 connectInfo:{}", this.connect);
+    protected Session initSession(SSHConnect connect) throws JSchException {
+        Session session;
+        // 登陆跳板机
+        if (connect.isPasswordAuth()) {
+            session = SSHHolder.JSCH.getSession(connect.getUser(), connect.getHost(), connect.getPort());
+            session.setPassword(connect.getPassword());
+        } else {
+            SSHHolder.JSCH.addIdentity(connect.getCertificatePath());
+            session = SSHHolder.JSCH.getSession(connect.getUser(), connect.getHost(), connect.getPort());
         }
-    }
-
-    /**
-     * 获取转发的端口列表
-     *
-     * @return 转发的端口列表
-     */
-    protected Set<Integer> getForwardPorts() {
-        return this.forwardInfos.parallelStream().map(SSHForwardConfig::getLocalPort).collect(Collectors.toSet());
-    }
-
-    /**
-     * 是否已连接
-     *
-     * @return 结果
-     */
-    public boolean isConnected() {
-        return this.session != null && this.session.isConnected();
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.setTimeout(connect.getTimeout());
+        session.connect();
+        JulLog.info("ssh连接成功 connect:{}", connect);
+        return session;
     }
 
     /**
      * 端口转发
      *
-     * @param forwardInfo 转发信息
+     * @param connects ssh连接信息
      * @return 转发后的本地端口
      * @throws SSHException ssh异常
      */
-    public int forward(SSHForwardConfig forwardInfo) throws SSHException {
-        if (forwardInfo != null) {
-            int localPort = SSHUtil.findAvailablePort(this.getForwardPorts());
-            if (localPort == -1) {
-                throw new SSHException("未找到可用端口");
-            }
-            try {
-                this.initSession();
-                this.session.setPortForwardingL(localPort, forwardInfo.getHost(), forwardInfo.getPort());
-                forwardInfo.setLocalPort(localPort);
-                this.forwardInfos.add(forwardInfo);
-                JulLog.info("ssh端口转发成功 localPort:{} forwardInfo:{}", localPort, forwardInfo);
-                return localPort;
-            } catch (JSchException ex) {
-                throw new SSHException(ex);
+    public int forward(List<? extends SSHConnect> connects, SSHConnect target) throws SSHException {
+        int forwardPort = -1;
+        if (CollectionUtil.isNotEmpty(connects)) {
+            for (int i = 0; i < connects.size(); i++) {
+                try {
+                    SSHConnect connect = connects.get(i);
+                    SSHConnect forwardConnect;
+                    if (i == connects.size() - 1) {
+                        forwardConnect = target;
+                    } else {
+                        forwardConnect = connects.get(i + 1);
+                    }
+                    Session session = this.initSession(connect);
+                    SSHJumpConfig config = SSHJumpConfig.from(forwardConnect);
+                    int localPort = session.setPortForwardingL(0, config.getRemoteHost(), config.getRemotePort());
+                    config.setLocalPort(localPort);
+                    this.jumpSessions.put(config, session);
+                    JulLog.info("ssh端口转发成功 本地端口:{} connect:{} config:{}", localPort, connect, config);
+                    forwardPort = localPort;
+                } catch (JSchException ex) {
+                    throw new SSHException(ex);
+                }
             }
         }
-        return -1;
+        return forwardPort;
     }
 
     /**
@@ -113,15 +92,15 @@ public class SSHJumper {
      */
     public void destroy() {
         // 删除端口本地转发
-        if (!this.forwardInfos.isEmpty() && this.isConnected()) {
-            for (SSHForwardConfig forwardInfo : this.forwardInfos) {
+        if (!this.jumpSessions.isEmpty()) {
+            for (Map.Entry<SSHJumpConfig, Session> entry : this.jumpSessions.entrySet()) {
                 try {
-                    this.session.delPortForwardingL(forwardInfo.getLocalPort());
+                    entry.getValue().delPortForwardingL(entry.getKey().getLocalPort());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-            this.forwardInfos.clear();
+            this.jumpSessions.clear();
         }
         JulLog.info("ssh端口转发已清理");
     }

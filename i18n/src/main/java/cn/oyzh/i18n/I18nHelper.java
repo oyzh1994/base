@@ -760,6 +760,10 @@ public class I18nHelper {
 
     public static final String CERTIFICATE = "base.certificate";
 
+    public static final String JUMP_HOST = "base.jumpHost";
+
+    public static final String JUMP_HOSTS = "base.jumpHosts";
+
     public static final String DESIGN = "base.design";
 
     public static final String QUERY = "base.query";
@@ -3995,5 +3999,13 @@ public class I18nHelper {
 
     public static String certificate() {
         return I18nResourceBundle.i18nString(CERTIFICATE);
+    }
+
+    public static String addJumpHost() {
+        return I18nResourceBundle.i18nString(ADD, JUMP_HOST);
+    }
+
+    public static String updateJumpHost() {
+        return I18nResourceBundle.i18nString(ADD, JUMP_HOST);
     }
 }

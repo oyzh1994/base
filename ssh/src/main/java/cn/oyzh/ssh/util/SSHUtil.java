@@ -91,7 +91,6 @@ public class SSHUtil {
                 return i;
             }
         }
-
         return -1;
     }
 
@@ -113,36 +112,36 @@ public class SSHUtil {
         return true;
     }
 
-    /**
-     * 转换为pem格式
-     *
-     * @param keyType    密钥类型
-     * @param privateKey 密钥
-     * @return 结果
-     */
-    public static String formatPem(String keyType, String privateKey) {
-        StringBuilder pem = new StringBuilder();
-        pem.append("-----BEGIN ").append(keyType).append("-----\n");
-        int lineLength = 64;
-        for (int i = 0; i < privateKey.length(); i += lineLength) {
-            pem.append(privateKey, i, Math.min(i + lineLength, privateKey.length())).append("\n");
-        }
-        pem.append("-----END ").append(keyType).append("-----");
-        return pem.toString();
-    }
-
-    /**
-     * 转换为pem格式
-     *
-     * @param keyType    密钥类型
-     * @param privateKey 密钥
-     * @return 结果
-     */
-    public static String formatPem1(String keyType, String privateKey) {
-        StringBuilder pem = new StringBuilder();
-        pem.append("-----BEGIN ").append(keyType).append("-----\n");
-        pem.append(privateKey).append("\n");
-        pem.append("-----END ").append(keyType).append("-----");
-        return pem.toString();
-    }
+//    /**
+//     * 转换为pem格式
+//     *
+//     * @param keyType    密钥类型
+//     * @param privateKey 密钥
+//     * @return 结果
+//     */
+//    public static String formatPem(String keyType, String privateKey) {
+//        StringBuilder pem = new StringBuilder();
+//        pem.append("-----BEGIN ").append(keyType).append("-----\n");
+//        int lineLength = 64;
+//        for (int i = 0; i < privateKey.length(); i += lineLength) {
+//            pem.append(privateKey, i, Math.min(i + lineLength, privateKey.length())).append("\n");
+//        }
+//        pem.append("-----END ").append(keyType).append("-----");
+//        return pem.toString();
+//    }
+//
+//    /**
+//     * 转换为pem格式
+//     *
+//     * @param keyType    密钥类型
+//     * @param privateKey 密钥
+//     * @return 结果
+//     */
+//    public static String formatPem1(String keyType, String privateKey) {
+//        StringBuilder pem = new StringBuilder();
+//        pem.append("-----BEGIN ").append(keyType).append("-----\n");
+//        pem.append(privateKey).append("\n");
+//        pem.append("-----END ").append(keyType).append("-----");
+//        return pem.toString();
+//    }
 }
