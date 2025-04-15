@@ -1,7 +1,8 @@
 package cn.oyzh.ssh;
 
 import cn.oyzh.common.log.JulLog;
-import com.jcraft.jsch.JSch;
+import cn.oyzh.ssh.util.SSHHolder;
+import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
