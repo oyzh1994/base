@@ -27,8 +27,16 @@ public class CollectionUtil {
         return null;
     }
 
+    /**
+     * 获取数据
+     *
+     * @param list  集合
+     * @param index 索引
+     * @param <T>   泛型
+     * @return 数据
+     */
     public static <T> T get(List<T> list, int index) {
-        if (list != null && !list.isEmpty() && index > 0 && index < list.size()) {
+        if (list != null && !list.isEmpty() && index >= 0 && index < list.size()) {
             return list.get(index);
         }
         return null;
