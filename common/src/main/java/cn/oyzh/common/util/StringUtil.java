@@ -87,6 +87,21 @@ public class StringUtil {
         return !isBlank(string);
     }
 
+    /**
+     * 是否不为空
+     *
+     * @param strings 字符串列表
+     * @return 结果
+     */
+    public static boolean isNotBlank(String... strings) {
+        for (String string : strings) {
+            if (isBlank(string)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty();
     }
