@@ -1,4 +1,4 @@
-package cn.oyzh.ssh;
+package cn.oyzh.ssh.domain;
 
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;

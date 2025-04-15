@@ -1,6 +1,9 @@
-package cn.oyzh.ssh;
+package cn.oyzh.ssh.jump;
 
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.ssh.SSHException;
+import cn.oyzh.ssh.domain.SSHConnect;
+import cn.oyzh.ssh.domain.SSHForwardConfig;
 import cn.oyzh.ssh.util.SSHHolder;
 import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.JSchException;
