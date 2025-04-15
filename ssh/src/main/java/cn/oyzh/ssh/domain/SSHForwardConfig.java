@@ -20,6 +20,11 @@ public class SSHForwardConfig {
     private String host;
 
     /**
+     * 本地地址
+     */
+    private String localHost;
+
+    /**
      * 本地端口
      */
     private int localPort;
@@ -46,5 +51,13 @@ public class SSHForwardConfig {
 
     public void setLocalPort(int localPort) {
         this.localPort = localPort;
+    }
+
+    public String getLocalHost() {
+        return localHost;
+    }
+
+    public void setLocalHost(String localHost) {
+        this.localHost = localHost;
     }
 }

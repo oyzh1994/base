@@ -15,12 +15,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * ssh转发器
+ * ssh跳板机
  *
  * @author oyzh
  * @since 2023/12/15
  */
-public class SSHForwarder {
+public class SSHJumper {
 
     /**
      * ssh会话
@@ -37,7 +37,7 @@ public class SSHForwarder {
      */
     private final List<SSHForwardConfig> forwardInfos = new ArrayList<>();
 
-    public SSHForwarder(SSHConnect connect) {
+    public SSHJumper(SSHConnect connect) {
         this.connect = connect;
     }
 
