@@ -210,6 +210,14 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
         this.certificatePriKey = certificatePriKey;
     }
 
+    public byte[] getCertificatePubKeyBytes() {
+        return certificatePubKey == null ? null : certificatePubKey.getBytes();
+    }
+
+    public byte[] getCertificatePriKeyyBytes() {
+        return certificatePriKey == null ? null : certificatePriKey.getBytes();
+    }
+
     @Override
     public String toString() {
         return "SSHConnect{" +

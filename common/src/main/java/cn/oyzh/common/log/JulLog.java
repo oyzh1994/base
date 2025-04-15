@@ -157,6 +157,11 @@ public class JulLog {
         return level.ordinal() >= JulLevel.WARN.ordinal();
     }
 
+    public static boolean isErrorEnabled() {
+        JulLevel level = JulLevel.ofLevel(LOGGER.getLevel());
+        return level.ordinal() >= JulLevel.ERROR.ordinal();
+    }
+
     public static Logger getLogger() {
         return LOGGER;
     }

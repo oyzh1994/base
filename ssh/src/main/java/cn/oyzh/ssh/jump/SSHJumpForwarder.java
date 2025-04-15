@@ -2,21 +2,17 @@ package cn.oyzh.ssh.jump;
 
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.ssh.SSHException;
 import cn.oyzh.ssh.domain.SSHConnect;
 import cn.oyzh.ssh.domain.SSHJumpConfig;
 import cn.oyzh.ssh.util.SSHHolder;
-import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * ssh跳板
@@ -24,7 +20,7 @@ import java.util.stream.Collectors;
  * @author oyzh
  * @since 2023/12/15
  */
-public class SSHJumper {
+public class SSHJumpForwarder {
 
     /**
      * 转发信息
@@ -40,11 +36,15 @@ public class SSHJumper {
         Session session;
         // 登陆跳板机
         if (connect.isPasswordAuth()) {
-            session = SSHHolder.JSCH.getSession(connect.getUser(), connect.getHost(), connect.getPort());
+            session = SSHHolder.getJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
             session.setPassword(connect.getPassword());
+        } else if (connect.isCertificateAuth()) {
+            SSHHolder.getJsch().addIdentity(connect.getCertificatePath());
+            session = SSHHolder.getJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
         } else {
-            SSHHolder.JSCH.addIdentity(connect.getCertificatePath());
-            session = SSHHolder.JSCH.getSession(connect.getUser(), connect.getHost(), connect.getPort());
+            String keyName = "ssh_key_" + UUIDUtil.uuidSimple();
+            SSHHolder.getJsch().addIdentity(keyName, connect.getCertificatePriKeyyBytes(), connect.getCertificatePubKeyBytes(), null);
+            session = SSHHolder.getJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
         }
         session.setConfig("StrictHostKeyChecking", "no");
         session.setTimeout(connect.getTimeout());
