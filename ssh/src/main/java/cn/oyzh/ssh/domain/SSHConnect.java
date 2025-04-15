@@ -66,6 +66,18 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
     @Column
     private String certificatePath;
 
+    /**
+     * 公钥
+     */
+    @Column
+    private String certificatePubKey;
+
+    /**
+     * 私钥
+     */
+    @Column
+    private String certificatePriKey;
+
     public String getAuthMethod() {
         return authMethod;
     }
@@ -82,12 +94,31 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
         this.certificatePath = certificatePath;
     }
 
+    /**
+     * 是否密码认证
+     *
+     * @return 结果
+     */
     public boolean isPasswordAuth() {
-        return StringUtil.isBlank(this.authMethod) || StringUtil.equalsAnyIgnoreCase(this.authMethod, "password");
+        return StringUtil.isBlank(this.authMethod) || StringUtil.equalsIgnoreCase(this.authMethod, "password");
     }
 
+    /**
+     * 是否证书认证
+     *
+     * @return 结果
+     */
     public boolean isCertificateAuth() {
-        return StringUtil.equalsAnyIgnoreCase(this.authMethod, "certificate");
+        return StringUtil.equalsIgnoreCase(this.authMethod, "certificate");
+    }
+
+    /**
+     * 是否密钥认证
+     *
+     * @return 结果
+     */
+    public boolean isKeyAuth() {
+        return StringUtil.equalsIgnoreCase(this.authMethod, "key");
     }
 
     public int getPort() {
@@ -163,6 +194,22 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
         this.certificatePath = t1.getCertificatePath();
     }
 
+    public String getCertificatePubKey() {
+        return certificatePubKey;
+    }
+
+    public void setCertificatePubKey(String certificatePubKey) {
+        this.certificatePubKey = certificatePubKey;
+    }
+
+    public String getCertificatePriKey() {
+        return certificatePriKey;
+    }
+
+    public void setCertificatePriKey(String certificatePriKey) {
+        this.certificatePriKey = certificatePriKey;
+    }
+
     @Override
     public String toString() {
         return "SSHConnect{" +
@@ -175,6 +222,8 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
                 ", timeout=" + timeout +
                 ", authMethod='" + authMethod + '\'' +
                 ", certificatePath='" + certificatePath + '\'' +
+                ", certificatePubKey='" + certificatePubKey + '\'' +
+                ", certificatePriKey='" + certificatePriKey + '\'' +
                 '}';
     }
 }

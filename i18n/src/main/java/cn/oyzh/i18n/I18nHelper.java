@@ -4005,6 +4005,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, JUMP_HOST);
     }
 
+    public static String addHost() {
+        return I18nResourceBundle.i18nString(ADD, HOST);
+    }
+
     public static String updateJumpHost() {
         return I18nResourceBundle.i18nString(ADD, JUMP_HOST);
     }
