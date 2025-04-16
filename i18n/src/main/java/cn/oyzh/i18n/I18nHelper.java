@@ -736,6 +736,10 @@ public class I18nHelper {
 
     public static final String LOCAL = "base.local";
 
+    public static final String REMOTE = "base.remote";
+
+    public static final String DYNAMIC = "base.dynamic";
+
     public static final String INSPECT = "base.inspect";
 
     public static final String APPLICATION_SETTING = "base.applicationSetting";
@@ -761,6 +765,8 @@ public class I18nHelper {
     public static final String CERTIFICATE = "base.certificate";
 
     public static final String JUMP_HOST = "base.jumpHost";
+
+    public static final String TUNNELING = "base.tunneling";
 
     public static final String JUMP_HOSTS = "base.jumpHosts";
 
@@ -3856,6 +3862,18 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NONE);
     }
 
+    public static String local() {
+        return I18nResourceBundle.i18nString(LOCAL);
+    }
+
+    public static String remote() {
+        return I18nResourceBundle.i18nString(REMOTE);
+    }
+
+    public static String dynamic() {
+        return I18nResourceBundle.i18nString(DYNAMIC);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
@@ -4011,5 +4029,13 @@ public class I18nHelper {
 
     public static String updateJumpHost() {
         return I18nResourceBundle.i18nString(ADD, JUMP_HOST);
+    }
+
+    public static String addTunneling() {
+        return I18nResourceBundle.i18nString(ADD, TUNNELING);
+    }
+
+    public static String updateTunneling() {
+        return I18nResourceBundle.i18nString(UPDATE, TUNNELING);
     }
 }
