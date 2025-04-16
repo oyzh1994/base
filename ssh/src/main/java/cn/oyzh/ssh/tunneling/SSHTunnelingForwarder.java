@@ -57,6 +57,10 @@ public class SSHTunnelingForwarder {
                         List<Integer> ports = this.remotePorts.computeIfAbsent(session, k -> new ArrayList<>());
                         ports.add(remotePort);
                         JulLog.info("远程端口转发成功 本地端口:{} 远程端口:{} tunneling:{}", localPort, remotePort, tunneling);
+                    } else if (tunneling.isDynamicType()) {
+                        int localPort = tunneling.getLocalPort();
+                        localPort = session.setPortForwardingL(tunneling.getLocalHost(), localPort, "0.0.0.0", 0);
+                        JulLog.info("动态端口转发成功 本地端口:{} tunneling:{}", localPort, tunneling);
                     }
                 }
             } catch (JSchException ex) {
