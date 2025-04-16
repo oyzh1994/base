@@ -4,33 +4,21 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.ssh.SSHException;
+import cn.oyzh.ssh.SSHForwarder;
 import cn.oyzh.ssh.domain.SSHConnect;
 import cn.oyzh.ssh.util.SSHHolder;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * ssh跳板
+ * ssh跳板转发器
  *
  * @author oyzh
  * @since 2023/12/15
  */
-public class SSHJumpForwarder {
-
-    /**
-     * 会话列表
-     */
-    private final List<Session> sessions = new ArrayList<>();
-
-    /**
-     * 本地端口
-     */
-    private final Map<Session, Integer> ports = new HashMap<>();
+public class SSHJumpForwarder extends SSHForwarder {
 
     /**
      * 初始化ssh会话
@@ -79,10 +67,10 @@ public class SSHJumpForwarder {
                         forwardConnect = connects.get(i + 1);
                     }
                     Session session = this.initSession(connect);
-                    int localPort = session.setPortForwardingL(0, forwardConnect.getHost(), forwardConnect.getPort());
+                    int remotePort = forwardConnect.getPort();
+                    int localPort = session.setPortForwardingL(0, forwardConnect.getHost(), remotePort);
                     this.sessions.add(session);
-                    this.ports.put(session, localPort);
-                    JulLog.info("ssh端口转发成功 本地端口:{} connect:{}", localPort, connect);
+                    JulLog.info("ssh端口转发成功 本地端口:{} 远程端口:{} connect:{}", localPort, remotePort, connect);
                     forwardPort = localPort;
                 } catch (JSchException ex) {
                     throw new SSHException(ex);
@@ -90,28 +78,5 @@ public class SSHJumpForwarder {
             }
         }
         return forwardPort;
-    }
-
-    /**
-     * 销毁
-     */
-    public void destroy() {
-        // 删除端口本地转发
-        if (!this.sessions.isEmpty()) {
-            // 反转集合，从最近到最远的顺序销毁回话
-            List<Session> sessions = this.sessions.reversed();
-            for (Session jumpSession : sessions) {
-                try {
-                    int localPort = this.ports.get(jumpSession);
-                    jumpSession.delPortForwardingL(localPort);
-                    jumpSession.disconnect();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-            this.ports.clear();
-            this.sessions.clear();
-        }
-        JulLog.info("ssh端口转发已清理");
     }
 }
