@@ -75,4 +75,16 @@ public class SSHTunneling {
     public void setRemoteHost(String remoteHost) {
         this.remoteHost = remoteHost;
     }
+
+    public boolean isLocalType() {
+        return "local".equals(type);
+    }
+
+    public boolean isRemoteType() {
+        return "remote".equals(type);
+    }
+
+    public boolean isDynamicType() {
+        return "dynamic".equals(type);
+    }
 }

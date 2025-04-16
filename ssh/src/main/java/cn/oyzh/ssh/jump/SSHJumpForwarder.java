@@ -62,6 +62,7 @@ public class SSHJumpForwarder {
      * 端口转发
      *
      * @param connects ssh连接信息
+     * @param target   目标连接
      * @return 转发后的本地端口
      * @throws SSHException ssh异常
      */
@@ -103,6 +104,7 @@ public class SSHJumpForwarder {
                 try {
                     int localPort = this.ports.get(jumpSession);
                     jumpSession.delPortForwardingL(localPort);
+                    jumpSession.disconnect();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
