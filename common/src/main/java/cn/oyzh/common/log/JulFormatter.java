@@ -28,7 +28,8 @@ public abstract class JulFormatter extends Formatter {
                         continue;
                     }
                     arg = this.pretreatmentArg(arg, true);
-                    message = message.replace("{}", arg.toString());
+                    // 仅替换1次
+                    message = StringUtil.replaceOneTime(message,"{}", arg.toString());
                     index++;
                 }
             } else if (message.contains("{0}")) {// jul类型占位符
