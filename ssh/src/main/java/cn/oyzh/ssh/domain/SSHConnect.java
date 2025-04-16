@@ -154,10 +154,13 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
     }
 
     public int getTimeout() {
-        return timeout;
+        return timeout < 3000 ? 3000 : timeout;
     }
 
     public void setTimeout(int timeout) {
+        if (timeout < 3000) {
+            timeout = 3000;
+        }
         this.timeout = timeout;
     }
 

@@ -5,11 +5,11 @@ import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.ssh.SSHException;
 import cn.oyzh.ssh.domain.SSHConnect;
-import cn.oyzh.ssh.domain.SSHJumpConfig;
 import cn.oyzh.ssh.util.SSHHolder;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +23,14 @@ import java.util.Map;
 public class SSHJumpForwarder {
 
     /**
-     * 转发信息
+     * 会话列表
      */
-    private final Map<SSHJumpConfig, Session> jumpSessions = new HashMap<>();
+    private final List<Session> sessions = new ArrayList<>();
+
+    /**
+     * 本地端口
+     */
+    private final Map<Session, Integer> ports = new HashMap<>();
 
     /**
      * 初始化ssh会话
@@ -73,11 +78,10 @@ public class SSHJumpForwarder {
                         forwardConnect = connects.get(i + 1);
                     }
                     Session session = this.initSession(connect);
-                    SSHJumpConfig config = SSHJumpConfig.from(forwardConnect);
-                    int localPort = session.setPortForwardingL(0, config.getRemoteHost(), config.getRemotePort());
-                    config.setLocalPort(localPort);
-                    this.jumpSessions.put(config, session);
-                    JulLog.info("ssh端口转发成功 本地端口:{} connect:{} config:{}", localPort, connect, config);
+                    int localPort = session.setPortForwardingL(0, forwardConnect.getHost(), forwardConnect.getPort());
+                    this.sessions.add(session);
+                    this.ports.put(session, localPort);
+                    JulLog.info("ssh端口转发成功 本地端口:{} connect:{}", localPort, connect);
                     forwardPort = localPort;
                 } catch (JSchException ex) {
                     throw new SSHException(ex);
@@ -92,15 +96,19 @@ public class SSHJumpForwarder {
      */
     public void destroy() {
         // 删除端口本地转发
-        if (!this.jumpSessions.isEmpty()) {
-            for (Map.Entry<SSHJumpConfig, Session> entry : this.jumpSessions.entrySet()) {
+        if (!this.sessions.isEmpty()) {
+            // 反转集合，从最近到最远的顺序销毁回话
+            List<Session> sessions = this.sessions.reversed();
+            for (Session jumpSession : sessions) {
                 try {
-                    entry.getValue().delPortForwardingL(entry.getKey().getLocalPort());
+                    int localPort = this.ports.get(jumpSession);
+                    jumpSession.delPortForwardingL(localPort);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
-            this.jumpSessions.clear();
+            this.ports.clear();
+            this.sessions.clear();
         }
         JulLog.info("ssh端口转发已清理");
     }
