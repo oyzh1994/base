@@ -29,6 +29,11 @@ public class SSHTunnelingForwarder {
     private final Map<Session, List<Integer>> localPorts = new HashMap<>();
 
     /**
+     * 远程端口
+     */
+    private final Map<Session, List<Integer>> remotePorts = new HashMap<>();
+
+    /**
      * 端口转发
      *
      * @param tunnelings ssh隧道信息
@@ -40,10 +45,18 @@ public class SSHTunnelingForwarder {
             try {
                 for (SSHTunneling tunneling : tunnelings) {
                     if (tunneling.isLocalType()) {
-                        int localPort = session.setPortForwardingL(tunneling.getLocalPort(), tunneling.getRemoteHost(), tunneling.getRemotePort());
-                        JulLog.info("本地端口转发成功 本地端口:{} connect:{}", localPort, tunneling);
+                        int remotePort = tunneling.getRemotePort();
+                        int localPort = session.setPortForwardingL(tunneling.getLocalHost(), tunneling.getLocalPort(), tunneling.getRemoteHost(), remotePort);
                         List<Integer> ports = this.localPorts.computeIfAbsent(session, k -> new ArrayList<>());
                         ports.add(localPort);
+                        JulLog.info("本地端口转发成功 本地端口:{} 远程端口:{} tunneling:{}", localPort, remotePort, tunneling);
+                    } else if (tunneling.isRemoteType()) {
+                        int localPort = tunneling.getLocalPort();
+                        int remotePort = tunneling.getRemotePort();
+                        session.setPortForwardingR(tunneling.getLocalHost(), localPort, tunneling.getRemoteHost(), remotePort);
+                        List<Integer> ports = this.remotePorts.computeIfAbsent(session, k -> new ArrayList<>());
+                        ports.add(remotePort);
+                        JulLog.info("远程端口转发成功 本地端口:{} 远程端口:{} tunneling:{}", localPort, remotePort, tunneling);
                     }
                 }
             } catch (JSchException ex) {
@@ -56,7 +69,7 @@ public class SSHTunnelingForwarder {
      * 销毁
      */
     public void destroy() {
-        // 删除端口本地转发
+        // 删除本地端口转发
         if (!this.localPorts.isEmpty()) {
             for (Map.Entry<Session, List<Integer>> entry : this.localPorts.entrySet()) {
                 try {
@@ -69,6 +82,20 @@ public class SSHTunnelingForwarder {
                 }
             }
             this.localPorts.clear();
+        }
+        // 删除远程端口转发
+        if (!this.remotePorts.isEmpty()) {
+            for (Map.Entry<Session, List<Integer>> entry : this.remotePorts.entrySet()) {
+                try {
+                    Session session = entry.getKey();
+                    for (Integer port : entry.getValue()) {
+                        session.delPortForwardingR(port);
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+            this.remotePorts.clear();
         }
         JulLog.info("ssh端口转发已清理");
     }

@@ -87,4 +87,12 @@ public class SSHTunneling {
     public boolean isDynamicType() {
         return "dynamic".equals(type);
     }
+
+    public String getLocalHostName() {
+        return localHost + ":" + localPort;
+    }
+
+    public String getRemoteHostName() {
+        return remoteHost + ":" + remotePort;
+    }
 }
