@@ -35,6 +35,11 @@ public class ReflectUtil {
         }
     }
 
+    public static void setFieldValue(String fieldName, Object value, Object object) {
+        Field field = getField(object.getClass(), fieldName);
+        setFieldValue(field, value, object);
+    }
+
     public static void clearFieldValue(Field field, Object object) throws SecurityException, IllegalAccessException {
         field.setAccessible(true);
         field.set(object, null);
@@ -134,7 +139,7 @@ public class ReflectUtil {
 //        return method.invoke(obj);
 //    }
 
-    public static Object invoke(Object obj, String methodName, Object... params) throws InvocationTargetException, IllegalAccessException {
+    public static Object invoke(Object obj, String methodName, Object... params) {
         Method method;
         if (params == null || params.length == 0) {
             method = getMethod(obj.getClass(), methodName, true, true);
