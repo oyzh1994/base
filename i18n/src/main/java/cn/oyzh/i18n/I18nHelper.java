@@ -1,8 +1,6 @@
 package cn.oyzh.i18n;
 
 
-import java.util.List;
-
 /**
  * @author oyzh
  * @since 2024/5/13
@@ -3572,6 +3570,10 @@ public class I18nHelper {
 
     public static String deleteFile() {
         return I18nResourceBundle.i18nString(DELETE, FILE);
+    }
+
+    public static String deleteFailed() {
+        return I18nResourceBundle.i18nString(DELETE, FAIL);
     }
 
     public static String directory() {
