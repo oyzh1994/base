@@ -480,6 +480,8 @@ public class I18nHelper {
 
     public static final String ADD = "base.add";
 
+    public static final String GUID = "base.guid";
+
     public static final String EXPLAIN = "base.explain";
 
     public static final String FIELD = "base.field";
@@ -3530,6 +3532,10 @@ public class I18nHelper {
 
     public static String connectAddTitle() {
         return I18nResourceBundle.i18nString(TITLE_CONNECT_ADD);
+    }
+
+    public static String addGuid() {
+        return I18nResourceBundle.i18nString(ADD,GUID);
     }
 
     public static String connectUpdateTitle() {
