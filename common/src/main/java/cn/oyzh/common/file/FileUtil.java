@@ -298,12 +298,18 @@ public class FileUtil {
         return false;
     }
 
-
     public static boolean mkdir(File dir) {
         if (dir != null && !dir.exists()) {
             return dir.mkdirs();
         }
         return false;
+    }
+
+    public static boolean mkdir(String dir) {
+        if(dir==null){
+            return false;
+        }
+        return mkdir(new File(dir));
     }
 
     public static boolean exists(String file) {
