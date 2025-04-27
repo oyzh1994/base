@@ -3535,7 +3535,7 @@ public class I18nHelper {
     }
 
     public static String addGuid() {
-        return I18nResourceBundle.i18nString(ADD,GUID);
+        return I18nResourceBundle.i18nString(ADD, GUID);
     }
 
     public static String connectUpdateTitle() {
@@ -3880,6 +3880,14 @@ public class I18nHelper {
 
     public static String dynamic() {
         return I18nResourceBundle.i18nString(DYNAMIC);
+    }
+
+    public static String addedToUploadList() {
+        return I18nResourceBundle.i18nString(ADDED, TO, UPLOAD, LIST);
+    }
+
+    public static String addedToDownloadList() {
+        return I18nResourceBundle.i18nString(ADDED, TO, DOWNLOAD, LIST);
     }
 
     public String fileUploadFailed() {
