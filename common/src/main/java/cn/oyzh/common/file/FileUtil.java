@@ -19,6 +19,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 文件工具类
@@ -306,7 +307,7 @@ public class FileUtil {
     }
 
     public static boolean mkdir(String dir) {
-        if(dir==null){
+        if (dir == null) {
             return false;
         }
         return mkdir(new File(dir));
@@ -314,5 +315,37 @@ public class FileUtil {
 
     public static boolean exists(String file) {
         return exist(new File(file));
+    }
+
+    public static List<File> getAllFiles(File folder) {
+        List<File> fileList = new ArrayList<>();
+        getAllFiles(folder, fileList);
+        return fileList;
+    }
+
+    public static void getAllFiles(File folder, List<File> fileList) {
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    getAllFiles(file, fileList);
+                } else {
+                    fileList.add(file);
+                }
+            }
+        }
+    }
+
+    public static void getAllFiles(File folder, Consumer<File> callback) {
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    getAllFiles(file, callback);
+                } else {
+                    callback.accept(file);
+                }
+            }
+        }
     }
 }
