@@ -1318,6 +1318,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(TRANSPORT, FAIL);
     }
 
+    public static String transportFailed() {
+        return I18nResourceBundle.i18nString(TRANSPORT, FAILED);
+    }
+
     public static String transportCancel() {
         return I18nResourceBundle.i18nString(TRANSPORT, CANCEL);
     }
