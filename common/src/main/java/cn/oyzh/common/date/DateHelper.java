@@ -1,5 +1,6 @@
 package cn.oyzh.common.date;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Date;
@@ -47,6 +48,15 @@ public class DateHelper {
 
     public static String formatDateTime(Date date) {
         return DATE_TIME_FORMAT.format(date);
+    }
+
+    public static Date parseDateTime(String date) {
+        try {
+            return DATE_TIME_FORMAT.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static String formatDateTime(Instant instant) {
