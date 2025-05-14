@@ -328,7 +328,7 @@ public class ProcessUtil {
     /**
      * 关闭指定名称的进程
      *
-     * @param processName 要关闭的进程名，需包含 .exe 后缀
+     * @param processName 要关闭的进程名
      * @return 如果成功关闭进程返回 true，否则返回 false
      */
     public static boolean killProcess(String processName) {
@@ -337,15 +337,47 @@ public class ProcessUtil {
                 // 创建 ProcessBuilder 来执行 taskkill 命令强制终止进程
                 ProcessBuilder processBuilder = new ProcessBuilder("taskkill", "/F", "/IM", processName);
                 Process process = processBuilder.start();
-//                // 获取命令执行结果的输入流
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//                String line;
-//                StringBuilder output = new StringBuilder();
-//                while ((line = reader.readLine()) != null) {
-//                    output.append(line).append("\n");
-//                }
-//                // 关闭 BufferedReader
-//                reader.close();
+                // 等待命令执行完成并获取退出状态码
+                int exitCode = process.waitFor();
+                // 退出状态码为 0 表示命令执行成功
+                return exitCode == 0;
+            }
+            if (OSUtil.isLinux() || OSUtil.isMacOS()) {
+                // 创建 ProcessBuilder 来执行 killall 命令强制终止进程
+                ProcessBuilder processBuilder = new ProcessBuilder("killall", "-9", processName);
+                Process process = processBuilder.start();
+                // 等待命令执行完成并获取退出状态码
+                int exitCode = process.waitFor();
+                // 退出状态码为 0 表示命令执行成功
+                return exitCode == 0;
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 关闭指定的进程
+     *
+     * @param pid 要关闭的进程id
+     * @return 如果成功关闭进程返回 true，否则返回 false
+     */
+    public static boolean killProcess(long pid) {
+        try {
+            if (OSUtil.isWindows()) {
+                // 创建 ProcessBuilder 来执行 taskkill 命令强制终止进程
+                ProcessBuilder processBuilder = new ProcessBuilder("taskkill", "/F", "/PID", pid + "");
+                Process process = processBuilder.start();
+                // 等待命令执行完成并获取退出状态码
+                int exitCode = process.waitFor();
+                // 退出状态码为 0 表示命令执行成功
+                return exitCode == 0;
+            }
+            if (OSUtil.isLinux() || OSUtil.isMacOS()) {
+                // 创建 ProcessBuilder 来执行 kill 命令强制终止进程
+                ProcessBuilder processBuilder = new ProcessBuilder("kill", "-9", pid + "");
+                Process process = processBuilder.start();
                 // 等待命令执行完成并获取退出状态码
                 int exitCode = process.waitFor();
                 // 退出状态码为 0 表示命令执行成功
