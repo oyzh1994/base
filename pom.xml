@@ -18,15 +18,15 @@
 
     <properties>
         <h2.version>2.3.232</h2.version>
-        <poi.version>5.4.0</poi.version>
+        <poi.version>5.4.1</poi.version>
         <base.version>1.0.1</base.version>
-        <jsch.version>0.2.25</jsch.version>
+        <jsch.version>2.27.0</jsch.version>
         <zxing.version>3.5.3</zxing.version>
         <junit.version>4.13.2</junit.version>
 <!--        <lombok.version>1.18.36</lombok.version>-->
-        <guava.version>33.4.0-jre</guava.version>
+        <guava.version>33.4.8-jre</guava.version>
         <sqlite.version>3.47.1.0</sqlite.version>
-        <fastjson.version>2.0.56</fastjson.version>
+        <fastjson.version>2.0.57</fastjson.version>
         <bouncycastle.version>1.80</bouncycastle.version>
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
