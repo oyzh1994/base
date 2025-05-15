@@ -10,21 +10,39 @@ import cn.oyzh.store.jdbc.Column;
  */
 public class SSHTunneling {
 
+    /**
+     * 名称
+     */
     @Column
     private String name;
 
+    /**
+     * 类型
+     */
     @Column
     private String type;
 
+    /**
+     * 本地端口
+     */
     @Column
     private int localPort;
 
+    /**
+     * 本地地址
+     */
     @Column
     private String localHost;
 
+    /**
+     * 远程端口
+     */
     @Column
     private int remotePort;
 
+    /**
+     * 远程地址
+     */
     @Column
     private String remoteHost;
 

@@ -21,6 +21,9 @@ public class QueryParam {
     public QueryParam(String name, Object data) {
         this.name = name;
         this.data = data;
+        if (data == null) {
+            this.operator = " is null";
+        }
     }
 
     public QueryParam(String name, Object data, String operator) {
