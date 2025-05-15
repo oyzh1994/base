@@ -36,7 +36,7 @@ public class SSHTunnelingForwarder extends SSHForwarder {
                     } else if (tunneling.isRemoteType()) {
                         int localPort = tunneling.getLocalPort();
                         int remotePort = tunneling.getRemotePort();
-                        session.setPortForwardingR(tunneling.getLocalHost(), localPort, tunneling.getRemoteHost(), remotePort);
+                        session.setPortForwardingR(tunneling.getRemoteHost(), remotePort, tunneling.getLocalHost(), localPort);
                         JulLog.info("远程端口转发成功 本地端口:{} 远程端口:{} tunneling:{}", localPort, remotePort, tunneling);
                     } else if (tunneling.isDynamicType()) {
                         int localPort = tunneling.getLocalPort();
