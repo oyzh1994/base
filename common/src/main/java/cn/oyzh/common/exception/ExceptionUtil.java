@@ -33,7 +33,7 @@ public class ExceptionUtil {
     }
 
     public static boolean isInterrupt(Exception ex) {
-        if (hasMessage(ex, "interrupt")) {
+        if (hasMessage(ex, "canceled", "interrupt")) {
             return true;
         }
         return false;

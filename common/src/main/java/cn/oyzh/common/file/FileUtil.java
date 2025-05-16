@@ -1,5 +1,6 @@
 package cn.oyzh.common.file;
 
+import cn.oyzh.common.function.ExceptionConsumer;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.BufferedReader;
@@ -19,7 +20,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * 文件工具类
@@ -336,7 +336,14 @@ public class FileUtil {
         }
     }
 
-    public static void getAllFiles(File folder, Consumer<File> callback) {
+    /**
+     * 获取全部文件
+     *
+     * @param folder   目录
+     * @param callback 回调
+     * @throws Exception 异常
+     */
+    public static void getAllFiles(File folder, ExceptionConsumer<File> callback) throws Exception {
         File[] files = folder.listFiles();
         if (files != null) {
             for (File file : files) {
