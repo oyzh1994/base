@@ -25,6 +25,18 @@ public class ThreadLocalUtil {
         localMap.put(key, obj);
     }
 
+    public static void removeVal(String key) {
+        ThreadLocalMap localMap;
+        Object object = LOCAL.get();
+        if (!(object instanceof ThreadLocalMap)) {
+            localMap = new ThreadLocalMap();
+            LOCAL.set(localMap);
+        } else {
+            localMap = (ThreadLocalMap) object;
+        }
+        localMap.remove(key);
+    }
+
     public static <T> T getVal(String key) {
         Object object = LOCAL.get();
         if (object instanceof ThreadLocalMap localMap) {
