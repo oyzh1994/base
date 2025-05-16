@@ -29,6 +29,13 @@ public class ExceptionUtil {
     }
 
     public static boolean hasMessage(Throwable ex, String... message) throws RuntimeException {
-        return StringUtil.containsAny(getMessage(ex), message);
+        return StringUtil.containsAnyIgnoreCase(getMessage(ex), message);
+    }
+
+    public static boolean isInterrupt(Exception ex) {
+        if (hasMessage(ex, "interrupt")) {
+            return true;
+        }
+        return false;
     }
 }
