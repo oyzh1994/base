@@ -224,6 +224,8 @@ public class I18nHelper {
 
     public static final String UPLOAD = "base.upload";
 
+    public static final String RETRY = "base.retry";
+
     public static final String IN_PREPARATION = "base.inPreparation";
 
     public static final String DIR = "base.dir";
@@ -3898,6 +3900,10 @@ public class I18nHelper {
 
     public static String closeTab() {
         return I18nResourceBundle.i18nString(CLOSE, TAB);
+    }
+
+    public static String retry() {
+        return I18nResourceBundle.i18nString(RETRY);
     }
 
     public String fileUploadFailed() {
