@@ -672,6 +672,8 @@ public class I18nHelper {
 
     public static final String CLOSE = "base.close";
 
+    public static final String TAB = "base.tab";
+
     public static final String TERMINAL_TIP1 = "base.terminalTip1";
 
     public static final String TERMINAL_TIP2 = "base.terminalTip2";
@@ -3892,6 +3894,10 @@ public class I18nHelper {
 
     public static String addedToDownloadList() {
         return I18nResourceBundle.i18nString(ADDED, TO, DOWNLOAD, LIST);
+    }
+
+    public static String closeTab() {
+        return I18nResourceBundle.i18nString(CLOSE, TAB);
     }
 
     public String fileUploadFailed() {
