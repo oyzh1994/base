@@ -25,7 +25,7 @@ public class SSHJumpForwarder extends SSHForwarder {
      *
      * @throws JSchException 异常
      */
-    protected Session initSession(SSHConnect connect) throws JSchException {
+    public Session initSession(SSHConnect connect) throws JSchException {
         Session session;
         // 登陆跳板机
         if (connect.isPasswordAuth()) {
