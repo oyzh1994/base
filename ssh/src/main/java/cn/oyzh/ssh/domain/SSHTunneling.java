@@ -1,5 +1,6 @@
 package cn.oyzh.ssh.domain;
 
+import cn.oyzh.common.object.ObjectCopier;
 import cn.oyzh.store.jdbc.Column;
 
 /**
@@ -8,7 +9,7 @@ import cn.oyzh.store.jdbc.Column;
  * @author oyzh
  * @since 2025-04-16
  */
-public class SSHTunneling {
+public class SSHTunneling implements ObjectCopier<SSHTunneling> {
 
     /**
      * 名称
@@ -112,5 +113,15 @@ public class SSHTunneling {
 
     public String getRemoteHostName() {
         return remoteHost + ":" + remotePort;
+    }
+
+    @Override
+    public void copy(SSHTunneling t1) {
+      this.name = t1.getName();
+      this.type = t1.getType();
+      this.localPort = t1.getLocalPort();
+      this.localHost = t1.getLocalHost();
+      this.remotePort = t1.getRemotePort();
+      this.remoteHost = t1.getRemoteHost();
     }
 }

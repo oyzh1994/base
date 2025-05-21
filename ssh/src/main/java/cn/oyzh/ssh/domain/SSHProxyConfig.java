@@ -1,5 +1,6 @@
 package cn.oyzh.ssh.domain;
 
+import cn.oyzh.common.object.ObjectCopier;
 import cn.oyzh.store.jdbc.Column;
 
 import java.io.Serializable;
@@ -8,7 +9,7 @@ import java.io.Serializable;
  * @author oyzh
  * @since 2025-04-14
  */
-public class SSHProxyConfig implements Serializable {
+public class SSHProxyConfig implements Serializable, ObjectCopier<SSHProxyConfig> {
 
     /**
      * 代理协议
@@ -108,5 +109,15 @@ public class SSHProxyConfig implements Serializable {
 
     public boolean isPasswordAuth() {
         return "password".equalsIgnoreCase(this.authType);
+    }
+
+    @Override
+    public void copy(SSHProxyConfig t1) {
+        this.user = t1.getUser();
+        this.host = t1.getHost();
+        this.port = t1.getPort();
+        this.protocol = t1.getProtocol();
+        this.authType = t1.getAuthType();
+        this.password = t1.getPassword();
     }
 }
