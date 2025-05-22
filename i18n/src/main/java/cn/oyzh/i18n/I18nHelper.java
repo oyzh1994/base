@@ -838,6 +838,8 @@ public class I18nHelper {
 
     public static final String QR_CODE = "base.qrCode";
 
+    public static final String VERIFICATION_CODE = "base.verificationCode";
+
     public static final String SORT_ASC = "base.sortAsc";
 
     public static final String SORT_DESC = "base.sortDesc";
@@ -2220,6 +2222,14 @@ public class I18nHelper {
 
     public static String qrCode() {
         return I18nResourceBundle.i18nString(QR_CODE);
+    }
+
+    public static String verificationCode() {
+        return I18nResourceBundle.i18nString(VERIFICATION_CODE);
+    }
+
+    public static String pleaseInputVerificationCode() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, VERIFICATION_CODE);
     }
 
     public static String sortDesc() {
