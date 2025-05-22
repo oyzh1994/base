@@ -1,10 +1,10 @@
 package cn.oyzh.store.file;
 
 import cn.oyzh.common.file.FileUtil;
-import cn.oyzh.common.json.JSONObject;
 import cn.oyzh.common.json.JSONUtil;
 import cn.oyzh.common.util.IOUtil;
 import com.alibaba.fastjson.JSONReader;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;

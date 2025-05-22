@@ -1,6 +1,8 @@
 package cn.oyzh.common.json;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 
 import java.util.Collections;
@@ -151,7 +153,7 @@ public class JSONUtil {
      */
     public static <T> List<T> toBeanList(JSONArray array, Class<T> beanClass) {
         try {
-            return array.toBeanList(beanClass);
+            return array.toList(beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

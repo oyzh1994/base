@@ -1,13 +1,13 @@
 package cn.oyzh.i18n;
 
 import cn.oyzh.common.file.FileUtil;
-import cn.oyzh.common.json.JSONArray;
-import cn.oyzh.common.json.JSONObject;
 import cn.oyzh.common.json.JSONUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.i18n.baidu.TransApi;
 import cn.oyzh.i18n.baidu.TransUtil;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
