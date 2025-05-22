@@ -109,56 +109,73 @@ public class ProcessExecBuilder {
     public ProcessExecResult exec() throws IOException, InterruptedException {
         Process process = this.build();
         ProcessExecResult execResult = new ProcessExecResult();
+        Thread inputThread = null;
         if (this.catchInput) {
-            try {
-                InputStream stream = process.getInputStream();
-                if (OSUtil.isWindows() || stream.available() > 0) {
-                    JulLog.info("process input--->start");
-                    // 获取进程的标准输出流
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
-                    StringBuilder builder = new StringBuilder();
-                    // 读取输出并打印到控制台
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        JulLog.info(line);
-                        builder.append(line);
+            inputThread = ThreadUtil.start(() -> {
+                try {
+                    InputStream stream = process.getInputStream();
+                    if (OSUtil.isWindows() || stream.available() > 0) {
+                        JulLog.info("process input--->start");
+                        // 获取进程的标准输出流
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
+                        StringBuilder builder = new StringBuilder();
+                        // 读取输出并打印到控制台
+                        while (process.isAlive() || stream.available() > 0) {
+                            String line = reader.readLine();
+                            if (line != null) {
+                                JulLog.info(line);
+                                builder.append(line);
+                            }
+                        }
+                        stream.close();
+                        reader.close();
+                        execResult.setInput(builder.toString());
+                        JulLog.info("process input--->end");
                     }
-                    stream.close();
-                    reader.close();
-                    execResult.setInput(builder.toString());
-                    JulLog.info("process input--->end");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            });
         }
+        Thread errorThread = null;
         if (this.catchError) {
-            try {
-                InputStream stream = process.getErrorStream();
-                if (OSUtil.isWindows() || stream.available() > 0) {
-                    JulLog.error("process error--->start");
-                    // 获取进程的标准输出流
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
-                    StringBuilder builder = new StringBuilder();
-                    // 读取输出并打印到控制台
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        JulLog.error(line);
-                        builder.append(line);
+            errorThread = ThreadUtil.start(() -> {
+                try {
+                    InputStream stream = process.getErrorStream();
+                    if (OSUtil.isWindows() || stream.available() > 0) {
+                        JulLog.error("process error--->start");
+                        // 获取进程的标准输出流
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
+                        StringBuilder builder = new StringBuilder();
+                        // 读取输出并打印到控制台
+                        while (process.isAlive() || stream.available() > 0) {
+                            String line = reader.readLine();
+                            if (line != null) {
+                                JulLog.error(line);
+                                builder.append(line);
+                            }
+                        }
+                        stream.close();
+                        reader.close();
+                        execResult.setError(builder.toString());
+                        JulLog.error("process error--->end");
                     }
-                    stream.close();
-                    reader.close();
-                    execResult.setError(builder.toString());
-                    JulLog.error("process error--->end");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            });
         }
         // 等待进程执行完成
         // 已设置超时时间
         if (this.timeout > 0) {
             boolean waitFor = process.waitFor(this.timeout, TimeUnit.MILLISECONDS);
+            // 等待读取结束
+            if (inputThread != null) {
+                inputThread.join();
+            }
+            if (errorThread != null) {
+                errorThread.join();
+            }
             if (waitFor) {
                 int code = process.exitValue();
                 // 设置执行结果
@@ -172,6 +189,13 @@ public class ProcessExecBuilder {
             }
         } else {// 未设置超时时间
             int code = process.waitFor();
+            // 等待读取结束
+            if (inputThread != null) {
+                inputThread.join();
+            }
+            if (errorThread != null) {
+                errorThread.join();
+            }
             // 设置执行结果
             execResult.setExitCode(code);
         }

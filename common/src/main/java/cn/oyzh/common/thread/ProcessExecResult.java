@@ -1,7 +1,6 @@
 package cn.oyzh.common.thread;
 
 /**
- *
  * @author oyzh
  * @since 2025-02-11
  */
@@ -56,5 +55,9 @@ public class ProcessExecResult {
                 ", exitCode=" + exitCode +
                 ", timedOut=" + timedOut +
                 '}';
+    }
+
+    public boolean isSuccess() {
+        return exitCode == 0;
     }
 }
