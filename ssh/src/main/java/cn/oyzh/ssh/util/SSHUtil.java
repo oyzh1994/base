@@ -1,6 +1,7 @@
 package cn.oyzh.ssh.util;
 
 
+import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.ssh.domain.SSHProxyConfig;
 import com.jcraft.jsch.Proxy;
 import com.jcraft.jsch.ProxyHTTP;
@@ -179,5 +180,20 @@ public class SSHUtil {
             proxy = socks5;
         }
         return proxy;
+    }
+
+    /**
+     * 移除ansi字符
+     *
+     * @param output 内容
+     * @return 结果
+     */
+    public static String removeAnsi(String output) {
+        if (StringUtil.isBlank(output)) {
+            return output;
+        }
+        String ansiRegex = "\u001B\\[[;\\d]*[ -/]*[@-~]";
+        output = output.replaceAll(ansiRegex, "");
+        return output;
     }
 }
