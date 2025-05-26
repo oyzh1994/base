@@ -230,6 +230,10 @@ public class I18nHelper {
 
     public static final String UN_COMPRESS = "base.uncompress";
 
+    public static final String AVAILABLE = "base.available";
+
+    public static final String SCAN = "base.scan";
+
     public static final String IN_PREPARATION = "base.inPreparation";
 
     public static final String DIR = "base.dir";
@@ -3957,6 +3961,14 @@ public class I18nHelper {
 
     public static String unCompress() {
         return I18nResourceBundle.i18nString(UN_COMPRESS);
+    }
+
+    public static String available() {
+        return I18nResourceBundle.i18nString(AVAILABLE);
+    }
+
+    public static String scan() {
+        return I18nResourceBundle.i18nString(SCAN);
     }
 
     public String fileUploadFailed() {
