@@ -177,6 +177,13 @@ public class StringUtil {
         return false;
     }
 
+    public static boolean startWith(String source, String target) {
+        if (source != null && target != null) {
+            return source.startsWith(target.toLowerCase());
+        }
+        return false;
+    }
+
     public static boolean startWithIgnoreCase(String source, String target) {
         if (source != null && target != null) {
             return source.toLowerCase().startsWith(target.toLowerCase());
