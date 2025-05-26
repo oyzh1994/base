@@ -416,6 +416,8 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String CUT = "base.cut";
+
     public static final String SHORTCUT = "base.shortcut";
 
     public static final String SHORTCUT_KEY = "base.shortcutKey";
@@ -2093,6 +2095,10 @@ public class I18nHelper {
 
     public static String copyFile() {
         return I18nResourceBundle.i18nString(COPY, FILE);
+    }
+
+    public static String cutFile() {
+        return I18nResourceBundle.i18nString(CUT, FILE);
     }
 
     public static String openTerminal() {
