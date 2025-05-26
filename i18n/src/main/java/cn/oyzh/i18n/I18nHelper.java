@@ -12,6 +12,8 @@ public class I18nHelper {
 
     public static final String MEMORY_USAGE = "base.memoryUsage";
 
+    public static final String MEMORY = "base.memory";
+
     public static final String UNKNOWN = "base.unknown";
 
     public static final String ALREADY_EXISTS = "base.alreadyExists";
@@ -1952,6 +1954,19 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NETWORK, INPUT);
     }
 
+    public static String network() {
+        return I18nResourceBundle.i18nString(NETWORK);
+    }
+
+    public static String input() {
+        return I18nResourceBundle.i18nString(INPUT);
+    }
+
+    public static String output() {
+        return I18nResourceBundle.i18nString(OUTPUT);
+    }
+
+
     public static String networkOutput() {
         return I18nResourceBundle.i18nString(NETWORK, OUTPUT);
     }
@@ -2440,6 +2455,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(MEMORY_USAGE);
     }
 
+    public static String memory() {
+        return I18nResourceBundle.i18nString(MEMORY);
+    }
+
     public static String editRow() {
         return I18nResourceBundle.i18nString(EDIT, ROW);
     }
@@ -2686,6 +2705,10 @@ public class I18nHelper {
 
     public static String discard() {
         return I18nResourceBundle.i18nString(DISCARD);
+    }
+
+    public static String disk() {
+        return I18nResourceBundle.i18nString(DISK);
     }
 
     public static String minute() {
@@ -4041,8 +4064,16 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DISK, READ, SPEED);
     }
 
+    public static String diskRead() {
+        return I18nResourceBundle.i18nString(DISK, READ);
+    }
+
     public static String diskWriteSpeed() {
         return I18nResourceBundle.i18nString(DISK, WRITE, SPEED);
+    }
+
+    public static String diskWrite() {
+        return I18nResourceBundle.i18nString(DISK, WRITE);
     }
 
     public static String networkBandwidthInflow() {
