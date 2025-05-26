@@ -228,6 +228,8 @@ public class I18nHelper {
 
     public static final String RETRY = "base.retry";
 
+    public static final String UN_COMPRESS = "base.uncompress";
+
     public static final String IN_PREPARATION = "base.inPreparation";
 
     public static final String DIR = "base.dir";
@@ -3951,6 +3953,10 @@ public class I18nHelper {
 
     public static String retry() {
         return I18nResourceBundle.i18nString(RETRY);
+    }
+
+    public static String unCompress() {
+        return I18nResourceBundle.i18nString(UN_COMPRESS);
     }
 
     public String fileUploadFailed() {

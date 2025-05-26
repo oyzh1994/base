@@ -290,6 +290,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否xz类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isXzType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "xz");
+    }
+
+    /**
      * 是否gif类型
      *
      * @param fileType 文件类型
@@ -728,6 +738,56 @@ public class FileNameUtil {
      */
     public static boolean isLogType(String fileType) {
         return "log".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否bz2类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBz2Type(String fileType) {
+        return "bz2".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否lzma类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLzmaType(String fileType) {
+        return "lzma".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否lz类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLzType(String fileType) {
+        return "lz".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否zst类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isZstType(String fileType) {
+        return "zst".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否lzo类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLzoType(String fileType) {
+        return "lzo".equalsIgnoreCase(fileType);
     }
 
     /**
