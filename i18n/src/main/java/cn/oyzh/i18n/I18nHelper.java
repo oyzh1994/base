@@ -2091,6 +2091,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(COPY);
     }
 
+    public static String copyFile() {
+        return I18nResourceBundle.i18nString(COPY, FILE);
+    }
+
     public static String openTerminal() {
         return I18nResourceBundle.i18nString(OPEN, TERMINAL);
     }
@@ -2169,6 +2173,10 @@ public class I18nHelper {
 
     public static String paste() {
         return I18nResourceBundle.i18nString(PASTE);
+    }
+
+    public static String pasteFile() {
+        return I18nResourceBundle.i18nString(PASTE, FILE);
     }
 
     public static String positioning() {
