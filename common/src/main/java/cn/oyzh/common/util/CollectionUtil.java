@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author oyzh
@@ -71,6 +73,14 @@ public class CollectionUtil {
         return !isEmpty(map);
     }
 
+    /**
+     * 分割集合
+     *
+     * @param collection 集合
+     * @param limit      限制数量
+     * @param <T>        集合列表
+     * @return 分割后的集合
+     */
     public static <T> List<List<T>> split(Collection<T> collection, int limit) {
         if (collection == null) {
             return Collections.emptyList();
@@ -84,6 +94,58 @@ public class CollectionUtil {
             result.add(new ArrayList<>(new ArrayList<>(collection).subList(i, end)));
         }
         return result;
+    }
+
+    /**
+     * 将集合均分成 n 个子集合，允许余数均匀分布在前几个子集合中。
+     * 例如：12个元素分成5份 -> [3, 3, 2, 2, 2]
+     *
+     * @param originalList 原始集合
+     * @param n            份数
+     */
+    public static <T> List<List<T>> splitIntoParts(List<T> originalList, int n) {
+        if (originalList == null || originalList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        if (n <= 0) {
+            throw new IllegalArgumentException("子集合数量 n 必须为正整数");
+        }
+        if (n > originalList.size()) {
+            n = originalList.size(); // 若 n 超过集合大小，调整为集合大小
+        }
+
+        List<List<T>> result = new ArrayList<>(n);
+        int size = originalList.size();
+        int baseSize = size / n;
+        int remainder = size % n;
+
+        int index = 0;
+        for (int i = 0; i < n; i++) {
+            int currentSize = baseSize + (i < remainder ? 1 : 0);
+            result.add(originalList.subList(index, index + currentSize));
+            index += currentSize;
+        }
+        return result;
+    }
+
+    /**
+     * 将集合按固定大小分割成多个子集合，最后一个子集合可能不足 size。
+     * 例如：12个元素按 size=5 分割 -> [5, 5, 2]
+     *
+     * @param originalList 原始集合
+     * @param size         大小
+     */
+    public static <T> List<List<T>> splitBySize(List<T> originalList, int size) {
+        if (originalList == null || originalList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        if (size <= 0) {
+            throw new IllegalArgumentException("子集合大小必须为正整数");
+        }
+
+        return IntStream.range(0, (originalList.size() + size - 1) / size)
+                .mapToObj(i -> originalList.subList(i * size, Math.min((i + 1) * size, originalList.size())))
+                .collect(Collectors.toList());
     }
 
     public static boolean contains(List<?> list, Object t) {

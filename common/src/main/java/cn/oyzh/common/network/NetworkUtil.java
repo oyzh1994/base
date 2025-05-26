@@ -1,12 +1,15 @@
 package cn.oyzh.common.network;
 
 import cn.oyzh.common.exception.InvalidParamException;
+import cn.oyzh.common.function.ExceptionBiConsumer;
 import cn.oyzh.common.thread.ThreadUtil;
+import cn.oyzh.common.util.CollectionUtil;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
 
 /**
@@ -27,8 +30,8 @@ public class NetworkUtil {
         try (Socket socket = new Socket()) {
             long startTime = System.currentTimeMillis();
             socket.connect(new InetSocketAddress(host, port), timeout);
-            long endtime = System.currentTimeMillis();
-            return endtime - startTime < timeout;
+            long endTime = System.currentTimeMillis();
+            return endTime - startTime <= timeout;
         } catch (Exception ignored) {
             return false;
         }
@@ -37,18 +40,19 @@ public class NetworkUtil {
     /**
      * 扫描
      *
-     * @param start 开始端口
-     * @param end   结束端口
-     * @param host  地址
+     * @param start   开始端口
+     * @param end     结束端口
+     * @param host    地址
+     * @param timeout 超时时间
      * @return 能联通的端口
      */
-    public static List<Integer> scan(int start, int end, String host) {
+    public static List<Integer> scan(int start, int end, String host, int timeout) {
         if (start < 0 || end < 0 || end > 65535 || end < start) {
             throw new InvalidParamException("start or end param invalid");
         }
         List<Integer> list = new ArrayList<>();
-        for (int i = start; i < end; i++) {
-            if (reachable(host, i, 100)) {
+        for (int i = start; i <= end; i++) {
+            if (reachable(host, i, timeout)) {
                 list.add(i);
             }
         }
@@ -60,29 +64,93 @@ public class NetworkUtil {
      *
      * @param start          开始端口
      * @param end            结束端口
+     * @param timeout        超时时间
      * @param host           地址
      * @param callback       结果回调
      * @param finishCallback 结束回调
      * @return Thread
      */
-    public static Thread scanAsync(int start, int end, String host, BiConsumer<Integer, Boolean> callback, Runnable finishCallback) {
+    public static Thread scanAsync(int start, int end, int timeout, String host, BiConsumer<Integer, Boolean> callback, Runnable finishCallback) {
         if (start < 0 || end < 0 || end > 65535 || end < start) {
             throw new InvalidParamException("start or end param invalid");
         }
         return ThreadUtil.start(() -> {
             try {
-                for (int i = start; i < end; i++) {
+                for (int i = start; i <= end; i++) {
                     if (ThreadUtil.isInterrupted()) {
                         break;
                     }
-                    if (reachable(host, i, 100)) {
+                    if (reachable(host, i, timeout)) {
                         callback.accept(i, true);
                     } else {
                         callback.accept(i, false);
                     }
                 }
             } finally {
+                if (finishCallback != null) {
+                    finishCallback.run();
+                }
+            }
+        });
+    }
 
+    /**
+     * 多线程扫描
+     *
+     * @param start          开始端口
+     * @param end            结束端口
+     * @param timeout        超时时间
+     * @param threadNum      线程数量
+     * @param host           地址
+     * @param callback       结果回调
+     * @param finishCallback 结束回调
+     * @return Thread
+     */
+    public static Thread scanMultiple(int start, int end, int timeout, int threadNum, String host, ExceptionBiConsumer<Integer, Boolean> callback, Runnable finishCallback) {
+        if (start < 0 || end < 0 || end > 65535 || end < start) {
+            throw new InvalidParamException("start or end param invalid");
+        }
+        return ThreadUtil.start(() -> {
+            // 子线程列表
+            List<Thread> threads = new ArrayList<>();
+            try {
+                // 端口列表
+                List<Integer> ports = new ArrayList<>();
+                for (int i = start; i <= end; i++) {
+                    ports.add(i);
+                }
+                // 分割集合
+                List<List<Integer>> lists = CollectionUtil.splitIntoParts(ports, threadNum);
+                // 等待队列
+                CountDownLatch latch = new CountDownLatch(lists.size());
+                // 每一个子集合都在子线程处理
+                for (List<Integer> list : lists) {
+                    Thread thread = ThreadUtil.start(() -> {
+                        try {
+                            for (Integer i : list) {
+                                if (ThreadUtil.isInterrupted()) {
+                                    break;
+                                }
+                                if (reachable(host, i, timeout)) {
+                                    callback.accept(i, true);
+                                } else {
+                                    callback.accept(i, false);
+                                }
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        } finally {
+                            latch.countDown();
+                        }
+                    });
+                    threads.add(thread);
+                }
+                // 等待完成
+                latch.await();
+            } catch (Exception ex) {
+                // 取消线程的执行
+                threads.forEach(ThreadUtil::interrupt);
+            } finally {
                 if (finishCallback != null) {
                     finishCallback.run();
                 }
@@ -178,6 +246,9 @@ public class NetworkUtil {
         if (port == 2107) {
             return "Bintec Citrix SmartAuditor Server";
         }
+        if (port == 2179) {
+            return "Microsoft RDP for virtual machines";
+        }
         if (port == 2869) {
             return "UPnP Device Host";
         }
@@ -186,6 +257,9 @@ public class NetworkUtil {
         }
         if (port == 3478) {
             return "STUN";
+        }
+        if (port == 4709) {
+            return "WPS Office";
         }
         if (port == 5601) {
             return "Kibana";
@@ -199,8 +273,14 @@ public class NetworkUtil {
         if (port == 6000) {
             return "X-Server";
         }
+        if (port == 7680) {
+            return "Windows Update Delivery Optimization";
+        }
         if (port == 8080) {
             return "Web Server";
+        }
+        if (port == 8081) {
+            return "Everything/Web Server";
         }
         if (port == 8443) {
             return "Web Server";

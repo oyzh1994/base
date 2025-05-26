@@ -13,6 +13,7 @@ public class DownLatch extends CountDownLatch {
         super(count);
     }
 
+    @Override
     public void await() {
         try {
             super.await();
