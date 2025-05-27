@@ -2,7 +2,6 @@ package cn.oyzh.common.util;
 
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -36,8 +35,14 @@ public class ReflectUtil {
     }
 
     public static void setFieldValue(String fieldName, Object value, Object object) {
-        Field field = getField(object.getClass(), fieldName);
-        setFieldValue(field, value, object);
+        Field field;
+        if (object instanceof Class<?> clazz) {
+            field = getField(clazz, fieldName);
+            setFieldValue(field, value, null);
+        } else {
+            field = getField(object.getClass(), fieldName);
+            setFieldValue(field, value, object);
+        }
     }
 
     public static void clearFieldValue(Field field, Object object) throws SecurityException, IllegalAccessException {
