@@ -3,6 +3,7 @@ package cn.oyzh.common.util;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * String工具类
@@ -111,10 +112,7 @@ public class StringUtil {
     }
 
     public static boolean equals(String source, String target) {
-        if (source != null && target != null) {
-            return source.equals(target);
-        }
-        return false;
+        return Objects.equals(source, target);
     }
 
     public static boolean notEquals(String source, String target) {
