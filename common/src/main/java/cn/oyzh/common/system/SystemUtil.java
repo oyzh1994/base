@@ -67,6 +67,8 @@ public class SystemUtil {
 
     /**
      * 定期gc
+     *
+     * @param interval 间隔，单位毫秒
      */
     public static void gcInterval(int interval) {
         JulLog.debug("gc interval in {}ms", interval);
@@ -81,6 +83,11 @@ public class SystemUtil {
         ThreadUtil.startVirtual(SystemUtil::gc);
     }
 
+    /**
+     * 获取已用内存，单位mb
+     *
+     * @return 已用内存
+     */
     public static double getUsedMemory() {
         MemoryMXBean mxBean = getMemoryMXBean();
         MemoryUsage heapMemoryUsage = mxBean.getHeapMemoryUsage();
