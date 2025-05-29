@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>cn.oyzh</groupId>
+        <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
         <version>1.0.1</version>
     </parent>
@@ -13,15 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.oyzh</groupId>
+            <groupId>io.github.oyzh1994</groupId>
             <artifactId>common</artifactId>
         </dependency>
-        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/com.google.guava/guava &ndash;&gt; -->
-        <!-- <dependency> -->
-        <!--     <groupId>com.google.guava</groupId> -->
-        <!--     <artifactId>guava</artifactId> -->
-        <!--     <version>${guava.version}</version> -->
-        <!-- </dependency> -->
     </dependencies>
 
 </project>

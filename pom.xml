@@ -2,6 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://gitee.com/oyzh1994/base</url>
+        <connection>scm:git:https://gitee.com/oyzh1994/base</connection>
+        <developerConnection>scm:git:https://gitee.com/oyzh1994/base</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <id>oyzh</id>
+            <name>oyzh</name>
+            <email>1987803602@qq.com</email>
+        </developer>
+    </developers>
+
+    <url>https://gitee.com/oyzh1994/base</url> <!-- 项目主页 -->
     <modelVersion>4.0.0</modelVersion>
 
     <version>1.0.1</version>
@@ -12,9 +33,10 @@
         <module>i18n</module>
         <module>event</module>
     </modules>
-    <groupId>cn.oyzh</groupId>
+    <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
     <artifactId>base</artifactId>
+    <description>各种基础功能的实现</description>
 
     <properties>
         <h2.version>2.3.232</h2.version>
@@ -23,7 +45,6 @@
         <jsch.version>2.27.0</jsch.version>
         <zxing.version>3.5.3</zxing.version>
         <junit.version>4.13.2</junit.version>
-<!--        <lombok.version>1.18.36</lombok.version>-->
         <guava.version>33.4.8-jre</guava.version>
         <sqlite.version>3.47.1.0</sqlite.version>
         <fastjson.version>2.0.57</fastjson.version>
@@ -63,47 +84,40 @@
         <dependencies>
             <!-- 自定义类库，通用模块 -->
             <dependency>
-                <groupId>cn.oyzh</groupId>
+                <groupId>io.github.oyzh1994</groupId>
                 <artifactId>common</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，存储模块 -->
             <dependency>
-                <groupId>cn.oyzh</groupId>
+                <groupId>io.github.oyzh1994</groupId>
                 <artifactId>store</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，ssh模块 -->
             <dependency>
-                <groupId>cn.oyzh</groupId>
+                <groupId>io.github.oyzh1994</groupId>
                 <artifactId>ssh</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，i18n模块 -->
             <dependency>
-                <groupId>cn.oyzh</groupId>
+                <groupId>io.github.oyzh1994</groupId>
                 <artifactId>i18n</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，事件模块 -->
             <dependency>
-                <groupId>cn.oyzh</groupId>
+                <groupId>io.github.oyzh1994</groupId>
                 <artifactId>event</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，json模块 -->
             <dependency>
-                <groupId>cn.oyzh</groupId>
+                <groupId>io.github.oyzh1994</groupId>
                 <artifactId>json</artifactId>
                 <version>${base.version}</version>
             </dependency>
-<!--            &lt;!&ndash;  lombok&ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.projectlombok</groupId>-->
-<!--                <artifactId>lombok</artifactId>-->
-<!--                <scope>compile</scope>-->
-<!--                <version>${lombok.version}</version>-->
-<!--            </dependency>-->
             <!-- ssh类库 -->
             <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
             <dependency>
@@ -133,15 +147,71 @@
                     <target>${maven.compiler.release}</target>
                     <release>${maven.compiler.release}</release>
                     <encoding>UTF-8</encoding>
-<!--                    <annotationProcessorPaths>-->
-<!--                        <path>-->
-<!--                            <groupId>org.projectlombok</groupId>-->
-<!--                            <artifactId>lombok</artifactId>-->
-<!--                            <version>${lombok.version}</version>-->
-<!--                        </path>-->
-<!--                    </annotationProcessorPaths>-->
                 </configuration>
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- Source -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- Javadoc -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.10.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!-- GPG -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.6</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>ossrh</publishingServerId>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
