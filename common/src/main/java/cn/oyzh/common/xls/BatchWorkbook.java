@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * 批处理表格
+ *
  * @author oyzh
  * @since 2024/8/29
  */
@@ -53,18 +55,40 @@ public class BatchWorkbook implements Workbook {
      */
     private boolean firstAppend = true;
 
+    /**
+     * 构造器
+     * @param file 文件
+     * @throws IOException 异常
+     */
     public BatchWorkbook(File file) throws IOException {
         this(false, file);
     }
 
+    /**
+     * 构造器
+     * @param filePath 文件
+     * @throws IOException 异常
+     */
     public BatchWorkbook(String filePath) throws IOException {
         this(false, new File(filePath));
     }
 
+    /**
+     * 构造器
+     * @param isXlsx 是否xlsx
+     * @param filePath 文件
+     * @throws IOException 异常
+     */
     public BatchWorkbook(boolean isXlsx, String filePath) throws IOException {
         this(isXlsx, new File(filePath));
     }
 
+    /**
+     * 构造器
+     * @param isXlsx 是否xlsx
+     * @param file 文件
+     * @throws IOException 异常
+     */
     public BatchWorkbook(boolean isXlsx, File file) throws IOException {
         this.isXlsx = isXlsx;
         this.file = file;

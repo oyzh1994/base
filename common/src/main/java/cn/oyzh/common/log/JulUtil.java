@@ -9,10 +9,11 @@ import cn.oyzh.common.util.StringUtil;
 import java.io.File;
 
 /**
+ * jul工具类
+ *
  * @author oyzh
  * @since 2024-11-21
  */
-//@UtilityClass
 public class JulUtil {
 
     /**

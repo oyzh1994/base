@@ -15,7 +15,6 @@ import java.util.List;
  * @author oyzh
  * @since 2023/02/28
  */
-//@UtilityClass
 public class ResourceUtil {
 
     /**

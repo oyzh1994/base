@@ -94,7 +94,7 @@ public class TaskManager {
      * @param task     任务
      * @param interval 定时时间
      * @param delay    延迟时间
-     * @return Future<?>
+     * @return 对象
      */
     public static Future<?> startInterval(String key, Runnable task, int interval, int delay) {
         Future<?> future = INTERVAL_TASKS.get(key);

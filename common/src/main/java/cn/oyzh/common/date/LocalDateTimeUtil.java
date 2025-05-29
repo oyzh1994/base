@@ -8,10 +8,11 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
+ * 本地时间工具类
+ *
  * @author oyzh
  * @since 2024-09-25
  */
-//@UtilityClass
 public class LocalDateTimeUtil {
 
     public static LocalDateTime of(Date date) {

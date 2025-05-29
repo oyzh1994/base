@@ -11,7 +11,6 @@ import java.io.IOException;
  * @author oyzh
  * @since 2020/9/14
  */
-//@Data
 public class Project {
 
     /**

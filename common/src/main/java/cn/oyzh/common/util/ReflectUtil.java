@@ -5,10 +5,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
+ * 反射工具类
+ *
  * @author oyzh
  * @since 2024-09-24
  */
-//@UtilityClass
 public class ReflectUtil {
 
     public static <T> T getFieldValue(Object object, String fieldName) {

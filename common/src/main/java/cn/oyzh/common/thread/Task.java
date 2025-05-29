@@ -13,35 +13,26 @@ public class Task implements Runnable {
     /**
      * 开始操作
      */
-//    @Setter
-//    @Getter
     private IRunnable start;
 
     /**
      * 结束操作
      */
-//    @Setter
-//    @Getter
     private IRunnable finish;
 
     /**
      * 成功操作
      */
-//    @Setter
-//    @Getter
     private IRunnable success;
 
     /**
      * 错误操作
      */
-//    @Setter
-//    @Getter
     private Consumer<Exception> error;
 
     /**
      * 异常
      */
-//    @Getter
     private Exception exception;
 
     public void onStart() throws Exception {

@@ -14,10 +14,11 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
+ * 进程工具类
+ *
  * @author oyzh
  * @since 2024-12-17
  */
-//@UtilityClass
 public class ProcessUtil {
 
     /**

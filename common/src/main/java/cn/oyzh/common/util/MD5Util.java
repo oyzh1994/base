@@ -5,10 +5,11 @@ import java.security.NoSuchAlgorithmException;
 
 
 /**
+ * md5工具类
+ *
  * @author oyzh
  * @since 2024-12-17
  */
-//@UtilityClass
 public class MD5Util {
 
     /**

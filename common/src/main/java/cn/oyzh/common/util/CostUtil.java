@@ -7,9 +7,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @since 2025/01/01
+ * 计时工具类
+ *
+ * @author oyzh
+ * @since 2025-01-01
  */
-//@UtilityClass
 public class CostUtil {
 
     private static final Map<String, Long> COST_RECORD = new ConcurrentHashMap<>();

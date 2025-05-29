@@ -4,16 +4,18 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 /**
+ * jul日志记录
+ *
  * @author oyzh
  * @since 2024-11-15
  */
 public class JulLogRecord extends LogRecord {
 
-//    @Setter
+    //    @Setter
 //    @Getter
     private int lineNumber;
 
-//    @Setter
+    //    @Setter
 //    @Getter
     private String threadName;
 

@@ -8,6 +8,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 行文件写入器
+ *
  * @author oyzh
  * @since 2024-09-04
  */

@@ -7,6 +7,8 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 /**
+ * jul格式化器
+ *
  * @author oyzh
  * @since 2024-11-21
  */
@@ -29,7 +31,7 @@ public abstract class JulFormatter extends Formatter {
                     }
                     arg = this.pretreatmentArg(arg, true);
                     // 仅替换1次
-                    message = StringUtil.replaceOneTime(message,"{}", arg.toString());
+                    message = StringUtil.replaceOneTime(message, "{}", arg.toString());
                     index++;
                 }
             } else if (message.contains("{0}")) {// jul类型占位符

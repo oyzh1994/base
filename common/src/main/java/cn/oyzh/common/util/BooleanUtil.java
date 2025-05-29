@@ -1,10 +1,11 @@
 package cn.oyzh.common.util;
 
 /**
+ * boolean工具类
+ *
  * @author oyzh
  * @since 2024-09-29
  */
-//@UtilityClass
 public class BooleanUtil {
 
     public static boolean isTrue(Boolean bool) {

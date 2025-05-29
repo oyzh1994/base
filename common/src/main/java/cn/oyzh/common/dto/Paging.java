@@ -6,6 +6,7 @@ import java.util.List;
 /**
  * 分页信息
  *
+ * @param <T> 形参
  * @author oyzh
  * @since 2020/9/15
  */
@@ -14,8 +15,6 @@ public class Paging<T> {
     /**
      * 每页显示数量
      */
-//    @Getter
-//    @Accessors(fluent = true, chain = true)
     private long limit = 10;
 
     /**

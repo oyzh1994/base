@@ -1,8 +1,9 @@
 package cn.oyzh.common.function;
 
 
-
 /**
+ * 弱引用Runnable
+ *
  * @author oyzh
  * @since 2025-04-02
  */

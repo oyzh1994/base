@@ -1,10 +1,12 @@
 package cn.oyzh.common.function;
 
 
-
 import java.util.function.Consumer;
 
 /**
+ * 弱引用Consumer
+ *
+ * @param <T> 形参
  * @author oyzh
  * @since 2025-04-02
  */

@@ -16,10 +16,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * 表格辅助类
+ *
  * @author oyzh
  * @since 2024/8/29
  */
-//@UtilityClass
 public class WorkbookHelper {
 
     public static Workbook create(boolean isXlsx) throws IOException {

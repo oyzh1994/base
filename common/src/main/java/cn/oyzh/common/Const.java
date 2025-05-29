@@ -8,7 +8,6 @@ import java.text.SimpleDateFormat;
  * @author oyzh
  * @since 2020/9/14
  */
-//@UtilityClass
 public class Const {
 
     /**

@@ -1,10 +1,10 @@
 package cn.oyzh.common;
 
 /**
+ * 系统常量
  * @author oyzh
  * @since 2024-09-27
  */
-//@UtilityClass
 public class SysConst {
 
     public static String CACHE_DIR = "cache.dir";

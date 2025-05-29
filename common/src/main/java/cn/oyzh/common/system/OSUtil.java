@@ -6,7 +6,6 @@ package cn.oyzh.common.system;
  * @author oyzh
  * @since 2023/3/9
  */
-//@UtilityClass
 public class OSUtil {
 
     /**

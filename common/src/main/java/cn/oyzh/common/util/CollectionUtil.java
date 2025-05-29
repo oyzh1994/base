@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
+ * 集合工具类
  * @author oyzh
  * @since 2024/7/1
  */
-//@UtilityClass
 public class CollectionUtil {
 
     public static <T> T indexOf(Collection<T> collection, int index) {

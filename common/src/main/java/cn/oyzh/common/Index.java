@@ -1,7 +1,7 @@
 package cn.oyzh.common;
 
 /**
- * 索引
+ * 索引接口
  *
  * @author oyzh
  * @since 2022/6/6

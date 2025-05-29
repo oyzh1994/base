@@ -12,7 +12,6 @@ import java.util.List;
  * @author oyzh
  * @since 2022/5/7
  */
-//@UtilityClass
 public class ArrayUtil {
 
     /**

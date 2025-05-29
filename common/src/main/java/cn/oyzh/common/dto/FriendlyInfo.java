@@ -3,11 +3,10 @@ package cn.oyzh.common.dto;
 /**
  * 友好信息对象
  *
+ * @param <T> 形参
  * @author oyzh
  * @since 2020/3/26
  */
-//@Data
-//@Accessors(fluent = true, chain = true)
 public class FriendlyInfo<T> {
 
     /**

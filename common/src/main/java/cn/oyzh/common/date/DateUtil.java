@@ -4,10 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * 日期工具类
+ *
  * @author oyzh
  * @since 2024/7/2
  */
-//@UtilityClass
 public class DateUtil {
 
     public static Date of(Number n) {

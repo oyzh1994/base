@@ -1,6 +1,8 @@
 package cn.oyzh.common.thread;
 
 /**
+ * 线程扩展
+ *
  * @author oyzh
  * @since 2024/6/7
  */

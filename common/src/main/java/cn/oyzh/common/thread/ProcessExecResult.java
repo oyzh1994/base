@@ -1,10 +1,11 @@
 package cn.oyzh.common.thread;
 
 /**
+ * 进程执行结果
+ *
  * @author oyzh
  * @since 2025-02-11
  */
-//@Data
 public class ProcessExecResult {
 
     private String input;

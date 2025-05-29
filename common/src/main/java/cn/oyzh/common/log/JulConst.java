@@ -3,10 +3,10 @@ package cn.oyzh.common.log;
 import cn.oyzh.common.util.StringUtil;
 
 /**
+ * jul常量
  * @author oyzh
  * @since 2024-11-19
  */
-//@UtilityClass
 public class JulConst {
 
     public static final String ENABLE_THREAD_ID = "jul.enable.thread.id";

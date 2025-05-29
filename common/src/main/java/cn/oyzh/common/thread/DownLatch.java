@@ -4,6 +4,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * DownLatch 对象
+ *
  * @author oyzh
  * @since 2024-11-08
  */

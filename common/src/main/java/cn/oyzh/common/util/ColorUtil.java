@@ -6,7 +6,6 @@ package cn.oyzh.common.util;
  * @author oyzh
  * @since 2024/08/17
  */
-//@UtilityClass
 public class ColorUtil {
 
     /**

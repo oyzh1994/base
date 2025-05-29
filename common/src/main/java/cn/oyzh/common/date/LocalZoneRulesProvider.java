@@ -28,6 +28,8 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
+ * 本地日期规则工具类
+ *
  * @author oyzh
  * @since 2024-09-27
  */
@@ -113,7 +115,7 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
                     Object rule = ruleArray[dis.readShort() & 0xffff];
                     if (rule instanceof byte[] bytes) {
                         ZoneRules rules = this.readRules(bytes);
-                        this.doCache(regionId,rules);
+                        this.doCache(regionId, rules);
                     }
                 }
             }

@@ -3,10 +3,11 @@ package cn.oyzh.common.util;
 import java.util.regex.Pattern;
 
 /**
+ * 正则辅助类
+ *
  * @author oyzh
  * @since 2024/7/5
  */
-//@UtilityClass
 public class RegexHelper {
 
     /**

@@ -6,10 +6,11 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
+ * 日期工具类
+ *
  * @author oyzh
  * @since 2024-09-25
  */
-//@UtilityClass
 public class ZonedDateTimeUtil {
 
     public static ZonedDateTime of(Date date) {

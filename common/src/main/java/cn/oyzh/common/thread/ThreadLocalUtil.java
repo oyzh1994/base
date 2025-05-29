@@ -8,7 +8,6 @@ import java.util.HashMap;
  * @author oyzh
  * @since 2023/1/3
  */
-//@UtilityClass
 public class ThreadLocalUtil {
 
     private static final ThreadLocal<Object> LOCAL = new ThreadLocal<>();

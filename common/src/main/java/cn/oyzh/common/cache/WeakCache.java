@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 弱引用缓存
+ *
+ * @param <K> 键
+ * @param <V> 值
  * @author oyzh
  * @since 2024-09-29
  */

@@ -24,7 +24,6 @@ import java.util.jar.JarFile;
  * @author oyzh
  * @since 2023/05/18
  */
-//@UtilityClass
 public class ClassUtil {
 
     public static <T> T newInstance(Class<T> clazz) {

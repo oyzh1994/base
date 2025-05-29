@@ -11,7 +11,6 @@ import java.util.Objects;
  * @author oyzh
  * @since 2023/08/12 0024 18:16
  */
-//@UtilityClass
 public class StringUtil {
 
     /**

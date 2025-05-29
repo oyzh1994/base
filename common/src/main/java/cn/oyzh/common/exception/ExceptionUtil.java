@@ -3,17 +3,29 @@ package cn.oyzh.common.exception;
 import cn.oyzh.common.util.StringUtil;
 
 /**
+ * 异常工具类
+ *
  * @author oyzh
  * @since 2024-11-08
  */
-//@UtilityClass
 public class ExceptionUtil {
 
+    /**
+     * 抛出runtime异常
+     *
+     * @param message 消息
+     */
     public static void throwRuntime(String message) throws RuntimeException {
         throw new RuntimeException(message);
     }
 
-    public static String getMessage(Throwable ex) throws RuntimeException {
+    /**
+     * 获取信息
+     *
+     * @param ex 异常
+     * @return 信息
+     */
+    public static String getMessage(Throwable ex) {
         if (ex == null) {
             return null;
         }
@@ -28,10 +40,23 @@ public class ExceptionUtil {
         return msg;
     }
 
-    public static boolean hasMessage(Throwable ex, String... message) throws RuntimeException {
+    /**
+     * 是否包含信息
+     *
+     * @param ex      异常
+     * @param message 消息
+     * @return 结果
+     */
+    public static boolean hasMessage(Throwable ex, String... message) {
         return StringUtil.containsAnyIgnoreCase(getMessage(ex), message);
     }
 
+    /**
+     * 是否中断
+     *
+     * @param ex 异常
+     * @return 结果
+     */
     public static boolean isInterrupt(Exception ex) {
         if (hasMessage(ex, "canceled", "interrupt")) {
             return true;

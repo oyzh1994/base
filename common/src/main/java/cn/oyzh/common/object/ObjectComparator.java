@@ -5,6 +5,7 @@ package cn.oyzh.common.object;
  *
  * @author oyzh
  * @since 2023/04/24
+ * @param <T> 参数
  */
 public interface ObjectComparator<T> {
 

@@ -5,10 +5,11 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 /**
+ * 数字工具类
+ *
  * @author oyzh
  * @since 2023/8/29
  */
-//@UtilityClass
 public class NumberUtil {
 
     /**

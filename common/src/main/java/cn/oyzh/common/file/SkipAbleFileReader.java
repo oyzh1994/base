@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 可跳过文件读取器
+ *
  * @author oyzh
  * @since 2024-09-02
  */

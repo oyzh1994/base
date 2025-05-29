@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 
 /**
+ * 快速文件写入器
+ *
  * @author oyzh
  * @since 2024/08/23
  */

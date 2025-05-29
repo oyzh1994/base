@@ -4,6 +4,8 @@ package cn.oyzh.common.exception;
 import cn.oyzh.common.util.ArrayUtil;
 
 /**
+ * 无效数据异常
+ *
  * @author oyzh
  * @since 2024-09-26
  */

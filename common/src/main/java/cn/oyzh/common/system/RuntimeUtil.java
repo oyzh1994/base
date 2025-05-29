@@ -10,10 +10,11 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
 /**
+ * runtime工具类
+ *
  * @author oyzh
  * @since 2023/11/14
  */
-//@UtilityClass
 public class RuntimeUtil {
 
     /**
@@ -356,6 +357,6 @@ public class RuntimeUtil {
     }
 
     public static void addShutdownHook(Thread thread) {
-         Runtime.getRuntime().addShutdownHook(thread);
+        Runtime.getRuntime().addShutdownHook(thread);
     }
 }

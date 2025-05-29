@@ -5,6 +5,7 @@ package cn.oyzh.common.object;
  *
  * @author oyzh
  * @since 2024/07/03
+ * @param <T> 形参
  */
 public interface ObjectCopier<T> {
 
