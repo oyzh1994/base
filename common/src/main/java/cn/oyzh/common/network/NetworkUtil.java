@@ -222,8 +222,17 @@ public class NetworkUtil {
         if (port == 465) {
             return "SMTPS";
         }
+        if (port == 513) {
+            return "RLogin";
+        }
         if (port == 587) {
             return "SMTP";
+        }
+        if (port == 902) {
+            return "VMWare Server";
+        }
+        if (port == 912) {
+            return "VMWare ESXi";
         }
         if (port == 993) {
             return "IMAPS";
