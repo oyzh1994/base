@@ -234,6 +234,8 @@ public class I18nHelper {
 
     public static final String SCAN = "base.scan";
 
+    public static final String TERM_SPLIT_VIEW = "base.termSplitView";
+
     public static final String IN_PREPARATION = "base.inPreparation";
 
     public static final String DIR = "base.dir";
@@ -3969,6 +3971,10 @@ public class I18nHelper {
 
     public static String scan() {
         return I18nResourceBundle.i18nString(SCAN);
+    }
+
+    public static String termSplitView() {
+        return I18nResourceBundle.i18nString(TERM_SPLIT_VIEW);
     }
 
     public String fileUploadFailed() {
