@@ -34,6 +34,18 @@ public class NetworkUtil {
 
     public static final short RLOGIN_PORT = 513;
 
+    public static final short Mysql_PORT = 3306;
+
+    public static final short Redis_PORT = 6379;
+
+    public static final short Oracle_PORT = 1521;
+
+    public static final short Mongo_PORT = 27017;
+
+    public static final short Zookeeper_PORT = 2281;
+
+    public static final short PostgreSQL_PORT = 5432;
+
     /**
      * 是否可达
      *
