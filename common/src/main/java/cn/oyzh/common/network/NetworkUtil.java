@@ -18,6 +18,22 @@ import java.util.function.BiConsumer;
  */
 public class NetworkUtil {
 
+    public static final short FTP_PORT = 21;
+
+    public static final short SSH_PORT = 22;
+
+    public static final short HTTP_PORT = 80;
+
+    public static final short VNC_PORT = 5900;
+
+    public static final short RDP_PORT = 3389;
+
+    public static final short HTTPS_PORT = 443;
+
+    public static final short TELNET_PORT = 23;
+
+    public static final short RLOGIN_PORT = 513;
+
     /**
      * 是否可达
      *
