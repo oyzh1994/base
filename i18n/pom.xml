@@ -6,11 +6,14 @@
     <parent>
         <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
+    <name>base-i18n</name>
     <artifactId>base-i18n</artifactId>
-
+    <description>
+        基础模块，i18n的实现
+    </description>
     <dependencies>
         <dependency>
             <groupId>io.github.oyzh1994</groupId>

@@ -6,10 +6,14 @@
     <parent>
         <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2</version>
     </parent>
 
+    <name>base-ssh</name>
     <artifactId>base-ssh</artifactId>
+    <description>
+        基础模块，ssh功能的实现
+    </description>
 
     <dependencies>
         <!-- 存储库 -->

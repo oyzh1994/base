@@ -26,7 +26,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2</version>
     <modules>
         <module>common</module>
         <module>store</module>
@@ -43,7 +43,7 @@
     <properties>
         <h2.version>2.3.232</h2.version>
         <poi.version>5.4.1</poi.version>
-        <base.version>1.0.1-SNAPSHOT</base.version>
+        <base.version>1.0.2</base.version>
         <jsch.version>2.27.0</jsch.version>
         <zxing.version>3.5.3</zxing.version>
         <junit.version>4.13.2</junit.version>
@@ -172,14 +172,6 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>3.10.1</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <!-- GPG -->
                     <plugin>
