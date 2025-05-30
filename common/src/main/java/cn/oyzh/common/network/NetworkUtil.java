@@ -34,6 +34,8 @@ public class NetworkUtil {
 
     public static final short TELNET_PORT = 23;
 
+    public static final short RTSP_PORT = 554;
+
     public static final short RLOGIN_PORT = 513;
 
     public static final short Mysql_PORT = 3306;
@@ -260,6 +262,9 @@ public class NetworkUtil {
         }
         if (port == RLOGIN_PORT) {
             return "RLogin";
+        }
+        if (port == 554) {
+            return "RTSP";
         }
         if (port == 587) {
             return "SMTP";
