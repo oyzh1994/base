@@ -6,15 +6,15 @@
     <parent>
         <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>i18n</artifactId>
+    <artifactId>base-i18n</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>io.github.oyzh1994</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>base-common</artifactId>
         </dependency>
         <!-- json库 -->
         <dependency>

@@ -6,20 +6,16 @@
     <parent>
         <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ssh</artifactId>
-
-    <properties>
-        <bouncycastle.version>1.80</bouncycastle.version>
-    </properties>
+    <artifactId>base-ssh</artifactId>
 
     <dependencies>
         <!-- 存储库 -->
         <dependency>
             <groupId>io.github.oyzh1994</groupId>
-            <artifactId>store</artifactId>
+            <artifactId>base-store</artifactId>
             <scope>compile</scope>
         </dependency>
 

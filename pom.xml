@@ -21,11 +21,12 @@
             <email>1987803602@qq.com</email>
         </developer>
     </developers>
+    <!-- 项目主页 -->
+    <url>https://gitee.com/oyzh1994/base</url>
 
-    <url>https://gitee.com/oyzh1994/base</url> <!-- 项目主页 -->
     <modelVersion>4.0.0</modelVersion>
 
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <modules>
         <module>common</module>
         <module>store</module>
@@ -35,13 +36,14 @@
     </modules>
     <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
+    <name>base</name>
     <artifactId>base</artifactId>
     <description>各种基础功能的实现</description>
 
     <properties>
         <h2.version>2.3.232</h2.version>
         <poi.version>5.4.1</poi.version>
-        <base.version>1.0.1</base.version>
+        <base.version>1.0.1-SNAPSHOT</base.version>
         <jsch.version>2.27.0</jsch.version>
         <zxing.version>3.5.3</zxing.version>
         <junit.version>4.13.2</junit.version>
@@ -85,37 +87,31 @@
             <!-- 自定义类库，通用模块 -->
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
-                <artifactId>common</artifactId>
+                <artifactId>base-common</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，存储模块 -->
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
-                <artifactId>store</artifactId>
+                <artifactId>base-store</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，ssh模块 -->
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
-                <artifactId>ssh</artifactId>
+                <artifactId>base-ssh</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，i18n模块 -->
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
-                <artifactId>i18n</artifactId>
+                <artifactId>base-i18n</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，事件模块 -->
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
-                <artifactId>event</artifactId>
-                <version>${base.version}</version>
-            </dependency>
-            <!-- 自定义类库，json模块 -->
-            <dependency>
-                <groupId>io.github.oyzh1994</groupId>
-                <artifactId>json</artifactId>
+                <artifactId>base-event</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- ssh类库 -->
@@ -200,6 +196,7 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- 部署到中心仓库 -->
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
@@ -213,5 +210,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

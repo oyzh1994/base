@@ -6,16 +6,12 @@
     <parent>
         <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>common</artifactId>
+    <artifactId>base-common</artifactId>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.projectlombok</groupId>-->
-<!--            <artifactId>lombok</artifactId>-->
-<!--        </dependency>-->
 
         <!-- 二维码工具 -->
         <dependency>
