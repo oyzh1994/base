@@ -42,11 +42,17 @@ public class NetworkUtil {
 
     public static final short Oracle_PORT = 1521;
 
-    public static final short Mongo_PORT = 27017;
+    public static final short MongoDB_PORT = 27017;
 
     public static final short Zookeeper_PORT = 2281;
 
     public static final short PostgreSQL_PORT = 5432;
+
+    public static final short Memcached_PORT = 11211;
+
+    public static final short SQLServer_PORT = 1433;
+
+    public static final short Elasticsearch_PORT = 9200;
 
     /**
      * 是否可达
@@ -195,13 +201,13 @@ public class NetworkUtil {
      * @return 描述
      */
     public static String detectDesc(int port) {
-        if (port == 20 || port == 21) {
+        if (port == 20 || port == FTP_PORT) {
             return "FTP";
         }
-        if (port == 22) {
+        if (port == SSH_PORT) {
             return "SSH/SFTP";
         }
-        if (port == 23) {
+        if (port == TELNET_PORT) {
             return "Telnet";
         }
         if (port == 25) {
@@ -216,7 +222,7 @@ public class NetworkUtil {
         if (port == 69) {
             return "TFTP";
         }
-        if (port == 80) {
+        if (port == HTTP_PORT) {
             return "HTTP";
         }
         if (port == 110) {
@@ -246,13 +252,13 @@ public class NetworkUtil {
         if (port == 194) {
             return "IRC";
         }
-        if (port == 443) {
+        if (port == HTTPS_PORT) {
             return "HTTPS";
         }
         if (port == 465) {
             return "SMTPS";
         }
-        if (port == 513) {
+        if (port == RLOGIN_PORT) {
             return "RLogin";
         }
         if (port == 587) {
@@ -291,7 +297,7 @@ public class NetworkUtil {
         if (port == 2869) {
             return "UPnP Device Host";
         }
-        if (port == 3389) {
+        if (port == RDP_PORT) {
             return "RDP";
         }
         if (port == 3478) {
@@ -306,7 +312,7 @@ public class NetworkUtil {
         if (port == 5800) {
             return "VNC Server";
         }
-        if (port == 5900) {
+        if (port == VNC_PORT) {
             return "VNC";
         }
         if (port == 6000) {
@@ -324,56 +330,60 @@ public class NetworkUtil {
         if (port == 8443) {
             return "Web Server";
         }
-        if (port == 9200) {
+        if (port == Elasticsearch_PORT) {
             return "Elasticsearch";
         }
         if (port == 25565) {
             return "Minecraft";
         }
         // mssql
-        if (port == 1433) {
+        if (port == SQLServer_PORT) {
             return "SQL Server";
         }
         if (port == 11433 || port == 21433 || port == 31433 || port == 41433 || port == 51433 || port == 61433) {
             return "SQL Server Suspected";
         }
         // oracle
-        if (port == 1521) {
+        if (port == Oracle_PORT) {
             return "Oracle";
         }
         if (port == 11521 || port == 21521 || port == 31521 || port == 41521 || port == 51521 || port == 61521) {
             return "Oracle Suspected";
         }
         // zk
-        if (port == 2281) {
+        if (port == Zookeeper_PORT) {
             return "Zookeeper";
         }
         if (port == 12181 || port == 22181 || port == 32181 || port == 42181 || port == 52181 || port == 62181) {
             return "Zookeeper Suspected";
         }
         // mysql
-        if (port == 3306) {
+        if (port == Mysql_PORT) {
             return "Mysql";
         }
         if (port == 13306 || port == 23306 || port == 33306 || port == 43306 || port == 53306 || port == 63306) {
             return "Mysql Suspected";
         }
         // pg
-        if (port == 5432) {
+        if (port == PostgreSQL_PORT) {
             return "PostgreSQL";
         }
         if (port == 15432 || port == 25432 || port == 35432 || port == 45432 || port == 55432 || port == 65432) {
             return "PostgreSQL Suspected";
         }
         // redis
-        if (port == 6379) {
+        if (port == Redis_PORT) {
             return "Redis";
         }
         if (port == 16379 || port == 26379 || port == 36379 || port == 46379 || port == 56379) {
             return "Redis Suspected";
         }
+        // 11211
+        if (port == Memcached_PORT) {
+            return "Memcached";
+        }
         // mongo
-        if (port == 27017) {
+        if (port == MongoDB_PORT) {
             return "MongoDB";
         }
         if (port == 37017 || port == 47017 || port == 57017) {
