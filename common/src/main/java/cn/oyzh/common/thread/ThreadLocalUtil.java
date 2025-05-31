@@ -44,6 +44,20 @@ public class ThreadLocalUtil {
         return null;
     }
 
+    /**
+     * 是否有值
+     *
+     * @param key 键
+     * @return 结果
+     */
+    public static boolean hasVal(String key) {
+        Object object = LOCAL.get();
+        if (object instanceof ThreadLocalMap localMap) {
+            return localMap.containsKey(key);
+        }
+        return false;
+    }
+
     private static class ThreadLocalMap extends HashMap<String, Object> {
 
     }
