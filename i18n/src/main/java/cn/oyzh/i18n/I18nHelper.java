@@ -3977,6 +3977,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(TERM_SPLIT_VIEW);
     }
 
+    public static String collectFile() {
+        return I18nResourceBundle.i18nString(COLLECT, FILE);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
