@@ -17,43 +17,47 @@ public abstract class JulFormatter extends Formatter {
     @Override
     public String formatMessage(LogRecord record) {
         String message = record.getMessage();
-        Throwable throwable = record.getThrown();
-        Object[] args = record.getParameters();
-        if (StringUtil.isNotBlank(message) && ArrayUtil.isNotEmpty(args)) {
-            int index = 0;
-            // 兼容其他日志库的占位符
-            if (message.contains("{}")) {
-                while (message.contains("{}") && index < args.length) {
-                    Object arg = args[index];
-                    if (arg instanceof Throwable t && record.getThrown() == null) {
-                        throwable = t;
-                        continue;
+        if (StringUtil.isNotBlank(message)) {
+            // 替换\r，解决遇到\r字符打印内容消失问题
+            message = message.replace("\r", System.lineSeparator());
+            Throwable throwable = record.getThrown();
+            Object[] args = record.getParameters();
+            if (ArrayUtil.isNotEmpty(args)) {
+                int index = 0;
+                // 兼容其他日志库的占位符
+                if (message.contains("{}")) {
+                    while (message.contains("{}") && index < args.length) {
+                        Object arg = args[index];
+                        if (arg instanceof Throwable t && record.getThrown() == null) {
+                            throwable = t;
+                            continue;
+                        }
+                        arg = this.pretreatmentArg(arg, true);
+                        // 仅替换1次
+                        message = StringUtil.replaceOneTime(message, "{}", arg.toString());
+                        index++;
                     }
-                    arg = this.pretreatmentArg(arg, true);
-                    // 仅替换1次
-                    message = StringUtil.replaceOneTime(message, "{}", arg.toString());
-                    index++;
-                }
-            } else if (message.contains("{0}")) {// jul类型占位符
-                while (index < args.length) {
-                    Object arg = args[index];
-                    if (arg instanceof Throwable t && record.getThrown() == null) {
-                        throwable = t;
-                        continue;
+                } else if (message.contains("{0}")) {// jul类型占位符
+                    while (index < args.length) {
+                        Object arg = args[index];
+                        if (arg instanceof Throwable t && record.getThrown() == null) {
+                            throwable = t;
+                            continue;
+                        }
+                        arg = this.pretreatmentArg(arg, true);
+                        message = message.replace("{" + index + "}", arg.toString());
+                        index++;
                     }
-                    arg = this.pretreatmentArg(arg, true);
-                    message = message.replace("{" + index + "}", arg.toString());
-                    index++;
+                } else if (message.contains("%")) {// string模板占位符
+                    message = String.format(message, args);
                 }
-            } else if (message.contains("%")) {// string模板占位符
-                message = String.format(message, args);
             }
-        }
-        if (throwable != null) {
-            if (record instanceof JulLogRecord logRecord) {
-                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), logRecord.getLineNumber());
-            } else {
-                message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), -1);
+            if (throwable != null) {
+                if (record instanceof JulLogRecord logRecord) {
+                    message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), logRecord.getLineNumber());
+                } else {
+                    message = this.formatThrow(message, throwable, record.getSourceClassName(), record.getSourceMethodName(), -1);
+                }
             }
         }
         return message;

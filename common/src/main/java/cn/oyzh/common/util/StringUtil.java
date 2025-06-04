@@ -79,6 +79,17 @@ public class StringUtil {
         }
     }
 
+    /**
+     * 删除最后一个字符
+     *
+     * @param builder StringBuilder对象
+     */
+    public static void deleteLast(StringBuilder builder) {
+        if (builder != null) {
+            builder.deleteCharAt(builder.length() - 1);
+        }
+    }
+
     public static boolean isBlank(String string) {
         return string == null || string.isBlank();
     }
@@ -413,7 +424,30 @@ public class StringUtil {
         return 1 - ((double) distance / maxLength);
     }
 
+    /**
+     * 是否以目标内容结尾
+     *
+     * @param str     内容
+     * @param endText 目标内容
+     * @return 结果
+     */
     public static boolean endsWith(String str, String endText) {
         return endWith(str, endText);
+    }
+
+    /**
+     * 是否以任意目标内容结尾
+     *
+     * @param str     内容
+     * @param endText 目标内容
+     * @return 结果
+     */
+    public static boolean endsWithAny(String str, String... endText) {
+        for (String s : endText) {
+            if (endWith(str, s)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,9 +1,6 @@
 package cn.oyzh.store.jdbc;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author oyzh
  * @since 2024-09-26
@@ -13,30 +10,30 @@ public class DeleteParam {
 
     private Long limit;
 
-    private List<QueryParam> queryParams;
+    private QueryParams queryParams;
 
-    private List<OrderByParam> orderByParams;
+//    private List<OrderByParam> orderByParams;
 
     public void addQueryParam(QueryParam queryParam) {
         if (this.queryParams == null) {
-            this.queryParams = new ArrayList<>();
+            this.queryParams = new QueryParams();
         }
         this.queryParams.add(queryParam);
     }
 
-    public void addQueryParams(List<QueryParam> queryParams) {
-        if (this.queryParams == null) {
-            this.queryParams = new ArrayList<>();
-        }
-        this.queryParams.addAll(queryParams);
-    }
+//    public void addQueryParams(QueryParams queryParams) {
+//        if (this.queryParams == null) {
+//            this.queryParams = new QueryParams<>();
+//        }
+//        this.queryParams.addAll(queryParams);
+//    }
 
-    public void addOrderByParam(OrderByParam orderByParam) {
-        if (this.orderByParams == null) {
-            this.orderByParams = new ArrayList<>();
-        }
-        this.orderByParams.add(orderByParam);
-    }
+//    public void addOrderByParam(OrderByParam orderByParam) {
+//        if (this.orderByParams == null) {
+//            this.orderByParams = new ArrayList<>();
+//        }
+//        this.orderByParams.add(orderByParam);
+//    }
 
     public Long getLimit() {
         return limit;
@@ -46,19 +43,19 @@ public class DeleteParam {
         this.limit = limit;
     }
 
-    public List<QueryParam> getQueryParams() {
+    public QueryParams getQueryParams() {
         return queryParams;
     }
 
-    public void setQueryParams(List<QueryParam> queryParams) {
+    public void setQueryParams(QueryParams queryParams) {
         this.queryParams = queryParams;
     }
 
-    public List<OrderByParam> getOrderByParams() {
-        return orderByParams;
-    }
-
-    public void setOrderByParams(List<OrderByParam> orderByParams) {
-        this.orderByParams = orderByParams;
-    }
+//    public List<OrderByParam> getOrderByParams() {
+//        return orderByParams;
+//    }
+//
+//    public void setOrderByParams(List<OrderByParam> orderByParams) {
+//        this.orderByParams = orderByParams;
+//    }
 }

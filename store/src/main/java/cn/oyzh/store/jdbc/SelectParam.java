@@ -12,11 +12,27 @@ public class SelectParam {
 
     public static final SelectParam EMPTY = new SelectParam();
 
+    private Long limit;
+
+    private Long offset;
+
+    private QueryParams queryParams;
+
     private List<String> queryColumns;
 
-    private final QueryParams queryParams = new QueryParams();
+    private OrderByParams orderByParams;
+
+    public void addOrderByParam(OrderByParam orderByParam) {
+        if (this.orderByParams == null) {
+            this.orderByParams = new OrderByParams();
+        }
+        this.orderByParams.add(orderByParam);
+    }
 
     public void addQueryParam(QueryParam queryParam) {
+        if (this.queryParams == null) {
+            this.queryParams = new QueryParams();
+        }
         this.queryParams.add(queryParam);
     }
 
@@ -27,15 +43,35 @@ public class SelectParam {
         this.queryColumns.add(column);
     }
 
-    public SelectParam() {
-
-    }
-
     public List<String> getQueryColumns() {
         return this.queryColumns;
     }
 
     public QueryParams getQueryParams() {
         return this.queryParams;
+    }
+
+    public OrderByParams getOrderByParams() {
+        return orderByParams;
+    }
+
+    public void setOrderByParams(OrderByParams orderByParams) {
+        this.orderByParams = orderByParams;
+    }
+
+    public Long getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Long limit) {
+        this.limit = limit;
+    }
+
+    public Long getOffset() {
+        return offset;
+    }
+
+    public void setOffset(Long offset) {
+        this.offset = offset;
     }
 }
