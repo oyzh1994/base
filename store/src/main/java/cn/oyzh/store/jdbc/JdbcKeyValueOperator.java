@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * jdbc键值操作器
+ *
  * @author oyzh
  * @since 2024-12-21
  */

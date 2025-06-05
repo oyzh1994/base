@@ -2,6 +2,8 @@ package cn.oyzh.store.jdbc;
 
 
 /**
+ * 分页参数
+ *
  * @author oyzh
  * @since 2024-09-26
  */

@@ -1,7 +1,6 @@
 package cn.oyzh.store.jdbc;
 
 import cn.oyzh.store.jdbc.h2.H2KeyValueOperator;
-import cn.oyzh.store.jdbc.sqlite.SqliteKeyValueOperator;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -17,11 +16,11 @@ public abstract class JdbcKeyValueStore<M extends Serializable> extends JdbcStor
     public JdbcKeyValueStore() {
         try {
             TableDefinition tableDefinition = this.tableDefinition();
-            if (JdbcManager.dialect == JdbcDialect.H2) {
+//            if (JdbcManager.dialect == JdbcDialect.H2) {
                 this.operator = new H2KeyValueOperator(tableDefinition);
-            } else {
-                this.operator = new SqliteKeyValueOperator(tableDefinition);
-            }
+//            } else {
+//                this.operator = new SqliteKeyValueOperator(tableDefinition);
+//            }
             this.operator.initTable();
             this.init();
         } catch (Exception ex) {

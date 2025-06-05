@@ -1,15 +1,14 @@
 package cn.oyzh.store.file;
 
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 文件读取配置
+ *
  * @author oyzh
  * @since 2024/09/02
  */
-//@Data
-//@Accessors(chain = true, fluent = true)
 public class FileReadConfig {
 
     /**
@@ -84,5 +83,53 @@ public class FileReadConfig {
     public FileReadConfig dataRowStarts(Integer dataRowStarts) {
         this.dataRowStarts = dataRowStarts;
         return this;
+    }
+
+    public String getRecordSeparator() {
+        return recordSeparator;
+    }
+
+    public void setRecordSeparator(String recordSeparator) {
+        this.recordSeparator = recordSeparator;
+    }
+
+    public char getFieldSeparator() {
+        return fieldSeparator;
+    }
+
+    public void setFieldSeparator(char fieldSeparator) {
+        this.fieldSeparator = fieldSeparator;
+    }
+
+    public char getTxtIdentifier() {
+        return txtIdentifier;
+    }
+
+    public void setTxtIdentifier(char txtIdentifier) {
+        this.txtIdentifier = txtIdentifier;
+    }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public Integer getDataRowStarts() {
+        return dataRowStarts;
+    }
+
+    public void setDataRowStarts(Integer dataRowStarts) {
+        this.dataRowStarts = dataRowStarts;
     }
 }

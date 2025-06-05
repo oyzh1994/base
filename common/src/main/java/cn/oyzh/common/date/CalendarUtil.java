@@ -11,6 +11,9 @@ import java.util.Date;
  */
 public class CalendarUtil {
 
+    private CalendarUtil() {
+    }
+
     public static Calendar of(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

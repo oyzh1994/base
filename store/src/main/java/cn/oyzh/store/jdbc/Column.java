@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 字段注解
+ *
  * @author oyzh
  * @since 2024-09-24
  */

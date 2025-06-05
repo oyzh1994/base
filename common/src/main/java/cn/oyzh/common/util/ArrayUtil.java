@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class ArrayUtil {
 
+    private ArrayUtil() {
+    }
+
     /**
      * 获取首个数据
      *

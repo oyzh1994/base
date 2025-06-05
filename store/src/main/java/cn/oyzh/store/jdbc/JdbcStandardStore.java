@@ -2,7 +2,7 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.store.jdbc.h2.H2StandardOperator;
-import cn.oyzh.store.jdbc.sqlite.SqliteStandardOperator;
+//import cn.oyzh.store.jdbc.sqlite.SqliteStandardOperator;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -22,11 +22,11 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
     public JdbcStandardStore() {
         try {
             TableDefinition tableDefinition = this.tableDefinition();
-            if (JdbcManager.dialect == JdbcDialect.H2) {
+//            if (JdbcManager.dialect == JdbcDialect.H2) {
                 this.operator = new H2StandardOperator(tableDefinition);
-            } else {
-                this.operator = new SqliteStandardOperator(tableDefinition);
-            }
+//            } else {
+//                this.operator = new SqliteStandardOperator(tableDefinition);
+//            }
             this.operator.initTable();
             this.init();
         } catch (Exception ex) {

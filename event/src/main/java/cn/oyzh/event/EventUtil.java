@@ -9,7 +9,6 @@ import java.util.function.Consumer;
  * @author oyzh
  * @since 2023/4/10
  */
-//@UtilityClass
 public class EventUtil {
 
     /**

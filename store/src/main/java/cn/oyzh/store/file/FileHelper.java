@@ -3,10 +3,11 @@ package cn.oyzh.store.file;
 import cn.oyzh.common.file.FileNameUtil;
 
 /**
+ * 文件辅助类
+ *
  * @author oyzh
  * @since 2024-11-27
  */
-//@UtilityClass
 public class FileHelper {
 
     /**

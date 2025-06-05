@@ -20,6 +20,9 @@ import java.util.regex.Pattern;
  */
 public class TextUtil {
 
+    private TextUtil() {
+    }
+
     /**
      * 搜索索引
      *

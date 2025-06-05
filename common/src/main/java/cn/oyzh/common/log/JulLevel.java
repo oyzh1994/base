@@ -3,7 +3,7 @@ package cn.oyzh.common.log;
 import java.util.logging.Level;
 
 /**
- * 日志等级
+ * jul日志等级
  *
  * @author oyzh
  * @since 2024-11-15

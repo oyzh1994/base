@@ -3,6 +3,8 @@ package cn.oyzh.store.file;
 import java.util.HashMap;
 
 /**
+ * 文件记录
+ *
  * @author oyzh
  * @since 2024-11-27
  */

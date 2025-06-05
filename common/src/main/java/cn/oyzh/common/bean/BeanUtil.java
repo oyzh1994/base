@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 
 /**
  * bean工具类
+ *
  * @author oyzh
  * @since 2024-09-24
  */
@@ -17,7 +18,7 @@ public class BeanUtil {
     /**
      * @param bean 对象
      * @param name 名称
-     * @param <T> 参数类型
+     * @param <T>  参数类型
      * @return 对象
      */
     public static <T> T getValue(Object bean, String name) {

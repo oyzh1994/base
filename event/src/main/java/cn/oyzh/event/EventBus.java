@@ -7,14 +7,13 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
+ * 事件总线
+ *
  * @author oyzh
  * @since 2024-11-13
  */
 public class EventBus {
 
-//    @Setter
-//    @Getter
-//    @Accessors(chain = false, fluent = true)
     private Consumer<Exception> exceptionHandler;
 
     private final EventRegister register = new EventRegister();

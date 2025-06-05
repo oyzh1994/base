@@ -8,6 +8,9 @@ package cn.oyzh.common.util;
  */
 public class HexUtil {
 
+    private HexUtil() {
+    }
+
     public static String bytesToHex(byte[] bytes) {
         return bytesToHex(bytes, true);
     }

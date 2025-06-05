@@ -1,15 +1,14 @@
 package cn.oyzh.store.file;
 
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 文件写入配置
+ *
  * @author oyzh
  * @since 2024/09/02
  */
-//@Data
-//@Accessors(chain = true, fluent = true)
 public class FileWriteConfig {
 
     /**
@@ -126,5 +125,85 @@ public class FileWriteConfig {
     public FileWriteConfig txtIdentifier(Character txtIdentifier) {
         this.txtIdentifier = txtIdentifier;
         return this;
+    }
+
+    public String getRecordSeparator() {
+        return recordSeparator;
+    }
+
+    public void setRecordSeparator(String recordSeparator) {
+        this.recordSeparator = recordSeparator;
+    }
+
+    public char getTxtIdentifier() {
+        return txtIdentifier;
+    }
+
+    public void setTxtIdentifier(char txtIdentifier) {
+        this.txtIdentifier = txtIdentifier;
+    }
+
+    public boolean isIncludeTitle() {
+        return includeTitle;
+    }
+
+    public void setIncludeTitle(boolean includeTitle) {
+        this.includeTitle = includeTitle;
+    }
+
+    public String getCharset() {
+        return charset;
+    }
+
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getRootNodeName() {
+        return rootNodeName;
+    }
+
+    public void setRootNodeName(String rootNodeName) {
+        this.rootNodeName = rootNodeName;
+    }
+
+    public String getItemNodeName() {
+        return itemNodeName;
+    }
+
+    public void setItemNodeName(String itemNodeName) {
+        this.itemNodeName = itemNodeName;
+    }
+
+    public String getSheetName() {
+        return sheetName;
+    }
+
+    public void setSheetName(String sheetName) {
+        this.sheetName = sheetName;
+    }
+
+    public boolean isCompress() {
+        return compress;
+    }
+
+    public void setCompress(boolean compress) {
+        this.compress = compress;
     }
 }

@@ -7,6 +7,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
+ * 事件调度器
+ *
  * @author oyzh
  * @since 2024-11-13
  */

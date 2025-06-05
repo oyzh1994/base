@@ -12,6 +12,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MD5Util {
 
+    private MD5Util() {
+    }
+
     /**
      * md5并转十六进制
      *

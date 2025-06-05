@@ -8,6 +8,9 @@ package cn.oyzh.common.util;
  */
 public class ColorUtil {
 
+    private ColorUtil() {
+    }
+
     /**
      * 获取颜色16进制值
      *

@@ -11,6 +11,9 @@ import java.nio.charset.StandardCharsets;
  */
 public class CharsetUtil {
 
+    private CharsetUtil() {
+    }
+
     public static Charset defaultCharset() {
         return Charset.defaultCharset();
     }

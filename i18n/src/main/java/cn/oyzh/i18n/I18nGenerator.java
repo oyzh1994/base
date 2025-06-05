@@ -18,10 +18,11 @@ import java.util.Locale;
 import java.util.Properties;
 
 /**
+ * i18n生成器
+ *
  * @author oyzh
  * @since 2025-01-23
  */
-//@UtilityClass
 public class I18nGenerator {
 
     /**

@@ -12,6 +12,9 @@ import java.lang.reflect.Method;
  */
 public class ReflectUtil {
 
+    private ReflectUtil() {
+    }
+
     public static <T> T getFieldValue(Object object, String fieldName) {
         Field field = getField(object.getClass(), fieldName);
         return getFieldValue(field, object);

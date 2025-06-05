@@ -8,7 +8,6 @@ import cn.oyzh.common.date.ZonedDateTimeUtil;
 import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.h2.H2Util;
-import cn.oyzh.store.jdbc.sqlite.SqlLiteUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -310,13 +309,15 @@ public class JdbcUtil {
         if (JdbcManager.dialect == JdbcDialect.H2) {
             return H2Util.wrap(data);
         }
-        return SqlLiteUtil.wrap(data);
+        return data;
+//        return SqlLiteUtil.wrap(data);
     }
 
     public static Object wrapData(Object data) {
         if (JdbcManager.dialect == JdbcDialect.H2) {
             return H2Util.wrapData(data);
         }
-        return SqlLiteUtil.wrapData(data);
+        return data;
+//        return SqlLiteUtil.wrapData(data);
     }
 }

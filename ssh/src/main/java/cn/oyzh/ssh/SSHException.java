@@ -3,10 +3,12 @@ package cn.oyzh.ssh;
 import com.jcraft.jsch.JSchException;
 
 /**
+ * ssh异常
+ *
  * @author oyzh
  * @since 2023/12/15
  */
-public class SSHException extends RuntimeException{
+public class SSHException extends RuntimeException {
 
     public SSHException() {
         super();

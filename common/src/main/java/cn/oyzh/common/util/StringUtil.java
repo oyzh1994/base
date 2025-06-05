@@ -13,6 +13,9 @@ import java.util.Objects;
  */
 public class StringUtil {
 
+    private StringUtil() {
+    }
+
     /**
      * 字符串转二进制
      *

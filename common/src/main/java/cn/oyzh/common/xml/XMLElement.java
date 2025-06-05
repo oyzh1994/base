@@ -19,15 +19,11 @@ public class XMLElement {
     /**
      * 文本内容
      */
-//    @Getter
-//    @Setter(AccessLevel.PACKAGE)
     private String text;
 
     /**
      * 标签名称
      */
-//    @Getter
-//    @Setter(AccessLevel.PACKAGE)
     private String tagName;
 
     /**

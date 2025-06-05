@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * html类型文件写入器
+ *
  * @author oyzh
  * @since 2024-09-04
  */

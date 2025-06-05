@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * xml类型文件写入器
+ *
  * @author oyzh
  * @since 2024-09-04
  */

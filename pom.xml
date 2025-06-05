@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- 开源协议 -->
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -9,11 +10,13 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <!-- 项目信息 -->
     <scm>
         <url>https://gitee.com/oyzh1994/base</url>
         <connection>scm:git:https://gitee.com/oyzh1994/base</connection>
         <developerConnection>scm:git:https://gitee.com/oyzh1994/base</developerConnection>
     </scm>
+    <!-- 开发者信息 -->
     <developers>
         <developer>
             <id>oyzh</id>
@@ -148,8 +151,10 @@
         </plugins>
     </build>
 
+    <!-- 配置脚本 -->
     <profiles>
         <profile>
+            <!-- 发布用的脚本 -->
             <id>release</id>
             <build>
                 <plugins>

@@ -7,7 +7,7 @@ import cn.oyzh.common.util.StringUtil;
 import java.util.logging.LogRecord;
 
 /**
- * 控制台日志格式化器
+ * jul控制台日志格式化器
  *
  * @author oyzh
  * @since 2024-11-15

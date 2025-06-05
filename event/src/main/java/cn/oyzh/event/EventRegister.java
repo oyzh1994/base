@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
+ * 事件注册器
+ *
  * @author oyzh
  * @since 2024-11-14
  */
@@ -76,5 +78,4 @@ public class EventRegister {
         }
         return result;
     }
-
 }

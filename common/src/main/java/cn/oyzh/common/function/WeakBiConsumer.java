@@ -5,10 +5,11 @@ import java.util.function.BiConsumer;
 
 /**
  * 弱引用BiConsumer
- * @author oyzh
- * @since 2025-04-02
+ *
  * @param <T> 形参1
  * @param <U> 形参2
+ * @author oyzh
+ * @since 2025-04-02
  */
 public class WeakBiConsumer<T, U> extends WeakFunction implements BiConsumer<T, U> {
 

@@ -2,10 +2,11 @@ package cn.oyzh.store.jdbc;
 
 
 /**
+ * 删除参数
+ *
  * @author oyzh
  * @since 2024-09-26
  */
-//@Data
 public class DeleteParam {
 
     private Long limit;

@@ -43,6 +43,14 @@ public class SelectParam {
         this.queryColumns.add(column);
     }
 
+    public void addQueryColumns(String... columns) {
+        if (columns != null) {
+            for (String column : columns) {
+                this.addQueryColumn(column);
+            }
+        }
+    }
+
     public List<String> getQueryColumns() {
         return this.queryColumns;
     }

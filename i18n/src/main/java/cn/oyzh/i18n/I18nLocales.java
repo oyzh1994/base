@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * i18n方言
+ *
  * @author oyzh
  * @since 2024/4/7
  */
-//@UtilityClass
 public class I18nLocales {
 
     public static Locale ZH_YUE = Locale.of("zh", "yue");

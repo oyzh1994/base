@@ -10,6 +10,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
+ * i18n资源绑定
+ *
  * @author oyzh
  * @since 2024/4/10
  */

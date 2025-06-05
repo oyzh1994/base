@@ -2,10 +2,11 @@ package cn.oyzh.i18n;
 
 
 /**
+ * i18n辅助类
+ *
  * @author oyzh
  * @since 2024/5/13
  */
-//@UtilityClass
 public class I18nHelper {
 
     public static final String CMD = "base.cmd";

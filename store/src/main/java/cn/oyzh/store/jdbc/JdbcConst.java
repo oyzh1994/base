@@ -3,12 +3,11 @@ package cn.oyzh.store.jdbc;
 import cn.oyzh.common.log.JulLog;
 
 /**
- * db常量
+ * jdbc常量
  *
  * @author oyzh
  * @since 2024-09-27
  */
-//@UtilityClass
 public class JdbcConst {
 
     /**

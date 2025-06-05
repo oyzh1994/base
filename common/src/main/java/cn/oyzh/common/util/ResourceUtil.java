@@ -17,6 +17,9 @@ import java.util.List;
  */
 public class ResourceUtil {
 
+    private ResourceUtil() {
+    }
+
     /**
      * 获取资源
      *

@@ -6,6 +6,8 @@ import cn.oyzh.store.jdbc.Column;
 import java.io.Serializable;
 
 /**
+ * ssh代理配置
+ *
  * @author oyzh
  * @since 2025-04-14
  */

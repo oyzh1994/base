@@ -12,6 +12,9 @@ import java.security.ProtectionDomain;
  */
 public class JarUtil {
 
+    private JarUtil() {
+    }
+
     /**
      * 是否运行在jar中
      *

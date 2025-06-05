@@ -27,6 +27,13 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 
+
+/**
+ * http请求
+ *
+ * @author oyzh
+ * @since 2025-01-23
+ */
 class HttpGet {
     protected static final int SOCKET_TIMEOUT = 10000;
     protected static final String GET = "GET";
@@ -48,12 +55,12 @@ class HttpGet {
     public static String get(String host, Map<String, String> params) {
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init((KeyManager[])null, new TrustManager[]{myX509TrustManager}, (SecureRandom)null);
+            sslcontext.init((KeyManager[]) null, new TrustManager[]{myX509TrustManager}, (SecureRandom) null);
             String sendUrl = getUrlWithQueryString(host, params);
             URL uri = new URL(sendUrl);
-            HttpURLConnection conn = (HttpURLConnection)uri.openConnection();
+            HttpURLConnection conn = (HttpURLConnection) uri.openConnection();
             if (conn instanceof HttpsURLConnection) {
-                ((HttpsURLConnection)conn).setSSLSocketFactory(sslcontext.getSocketFactory());
+                ((HttpsURLConnection) conn).setSSLSocketFactory(sslcontext.getSocketFactory());
             }
 
             conn.setConnectTimeout(10000);
@@ -68,7 +75,7 @@ class HttpGet {
             StringBuilder builder = new StringBuilder();
             String line = null;
 
-            while((line = br.readLine()) != null) {
+            while ((line = br.readLine()) != null) {
                 builder.append(line);
             }
 
@@ -103,8 +110,8 @@ class HttpGet {
 
             int i = 0;
 
-            for(String key : params.keySet()) {
-                String value = (String)params.get(key);
+            for (String key : params.keySet()) {
+                String value = (String) params.get(key);
                 if (value != null) {
                     if (i != 0) {
                         builder.append('&');

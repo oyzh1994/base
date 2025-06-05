@@ -14,6 +14,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CostUtil {
 
+    private CostUtil() {
+    }
+
     private static final Map<String, Long> COST_RECORD = new ConcurrentHashMap<>();
 
     public static void record() {

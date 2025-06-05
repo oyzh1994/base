@@ -3,10 +3,11 @@ package cn.oyzh.event;
 import cn.oyzh.common.util.ClassUtil;
 
 /**
+ * 事件工厂
+ *
  * @author oyzh
  * @since 2024-11-14
  */
-//@UtilityClass
 public class EventFactory {
 
     private static Class<? extends EventBus> eventBusClass;

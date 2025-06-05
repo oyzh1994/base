@@ -57,11 +57,23 @@ public class OpenSSHED25519Util {
         return new String[]{"", ""};
     }
 
+    /**
+     * 生成密钥对
+     *
+     * @return 结果
+     * @throws NoSuchAlgorithmException 异常
+     */
     private static KeyPair generateEd25519KeyPair() throws NoSuchAlgorithmException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("Ed25519");
         return kpg.generateKeyPair();
     }
 
+    /**
+     * 生成openssh公钥
+     *
+     * @param publicKey 公钥
+     * @return openssh公钥
+     */
     private static String generateOpenSSHPublicKey(PublicKey publicKey) {
         if (!"EdDSA".equals(publicKey.getAlgorithm())) {
             throw new IllegalArgumentException("Not an Ed25519 public key");

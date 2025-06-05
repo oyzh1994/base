@@ -12,6 +12,9 @@ import java.io.InputStream;
  */
 public class IOUtil {
 
+    private IOUtil() {
+    }
+
     public static void close(AutoCloseable closeable) {
         if (closeable != null) {
             try {

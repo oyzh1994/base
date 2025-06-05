@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * xml类型文件读取器
+ *
  * @author oyzh
  * @since 2024-09-04
  */

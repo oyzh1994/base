@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
  */
 public class RegexUtil {
 
+    private RegexUtil() {
+    }
+
     /**
      * IPv4的正则表达式
      */

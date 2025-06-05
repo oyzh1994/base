@@ -9,12 +9,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * jul日志
+ * jul日志对象
  *
  * @author oyzh
  * @since 2024-09-27
  */
-//@UtilityClass
 public class JulLog {
 
     /**

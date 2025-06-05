@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 
 /**
  * 弱引用Function
+ *
  * @author oyzh
  * @since 2025-04-02
  */

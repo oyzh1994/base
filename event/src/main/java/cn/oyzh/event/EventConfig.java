@@ -2,10 +2,11 @@ package cn.oyzh.event;
 
 
 /**
+ * 事件配置
+ *
  * @author oyzh
  * @since 2024/3/29
  */
-//@Setter
 public class EventConfig {
 
     protected Boolean async;

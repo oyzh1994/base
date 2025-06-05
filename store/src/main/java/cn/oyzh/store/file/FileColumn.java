@@ -2,10 +2,11 @@ package cn.oyzh.store.file;
 
 
 /**
+ * 文件字段
+ *
  * @author oyzh
  * @since 2024-11-27
  */
-//@Data
 public class FileColumn {
 
     private String name;

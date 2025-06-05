@@ -2,10 +2,11 @@ package cn.oyzh.store.jdbc;
 
 
 /**
+ * orderBy参数
+ *
  * @author oyzh
  * @since 2024-09-26
  */
-//@Data
 public class OrderByParam {
 
     private String name;

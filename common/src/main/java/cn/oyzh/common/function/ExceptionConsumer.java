@@ -1,7 +1,7 @@
 package cn.oyzh.common.function;
 
 /**
- * 异常BiConsumer
+ * 异常Consumer
  *
  * @param <T> 形参
  * @author oyzh

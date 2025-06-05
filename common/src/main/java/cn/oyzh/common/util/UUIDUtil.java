@@ -10,6 +10,9 @@ import java.util.UUID;
  */
 public class UUIDUtil {
 
+    private UUIDUtil() {
+    }
+
     public static UUID randomUUID() {
         return UUID.randomUUID();
     }

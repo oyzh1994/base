@@ -5,6 +5,8 @@ import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.common.util.UUIDUtil;
 
 /**
+ * 键生成器
+ *
  * @author oyzh
  * @since 2024-09-24
  */

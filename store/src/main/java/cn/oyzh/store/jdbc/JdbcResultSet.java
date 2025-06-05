@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
+ * jdbc结果
+ *
  * @author oyzh
  * @since 2024-09-25
  */

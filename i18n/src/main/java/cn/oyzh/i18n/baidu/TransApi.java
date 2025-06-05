@@ -12,6 +12,12 @@ import cn.oyzh.common.util.StringUtil;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 翻译api
+ *
+ * @author oyzh
+ * @since 2025-01-23
+ */
 public class TransApi {
     private static final String TRANS_API_HOST = "http://api.fanyi.baidu.com/api/trans/vip/translate";
     private String appid;

@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.util.Map;
 
 /**
+ * txt类型文件写入器
+ *
  * @author oyzh
  * @since 2024-09-04
  */

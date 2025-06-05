@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * jdbc标准操作器
+ *
  * @author oyzh
  * @since 2024-09-23
  */

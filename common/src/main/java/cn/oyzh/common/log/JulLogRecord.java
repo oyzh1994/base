@@ -11,12 +11,8 @@ import java.util.logging.LogRecord;
  */
 public class JulLogRecord extends LogRecord {
 
-    //    @Setter
-//    @Getter
     private int lineNumber;
 
-    //    @Setter
-//    @Getter
     private String threadName;
 
     public JulLogRecord(Level level, String msg) {

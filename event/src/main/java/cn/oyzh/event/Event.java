@@ -7,8 +7,6 @@ package cn.oyzh.event;
  * @author oyzh
  * @since 2023/4/10
  */
-//@Data
-//@Accessors(fluent = true, chain = false)
 public class Event<D> {
 
     /**

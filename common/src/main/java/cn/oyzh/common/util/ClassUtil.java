@@ -26,6 +26,9 @@ import java.util.jar.JarFile;
  */
 public class ClassUtil {
 
+    private ClassUtil() {
+    }
+
     public static <T> T newInstance(Class<T> clazz) {
         if (clazz != null) {
             try {

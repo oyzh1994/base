@@ -3,7 +3,7 @@ package cn.oyzh.ssh.util;
 import com.jcraft.jsch.JSch;
 
 /**
- * ssh持有
+ * ssh持有器
  *
  * @author oyzh
  * @since 2025-03-25

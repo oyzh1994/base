@@ -3,6 +3,7 @@ package cn.oyzh.common.exception;
 
 /**
  * 无效参数异常
+ *
  * @author oyzh
  * @since 2024-09-26
  */

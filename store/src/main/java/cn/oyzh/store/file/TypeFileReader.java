@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 文件类型读取器
+ *
  * @author oyzh
  * @since 2024-09-03
  */

@@ -10,6 +10,8 @@ import java.sql.Statement;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
+ * jdbc连接
+ *
  * @author oyzh
  * @since 2024-09-25
  */

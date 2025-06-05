@@ -9,6 +9,8 @@ import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
 
 /**
+ * xml类型文件读取器
+ *
  * @author oyzh
  * @since 2024-09-03
  */

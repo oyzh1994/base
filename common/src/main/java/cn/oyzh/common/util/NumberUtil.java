@@ -12,6 +12,9 @@ import java.text.DecimalFormat;
  */
 public class NumberUtil {
 
+    private NumberUtil() {
+    }
+
     /**
      * 格式化大小
      *

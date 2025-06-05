@@ -12,10 +12,14 @@ import java.util.stream.IntStream;
 
 /**
  * 集合工具类
+ *
  * @author oyzh
  * @since 2024/7/1
  */
 public class CollectionUtil {
+
+    private CollectionUtil() {
+    }
 
     public static <T> T indexOf(Collection<T> collection, int index) {
         if (collection != null && !collection.isEmpty() && index > 0 && index < collection.size()) {

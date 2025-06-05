@@ -11,6 +11,8 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 /**
+ * json类型文件读取器
+ *
  * @author oyzh
  * @since 2024-09-03
  */

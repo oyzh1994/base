@@ -7,7 +7,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 
 /**
- * 文件日志处理器
+ * jul文件日志处理器
  *
  * @author oyzh
  * @since 2024-11-15

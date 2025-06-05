@@ -21,13 +21,13 @@
             <artifactId>base-common</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>${sqlite.version}</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc &ndash;&gt; -->
+        <!-- <dependency> -->
+        <!--     <groupId>org.xerial</groupId> -->
+        <!--     <artifactId>sqlite-jdbc</artifactId> -->
+        <!--     <version>${sqlite.version}</version> -->
+        <!--     <scope>provided</scope> -->
+        <!-- </dependency> -->
 
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
         <dependency>

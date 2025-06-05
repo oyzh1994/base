@@ -2,10 +2,11 @@ package cn.oyzh.store.jdbc;
 
 
 /**
+ * 查询参数
+ *
  * @author oyzh
  * @since 2024-09-26
  */
-//@Data
 public class QueryParam {
 
     private String name;

@@ -6,10 +6,11 @@ import java.util.Locale;
 
 
 /**
+ * 翻译工具
+ *
  * @author oyzh
  * @since 2025-01-23
  */
-//@UtilityClass
 public class TransUtil {
 
     /**

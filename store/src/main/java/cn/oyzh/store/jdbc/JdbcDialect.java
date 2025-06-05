@@ -6,5 +6,5 @@ package cn.oyzh.store.jdbc;
  */
 public enum JdbcDialect {
     H2,
-    SQLITE
+//    SQLITE
 }

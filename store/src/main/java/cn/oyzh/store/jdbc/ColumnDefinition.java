@@ -1,7 +1,6 @@
 package cn.oyzh.store.jdbc;
 
 import cn.oyzh.store.jdbc.h2.H2Util;
-import cn.oyzh.store.jdbc.sqlite.SqlLiteUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -42,8 +41,8 @@ public class ColumnDefinition {
                 String columnType = "";
                 if (JdbcManager.dialect == JdbcDialect.H2) {
                     columnType = H2Util.toSqlType(field.getType());
-                } else if (JdbcManager.dialect == JdbcDialect.SQLITE) {
-                    columnType = SqlLiteUtil.toSqlType(field.getType());
+//                } else if (JdbcManager.dialect == JdbcDialect.SQLITE) {
+//                    columnType = SqlLiteUtil.toSqlType(field.getType());
                 }
                 columnDefinition.setColumnType(columnType);
             } else {

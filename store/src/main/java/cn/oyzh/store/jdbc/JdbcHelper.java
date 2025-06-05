@@ -11,6 +11,8 @@ import java.sql.Statement;
 import java.util.Collection;
 
 /**
+ * jdbc辅助类
+ *
  * @author oyzh
  * @since 2024-09-25
  */

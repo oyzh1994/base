@@ -3,8 +3,12 @@ package cn.oyzh.i18n;
 
 import java.util.Locale;
 
-//@Data
-//@AllArgsConstructor
+/**
+ * i18方言
+ *
+ * @author oyzh
+ * @since 2025-01-23
+ */
 public class I1n8Locale {
 
     private String name;

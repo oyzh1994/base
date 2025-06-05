@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
+ * jdbc操作器
+ *
  * @author oyzh
  * @since 2024-12-21
  */
