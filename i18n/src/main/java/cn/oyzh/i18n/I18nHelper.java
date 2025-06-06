@@ -183,6 +183,8 @@ public class I18nHelper {
 
     public static final String SEARCH = "base.search";
 
+    public static final String SEARCH_KW_TIP = "base.searchKWTip";
+
     public static final String NO = "base.no";
 
     public static final String MATCH = "base.match";
@@ -1023,6 +1025,10 @@ public class I18nHelper {
 
     public static String searching() {
         return I18nResourceBundle.i18nString(SEARCH, ING);
+    }
+
+    public static String searchKWTip() {
+        return I18nResourceBundle.i18nString(SEARCH_KW_TIP);
     }
 
     public static String transport() {
