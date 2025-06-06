@@ -302,15 +302,7 @@ public class StringUtil {
     }
 
     public static boolean endWithAny(String str, String... endText) {
-        if (str == null || endText == null) {
-            return false;
-        }
-        for (String s : endText) {
-            if (endWith(str, s)) {
-                return true;
-            }
-        }
-        return false;
+        return endsWithAny(str, endText);
     }
 
     public static boolean contains(String source, String target) {
