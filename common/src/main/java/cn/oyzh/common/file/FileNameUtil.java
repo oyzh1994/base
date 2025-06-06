@@ -713,6 +713,46 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否java类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJavaType(String fileType) {
+        return "java".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否python类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPythonType(String fileType) {
+        return "py".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否c类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCType(String fileType) {
+        return "c".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否cpp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCppType(String fileType) {
+        return "cpp".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否txt类型
      *
      * @param fileType 文件类型

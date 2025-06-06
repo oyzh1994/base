@@ -110,6 +110,9 @@ public class RegexHelper {
         return Html_Comment_Pattern;
     }
 
+    /**
+     * yaml正则模式
+     */
     private static Pattern YAML_Pattern;
 
     public static Pattern yamlPattern() {
@@ -118,5 +121,105 @@ public class RegexHelper {
             YAML_Pattern = Pattern.compile(regex, Pattern.MULTILINE);
         }
         return YAML_Pattern;
+    }
+
+    /**
+     * java正则模式
+     */
+    private static Pattern JAVA_Pattern;
+
+    public static Pattern javaPattern() {
+        if (JAVA_Pattern == null) {
+            String regex = "(?x)" +
+                    "(\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|implements|import|instanceof|int|interface|long|native|new|package|private|protected|public|return|short|static|strictfp|super|switch|synchronized|this|throw|throws|transient|try|void|volatile|while)\\b)|" +  // 关键字
+                    "(\\b(byte|short|int|long|float|double|char|boolean)\\b)|" +  // 数据类型
+                    "(\"(?:\\\\.|[^\"\\\\])*\")|" +  // 字符串
+                    "('(?:\\\\.|[^'\\\\])*')|" +  // 字符
+                    "(//[^\\n]*)|" +  // 单行注释
+                    "(/\\*[\\s\\S]*?\\*/)|" +  // 多行注释
+                    "(\\b(0[xX][0-9a-fA-F]+|0[0-7]*|[0-9]+(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?[fFdD]?|true|false|null)\\b)|" +  // 数字
+                    "(\\b[a-zA-Z_$][a-zA-Z0-9_$]*\\s*\\()|" +  // 方法调用
+                    "(\\b[a-zA-Z_$][a-zA-Z0-9_$]*\\b)|" +  // 标识符
+                    "([+\\-*/%=<>!&|^~?:,;()\\[\\]{}])";  // 符号
+            JAVA_Pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        }
+        return JAVA_Pattern;
+    }
+
+    /**
+     * python正则模式
+     */
+    private static Pattern PYTHON_Pattern;
+
+    public static Pattern pythonPattern() {
+        if (PYTHON_Pattern == null) {
+
+            // Python关键字（保留字）
+            String keywords = "\\b(False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\\b";
+
+            // 数据类型和内置函数
+            String builtins = "\\b(bool|bytearray|bytes|complex|dict|float|frozenset|int|list|memoryview|object|range|set|str|tuple|type|print|input|len|open)\\b";
+
+            // 字符串匹配（单/双引号，支持三引号）
+            String strings = "(\"\"\"|'''|\"|')(?:(?!\\1).|\\n)*\\1";
+
+            // 数字（整数/浮点数/复数）
+            String numbers = "\\b\\d+\\.?\\d*(?:[eE][+-]?\\d+)?[jJ]?\\b";
+
+            // 注释（单行和多行）
+            String comments = "(#.*$|(\"\"\"|''')[\\s\\S]*?\\2)";
+
+            // 运算符和分隔符
+            String operators = "([-+*/%&|^~<>!=]=?|\\*\\*|//|<<|>>|\\b(?:in|is|not)\\b|[:;,.()\\[\\]{}])";
+
+            // 组合最终正则表达式
+            String regex = String.join("|",
+                    "(?<KEYWORD>" + keywords + ")",
+                    "(?<BUILTIN>" + builtins + ")",
+                    "(?<STRING>" + strings + ")",
+                    "(?<NUMBER>" + numbers + ")",
+                    "(?<COMMENT>" + comments + ")",
+                    "(?<OPERATOR>" + operators + ")"
+            );
+            PYTHON_Pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        }
+        return PYTHON_Pattern;
+    }
+
+    /**
+     * javascript正则模式
+     */
+    private static Pattern JAVASRIPT_Pattern;
+
+    public static Pattern javascriptPattern() {
+        if (JAVASRIPT_Pattern == null) {
+            String regex = "(?x)" +
+                    // 关键字
+                    "(\\b(abstract|arguments|await|boolean|break|byte|case|catch|char|class|const|continue|debugger|default|delete|do|double|else|enum|eval|export|extends|false|final|finally|float|for|function|goto|if|implements|import|in|instanceof|int|interface|let|long|native|new|null|package|private|protected|public|return|short|static|super|switch|synchronized|this|throw|throws|transient|true|try|typeof|var|void|volatile|while|with|yield)\\b)|" +
+                    // 数据类型和内置对象
+                    "(\\b(Array|Boolean|Date|Error|Function|Map|Math|Number|Object|Promise|RegExp|Set|String|Symbol|TypeError|undefined|console|window|document)\\b)|" +
+                    // 字符串（单引号、双引号、模板字符串）
+                    "(`[^`]*`|\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*')|" +
+                    // 注释
+                    "(//[^\n]*|/\\*[\\s\\S]*?\\*/)|" +
+                    // 数字（整数、浮点数、十六进制、二进制、八进制）
+                    "(\\b(0[xX][0-9a-fA-F]+|0[bB][01]+|0[oO][0-7]+|\\d+(?:\\.\\d+)?(?:e[+-]?\\d+)?|\\d+\\.\\d*|\\.\\d+)\\b)|" +
+                    // 函数定义
+                    "(\\bfunction\\s+([a-zA-Z_$][a-zA-Z0-9_$]*)\\s*\\()|" +
+                    // 类定义
+                    "(\\bclass\\s+([a-zA-Z_$][a-zA-Z0-9_$]*)\\s*[:{])|" +
+                    // 箭头函数
+                    "((?:\\b|\\))\\s*\\([^)]*\\)\\s*=>)|" +
+                    // 装饰器
+                    "(^[ \\t]*@[a-zA-Z_$][a-zA-Z0-9_$]*\\b)|" +
+                    // 对象属性访问
+                    "((?:\\b[a-zA-Z_$][a-zA-Z0-9_$]*\\s*\\.\\s*)[a-zA-Z_$][a-zA-Z0-9_$]*\\b)|" +
+                    // 标识符
+                    "(\\b[a-zA-Z_$][a-zA-Z0-9_$]*\\b)|" +
+                    // 特殊符号
+                    "([+\\-*/%=<>!&|^~?:,;()\\[\\]{}])";
+            JAVASRIPT_Pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        }
+        return JAVASRIPT_Pattern;
     }
 }
