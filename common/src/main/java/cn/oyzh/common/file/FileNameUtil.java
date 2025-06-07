@@ -57,7 +57,7 @@ public class FileNameUtil {
      * @param fileType 文件类型
      * @return 结果
      */
-    public boolean isSqlType(String fileType) {
+    public static boolean isSqlType(String fileType) {
         return "sql".equalsIgnoreCase(fileType);
     }
 
@@ -222,6 +222,67 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否apk类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isApkType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "apk");
+    }
+
+    /**
+     * 是否3gp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean is3gpType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "3gp");
+    }
+
+    /**
+     * 是否webp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWebpType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "webp");
+    }
+
+    /**
+     * 是否wps类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWpsType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "wps");
+    }
+
+
+    /**
+     * 是否rpm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRpmType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "rpm");
+    }
+
+    /**
+     * 是否amr类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isAmrType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "amr");
+    }
+
+    /**
      * 是否jar类型
      *
      * @param fileType 文件类型
@@ -269,6 +330,66 @@ public class FileNameUtil {
      */
     public static boolean isBmpType(String fileType) {
         return StringUtil.equalsIgnoreCase(fileType, "bmp");
+    }
+
+    /**
+     * 是否flv类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isFlvType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "flv");
+    }
+
+    /**
+     * 是否kmk类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isKmkType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "kmk");
+    }
+
+    /**
+     * 是否icns类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isIcnsType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "icns");
+    }
+
+    /**
+     * 是否cs类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCsType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "cs");
+    }
+
+    /**
+     * 是否kt类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isKtType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "kt");
+    }
+
+    /**
+     * 是否lua类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLuaType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "lua");
     }
 
     /**
@@ -602,6 +723,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否aspx类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isAspxType(String fileType) {
+        return "aspx".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否wav类型
      *
      * @param fileType 文件类型
@@ -723,6 +854,56 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否plist类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPlistType(String fileType) {
+        return "plist".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否vb类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isVbType(String fileType) {
+        return "vb".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否war类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWarType(String fileType) {
+        return "war".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否tsx类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTsxType(String fileType) {
+        return "tsx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否vbs类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isVbsType(String fileType) {
+        return "vbs".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否python类型
      *
      * @param fileType 文件类型
@@ -830,6 +1011,136 @@ public class FileNameUtil {
      */
     public static boolean isLzoType(String fileType) {
         return "lzo".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ds_store类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDsstoreType(String fileType) {
+        return "ds_store".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否pyc类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPycType(String fileType) {
+        return "pyc".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ocx类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isOcxType(String fileType) {
+        return "ocx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否inf类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isInfType(String fileType) {
+        return "inf".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否gradle类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGradleType(String fileType) {
+        return "gradle".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否epub类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isEpubType(String fileType) {
+        return "epub".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否db类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDbType(String fileType) {
+        return "db".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否config类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isConfigType(String fileType) {
+        return "config".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否com类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isComType(String fileType) {
+        return "com".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否class类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isClassType(String fileType) {
+        return "class".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否chm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isChmType(String fileType) {
+        return "chm".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否cfg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCfgType(String fileType) {
+        return "cfg".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否cer类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCerType(String fileType) {
+        return "cer".equalsIgnoreCase(fileType);
     }
 
     /**

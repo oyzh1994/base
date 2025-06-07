@@ -53,6 +53,18 @@ public class ThreadUtil {
     }
 
     /**
+     * 执行任务
+     * TODO: 虚拟线程，轻量级别，适合io密集型任务
+     *
+     * @param task 任务
+     */
+    public static void submitVirtual(Runnable task) {
+        if (task != null) {
+            submitVirtual(Collections.singletonList(task));
+        }
+    }
+
+    /**
      * 执行任务列表，并活得结果
      * TODO: 虚拟线程，轻量级别，适合io密集型任务
      *
