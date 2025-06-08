@@ -2664,6 +2664,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, CONTENT);
     }
 
+    public static String pleaseSelectFont() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, FONT);
+    }
+
     public static String pleaseSelectConnect() {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, CONNECT);
     }
