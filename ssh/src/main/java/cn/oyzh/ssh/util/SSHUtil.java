@@ -216,6 +216,9 @@ public class SSHUtil {
         } else {
             connector = new SSHAgentConnector();
         }
+        if (!connector.isAvailable()) {
+            throw new AgentProxyException("AgentConnector is not available");
+        }
         return new AgentIdentityRepository(connector);
     }
 }
