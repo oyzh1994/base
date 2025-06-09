@@ -7,6 +7,10 @@ import cn.oyzh.ssh.SSHException;
 import cn.oyzh.ssh.SSHForwarder;
 import cn.oyzh.ssh.domain.SSHConnect;
 import cn.oyzh.ssh.util.SSHHolder;
+import cn.oyzh.ssh.util.SSHUtil;
+import com.jcraft.jsch.AgentIdentityRepository;
+import com.jcraft.jsch.AgentProxyException;
+import com.jcraft.jsch.IdentityRepository;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
@@ -25,7 +29,7 @@ public class SSHJumpForwarder extends SSHForwarder {
      *
      * @throws JSchException 异常
      */
-    public Session initSession(SSHConnect connect) throws JSchException {
+    public Session initSession(SSHConnect connect) throws JSchException, AgentProxyException {
         Session session;
         // 登陆跳板机
         if (connect.isPasswordAuth()) {
@@ -34,10 +38,19 @@ public class SSHJumpForwarder extends SSHForwarder {
         } else if (connect.isCertificateAuth()) {
             SSHHolder.getJsch().addIdentity(connect.getCertificatePath());
             session = SSHHolder.getJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
-        } else {
+        } else if (connect.isSSHAgentAuth()) {
+            IdentityRepository repository = SSHHolder.getAgentJsch().getIdentityRepository();
+            if (!(repository instanceof AgentIdentityRepository)) {
+                repository = SSHUtil.initAgentIdentityRepository();
+                SSHHolder.getAgentJsch().setIdentityRepository(repository);
+            }
+            session = SSHHolder.getAgentJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
+        } else if (connect.isKeyAuth()) {
             String keyName = "ssh_key_" + UUIDUtil.uuidSimple();
             SSHHolder.getJsch().addIdentity(keyName, connect.getCertificatePriKeyyBytes(), connect.getCertificatePubKeyBytes(), null);
             session = SSHHolder.getJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
+        } else {
+            throw new RuntimeException("unknow auth type");
         }
         session.setConfig("StrictHostKeyChecking", "no");
         session.setTimeout(connect.getTimeout());
@@ -72,7 +85,7 @@ public class SSHJumpForwarder extends SSHForwarder {
                     this.sessions.add(session);
                     JulLog.info("ssh端口转发成功 本地端口:{} 远程端口:{} connect:{}", localPort, remotePort, connect);
                     forwardPort = localPort;
-                } catch (JSchException ex) {
+                } catch (JSchException | AgentProxyException ex) {
                     throw new SSHException(ex);
                 }
             }

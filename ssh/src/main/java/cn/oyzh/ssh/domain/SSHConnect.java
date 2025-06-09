@@ -121,6 +121,15 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
         return StringUtil.equalsIgnoreCase(this.authMethod, "key");
     }
 
+    /**
+     * 是否ssh agent认证
+     *
+     * @return 结果
+     */
+    public boolean isSSHAgentAuth() {
+        return StringUtil.equalsIgnoreCase(this.authMethod, "sshAgent");
+    }
+
     public int getPort() {
         return port;
     }

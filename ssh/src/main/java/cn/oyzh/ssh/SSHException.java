@@ -1,7 +1,5 @@
 package cn.oyzh.ssh;
 
-import com.jcraft.jsch.JSchException;
-
 /**
  * ssh异常
  *
@@ -22,7 +20,7 @@ public class SSHException extends RuntimeException {
         super(s, e);
     }
 
-    public SSHException(JSchException ex) {
+    public SSHException(Exception ex) {
         super(ex.getMessage(), ex.getCause());
     }
 }

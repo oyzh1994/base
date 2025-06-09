@@ -1,12 +1,18 @@
 package cn.oyzh.ssh.util;
 
 
+import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.ssh.domain.SSHProxyConfig;
+import com.jcraft.jsch.AgentConnector;
+import com.jcraft.jsch.AgentIdentityRepository;
+import com.jcraft.jsch.AgentProxyException;
+import com.jcraft.jsch.PageantConnector;
 import com.jcraft.jsch.Proxy;
 import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.ProxySOCKS4;
 import com.jcraft.jsch.ProxySOCKS5;
+import com.jcraft.jsch.SSHAgentConnector;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -195,5 +201,21 @@ public class SSHUtil {
         String ansiRegex = "\u001B\\[[;\\d]*[ -/]*[@-~]";
         output = output.replaceAll(ansiRegex, "");
         return output;
+    }
+
+    /**
+     * 初始化代理证书仓库
+     *
+     * @return AgentIdentityRepository
+     * @throws AgentProxyException 异常
+     */
+    public static AgentIdentityRepository initAgentIdentityRepository() throws AgentProxyException {
+        AgentConnector connector;
+        if (OSUtil.isWindows()) {
+            connector = new PageantConnector();
+        } else {
+            connector = new SSHAgentConnector();
+        }
+        return new AgentIdentityRepository(connector);
     }
 }

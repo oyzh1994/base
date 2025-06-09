@@ -11,18 +11,32 @@ import com.jcraft.jsch.JSch;
 public class SSHHolder {
 
     /**
-     * JSCH对象，只需要一个即可
+     * JSCH对象，本地证书，只需要一个即可
      */
-    private static JSch jSch;
+    private static JSch localJSch;
 
     public static JSch getJsch() {
         synchronized (SSHHolder.class) {
-            if (jSch == null) {
-                jSch = new JSch();
+            if (localJSch == null) {
+                localJSch = new JSch();
                 JSch.setLogger(new JschLogger());
             }
         }
-        return jSch;
+        return localJSch;
     }
 
+    /**
+     * JSCH对象，agent代理证书，只需要一个即可
+     */
+    private static JSch agentJSch;
+
+    public static JSch getAgentJsch() {
+        synchronized (SSHHolder.class) {
+            if (agentJSch == null) {
+                agentJSch = new JSch();
+                JSch.setLogger(new JschLogger());
+            }
+        }
+        return agentJSch;
+    }
 }
