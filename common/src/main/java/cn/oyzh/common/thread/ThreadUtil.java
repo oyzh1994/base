@@ -98,6 +98,26 @@ public class ThreadUtil {
     }
 
     /**
+     * 创建线程
+     *
+     * @param task 任务
+     * @return 线程
+     */
+    public static Thread newThread(Runnable task) {
+        return new ThreadExt(task);
+    }
+
+    /**
+     * 创建虚拟线程
+     *
+     * @param task 任务
+     * @return 线程
+     */
+    public static Thread newThreadVirtual(Runnable task) {
+        return Thread.ofVirtual().unstarted(task);
+    }
+
+    /**
      * 开始运行线程
      *
      * @param task  任务
