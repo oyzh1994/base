@@ -107,12 +107,25 @@ public class OpenSSHRSAUtil {
         return -1;
     }
 
+    /**
+     * 生成rsa密钥对
+     *
+     * @param keySize 键长度
+     * @return rsa密钥对
+     * @throws NoSuchAlgorithmException 异常
+     */
     private static KeyPair generateRSAKeyPair(int keySize) throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(keySize);
         return keyPairGenerator.generateKeyPair();
     }
 
+    /**
+     * 生成openssh格式的公钥
+     *
+     * @param publicKey 公钥
+     * @return openssh的公钥
+     */
     private static String generateOpenSSHPublicKey(PublicKey publicKey) {
         if (!(publicKey instanceof RSAPublicKey rsaPublicKey)) {
             throw new IllegalArgumentException("Not an RSA public key");
@@ -139,6 +152,13 @@ public class OpenSSHRSAUtil {
         }
     }
 
+    /**
+     * 生成pem格式的私钥
+     *
+     * @param privateKey 私钥
+     * @return pem格式的私钥
+     * @throws IOException 异常
+     */
     private static String generatePEMPrivateKey(PrivateKey privateKey) throws Exception {
         // 转换私钥到PKCS#1格式
         PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());

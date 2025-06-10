@@ -3892,6 +3892,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(UPDATE, KEY1);
     }
 
+    public static String editKey1() {
+        return I18nResourceBundle.i18nString(EDIT, KEY1);
+    }
+
     public static String importKey1() {
         return I18nResourceBundle.i18nString(IMPORT, KEY1);
     }

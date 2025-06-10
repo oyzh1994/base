@@ -99,6 +99,13 @@ public class OpenSSHED25519Util {
         }
     }
 
+    /**
+     * 生成pem格式的私钥
+     *
+     * @param privateKey 私钥
+     * @return pem格式的私钥
+     * @throws IOException 异常
+     */
     private static String generatePEMPrivateKey(PrivateKey privateKey) throws IOException {
         // 构造PKCS#8格式的PEM文件
         PemObject pemObject = new PemObject("PRIVATE KEY", privateKey.getEncoded());
