@@ -42,6 +42,9 @@ public class SSHJumpForwarder extends SSHForwarder {
             IdentityRepository repository = SSHHolder.getAgentJsch().getIdentityRepository();
             if (!(repository instanceof AgentIdentityRepository)) {
                 repository = SSHUtil.initAgentIdentityRepository();
+                if (CollectionUtil.isEmpty(repository.getIdentities())) {
+                    throw new AgentProxyException("identities is empty");
+                }
                 SSHHolder.getAgentJsch().setIdentityRepository(repository);
             }
             session = SSHHolder.getAgentJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());

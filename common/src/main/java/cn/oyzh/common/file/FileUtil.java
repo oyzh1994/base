@@ -212,7 +212,7 @@ public class FileUtil {
                 StringBuilder sb = new StringBuilder();
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
-                    sb.append(line);
+                    sb.append(line).append("\n");
                 }
                 return sb.toString();
             }
