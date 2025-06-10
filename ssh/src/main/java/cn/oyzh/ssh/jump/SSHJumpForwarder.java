@@ -10,6 +10,7 @@ import cn.oyzh.ssh.util.SSHHolder;
 import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.AgentIdentityRepository;
 import com.jcraft.jsch.AgentProxyException;
+import com.jcraft.jsch.Identity;
 import com.jcraft.jsch.IdentityRepository;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -46,6 +47,9 @@ public class SSHJumpForwarder extends SSHForwarder {
                     throw new AgentProxyException("identities is empty");
                 }
                 SSHHolder.getAgentJsch().setIdentityRepository(repository);
+            }
+            for (Identity identity : repository.getIdentities()) {
+                JulLog.info("Identity: {}", identity.getName());
             }
             session = SSHHolder.getAgentJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
         } else if (connect.isKeyAuth()) {
