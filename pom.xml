@@ -31,11 +31,11 @@
 
     <version>1.0.2</version>
     <modules>
-        <module>common</module>
-        <module>store</module>
-        <module>ssh</module>
-        <module>i18n</module>
-        <module>event</module>
+        <module>base-common</module>
+        <module>base-store</module>
+        <module>base-ssh</module>
+        <module>base-i18n</module>
+        <module>base-event</module>
     </modules>
     <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
