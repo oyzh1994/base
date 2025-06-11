@@ -787,6 +787,8 @@ public class I18nHelper {
 
     public static final String TUNNELING = "base.tunneling";
 
+    public static final String SNIPPET = "base.snippet";
+
     public static final String JUMP_HOSTS = "base.jumpHosts";
 
     public static final String DESIGN = "base.design";
@@ -4168,4 +4170,13 @@ public class I18nHelper {
     public static String updateTunneling() {
         return I18nResourceBundle.i18nString(UPDATE, TUNNELING);
     }
+
+    public static String snippet() {
+        return I18nResourceBundle.i18nString(SNIPPET);
+    }
+
+    public static String snippetList() {
+        return I18nResourceBundle.i18nString(SNIPPET, LIST);
+    }
+
 }
