@@ -21,6 +21,9 @@ public class ReflectUtil {
     }
 
     public static <T> T getFieldValue(Field field, Object object) {
+        if(field == null) {
+            return null;
+        }
         try {
             field.setAccessible(true);
             return (T) field.get(object);
