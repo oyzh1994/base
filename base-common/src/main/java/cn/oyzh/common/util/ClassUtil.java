@@ -135,4 +135,18 @@ public class ClassUtil {
         }
         return null;
     }
+
+    /**
+     * 是否原始类型
+     *
+     * @param clazz 类
+     * @return 结果
+     */
+    public static boolean isPrimitiveType(Class<?> clazz) {
+        if (clazz == null) {
+            return false;
+        }
+        return clazz == boolean.class || clazz == int.class || clazz == byte.class || clazz == short.class
+                || clazz == char.class || clazz == double.class || clazz == float.class || clazz == long.class;
+    }
 }

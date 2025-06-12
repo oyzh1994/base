@@ -17,7 +17,7 @@ public class Event<D> {
     /**
      * 额外数据
      */
-    private Object extra;
+    private final Object extra;
 
     public Event() {
         this(null, null);
@@ -29,7 +29,7 @@ public class Event<D> {
 
     public Event(D data, Object extra) {
         this.data = data;
-        this.extra = data;
+        this.extra = extra;
     }
 
     public D data() {

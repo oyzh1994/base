@@ -3,6 +3,7 @@ package cn.oyzh.common.system;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
+import cn.oyzh.common.util.NumberUtil;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -55,10 +56,12 @@ public class SystemUtil {
             // 获取非堆内存信息
             MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
             long usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
-            JulLog.info("gc之前预估使用内存:{}Mb", usedMemory / 1024 / 1024.0);
+            double m1 = NumberUtil.scale(usedMemory * 1D / 1024 / 1024, 2);
+            JulLog.info("gc之前预估使用内存:{}Mb", m1);
             mxBean.gc();
             usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
-            JulLog.info("gc之后预估使用内存:{}Mb", usedMemory / 1024 / 1024.0);
+            m1 = NumberUtil.scale(usedMemory * 1D / 1024 / 1024, 2);
+            JulLog.info("gc之后预估使用内存:{}Mb", m1);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -95,7 +98,20 @@ public class SystemUtil {
         return usedMemory / 1024.0 / 1024;
     }
 
+    /**
+     * 获取临时目录
+     *
+     * @return 临时目录
+     */
     public static String tmpdir() {
         return System.getProperty("java.io.tmpdir");
+    }
+    /**
+     * 获取用户目录
+     *
+     * @return 用户目录
+     */
+    public static String userHome() {
+        return System.getProperty("user.home");
     }
 }
