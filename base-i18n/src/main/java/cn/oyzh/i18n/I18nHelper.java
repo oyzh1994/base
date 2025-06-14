@@ -451,6 +451,8 @@ public class I18nHelper {
 
     public static final String PASSWORD = "base.password";
 
+    public static final String LEFT_SIDE = "base.leftSide";
+
     public static final String SHOW = "base.show";
 
     public static final String HIDDEN = "base.hidden";
@@ -1615,6 +1617,14 @@ public class I18nHelper {
 
     public static String hiddenPassword() {
         return I18nResourceBundle.i18nString(HIDDEN, PASSWORD);
+    }
+
+    public static String hiddenLeftSide() {
+        return I18nResourceBundle.i18nString(HIDDEN, LEFT_SIDE);
+    }
+
+    public static String showLeftSide() {
+        return I18nResourceBundle.i18nString(SHOW, LEFT_SIDE);
     }
 
     public static String connectionConnected() {
