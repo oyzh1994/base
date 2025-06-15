@@ -354,4 +354,24 @@ public class FileUtil {
             }
         }
     }
+
+    /**
+     * 获取文件大小
+     *
+     * @param file 文件
+     * @return 文件大小
+     */
+    public static long size(File file) {
+        return file.length();
+    }
+
+    /**
+     * 获取文件大小
+     *
+     * @param file 文件
+     * @return 文件大小
+     */
+    public static long size(String file) {
+        return new File(file).length();
+    }
 }
