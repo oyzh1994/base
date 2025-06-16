@@ -691,6 +691,8 @@ public class I18nHelper {
 
     public static final String ENABLE = "base.enable";
 
+    public static final String DISABLE = "base.disable";
+
     public static final String CLOSE = "base.close";
 
     public static final String TAB = "base.tab";
@@ -2044,6 +2046,10 @@ public class I18nHelper {
 
     public static String enable() {
         return I18nResourceBundle.i18nString(ENABLE);
+    }
+
+    public static String disable() {
+        return I18nResourceBundle.i18nString(DISABLE);
     }
 
     public static String terminalTip1() {
