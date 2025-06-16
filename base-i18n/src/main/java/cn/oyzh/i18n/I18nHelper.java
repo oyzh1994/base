@@ -1449,6 +1449,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE);
     }
 
+    public static String deleteBucket() {
+        return I18nResourceBundle.i18nString(DELETE, BUCKET);
+    }
+
+    public static String forceDeleteBucket() {
+        return I18nResourceBundle.i18nString(FORCE, DELETE, BUCKET);
+    }
+
     public static String keys() {
         return I18nResourceBundle.i18nString(KEYS);
     }
@@ -4012,6 +4020,10 @@ public class I18nHelper {
 
     public static String addBucket() {
         return I18nResourceBundle.i18nString(ADD, BUCKET);
+    }
+
+    public static String refreshBucket() {
+        return I18nResourceBundle.i18nString(REFRESH, BUCKET);
     }
 
     public String fileUploadFailed() {
