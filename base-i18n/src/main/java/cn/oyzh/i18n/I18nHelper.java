@@ -611,6 +611,8 @@ public class I18nHelper {
 
     public static final String DAYS = "base.days";
 
+    public static final String YEARS = "base.years";
+
     public static final String COPIED = "base.copied";
 
     public static final String MOVE = "base.move";
@@ -4034,6 +4036,18 @@ public class I18nHelper {
 
     public static String refreshBucket() {
         return I18nResourceBundle.i18nString(REFRESH, BUCKET);
+    }
+
+    public static String years() {
+        return I18nResourceBundle.i18nString(YEARS);
+    }
+
+    public static String compliance() {
+        return I18nResourceBundle.i18nString("base.compliance");
+    }
+
+    public static String governance() {
+        return I18nResourceBundle.i18nString("base.governance");
     }
 
     public String fileUploadFailed() {
