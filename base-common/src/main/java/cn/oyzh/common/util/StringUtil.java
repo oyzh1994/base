@@ -142,7 +142,7 @@ public class StringUtil {
     public static boolean equalsAny(String source, String... strings) {
         if (source != null && strings != null) {
             for (String string : strings) {
-                if (source.equals(string)) {
+                if (Objects.equals(source, string)) {
                     return true;
                 }
             }
@@ -445,4 +445,26 @@ public class StringUtil {
         }
         return false;
     }
+
+    /**
+     * 统计出现的字符数是否大于等于指定数量
+     *
+     * @param str           字符串
+     * @param target        字符
+     * @param maxOccurrence 最大数
+     * @return 结果
+     */
+    public static boolean checkCountOccurrences(String str, char target, int maxOccurrence) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == target) {
+                count++;
+                if (count >= maxOccurrence) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
