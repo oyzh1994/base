@@ -23,6 +23,8 @@ public class I18nHelper {
 
     public static final String FAILED = "base.failed";
 
+    public static final String BUCKET = "base.bucket";
+
     public static final String SUCCESS = "base.success";
 
     public static final String SUCCESSFUL = "base.successful";
@@ -4006,6 +4008,10 @@ public class I18nHelper {
 
     public static String collectFile() {
         return I18nResourceBundle.i18nString(COLLECT, FILE);
+    }
+
+    public static String addBucket() {
+        return I18nResourceBundle.i18nString(ADD, BUCKET);
     }
 
     public String fileUploadFailed() {
