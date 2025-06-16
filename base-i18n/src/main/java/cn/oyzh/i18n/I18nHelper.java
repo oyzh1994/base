@@ -4028,6 +4028,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, BUCKET);
     }
 
+    public static String updateBucket() {
+        return I18nResourceBundle.i18nString(UPDATE, BUCKET);
+    }
+
     public static String refreshBucket() {
         return I18nResourceBundle.i18nString(REFRESH, BUCKET);
     }
