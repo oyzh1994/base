@@ -260,6 +260,9 @@ public class RuntimeUtil {
             // 等待命令执行完成
             int exitCode = process.waitFor();
             JulLog.debug("Runtime executed with exit code:{}", exitCode);
+            // while (sb.toString().endsWith("\r") || sb.toString().endsWith("\n")) {
+            //     sb.deleteCharAt(sb.length() - 1);
+            // }
             return sb.toString();
         } catch (Exception ex) {
             ex.printStackTrace();
