@@ -13,6 +13,8 @@ import java.util.Objects;
  */
 public class StringUtil {
 
+    public static final String SPACE = " ";
+
     private StringUtil() {
     }
 

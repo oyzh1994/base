@@ -93,6 +93,21 @@ public class ArrayUtil {
         return Arrays.copyOfRange(arr, start, end);
     }
 
+    public static <T> T[] subarray(T[] arr, int start, int end) {
+        return sub(arr, start, end);
+    }
+
+    public static byte[] sub(byte[] arr, int start, int end) {
+        if (arr == null || start < 0 || end < start || arr.length < end) {
+            return arr;
+        }
+        return Arrays.copyOfRange(arr, start, end);
+    }
+
+    public static byte[] subarray(byte[] arr, int start, int end) {
+        return sub(arr, start, end);
+    }
+
     public static <T> T[] toArray(Collection<T> elements, Class<T> clazz) {
         if (elements == null || clazz == null) {
             return null;

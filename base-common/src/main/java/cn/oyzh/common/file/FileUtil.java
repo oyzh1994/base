@@ -374,4 +374,8 @@ public class FileUtil {
     public static long size(String file) {
         return new File(file).length();
     }
+
+    public static void forceMkdir(File dir) {
+        mkdir(dir);
+    }
 }

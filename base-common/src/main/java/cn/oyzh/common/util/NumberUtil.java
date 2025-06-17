@@ -227,4 +227,12 @@ public class NumberUtil {
     public static String getBinaryStr(int i) {
         return Integer.toBinaryString(i);
     }
+
+    public static int toInt(String str) {
+        return Integer.parseInt(str);
+    }
+
+    public static long toLong(String str) {
+        return Long.parseLong(str);
+    }
 }
