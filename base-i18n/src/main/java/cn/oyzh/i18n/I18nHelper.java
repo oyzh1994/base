@@ -4002,6 +4002,15 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLOSE, TAB);
     }
 
+    public static String headOfLine() {
+        return I18nResourceBundle.i18nString("base.headOfLine");
+    }
+
+
+    public static String endOfLine() {
+        return I18nResourceBundle.i18nString("base.endOfLine");
+    }
+
     public static String retry() {
         return I18nResourceBundle.i18nString(RETRY);
     }

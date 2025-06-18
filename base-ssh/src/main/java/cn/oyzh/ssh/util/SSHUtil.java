@@ -204,6 +204,34 @@ public class SSHUtil {
     }
 
     /**
+     * 移除控制字符
+     *
+     * @param output 内容
+     * @return 结果
+     */
+    public static String removeControl(String output) {
+        if (StringUtil.isBlank(output)) {
+            return output;
+        }
+        if (output.contains("\b")) {
+            output = output.replace("\b", "");
+        }
+        if (output.contains("\\a")) {
+            output = output.replace("\\a", "");
+        }
+        if (output.contains("\r")) {
+            output = output.replace("\r", "");
+        }
+        if (output.contains("\t")) {
+            output = output.replace("\t", "");
+        }
+        if (output.contains("\n")) {
+            output = output.replace("\n", "");
+        }
+        return output;
+    }
+
+    /**
      * 初始化代理证书仓库
      *
      * @return AgentIdentityRepository
