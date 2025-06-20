@@ -1,14 +1,11 @@
 package cn.oyzh.ssh;
 
 import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
-import cn.oyzh.ssh.domain.SSHTunneling;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
