@@ -26,6 +26,7 @@ import java.util.Base64;
  * @author oyzh
  * @since 2025/04/04
  */
+@Deprecated
 public class OpenSSHRSAUtil {
 
     public static void main(String[] args) throws Exception {

@@ -231,10 +231,12 @@ public class FileUtil {
     }
 
     public static String readString(File file, Charset charset) {
-        try {
-            return readString(new FileInputStream(file), charset);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (file.exists() && file.isFile()) {
+            try {
+                return readString(new FileInputStream(file), charset);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return null;
     }

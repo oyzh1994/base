@@ -20,6 +20,7 @@ import java.security.spec.ECGenParameterSpec;
  * @author oyzh
  * @since 2025/06/10
  */
+@Deprecated
 public class OpenSSHECDSAUtil {
 
     static {
