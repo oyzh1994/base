@@ -47,7 +47,7 @@
         <h2.version>2.3.232</h2.version>
         <poi.version>5.4.1</poi.version>
         <base.version>1.0.2</base.version>
-        <jsch.version>2.27.0</jsch.version>
+        <jsch.version>2.27.2</jsch.version>
         <sshj.version>0.40.0</sshj.version>
         <zxing.version>3.5.3</zxing.version>
         <junit.version>4.13.2</junit.version>
