@@ -19,7 +19,9 @@ public class SSHHolder {
         synchronized (SSHHolder.class) {
             if (localJSch == null) {
                 localJSch = new JSch();
-                JSch.setLogger(new JschLogger());
+                if (JSch.getLogger() == null) {
+                    JSch.setLogger(new JschLogger());
+                }
             }
         }
         return localJSch;
@@ -34,7 +36,9 @@ public class SSHHolder {
         synchronized (SSHHolder.class) {
             if (agentJSch == null) {
                 agentJSch = new JSch();
-                JSch.setLogger(new JschLogger());
+                if (JSch.getLogger() == null) {
+                    JSch.setLogger(new JschLogger());
+                }
             }
         }
         return agentJSch;
