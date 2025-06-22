@@ -29,7 +29,8 @@ public class JdbcConn {
      */
     private final Connection connection;
 
-    public JdbcConn(Connection connection) {
+    public JdbcConn(Connection connection) throws SQLException {
+        connection.setAutoCommit(true);
         this.connection = connection;
         this.status = new AtomicInteger(0);
     }

@@ -2,6 +2,7 @@ package cn.oyzh.ssh.util;
 
 import cn.oyzh.common.util.StringUtil;
 import org.apache.sshd.common.config.keys.KeyUtils;
+import org.apache.sshd.common.config.keys.writer.openssh.OpenSSHKeyEncryptionContext;
 import org.apache.sshd.common.config.keys.writer.openssh.OpenSSHKeyPairResourceWriter;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
 import org.apache.sshd.common.util.security.SecurityUtils;
@@ -20,16 +21,23 @@ public class SSHKeyUtil {
 
     /***
      * 生成ed25519的密钥
+     * @param keySize 长度
+     * @param password 密码
      * @return 密钥
      * @throws Exception 异常
      */
-    public static String[] generateEd25519() throws Exception {
-        KeyPair keyPair = KeyUtils.generateKeyPair(KeyPairProvider.SSH_ED25519, 256);
+    public static String[] generateEd25519(int keySize, String password) throws Exception {
+        KeyPair keyPair = KeyUtils.generateKeyPair(KeyPairProvider.SSH_ED25519, keySize);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
-
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, null, baos1);
+        OpenSSHKeyEncryptionContext context = null;
+        if (StringUtil.isNotBlank(password)) {
+            context = new OpenSSHKeyEncryptionContext();
+            context.setCipherType("256");
+            context.setPassword(password);
+        }
+        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
         String publicKey = baos.toString();
         String privateKey = baos1.toString();
         baos.close();
@@ -40,15 +48,48 @@ public class SSHKeyUtil {
     /***
      * 生成rsa的密钥
      * @param keySize 长度
+     * @param password 密码
      * @return 密钥
      * @throws Exception 异常
      */
-    public static String[] generateRSA(int keySize) throws Exception {
+    public static String[] generateRsa(int keySize, String password) throws Exception {
         KeyPair keyPair = KeyUtils.generateKeyPair(KeyPairProvider.SSH_RSA, keySize);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, null, baos1);
+        OpenSSHKeyEncryptionContext context = null;
+        if (StringUtil.isNotBlank(password)) {
+            context = new OpenSSHKeyEncryptionContext();
+            context.setCipherType("256");
+            context.setPassword(password);
+        }
+        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
+        String publicKey = baos.toString();
+        String privateKey = baos1.toString();
+        baos.close();
+        baos1.close();
+        return new String[]{publicKey, privateKey};
+    }
+
+    /***
+     * 生成dsa的密钥
+     * @param keySize 长度
+     * @param password 密码
+     * @return 密钥
+     * @throws Exception 异常
+     */
+    public static String[] generateDsa(int keySize, String password) throws Exception {
+        KeyPair keyPair = KeyUtils.generateKeyPair(KeyPairProvider.SSH_DSS, keySize);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
+        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+        OpenSSHKeyEncryptionContext context = null;
+        if (StringUtil.isNotBlank(password)) {
+            context = new OpenSSHKeyEncryptionContext();
+            context.setCipherType("256");
+            context.setPassword(password);
+        }
+        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
         String publicKey = baos.toString();
         String privateKey = baos1.toString();
         baos.close();
@@ -59,10 +100,11 @@ public class SSHKeyUtil {
     /***
      * 生成ecdsa的密钥
      * @param keySize 长度
+     * @param password 密码
      * @return 密钥
      * @throws Exception 异常
      */
-    public static String[] generateEcdsa(int keySize) throws Exception {
+    public static String[] generateEcdsa(int keySize, String password) throws Exception {
         String keyType = switch (keySize) {
             case 256 -> KeyPairProvider.ECDSA_SHA2_NISTP256;
             case 384 -> KeyPairProvider.ECDSA_SHA2_NISTP384;
@@ -73,7 +115,13 @@ public class SSHKeyUtil {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
         ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, null, baos1);
+        OpenSSHKeyEncryptionContext context = null;
+        if (StringUtil.isNotBlank(password)) {
+            context = new OpenSSHKeyEncryptionContext();
+            context.setCipherType("256");
+            context.setPassword(password);
+        }
+        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
         String publicKey = baos.toString();
         String privateKey = baos1.toString();
         baos.close();
