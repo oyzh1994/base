@@ -19,8 +19,8 @@ public class DownLatch extends CountDownLatch {
     public void await() {
         try {
             super.await();
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
+        } catch (InterruptedException ignore) {
+            // ex.printStackTrace();
         }
     }
 
