@@ -231,6 +231,8 @@ public class I18nHelper {
 
     public static final String UPLOAD = "base.upload";
 
+    public static final String SKIP = "base.skip";
+
     public static final String RETRY = "base.retry";
 
     public static final String UN_COMPRESS = "base.uncompress";
@@ -1787,6 +1789,14 @@ public class I18nHelper {
 
     public static String pleaseInputContent() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, CONTENT);
+    }
+
+    public static String pleaseChooseFile() {
+        return I18nResourceBundle.i18nString(PLEASE, CHOOSE, FILE);
+    }
+
+    public static String pleaseChooseDir() {
+        return I18nResourceBundle.i18nString(PLEASE, CHOOSE, DIR);
     }
 
     public static String pleaseInputName() {
@@ -4057,6 +4067,10 @@ public class I18nHelper {
 
     public static String governance() {
         return I18nResourceBundle.i18nString("base.governance");
+    }
+
+    public static String skip() {
+        return I18nResourceBundle.i18nString(SKIP);
     }
 
     public String fileUploadFailed() {
