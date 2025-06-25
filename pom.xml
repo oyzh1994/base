@@ -54,7 +54,7 @@
         <guava.version>33.4.8-jre</guava.version>
         <sqlite.version>3.47.1.0</sqlite.version>
         <fastjson.version>2.0.57</fastjson.version>
-        <sshd-core.version>2.15.0</sshd-core.version>
+        <sshd-common.version>2.15.0</sshd-common.version>
         <bouncycastle.version>1.80</bouncycastle.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>

@@ -55,11 +55,11 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.sshd/sshd-core -->
+        <!-- https://mvnrepository.com/artifact/org.apache.sshd/sshd-common -->
         <dependency>
             <groupId>org.apache.sshd</groupId>
-            <artifactId>sshd-core</artifactId>
-            <version>${sshd-core.version}</version>
+            <artifactId>sshd-common</artifactId>
+            <version>${sshd-common.version}</version>
             <scope>provided</scope>
         </dependency>
 
