@@ -1,12 +1,14 @@
 package cn.oyzh.common.util;
 
 import cn.oyzh.common.exception.InvalidParamException;
+import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.thread.ThreadUtil;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 迟
+ * 池
  *
  * @param <T> 类型
  * @author oyzh
@@ -29,9 +31,22 @@ public abstract class Pool<T> {
      */
     private List<T> list;
 
+    /**
+     * 如果没有可用对象，则一直等待接用
+     */
+    private boolean waitingBorrow;
+
     public Pool(int minSize, int maxSize) {
         this.setMaxSize(maxSize);
         this.setMinSize(minSize);
+    }
+
+    public boolean isWaitingBorrow() {
+        return waitingBorrow;
+    }
+
+    public void setWaitingBorrow(boolean waitingBorrow) {
+        this.waitingBorrow = waitingBorrow;
     }
 
     public int getMinSize() {
@@ -67,10 +82,29 @@ public abstract class Pool<T> {
         this.list = list;
     }
 
+    /**
+     * 清除列表
+     */
+    public void clear() {
+        if (this.list != null) {
+            this.list.clear();
+        }
+    }
+
+    /**
+     * 列表是否为空
+     *
+     * @return 结果
+     */
     public boolean isEmpty() {
         return CollectionUtil.isEmpty(this.list);
     }
 
+    /**
+     * 获取列表长度
+     *
+     * @return 列表长度
+     */
     public int size() {
         return CollectionUtil.size(this.list);
     }
@@ -80,9 +114,23 @@ public abstract class Pool<T> {
      *
      * @throws Exception 异常
      */
-    protected synchronized void init() throws Exception {
+    protected synchronized void init() {
+        int failCount = 0;
         while (this.size() < this.getMinSize()) {
-            this.list().add(this.newObject());
+            T obj = null;
+            try {
+                obj = this.newObject();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            if (obj == null) {
+                JulLog.warn("newObject is null");
+                if (failCount++ > 3) {
+                    break;
+                }
+                continue;
+            }
+            this.list().add(obj);
         }
     }
 
@@ -103,9 +151,16 @@ public abstract class Pool<T> {
         if (t == null || this.list == null || this.size() >= this.getMaxSize()) {
             return;
         }
-        this.list.add(t);
+        synchronized (this.listLock) {
+            this.list.add(t);
+        }
         System.out.println("object:" + t + " is returned, size:" + this.size());
     }
+
+    /**
+     * 数据锁
+     */
+    private final Object listLock = new Object();
 
     /**
      * 借用对象
@@ -113,16 +168,34 @@ public abstract class Pool<T> {
      * @return 对象
      */
     public T borrowObject() {
+        T obj = null;
         try {
-            if (this.isEmpty()) {
-                this.init();
-            }
-            if (!this.isEmpty()) {
-                return this.list().removeFirst();
+            synchronized (this.listLock) {
+                if (this.isEmpty()) {
+                    this.init();
+                }
+                if (this.isEmpty() && this.waitingBorrow) {
+                    int count = 0;
+                    JulLog.info("waiting for borrow...");
+                    while (this.isEmpty()) {
+                        ThreadUtil.sleep(5);
+                        if (count++ > 1000) {
+                            break;
+                        }
+                    }
+                    if (this.isEmpty()) {
+                        JulLog.warn("borrow fail...");
+                    }
+                }
+                if (!this.isEmpty()) {
+                    obj = this.list().removeFirst();
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            System.out.println("object:" + obj + " is borrowed, size:" + this.size());
         }
-        return null;
+        return obj;
     }
 }
