@@ -110,9 +110,16 @@ public abstract class Pool<T> {
     }
 
     /**
-     * 初始化
+     * 池子是否满了
      *
-     * @throws Exception 异常
+     * @return 结果
+     */
+    public boolean isFull() {
+        return this.size() >= this.getMaxSize();
+    }
+
+    /**
+     * 初始化
      */
     protected synchronized void init() {
         int failCount = 0;
@@ -148,7 +155,7 @@ public abstract class Pool<T> {
      * @param t 对象
      */
     public void returnObject(T t) {
-        if (t == null || this.list == null || this.size() >= this.getMaxSize()) {
+        if (t == null || this.list == null || this.isFull()) {
             return;
         }
         synchronized (this.listLock) {
