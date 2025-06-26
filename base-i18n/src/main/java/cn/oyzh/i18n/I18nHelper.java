@@ -321,6 +321,8 @@ public class I18nHelper {
 
     public static final String CONNECT = "base.connect";
 
+    public static final String SESSION = "base.session";
+
     public static final String CLONE = "base.clone";
 
     public static final String ALL = "base.all";
@@ -3602,6 +3604,10 @@ public class I18nHelper {
 
     public static String cloneConnect() {
         return I18nResourceBundle.i18nString(CLONE, CONNECT);
+    }
+
+    public static String cloneSession() {
+        return I18nResourceBundle.i18nString(CLONE, SESSION);
     }
 
     public static String clone1() {
