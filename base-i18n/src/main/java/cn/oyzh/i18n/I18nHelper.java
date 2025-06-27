@@ -1581,6 +1581,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(VALUE);
     }
 
+    public static String items() {
+        return I18nResourceBundle.i18nString("base.items");
+    }
+
     public static String cost() {
         return I18nResourceBundle.i18nString(COST);
     }
