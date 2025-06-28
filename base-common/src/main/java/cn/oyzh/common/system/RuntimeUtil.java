@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.time.Duration;
 
 /**
  * runtime工具类
@@ -68,7 +69,7 @@ public class RuntimeUtil {
         } else {
             charset = Charset.defaultCharset();
         }
-        return execAndWait(cmd, dir, true, true, charset, 15_000);
+        return execAndWait(cmd, dir, true, true, charset, -1);
     }
 
     /**
@@ -84,7 +85,7 @@ public class RuntimeUtil {
      * @throws Exception 异常
      */
     public static int execAndWait(String cmd, File dir, boolean printInput, boolean printError, Charset charset, int execTimeout) throws Exception {
-        int code = 0;
+        int code = -1;
         try {
             Charset streamCharset = charset == null ? Charset.defaultCharset() : charset;
             JulLog.info("execAndWait start cmd:{} dir:{} printInput:{} printError:{}", cmd, dir, printInput, printError);
@@ -105,11 +106,20 @@ public class RuntimeUtil {
             // if (process.getInputStream().available() <= 0) {
             //     process.waitFor(1000, TimeUnit.MILLISECONDS);
             // }
+            //DownLatch latch;
+            //if (printInput && printError) {
+            //    latch = DownLatch.of(2);
+            //} else if (printError || printInput) {
+            //    latch = DownLatch.of();
+            //} else {
+            //    latch = null;
+            //}
             Thread inputThread = null, errorThread = null;
             if (printInput) {
                 inputThread = new Thread(() -> {
                     try {
-                        if (process.getInputStream().available() > 0) {
+                        //TODO: 特别注意，windows需要hold住，需要直接尝试读取流
+                        if (OSUtil.isWindows() || process.getInputStream().available() > 0) {
                             JulLog.info("process input--->start");
                             // 获取进程的标准输出流
                             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), streamCharset));
@@ -122,6 +132,8 @@ public class RuntimeUtil {
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
+                    //} finally {
+                    //    latch.countDown();
                     }
                 });
                 inputThread.start();
@@ -129,7 +141,8 @@ public class RuntimeUtil {
             if (printError) {
                 errorThread = new Thread(() -> {
                     try {
-                        if (process.getErrorStream().available() > 0) {
+                        //TODO: 特别注意，windows需要hold住，需要直接尝试读取流
+                        if (OSUtil.isWindows() || process.getErrorStream().available() > 0) {
                             JulLog.error("process error--->start");
                             // 获取进程的标准输出流
                             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), streamCharset));
@@ -142,17 +155,31 @@ public class RuntimeUtil {
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
+                    //} finally {
+                    //    latch.countDown();
                     }
                 });
                 errorThread.start();
             }
-            // 等待进程执行完成
-            code = process.waitFor();
             if (inputThread != null) {
                 inputThread.join();
             }
             if (errorThread != null) {
                 errorThread.join();
+            }
+            if (execTimeout == -1) {
+                //if (latch != null) {
+                //    latch.await();
+                //}
+                code = process.waitFor();
+            } else {
+                //if (latch != null) {
+                //    latch.await(execTimeout);
+                //}
+                // 等待进程执行完成
+                if (process.waitFor(Duration.ofMillis(execTimeout))) {
+                    code = process.exitValue();
+                }
             }
         } finally {
             JulLog.info("execAndWait finish code:{}", code);

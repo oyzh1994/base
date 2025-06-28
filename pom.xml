@@ -56,9 +56,9 @@
         <fastjson.version>2.0.57</fastjson.version>
         <sshd-common.version>2.15.0</sshd-common.version>
         <bouncycastle.version>1.80</bouncycastle.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
+        <maven.compiler.release>24</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot-maven-plugin.version>2.7.18</spring-boot-maven-plugin.version>
     </properties>
