@@ -737,6 +737,10 @@ public class I18nHelper {
 
     public static final String FONT = "base.font";
 
+    public static final String INCR = "base.increase";
+
+    public static final String DECR = "base.decrease";
+
     public static final String THEME = "base.theme";
 
     public static final String LOCALE = "base.locale";
@@ -4081,6 +4085,14 @@ public class I18nHelper {
 
     public static String skip() {
         return I18nResourceBundle.i18nString(SKIP);
+    }
+
+    public static String incrFont() {
+        return I18nResourceBundle.i18nString(INCR, FONT);
+    }
+
+    public static String decrFont() {
+        return I18nResourceBundle.i18nString(DECR, FONT);
     }
 
     public String fileUploadFailed() {
