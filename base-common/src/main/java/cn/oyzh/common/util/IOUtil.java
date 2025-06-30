@@ -3,7 +3,9 @@ package cn.oyzh.common.util;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * io工具类
@@ -51,5 +53,47 @@ public class IOUtil {
 
     public static InputStream toStream(byte[] bytes) {
         return new ByteArrayInputStream(bytes);
+    }
+
+    /**
+     * 保存到文件
+     *
+     * @param stream   流
+     * @param filePath 文件路径
+     */
+    public static void saveToFile(InputStream stream, String filePath) {
+        if (stream != null) {
+            try {
+                byte[] bytes = new byte[4096];
+                int len;
+                FileOutputStream fos = new FileOutputStream(filePath);
+                while ((len = stream.read(bytes)) != -1) {
+                    fos.write(bytes, 0, len);
+                }
+                IOUtil.close(fos);
+            } catch (Exception ignored) {
+
+            }
+        }
+    }
+
+    /**
+     * 保存到文件
+     *
+     * @param in  输入流
+     * @param out 输出流
+     */
+    public static void saveToStream(InputStream in, OutputStream out) {
+        if (in != null) {
+            try {
+                byte[] bytes = new byte[4096];
+                int len;
+                while ((len = in.read(bytes)) != -1) {
+                    out.write(bytes, 0, len);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }
     }
 }
