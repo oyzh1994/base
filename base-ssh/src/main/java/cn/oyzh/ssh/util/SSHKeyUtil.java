@@ -193,6 +193,18 @@ public class SSHKeyUtil {
      * @throws Exception 异常
      */
     public static Iterable<KeyPair> loadKeysForStr(String key, String password) throws Exception {
+        return loadKeysForBytes(key.getBytes(), password);
+    }
+
+    /**
+     * 从文本加载证书
+     *
+     * @param key      密钥
+     * @param password 秘密
+     * @return 证书
+     * @throws Exception 异常
+     */
+    public static Iterable<KeyPair> loadKeysForBytes(byte[] key, String password) throws Exception {
         FilePasswordProvider passwordFinder = null;
         // 证书密码
         if (StringUtil.isNotBlank(password)) {
@@ -201,7 +213,7 @@ public class SSHKeyUtil {
         Iterable<KeyPair> keyPairs = SecurityUtils.loadKeyPairIdentities(
                 null,
                 null,
-                new ByteArrayInputStream(key.getBytes()),
+                new ByteArrayInputStream(key),
                 passwordFinder
         );
         return keyPairs;
