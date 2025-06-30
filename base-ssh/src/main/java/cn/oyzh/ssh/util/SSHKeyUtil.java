@@ -1,6 +1,8 @@
 package cn.oyzh.ssh.util;
 
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
+import org.apache.sshd.common.config.keys.FilePasswordProvider;
 import org.apache.sshd.common.config.keys.KeyUtils;
 import org.apache.sshd.common.config.keys.writer.openssh.OpenSSHKeyEncryptionContext;
 import org.apache.sshd.common.config.keys.writer.openssh.OpenSSHKeyPairResourceWriter;
@@ -9,6 +11,7 @@ import org.apache.sshd.common.util.security.SecurityUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.security.KeyPair;
 
 /**
@@ -179,5 +182,53 @@ public class SSHKeyUtil {
             }
         }
         return null;
+    }
+
+    /**
+     * 从文本加载证书
+     *
+     * @param key      密钥
+     * @param password 秘密
+     * @return 证书
+     * @throws Exception 异常
+     */
+    public static Iterable<KeyPair> loadKeysForStr(String key, String password) throws Exception {
+        FilePasswordProvider passwordFinder = null;
+        // 证书密码
+        if (StringUtil.isNotBlank(password)) {
+            passwordFinder = FilePasswordProvider.of(password);
+        }
+        Iterable<KeyPair> keyPairs = SecurityUtils.loadKeyPairIdentities(
+                null,
+                null,
+                new ByteArrayInputStream(key.getBytes()),
+                passwordFinder
+        );
+        return keyPairs;
+    }
+
+    /**
+     * 从文件加载证书
+     *
+     * @param path     路径
+     * @param password 秘密
+     * @return 证书
+     * @throws Exception 异常
+     */
+    public static Iterable<KeyPair> loadKeysFromFile(String path, String password) throws Exception {
+        FilePasswordProvider passwordFinder = null;
+        // 证书密码
+        if (StringUtil.isNotBlank(password)) {
+            passwordFinder = FilePasswordProvider.of(password);
+        }
+        FileInputStream fis = new FileInputStream(path);
+        Iterable<KeyPair> keyPairs = SecurityUtils.loadKeyPairIdentities(
+                null,
+                null,
+                fis,
+                passwordFinder
+        );
+        IOUtil.close(fis);
+        return keyPairs;
     }
 }
