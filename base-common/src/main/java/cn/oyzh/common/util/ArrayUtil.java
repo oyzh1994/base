@@ -57,14 +57,14 @@ public class ArrayUtil {
         return arr == null || arr.length == 0;
     }
 
-    public static <T> T indexOf(T[] arr,int index) {
-        if(index < 0 || index >= arr.length) {
+    public static <T> T indexOf(T[] arr, int index) {
+        if (index < 0 || index >= arr.length) {
             return null;
         }
         return arr[index];
     }
 
-    public static  <T> boolean isNotEmpty(T[] arr) {
+    public static <T> boolean isNotEmpty(T[] arr) {
         return !isEmpty(arr);
     }
 
@@ -138,5 +138,21 @@ public class ArrayUtil {
             chars[i] = c;
         }
         return chars;
+    }
+
+    /**
+     * 拼接
+     *
+     * @param arr     数组
+     * @param joinStr 拼接字符
+     * @param <T>     泛型
+     * @return 结果
+     */
+    public static <T> String join(T[] arr, String joinStr) {
+        StringBuilder builder = new StringBuilder();
+        for (T t : arr) {
+            builder.append(joinStr).append(t);
+        }
+        return builder.isEmpty() ? builder.toString() : builder.substring(1);
     }
 }
