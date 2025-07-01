@@ -109,6 +109,10 @@ public class SSHProxyConfig implements Serializable, ObjectCopier<SSHProxyConfig
         return "socks5".equalsIgnoreCase(this.protocol);
     }
 
+    public boolean isNoneProxy() {
+        return !this.isSocks5Proxy() && !this.isSocks4Proxy() && !this.isHttpProxy();
+    }
+
     public boolean isPasswordAuth() {
         return "password".equalsIgnoreCase(this.authType);
     }
