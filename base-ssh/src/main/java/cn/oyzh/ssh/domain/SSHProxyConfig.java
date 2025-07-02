@@ -1,6 +1,7 @@
 package cn.oyzh.ssh.domain;
 
 import cn.oyzh.common.object.ObjectCopier;
+import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;
 
 import java.io.Serializable;
@@ -101,6 +102,10 @@ public class SSHProxyConfig implements Serializable, ObjectCopier<SSHProxyConfig
         return "http".equalsIgnoreCase(this.protocol);
     }
 
+    public boolean isSocksProxy() {
+        return StringUtil.equalsAnyIgnoreCase(this.protocol, "socks", "socks4", "socks5");
+    }
+
     public boolean isSocks4Proxy() {
         return "socks4".equalsIgnoreCase(this.protocol);
     }
@@ -110,7 +115,7 @@ public class SSHProxyConfig implements Serializable, ObjectCopier<SSHProxyConfig
     }
 
     public boolean isNoneProxy() {
-        return !this.isSocks5Proxy() && !this.isSocks4Proxy() && !this.isHttpProxy();
+        return !this.isSocksProxy() && !this.isHttpProxy();
     }
 
     public boolean isPasswordAuth() {
