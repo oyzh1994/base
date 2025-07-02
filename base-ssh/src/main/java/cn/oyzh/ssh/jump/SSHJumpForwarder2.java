@@ -3,21 +3,13 @@ package cn.oyzh.ssh.jump;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.CollectionUtil;
-import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.ssh.SSHException;
-import cn.oyzh.ssh.SSHForwarder;
 import cn.oyzh.ssh.SSHForwarder2;
 import cn.oyzh.ssh.domain.SSHConnect;
 import cn.oyzh.ssh.util.SSHAgentConnectorFactory;
-import cn.oyzh.ssh.util.SSHHolder;
 import cn.oyzh.ssh.util.SSHKeyUtil;
 import cn.oyzh.ssh.util.SSHUtil;
-import com.jcraft.jsch.AgentIdentityRepository;
-import com.jcraft.jsch.AgentProxyException;
-import com.jcraft.jsch.Identity;
-import com.jcraft.jsch.IdentityRepository;
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import org.apache.sshd.client.ClientBuilder;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.auth.password.UserAuthPasswordFactory;
@@ -28,8 +20,6 @@ import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.channel.ChannelFactory;
-import org.apache.sshd.common.compression.BuiltinCompressions;
-import org.apache.sshd.common.compression.Compression;
 import org.apache.sshd.common.global.KeepAliveHandler;
 import org.apache.sshd.common.kex.BuiltinDHFactories;
 import org.apache.sshd.common.kex.KeyExchangeFactory;
@@ -43,7 +33,6 @@ import org.eclipse.jgit.internal.transport.sshd.agent.JGitSshAgentFactory;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.sshd.KeyPasswordProvider;
 
-import java.io.IOException;
 import java.security.KeyPair;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -63,7 +52,7 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
      * @param connect 连接
      * @return 客户端
      */
-    protected JGitSshClient initClient(SSHConnect connect) {
+    protected JGitSshClient initClient(SSHConnect connect) throws Exception {
         // 客户端构建器
         ClientBuilder builder = new ClientBuilder();
         // 保持连接
@@ -110,13 +99,29 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         // 密码
         if (connect.isPasswordAuth()) {
             methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.KB_INTERACTIVE}, ",");
+            sshClient.addPasswordIdentity(connect.getPassword());
         } else if (connect.isSSHAgentAuth()) {// ssh agent
             methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.PUBLIC_KEY, UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.KB_INTERACTIVE}, ",");
-        } else if (connect.isCertificateAuth() || connect.isKeyAuth()) {// 证书、密钥
+        } else if (connect.isCertificateAuth() ) {// 证书
             methods = UserAuthPasswordFactory.PUBLIC_KEY;
+            // 加载证书
+            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
+            //  设置证书认证
+            for (KeyPair keyPair : keyPairs) {
+                sshClient.addPublicKeyIdentity(keyPair);
+            }
+        } else if ( connect.isKeyAuth()) {// 密钥
+            methods = UserAuthPasswordFactory.PUBLIC_KEY;
+            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
+            //  设置证书认证
+            for (KeyPair keyPair : keyPairs) {
+                sshClient.addPublicKeyIdentity(keyPair);
+            }
         }
         // 设置优先认证方式
         CoreModuleProperties.PREFERRED_AUTHS.set(sshClient, methods);
+        // 心跳
+        sshClient.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, Duration.ofSeconds(60));
         return sshClient;
     }
 
@@ -142,28 +147,26 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         ConnectFuture future = sshClient.connect(entry);
         // 创建会话
         ClientSession session = future.verify(timeout).getClientSession();
-        // 心跳
-        session.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, Duration.ofSeconds(60));
         // 登陆跳板机
-        // 密码
-        if (connect.isPasswordAuth()) {
-            session.addPasswordIdentity(connect.getPassword());
-        } else if (connect.isCertificateAuth()) {// 证书
-            // 加载证书
-            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
-            //  设置证书认证
-            for (KeyPair keyPair : keyPairs) {
-                session.addPublicKeyIdentity(keyPair);
-            }
-        } else if (connect.isKeyAuth()) {// 密钥
-            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
-            //  设置证书认证
-            for (KeyPair keyPair : keyPairs) {
-                session.addPublicKeyIdentity(keyPair);
-            }
-        } else {
-            throw new RuntimeException("unknow auth type");
-        }
+        // // 密码
+        // if (connect.isPasswordAuth()) {
+        //     session.addPasswordIdentity(connect.getPassword());
+        // } else if (connect.isCertificateAuth()) {// 证书
+        //     // 加载证书
+        //     Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
+        //     //  设置证书认证
+        //     for (KeyPair keyPair : keyPairs) {
+        //         session.addPublicKeyIdentity(keyPair);
+        //     }
+        // } else if (connect.isKeyAuth()) {// 密钥
+        //     Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
+        //     //  设置证书认证
+        //     for (KeyPair keyPair : keyPairs) {
+        //         session.addPublicKeyIdentity(keyPair);
+        //     }
+        // } else {
+        //     throw new RuntimeException("unknow auth type");
+        // }
         // 认证
         session.auth().verify(timeout);
         JulLog.info("ssh连接成功 connect:{}", connect);
