@@ -1,7 +1,9 @@
 package cn.oyzh.ssh.util;
 
 
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.system.OSUtil;
+import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.ssh.domain.SSHProxyConfig;
 import com.jcraft.jsch.AgentConnector;
@@ -14,6 +16,7 @@ import com.jcraft.jsch.ProxySOCKS4;
 import com.jcraft.jsch.ProxySOCKS5;
 import com.jcraft.jsch.SSHAgentConnector;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -248,5 +251,50 @@ public class SSHUtil {
             throw new AgentProxyException("AgentConnector is not available");
         }
         return new AgentIdentityRepository(connector);
+    }
+
+    /**
+     * 获取ssh agent的sock文件
+     *
+     * @return 结果
+     */
+    public static String getSSHAgentSockFile() {
+        String sockFile = null;
+        String file = System.getenv("SSH_AUTH_SOCK");
+        boolean findMore = false;
+        if (FileUtil.exist(file)) {
+            // 注意，这个SSH_AUTH_SOCK值未必准确，可能需要深入查找
+            String res = RuntimeUtil.execForStr("ssh-add -l");
+            if (StringUtil.contains(res, "The agent has no identities")) {
+                findMore = true;
+            } else {
+                sockFile = file;
+            }
+        } else {
+            findMore = true;
+        }
+        // 寻找更深层次的文件
+        if (findMore && OSUtil.isMacOS()) {
+            String tmpdir = System.getenv("TMPDIR");
+            File tmp = new File(tmpdir);
+            if (tmp.exists() && tmp.isDirectory()) {
+                File[] files2 = tmp.listFiles();
+                if (files2 != null) {
+                    f1:
+                    for (File file1 : files2) {
+                        if (file1.isDirectory() && file1.getName().startsWith("ssh-")) {
+                            File[] files3 = file1.listFiles();
+                            if (files3 != null) {
+                                for (File file2 : files3) {
+                                    sockFile = file2.getPath();
+                                    break f1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return sockFile;
     }
 }

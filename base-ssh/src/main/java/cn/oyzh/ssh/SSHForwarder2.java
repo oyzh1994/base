@@ -1,6 +1,8 @@
 package cn.oyzh.ssh;
 
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.util.IOUtil;
+import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.util.net.SshdSocketAddress;
 
@@ -17,6 +19,11 @@ import java.util.Set;
  * @since 2025/07/02
  */
 public class SSHForwarder2 implements AutoCloseable {
+
+    /**
+     * 客户端列表
+     */
+    protected final Set<SshClient> clients = new HashSet<>();
 
     /**
      * 会话列表
@@ -51,6 +58,11 @@ public class SSHForwarder2 implements AutoCloseable {
             }
         }
         this.sessions.clear();
+        // 清理客户端
+        for (SshClient client : clients) {
+            IOUtil.close(client);
+        }
+        this.clients.clear();
         JulLog.info("ssh端口转发已清理");
     }
 }

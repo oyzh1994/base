@@ -67,6 +67,12 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
     private String certificatePath;
 
     /**
+     * 证书密码
+     */
+    @Column
+    private String certificatePwd;
+
+    /**
      * 公钥
      */
     @Column
@@ -203,7 +209,10 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
         this.timeout = t1.getTimeout();
         this.password = t1.getPassword();
         this.authMethod = t1.getAuthMethod();
+        this.certificatePwd = t1.getCertificatePwd();
         this.certificatePath = t1.getCertificatePath();
+        this.certificatePriKey = t1.getCertificatePriKey();
+        this.certificatePubKey = t1.getCertificatePubKey();
     }
 
     public String getCertificatePubKey() {
@@ -226,8 +235,16 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
         return certificatePubKey == null ? null : certificatePubKey.getBytes();
     }
 
-    public byte[] getCertificatePriKeyyBytes() {
+    public byte[] getCertificatePriKeyBytes() {
         return certificatePriKey == null ? null : certificatePriKey.getBytes();
+    }
+
+    public String getCertificatePwd() {
+        return certificatePwd;
+    }
+
+    public void setCertificatePwd(String certificatePwd) {
+        this.certificatePwd = certificatePwd;
     }
 
     @Override
@@ -241,6 +258,7 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
                 ", password='" + password + '\'' +
                 ", timeout=" + timeout +
                 ", authMethod='" + authMethod + '\'' +
+                ", certificatePwd='" + certificatePwd + '\'' +
                 ", certificatePath='" + certificatePath + '\'' +
                 ", certificatePubKey='" + certificatePubKey + '\'' +
                 ", certificatePriKey='" + certificatePriKey + '\'' +

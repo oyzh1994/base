@@ -21,7 +21,7 @@ import java.util.List;
  * ssh跳板转发器
  *
  * @author oyzh
- * @since 2023/12/15
+ * @since 2025/04/15
  */
 public class SSHJumpForwarder extends SSHForwarder {
 
@@ -54,7 +54,7 @@ public class SSHJumpForwarder extends SSHForwarder {
             session = SSHHolder.getAgentJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
         } else if (connect.isKeyAuth()) {
             String keyName = "ssh_key_" + UUIDUtil.uuidSimple();
-            SSHHolder.getJsch().addIdentity(keyName, connect.getCertificatePriKeyyBytes(), connect.getCertificatePubKeyBytes(), null);
+            SSHHolder.getJsch().addIdentity(keyName, connect.getCertificatePriKeyBytes(), connect.getCertificatePubKeyBytes(), null);
             session = SSHHolder.getJsch().getSession(connect.getUser(), connect.getHost(), connect.getPort());
         } else {
             throw new RuntimeException("unknow auth type");
