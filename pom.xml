@@ -47,6 +47,7 @@
         <h2.version>2.3.232</h2.version>
         <poi.version>5.4.1</poi.version>
         <base.version>1.0.2</base.version>
+        <sshd.version>2.15.0</sshd.version>
         <jsch.version>2.27.2</jsch.version>
         <sshj.version>0.40.0</sshj.version>
         <zxing.version>3.5.3</zxing.version>
@@ -55,8 +56,8 @@
         <guava.version>33.4.8-jre</guava.version>
         <sqlite.version>3.47.1.0</sqlite.version>
         <fastjson.version>2.0.57</fastjson.version>
-        <sshd-common.version>2.15.0</sshd-common.version>
         <bouncycastle.version>1.81</bouncycastle.version>
+        <jgit.version>7.3.0.202506031305-r</jgit.version>
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
         <maven.compiler.release>24</maven.compiler.release>
