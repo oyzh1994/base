@@ -4107,6 +4107,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DECR, FONT);
     }
 
+    public static String imageId() {
+        return I18nResourceBundle.i18nString(IMAGE, ID);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
@@ -4193,6 +4197,10 @@ public class I18nHelper {
 
     public static String saveImage() {
         return I18nResourceBundle.i18nString(SAVE, IMAGE);
+    }
+
+    public static String saveContainer() {
+        return I18nResourceBundle.i18nString(SAVE, CONTAINER);
     }
 
     public static String resource() {
