@@ -211,6 +211,10 @@ public class I18nHelper {
 
     public static final String FILE = "base.file";
 
+    public static final String MONTHS = "base.months";
+
+    public static final String MINUTES = "base.minutes";
+
     public static final String FIND = "base.find";
 
     public static final String LINE_DOWN = "base.lineDown";
@@ -262,6 +266,8 @@ public class I18nHelper {
     public static final String LOGS = "base.logs";
 
     public static final String IMAGE = "base.image";
+
+    public static final String SHARE = "base.share";
 
     public static final String RUN = "base.run";
 
@@ -928,6 +934,8 @@ public class I18nHelper {
     public static final String DISCARD = "base.discard";
 
     public static final String HOUR = "base.hour";
+
+    public static final String HOURS = "base.hours";
 
     public static final String MINUTE = "base.minute";
 
@@ -2810,6 +2818,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(HOUR);
     }
 
+    public static String hours() {
+        return I18nResourceBundle.i18nString(HOURS);
+    }
+
     public static String deleteField() {
         return I18nResourceBundle.i18nString(DELETE, FIELD);
     }
@@ -4109,6 +4121,18 @@ public class I18nHelper {
 
     public static String imageId() {
         return I18nResourceBundle.i18nString(IMAGE, ID);
+    }
+
+    public static String shareFile() {
+        return I18nResourceBundle.i18nString(SHARE,FILE);
+    }
+
+    public static String minutes() {
+        return I18nResourceBundle.i18nString(MINUTES);
+    }
+
+    public static String months() {
+        return I18nResourceBundle.i18nString(MONTHS);
     }
 
     public String fileUploadFailed() {
