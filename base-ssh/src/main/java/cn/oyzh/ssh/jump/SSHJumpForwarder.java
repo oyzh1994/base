@@ -6,6 +6,7 @@ import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.ssh.SSHException;
 import cn.oyzh.ssh.SSHForwarder;
 import cn.oyzh.ssh.domain.SSHConnect;
+import cn.oyzh.ssh.util.JschUtil;
 import cn.oyzh.ssh.util.SSHHolder;
 import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.AgentIdentityRepository;
@@ -42,7 +43,7 @@ public class SSHJumpForwarder extends SSHForwarder {
         } else if (connect.isSSHAgentAuth()) {
             IdentityRepository repository = SSHHolder.getAgentJsch().getIdentityRepository();
             if (!(repository instanceof AgentIdentityRepository)) {
-                repository = SSHUtil.initAgentIdentityRepository();
+                repository = JschUtil.initAgentIdentityRepository();
                 if (CollectionUtil.isEmpty(repository.getIdentities())) {
                     throw new AgentProxyException("identities is empty");
                 }
