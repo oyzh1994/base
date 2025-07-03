@@ -59,6 +59,35 @@ public class NumberUtil {
     }
 
     /**
+     * 解析大小
+     *
+     * @param size  大小
+     * @return 结果
+     */
+    public static double parseSize(String size) {
+        size = size.trim().toUpperCase();
+        double result;
+        if (size.contains("TB")) {
+            result = NumberUtil.parseDouble(size.replace("TB", ""));
+            result = result * 1024 * 1024 * 1024 * 1024;
+        } else if (size.contains("GB")) {
+            result = NumberUtil.parseDouble(size.replace("GB", ""));
+            result = result * 1024 * 1024 * 1024;
+        } else if (size.contains("MB")) {
+            result = NumberUtil.parseDouble(size.replace("MB", ""));
+            result = result * 1024 * 1024;
+        } else if (size.contains("KB")) {
+            result = NumberUtil.parseDouble(size.replace("KB", ""));
+            result = result * 1024;
+        } else if (size.contains("B")) {
+            result = NumberUtil.parseDouble(size.replace("B", ""));
+        } else {
+            result = NumberUtil.parseDouble(size);
+        }
+        return result;
+    }
+
+    /**
      * 保留小数
      *
      * @param size  大小

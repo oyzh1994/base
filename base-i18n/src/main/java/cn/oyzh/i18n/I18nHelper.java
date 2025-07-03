@@ -4139,6 +4139,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RUNNING);
     }
 
+    public static String runContainer() {
+        return I18nResourceBundle.i18nString(RUN, CONTAINER);
+    }
+
     public static String start1Container() {
         return I18nResourceBundle.i18nString(START1, CONTAINER);
     }
@@ -4185,6 +4189,10 @@ public class I18nHelper {
 
     public static String containerResource() {
         return I18nResourceBundle.i18nString(CONTAINER, RESOURCE);
+    }
+
+    public static String saveImage() {
+        return I18nResourceBundle.i18nString(SAVE, IMAGE);
     }
 
     public static String resource() {
