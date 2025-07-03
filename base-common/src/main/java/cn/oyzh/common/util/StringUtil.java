@@ -469,4 +469,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 获取字符串长度
+     *
+     * @param str 字符串
+     * @return 长度
+     */
+    public static int length(String str) {
+        return str == null ? 0 : str.length();
+    }
 }

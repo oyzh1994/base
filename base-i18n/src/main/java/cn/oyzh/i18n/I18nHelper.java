@@ -67,6 +67,8 @@ public class I18nHelper {
 
     public static final String INFO = "base.info";
 
+    public static final String ID = "base.id";
+
     public static final String FILES = "base.files";
 
     public static final String VIEW = "base.view";
@@ -260,6 +262,8 @@ public class I18nHelper {
     public static final String LOGS = "base.logs";
 
     public static final String IMAGE = "base.image";
+
+    public static final String RUN = "base.run";
 
     public static final String FORCE = "base.force";
 
@@ -1159,6 +1163,10 @@ public class I18nHelper {
 
     public static String timout() {
         return I18nResourceBundle.i18nString(TIMOUT);
+    }
+
+    public static String executeTimout() {
+        return I18nResourceBundle.i18nString(EXECUTE, TIMOUT);
     }
 
     public static String exception() {
@@ -3014,6 +3022,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RUN_SQL_FILE);
     }
 
+    public static String runImage() {
+        return I18nResourceBundle.i18nString(RUN, IMAGE);
+    }
+
     public static String execProcessing() {
         return I18nResourceBundle.i18nString(EXECUTE, PROCESS, ING);
     }
@@ -4143,9 +4155,12 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(IMAGE, INFO);
     }
 
+    public static String containerId() {
+        return I18nResourceBundle.i18nString(CONTAINER, ID);
+    }
+
     public static String containerInfo() {
         return I18nResourceBundle.i18nString(CONTAINER, INFO);
-
     }
 
     public static String log() {
