@@ -4312,7 +4312,7 @@ public class I18nHelper {
     }
 
     public static String updateJumpHost() {
-        return I18nResourceBundle.i18nString(ADD, JUMP_HOST);
+        return I18nResourceBundle.i18nString(UPDATE, JUMP_HOST);
     }
 
     public static String addTunneling() {

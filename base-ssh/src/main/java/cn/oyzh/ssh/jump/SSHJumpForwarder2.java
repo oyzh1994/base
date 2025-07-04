@@ -12,7 +12,9 @@ import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.JSchException;
 import org.apache.sshd.client.ClientBuilder;
 import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.auth.keyboard.UserAuthKeyboardInteractiveFactory;
 import org.apache.sshd.client.auth.password.UserAuthPasswordFactory;
+import org.apache.sshd.client.auth.pubkey.UserAuthPublicKeyFactory;
 import org.apache.sshd.client.config.hosts.HostConfigEntry;
 import org.apache.sshd.client.future.ConnectFuture;
 import org.apache.sshd.client.kex.DHGClient;
@@ -86,42 +88,48 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         if (connect.isSSHAgentAuth()) {
             sshClient.setAgentFactory(new JGitSshAgentFactory(SSHAgentConnectorFactory.INSTANCE, null));
         }
+        // 优先的认证方式
+        String methods = UserAuthPasswordFactory.PASSWORD;
+        // 密码
+        if (connect.isPasswordAuth()) {
+            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.KB_INTERACTIVE, UserAuthPasswordFactory.PASSWORD}, ",");
+            // sshClient.addPasswordIdentity(connect.getPassword());
+        } else if (connect.isSSHAgentAuth()) {// ssh agent
+            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.PUBLIC_KEY, UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.KB_INTERACTIVE}, ",");
+        } else if (connect.isCertificateAuth()) {// 证书
+            methods = UserAuthPasswordFactory.PUBLIC_KEY;
+            // // 加载证书
+            // Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
+            // //  设置证书认证
+            // for (KeyPair keyPair : keyPairs) {
+            //     sshClient.addPublicKeyIdentity(keyPair);
+            // }
+        } else if (connect.isKeyAuth()) {// 密钥
+            methods = UserAuthPasswordFactory.PUBLIC_KEY;
+            // Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
+            // //  设置证书认证
+            // for (KeyPair keyPair : keyPairs) {
+            //     sshClient.addPublicKeyIdentity(keyPair);
+            // }
+        }
+        // 设置优先认证方式
+        CoreModuleProperties.PREFERRED_AUTHS.set(sshClient, methods);
+        // 设置认证工厂
+        sshClient.setUserAuthFactories(List.of(
+                UserAuthKeyboardInteractiveFactory.INSTANCE,
+                UserAuthPasswordFactory.INSTANCE,
+                UserAuthPublicKeyFactory.INSTANCE
+        ));
         // 启动客户端
         sshClient.start();
         // 测试环境使用，生产环境需替换
         sshClient.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
         // 设置密码工厂
         sshClient.setKeyPasswordProviderFactory(() -> (KeyPasswordProvider) CredentialsProvider.getDefault());
-        // 添加到列表
-        this.clients.add(sshClient);
-        // 优先的认证方式
-        String methods = UserAuthPasswordFactory.PASSWORD;
-        // 密码
-        if (connect.isPasswordAuth()) {
-            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.KB_INTERACTIVE}, ",");
-            sshClient.addPasswordIdentity(connect.getPassword());
-        } else if (connect.isSSHAgentAuth()) {// ssh agent
-            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.PUBLIC_KEY, UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.KB_INTERACTIVE}, ",");
-        } else if (connect.isCertificateAuth() ) {// 证书
-            methods = UserAuthPasswordFactory.PUBLIC_KEY;
-            // 加载证书
-            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
-            //  设置证书认证
-            for (KeyPair keyPair : keyPairs) {
-                sshClient.addPublicKeyIdentity(keyPair);
-            }
-        } else if ( connect.isKeyAuth()) {// 密钥
-            methods = UserAuthPasswordFactory.PUBLIC_KEY;
-            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
-            //  设置证书认证
-            for (KeyPair keyPair : keyPairs) {
-                sshClient.addPublicKeyIdentity(keyPair);
-            }
-        }
-        // 设置优先认证方式
-        CoreModuleProperties.PREFERRED_AUTHS.set(sshClient, methods);
         // 心跳
         sshClient.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, Duration.ofSeconds(60));
+        // 添加到列表
+        this.clients.add(sshClient);
         return sshClient;
     }
 
@@ -137,6 +145,11 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         // 超时时间
         int timeout = connect.getTimeout();
 
+        // 由于二次验证会要求更多时间，优化下此处的验证时间
+        if (connect.isPasswordAuth() && timeout < 15000) {
+            timeout = 15000;
+        }
+
         // 会话连接参数
         HostConfigEntry entry = new HostConfigEntry();
         entry.setPort(connect.getPort());
@@ -147,26 +160,25 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         ConnectFuture future = sshClient.connect(entry);
         // 创建会话
         ClientSession session = future.verify(timeout).getClientSession();
-        // 登陆跳板机
-        // // 密码
-        // if (connect.isPasswordAuth()) {
-        //     session.addPasswordIdentity(connect.getPassword());
-        // } else if (connect.isCertificateAuth()) {// 证书
-        //     // 加载证书
-        //     Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
-        //     //  设置证书认证
-        //     for (KeyPair keyPair : keyPairs) {
-        //         session.addPublicKeyIdentity(keyPair);
-        //     }
-        // } else if (connect.isKeyAuth()) {// 密钥
-        //     Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
-        //     //  设置证书认证
-        //     for (KeyPair keyPair : keyPairs) {
-        //         session.addPublicKeyIdentity(keyPair);
-        //     }
-        // } else {
-        //     throw new RuntimeException("unknow auth type");
-        // }
+        // 密码
+        if (connect.isPasswordAuth()) {
+            session.addPasswordIdentity(connect.getPassword());
+        } else if (connect.isCertificateAuth()) {// 证书
+            // 加载证书
+            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
+            //  设置证书认证
+            for (KeyPair keyPair : keyPairs) {
+                session.addPublicKeyIdentity(keyPair);
+            }
+        } else if (connect.isKeyAuth()) {// 密钥
+            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
+            //  设置证书认证
+            for (KeyPair keyPair : keyPairs) {
+                session.addPublicKeyIdentity(keyPair);
+            }
+        } else {
+            throw new RuntimeException("unknow auth type");
+        }
         // 认证
         session.auth().verify(timeout);
         JulLog.info("ssh连接成功 connect:{}", connect);
@@ -187,6 +199,7 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
             for (int i = 0; i < connects.size(); i++) {
                 try {
                     SSHConnect connect = connects.get(i);
+                    JulLog.info("ssh跳板机连接开始 connect:{}", connect);
                     SSHConnect forwardConnect;
                     if (i == connects.size() - 1) {
                         forwardConnect = target;
@@ -200,7 +213,7 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
                     SshdSocketAddress address = session.startLocalPortForwarding(localPort, remote);
                     localPort = address.getPort();
                     this.sessions.add(session);
-                    JulLog.info("ssh端口转发成功 本地端口:{} 远程端口:{} connect:{}", localPort, remotePort, connect);
+                    JulLog.info("ssh跳板机连接成功 本地端口:{} 远程端口:{} connect:{}", localPort, remotePort, connect);
                     forwardPort = localPort;
                 } catch (Exception ex) {
                     throw new SSHException(ex);
