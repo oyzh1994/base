@@ -9,6 +9,7 @@ import com.jcraft.jsch.Logger;
  * @author oyzh
  * @since 2025/04/15
  */
+@Deprecated
 public class JschLogger implements Logger {
 
     @Override

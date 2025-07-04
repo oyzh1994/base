@@ -16,6 +16,7 @@ import com.jcraft.jsch.SSHAgentConnector;
  * @author oyzh
  * @since 2025-07-03
  */
+@Deprecated
 public class JschUtil {
 
     /**
