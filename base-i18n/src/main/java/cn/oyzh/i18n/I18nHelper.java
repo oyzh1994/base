@@ -1095,6 +1095,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ERROR, INFO);
     }
 
+    public static String moreInfo() {
+        return I18nResourceBundle.i18nString(MORE, INFO);
+    }
+
     public static String export() {
         return I18nResourceBundle.i18nString(EXPORT);
     }
