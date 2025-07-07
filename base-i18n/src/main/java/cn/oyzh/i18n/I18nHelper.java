@@ -713,6 +713,8 @@ public class I18nHelper {
 
     public static final String TAB = "base.tab";
 
+    public static final String SWITCH = "base.switch";
+
     public static final String TERMINAL_TIP1 = "base.terminalTip1";
 
     public static final String TERMINAL_TIP2 = "base.terminalTip2";
@@ -4115,6 +4117,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(INCR, FONT);
     }
 
+    public static String resetFont() {
+        return I18nResourceBundle.i18nString(RESET, FONT);
+    }
+
     public static String decrFont() {
         return I18nResourceBundle.i18nString(DECR, FONT);
     }
@@ -4124,7 +4130,7 @@ public class I18nHelper {
     }
 
     public static String shareFile() {
-        return I18nResourceBundle.i18nString(SHARE,FILE);
+        return I18nResourceBundle.i18nString(SHARE, FILE);
     }
 
     public static String minutes() {
@@ -4133,6 +4139,10 @@ public class I18nHelper {
 
     public static String months() {
         return I18nResourceBundle.i18nString(MONTHS);
+    }
+
+    public static String switchTab() {
+        return I18nResourceBundle.i18nString(SWITCH, TAB);
     }
 
     public String fileUploadFailed() {
