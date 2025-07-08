@@ -201,6 +201,7 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
                     SSHConnect connect = connects.get(i);
                     JulLog.info("ssh跳板机连接开始 connect:{}", connect);
                     SSHConnect forwardConnect;
+                    // 最后一个是目标机器
                     if (i == connects.size() - 1) {
                         forwardConnect = target;
                     } else {
