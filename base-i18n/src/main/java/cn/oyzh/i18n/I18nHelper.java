@@ -715,6 +715,8 @@ public class I18nHelper {
 
     public static final String SWITCH = "base.switch";
 
+    public static final String OTHER = "base.other";
+
     public static final String TERMINAL_TIP1 = "base.terminalTip1";
 
     public static final String TERMINAL_TIP2 = "base.terminalTip2";
@@ -4147,6 +4149,26 @@ public class I18nHelper {
 
     public static String switchTab() {
         return I18nResourceBundle.i18nString(SWITCH, TAB);
+    }
+
+    public static String tencent() {
+        return I18nResourceBundle.i18nString("base.tencent");
+    }
+
+    public static String alibaba() {
+        return I18nResourceBundle.i18nString("base.alibaba");
+    }
+
+    public static String aliyun() {
+        return I18nResourceBundle.i18nString("base.aliyun");
+    }
+
+    public static String other() {
+        return I18nResourceBundle.i18nString(OTHER);
+    }
+
+    public static String standard() {
+        return I18nResourceBundle.i18nString("base.standard");
     }
 
     public String fileUploadFailed() {
