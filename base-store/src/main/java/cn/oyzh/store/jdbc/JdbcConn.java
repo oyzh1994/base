@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author oyzh
  * @since 2024-09-25
  */
-public class JdbcConn {
+public class JdbcConn implements AutoCloseable {
 
     /**
      * 0 正常
@@ -27,7 +27,7 @@ public class JdbcConn {
     /**
      * 连接
      */
-    private final Connection connection;
+    private Connection connection;
 
     public JdbcConn(Connection connection) throws SQLException {
         connection.setAutoCommit(true);
@@ -144,5 +144,11 @@ public class JdbcConn {
 
     public Connection getConnection() {
         return this.connection;
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.connection.close();
+        this.connection = null;
     }
 }

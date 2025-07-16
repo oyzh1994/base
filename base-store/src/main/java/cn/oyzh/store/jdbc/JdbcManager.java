@@ -1,12 +1,14 @@
 package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -84,7 +86,7 @@ public class JdbcManager {
                 url += ";PAGE_SIZE=" + pageSize;
             }
             // 延迟关闭
-            url += ";DB_CLOSE_DELAY=-1";
+            url += ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
         } else {
             url = "jdbc:sqlite:" + dbFile;
         }
@@ -140,6 +142,23 @@ public class JdbcManager {
             if (CollectionUtil.isNotEmpty(invalid)) {
                 CONNECTIONS.removeAll(invalid);
             }
+        }
+    }
+
+    /**
+     * 销毁
+     */
+    public static void destroy() {
+        try {
+            JdbcConn conn = JdbcManager.takeoff();
+            Statement statement = conn.createStatement();
+            statement.execute("SHUTDOWN");
+            IOUtil.close(statement);
+            for (JdbcConn jdbcConn : CONNECTIONS) {
+                IOUtil.close(jdbcConn);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
