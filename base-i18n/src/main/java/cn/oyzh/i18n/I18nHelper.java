@@ -73,6 +73,8 @@ public class I18nHelper {
 
     public static final String VIEW = "base.view";
 
+    public static final String VIEW1 = "base.view1";
+
     public static final String TABLE = "base.table";
 
     public static final String TRUNCATE = "base.truncate";
@@ -4333,6 +4335,10 @@ public class I18nHelper {
 
     public static String editFile() {
         return I18nResourceBundle.i18nString(EDIT, FILE);
+    }
+
+    public static String view1File() {
+        return I18nResourceBundle.i18nString(VIEW1, FILE);
     }
 
     public static String certificate() {
