@@ -333,6 +333,8 @@ public class I18nHelper {
 
     public static final String CONNECT = "base.connect";
 
+    public static final String REGION = "base.region";
+
     public static final String SESSION = "base.session";
 
     public static final String CLONE = "base.clone";
@@ -736,6 +738,8 @@ public class I18nHelper {
     public static final String VIDEO = "base.video";
 
     public static final String AUDIO = "base.audio";
+
+    public static final String MEDIA = "base.media";
 
     public static final String MORE = "base.more";
 
@@ -2140,6 +2144,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(LOAD, VIDEO, FAIL);
     }
 
+    public static String loadMediaFail() {
+        return I18nResourceBundle.i18nString(LOAD, MEDIA, FAIL);
+    }
+
     public static String auth() {
         return I18nResourceBundle.i18nString(AUTH);
     }
@@ -2754,6 +2762,10 @@ public class I18nHelper {
 
     public static String pleaseSelectConnect() {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, CONNECT);
+    }
+
+    public static String pleaseSelectRegion() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, REGION);
     }
 
     public static String pleaseSelectType() {

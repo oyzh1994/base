@@ -129,6 +129,7 @@ public class ResourceUtil {
      * @return 本地文件地址
      */
     public static String getLocalFileUrl(String url) {
+        url = url.replace("\\", "/");
         if (OSUtil.isWindows()) {
             return "file:/" + url;
         }

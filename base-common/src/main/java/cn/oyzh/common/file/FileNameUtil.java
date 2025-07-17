@@ -252,6 +252,17 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否wbmp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWbmpType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "wbmp");
+    }
+
+
+    /**
      * 是否wps类型
      *
      * @param fileType 文件类型
@@ -340,6 +351,76 @@ public class FileNameUtil {
      */
     public static boolean isFlvType(String fileType) {
         return StringUtil.equalsIgnoreCase(fileType, "flv");
+    }
+
+    /**
+     * 是否pcm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPcmType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "pcm");
+    }
+
+    /**
+     * 是否wma类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWmaType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "wma");
+    }
+
+    /**
+     * 是否webm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isWebmType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "webm");
+    }
+
+    /**
+     * 是否flac类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isFlacType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "flac");
+    }
+
+    /**
+     * 是否ogg类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isOggType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "ogg");
+    }
+
+    /**
+     * 是否aac类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isAacType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "aac");
+    }
+
+    /**
+     * 是否m4a类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isM4aType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "m4a");
     }
 
     /**
