@@ -733,6 +733,10 @@ public class I18nHelper {
 
     public static final String LOAD = "base.load";
 
+    public static final String VIDEO = "base.video";
+
+    public static final String AUDIO = "base.audio";
+
     public static final String MORE = "base.more";
 
     public static final String AUTHED = "base.authed";
@@ -2130,6 +2134,10 @@ public class I18nHelper {
 
     public static String loadFail() {
         return I18nResourceBundle.i18nString(LOAD, FAIL);
+    }
+
+    public static String loadVideoFail() {
+        return I18nResourceBundle.i18nString(LOAD, VIDEO, FAIL);
     }
 
     public static String auth() {
