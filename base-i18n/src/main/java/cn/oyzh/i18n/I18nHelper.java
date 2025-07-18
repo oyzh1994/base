@@ -469,6 +469,8 @@ public class I18nHelper {
 
     public static final String USER_NAME = "base.userName";
 
+    public static final String OR = "base.or";
+
     public static final String PASSWORD = "base.password";
 
     public static final String LEFT_SIDE = "base.leftSide";
@@ -1875,6 +1877,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, COMMENT);
     }
 
+    public static String pleaseCheckUserNameOrPassword() {
+        return I18nResourceBundle.i18nString(PLEASE, CHECK, USER_NAME, OR, PASSWORD);
+    }
+
     public static String days() {
         return I18nResourceBundle.i18nString(DAYS);
     }
@@ -2174,6 +2180,10 @@ public class I18nHelper {
 
     public static String authFailTip1() {
         return I18nResourceBundle.i18nString(AUTH_FAIL_TIP1);
+    }
+
+    public static String authFail() {
+        return I18nResourceBundle.i18nString(AUTH, FAIL);
     }
 
     public static String nodePath() {
