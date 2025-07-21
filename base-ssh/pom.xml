@@ -56,13 +56,13 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.apache.sshd/sshd-common -->
-        <dependency>
-            <groupId>org.apache.sshd</groupId>
-            <artifactId>sshd-common</artifactId>
-            <version>${sshd.version}</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.sshd/sshd-common &ndash;&gt; -->
+        <!-- <dependency> -->
+        <!--     <groupId>org.apache.sshd</groupId> -->
+        <!--     <artifactId>sshd-common</artifactId> -->
+        <!--     <version>${sshd.version}</version> -->
+        <!--     <scope>provided</scope> -->
+        <!-- </dependency> -->
 
         <!-- https://mvnrepository.com/artifact/org.apache.sshd/sshd-common -->
         <dependency>
