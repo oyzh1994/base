@@ -4187,6 +4187,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString("base.tencent");
     }
 
+    public static String huawei() {
+        return I18nResourceBundle.i18nString("base.huawei");
+    }
+
     public static String alibaba() {
         return I18nResourceBundle.i18nString("base.alibaba");
     }
