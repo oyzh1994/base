@@ -3798,6 +3798,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RENAME, FILE);
     }
 
+    public static String renameDir() {
+        return I18nResourceBundle.i18nString(RENAME, DIR);
+    }
+
     public static String copyPath() {
         return I18nResourceBundle.i18nString(COPY, PATH);
     }
