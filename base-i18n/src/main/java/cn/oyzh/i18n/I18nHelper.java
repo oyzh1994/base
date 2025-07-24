@@ -243,6 +243,8 @@ public class I18nHelper {
 
     public static final String RETRY = "base.retry";
 
+    public static final String COMPRESS = "base.compress";
+
     public static final String UN_COMPRESS = "base.uncompress";
 
     public static final String AVAILABLE = "base.available";
@@ -1871,6 +1873,10 @@ public class I18nHelper {
 
     public static String pleaseInputFunctionName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, FUNCTION, NAME);
+    }
+
+    public static String pleaseInputUserName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, USER_NAME);
     }
 
     public static String pleaseInputComment() {
@@ -4105,6 +4111,10 @@ public class I18nHelper {
 
     public static String retry() {
         return I18nResourceBundle.i18nString(RETRY);
+    }
+
+    public static String compress() {
+        return I18nResourceBundle.i18nString(COMPRESS);
     }
 
     public static String unCompress() {
