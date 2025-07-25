@@ -449,6 +449,8 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String THIS = "base.this";
+
     public static final String CUT = "base.cut";
 
     public static final String SHORTCUT = "base.shortcut";
@@ -2007,6 +2009,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NODE, NAME);
     }
 
+    public static String pleaseInputGroupName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, GROUP, NAME);
+    }
+
     public static String keyFilter() {
         return I18nResourceBundle.i18nString(KEY, FILTER);
     }
@@ -2214,6 +2220,10 @@ public class I18nHelper {
 
     public static String copy() {
         return I18nResourceBundle.i18nString(COPY);
+    }
+
+    public static String copyThisSession() {
+        return I18nResourceBundle.i18nString(COPY, THIS, SESSION);
     }
 
     public static String copyFile() {
@@ -2738,6 +2748,10 @@ public class I18nHelper {
 
     public static String view() {
         return I18nResourceBundle.i18nString(VIEW);
+    }
+
+    public static String view1() {
+        return I18nResourceBundle.i18nString(VIEW1);
     }
 
     public static String pleaseInputViewName() {
@@ -3824,6 +3838,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DOWNLOAD, FILE);
     }
 
+    public static String upload() {
+        return I18nResourceBundle.i18nString(UPLOAD);
+    }
+
     public static String uploadFailed() {
         return I18nResourceBundle.i18nString(UPLOAD, FAILED);
     }
@@ -4219,6 +4237,22 @@ public class I18nHelper {
 
     public static String standard() {
         return I18nResourceBundle.i18nString("base.standard");
+    }
+
+    public static String addSnippet() {
+        return I18nResourceBundle.i18nString(ADD, SNIPPET);
+    }
+
+    public static String editSnippet() {
+        return I18nResourceBundle.i18nString(EDIT, SNIPPET);
+    }
+
+    public static String deleteSnippet() {
+        return I18nResourceBundle.i18nString(DELETE, SNIPPET);
+    }
+
+    public static String renameSnippet() {
+        return I18nResourceBundle.i18nString(RENAME, SNIPPET);
     }
 
     public String fileUploadFailed() {
