@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 /**
  * runtime工具类
@@ -106,8 +107,8 @@ public class RuntimeUtil {
             // if (process.getInputStream().available() <= 0) {
             //     process.waitFor(1000, TimeUnit.MILLISECONDS);
             // }
-            //DownLatch latch;
-            //if (printInput && printError) {
+            // DownLatch latch;
+            // if (printInput && printError) {
             //    latch = DownLatch.of(2);
             //} else if (printError || printInput) {
             //    latch = DownLatch.of();
@@ -118,7 +119,7 @@ public class RuntimeUtil {
             if (printInput) {
                 inputThread = new Thread(() -> {
                     try {
-                        //TODO: 特别注意，windows需要hold住，需要直接尝试读取流
+                        // TODO: 特别注意，windows需要hold住，需要直接尝试读取流
                         if (OSUtil.isWindows() || process.getInputStream().available() > 0) {
                             JulLog.info("process input--->start");
                             // 获取进程的标准输出流
@@ -132,8 +133,8 @@ public class RuntimeUtil {
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
-                    //} finally {
-                    //    latch.countDown();
+                        //} finally {
+                        //    latch.countDown();
                     }
                 });
                 inputThread.start();
@@ -141,7 +142,7 @@ public class RuntimeUtil {
             if (printError) {
                 errorThread = new Thread(() -> {
                     try {
-                        //TODO: 特别注意，windows需要hold住，需要直接尝试读取流
+                        // TODO: 特别注意，windows需要hold住，需要直接尝试读取流
                         if (OSUtil.isWindows() || process.getErrorStream().available() > 0) {
                             JulLog.error("process error--->start");
                             // 获取进程的标准输出流
@@ -155,8 +156,8 @@ public class RuntimeUtil {
                         }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
-                    //} finally {
-                    //    latch.countDown();
+                        //} finally {
+                        //    latch.countDown();
                     }
                 });
                 errorThread.start();
@@ -168,16 +169,16 @@ public class RuntimeUtil {
                 errorThread.join();
             }
             if (execTimeout == -1) {
-                //if (latch != null) {
+                // if (latch != null) {
                 //    latch.await();
                 //}
                 code = process.waitFor();
             } else {
-                //if (latch != null) {
+                // if (latch != null) {
                 //    latch.await(execTimeout);
                 //}
                 // 等待进程执行完成
-                if (process.waitFor(Duration.ofMillis(execTimeout))) {
+                if (process.waitFor(execTimeout, TimeUnit.MILLISECONDS)) {
                     code = process.exitValue();
                 }
             }
