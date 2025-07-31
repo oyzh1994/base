@@ -188,6 +188,17 @@ public class ThreadUtil {
             } finally {
                 service.shutdown();
             }
+            // DownLatch latch = DownLatch.of(tasks.size());
+            // for (Runnable task : tasks) {
+            //     start(() -> {
+            //         try {
+            //             task.run();
+            //         } finally {
+            //             latch.countDown();
+            //         }
+            //     });
+            // }
+            // latch.await();
         }
     }
 

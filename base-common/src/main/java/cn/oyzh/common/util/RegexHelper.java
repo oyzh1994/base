@@ -69,7 +69,7 @@ public class RegexHelper {
 
     public static Pattern xmlPattern() {
         if (Xml_Pattern == null) {
-            Xml_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-\\.]+)([^>]*)>");
+            Xml_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-.]+)([^>]*)>");
         }
         return Xml_Pattern;
     }
@@ -93,7 +93,7 @@ public class RegexHelper {
 
     public static Pattern htmlPattern() {
         if (Html_Pattern == null) {
-            Html_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-\\.]+)([^>]*)>");
+            Html_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-.]+)([^>]*)>");
         }
         return Html_Pattern;
     }

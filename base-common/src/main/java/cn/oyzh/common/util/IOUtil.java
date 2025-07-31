@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * io工具类
@@ -49,6 +51,22 @@ public class IOUtil {
 
         }
         return null;
+    }
+
+    public static String readString(InputStream stream, Charset charset) {
+        byte[] bytes = readBytes(stream);
+        if (bytes == null) {
+            return null;
+        }
+        return new String(bytes, charset);
+    }
+
+    public static String readUtf8String(InputStream stream) {
+        return readString(stream, StandardCharsets.UTF_8);
+    }
+
+    public static String readDefaultString(InputStream stream) {
+        return readString(stream, Charset.defaultCharset());
     }
 
     public static InputStream toStream(byte[] bytes) {
