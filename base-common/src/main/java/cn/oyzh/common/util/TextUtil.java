@@ -321,6 +321,36 @@ public class TextUtil {
     }
 
     /**
+     * 获取css数据
+     *
+     * @return css数据
+     */
+    public static String getCssData(Object rawData) {
+        if (rawData instanceof byte[] bytes) {
+            return new String(bytes);
+        }
+        if (rawData instanceof CharSequence sequence) {
+            return sequence.toString();
+        }
+        return "";
+    }
+
+    /**
+     * 获取properties数据
+     *
+     * @return properties数据
+     */
+    public static String getPropertiesData(Object rawData) {
+        if (rawData instanceof byte[] bytes) {
+            return new String(bytes);
+        }
+        if (rawData instanceof CharSequence sequence) {
+            return sequence.toString();
+        }
+        return "";
+    }
+
+    /**
      * 获取二进制数据
      *
      * @return 二进制数据
