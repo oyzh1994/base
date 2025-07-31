@@ -87,6 +87,19 @@ public class RegexHelper {
     }
 
     /**
+     * xml属性正则模式
+     */
+    private static Pattern Xml_Attribute_Pattern;
+
+    public static Pattern xmlAttributePattern() {
+        if (Xml_Attribute_Pattern == null) {
+            String regex = "(\\s+)([a-zA-Z_:][a-zA-Z0-9_:.-]*)(\\s*=\\s*)(?:\"([^\"]*)\"|'([^']*)')";
+            Xml_Attribute_Pattern = Pattern.compile(regex);
+        }
+        return Xml_Attribute_Pattern;
+    }
+
+    /**
      * html标签正则模式
      */
     private static Pattern Html_Pattern;
@@ -108,6 +121,19 @@ public class RegexHelper {
             Html_Comment_Pattern = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
         }
         return Html_Comment_Pattern;
+    }
+
+    /**
+     * html属性正则模式
+     */
+    private static Pattern Html_Attribute_Pattern;
+
+    public static Pattern htmlAttributePattern() {
+        if (Html_Attribute_Pattern == null) {
+            String regex = "(\\s+)([a-zA-Z_][a-zA-Z0-9_-]*)(\\s*=\\s*)(?:\"([^\"]*)\"|'([^']*)'|([^\"'\\s>]+))";
+            Html_Attribute_Pattern = Pattern.compile(regex);
+        }
+        return Html_Attribute_Pattern;
     }
 
     /**
