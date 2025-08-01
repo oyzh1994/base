@@ -531,7 +531,6 @@ public class TextUtil {
             hexString.append(String.format("%02X", b));
         }
         if (toUpperCase) {
-
             return hexString.toString().toUpperCase();
         }
         return hexString.toString();
@@ -544,12 +543,7 @@ public class TextUtil {
      * @return 结果
      */
     public static boolean isXmlStr(String str) {
-        if (str != null && !str.isBlank()) {
-            String[] array = str.trim().lines().toArray(String[]::new);
-            return StringUtil.startWithIgnoreCase(ArrayUtil.first(array), "<?xml")
-                    || StringUtil.startWithIgnoreCase(ArrayUtil.first(array), "xmlns:xsi=");
-        }
-        return false;
+        return StringUtil.containsIgnoreCase(str, "<?xml") && StringUtil.contains(str, "<") && StringUtil.contains(str, "</");
     }
 
     /**
@@ -559,11 +553,37 @@ public class TextUtil {
      * @return 结果
      */
     public static boolean isHtmlStr(String str) {
-        if (str != null && !str.isBlank()) {
-            String[] array = str.trim().lines().toArray(String[]::new);
-            return StringUtil.endWith(ArrayUtil.last(array), "</html>");
-        }
-        return false;
+        return StringUtil.containsIgnoreCase(str, "</html>") && StringUtil.containsIgnoreCase(str, "</body>");
+    }
+
+    /**
+     * 是否html字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isCssStr(String str) {
+        return StringUtil.contains(str, " {") && StringUtil.contains(str, ":") && StringUtil.contains(str, ";");
+    }
+
+    /**
+     * 是否properties字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isPropertiesStr(String str) {
+        return StringUtil.contains(str, "=");
+    }
+
+    /**
+     * 是否yaml字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isYamlStr(String str) {
+        return StringUtil.contains(str, ":");
     }
 
     /**
@@ -579,6 +599,23 @@ public class TextUtil {
             return matcher.matches();
         }
         return false;
+    }
+
+    /**
+     * 判断是否json字符串
+     *
+     * @param json json字符串
+     * @return 结果
+     */
+    public static boolean isJsonStr(String json) {
+        boolean isJson = StringUtil.contains(json, "{") && StringUtil.contains(json, "}")
+                && StringUtil.contains(json, ":") && StringUtil.contains(json, "\"");
+
+        if (!isJson) {
+            isJson = StringUtil.contains(json, "[") && StringUtil.contains(json, "]")
+                    && StringUtil.contains(json, ":") && StringUtil.contains(json, "\"");
+        }
+        return isJson;
     }
 
     /**
@@ -604,6 +641,9 @@ public class TextUtil {
      * 4 html
      * 5 字符串
      * 6 其他
+     * 7 css
+     * 8 properties
+     * 9 yaml
      *
      * @return 类型
      */
@@ -612,7 +652,7 @@ public class TextUtil {
             return 5;
         }
         if (rawData instanceof String str) {
-            if (JSONUtil.isJson(str)) {
+            if (isJsonStr(str)) {
                 return 1;
             }
             if (isBinaryStr(str)) {
@@ -623,6 +663,15 @@ public class TextUtil {
             }
             if (isHtmlStr(str)) {
                 return 4;
+            }
+            if (isCssStr(str)) {
+                return 7;
+            }
+            if (isPropertiesStr(str)) {
+                return 8;
+            }
+            if (isYamlStr(str)) {
+                return 9;
             }
             return 5;
         }

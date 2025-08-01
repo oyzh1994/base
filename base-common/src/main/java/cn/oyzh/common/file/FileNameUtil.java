@@ -574,6 +574,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否properties类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPropertiesType(String fileType) {
+        return "properties".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否conf类型
      *
      * @param fileType 文件类型

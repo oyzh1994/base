@@ -35,10 +35,8 @@ public class RegexHelper {
     /**
      * json符号正则模式
      */
-    @Deprecated
     private static Pattern Json_Symbol_Pattern;
 
-    @Deprecated
     public static Pattern jsonSymbolPattern() {
         if (Json_Symbol_Pattern == null) {
             Json_Symbol_Pattern = Pattern.compile("[{}|\\[\\]]");
@@ -49,7 +47,6 @@ public class RegexHelper {
     /**
      * json键正则模式
      */
-    @Deprecated
     private static Pattern Json_Key_Pattern;
 
     public static Pattern jsonKeyPattern() {
@@ -63,10 +60,8 @@ public class RegexHelper {
     /**
      * json值正则模式
      */
-    @Deprecated
     private static Pattern Json_Value_Pattern;
 
-    @Deprecated
     public static Pattern jsonValuePattern() {
         if (Json_Value_Pattern == null) {
 //            String regex = "(\"[^\"]*\"|\\d+\\.?\\d*|true|false|null|\\{.*?\\}|\\[.*?\\])";
@@ -96,12 +91,7 @@ public class RegexHelper {
 
     public static Pattern xmlPattern() {
         if (Xml_Pattern == null) {
-            // 修复语法错误的正则表达式
-            String regex = "(?<comment><!--[\\s\\S]*?-->)|" +
-                    "(?<endTag></[a-zA-Z_:][a-zA-Z0-9_.-]*>)|" +
-                    "(?<selfCloseTag><[a-zA-Z_:][a-zA-Z0-9_.-]*[^>]*?/>)|" +
-                    "(?<startTag><[a-zA-Z_:][a-zA-Z0-9_.-]*[^>]*?>)";
-            Xml_Pattern = Pattern.compile(regex, Pattern.DOTALL);
+            Xml_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-\\.]+)([^>]*)>");
         }
         return Xml_Pattern;
     }
@@ -109,10 +99,8 @@ public class RegexHelper {
     /**
      * xml注释正则模式
      */
-    @Deprecated
     private static Pattern Xml_Comment_Pattern;
 
-    @Deprecated
     public static Pattern xmlCommentPattern() {
         if (Xml_Comment_Pattern == null) {
             Xml_Comment_Pattern = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
@@ -140,15 +128,7 @@ public class RegexHelper {
 
     public static Pattern htmlPattern() {
         if (Html_Pattern == null) {
-            // HTML解析正则表达式（命名捕获组形式）
-            String regex = "(?<comment><!--[\\s\\S]*?-->)|" +
-                    // 标签模式（放在属性之后）
-                    "(?<tagClose></[a-zA-Z][a-zA-Z0-9_-]*\\s*>)|" +
-                    "(?<selfCloseTag><[a-zA-Z][a-zA-Z0-9_-]*\\s*[^>]*?/>)|" +
-                    "(?<tagOpen><[a-zA-Z][a-zA-Z0-9_-]*\\s*)|" +
-                    "(?<tagEnd>>)|" +
-                    "(?<text>[^<]+)";
-            Html_Pattern = Pattern.compile(regex, Pattern.DOTALL);
+            Html_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-\\.]+)([^>]*)>");
         }
         return Html_Pattern;
     }
@@ -156,10 +136,8 @@ public class RegexHelper {
     /**
      * html注释正则模式
      */
-    @Deprecated
     private static Pattern Html_Comment_Pattern;
 
-    @Deprecated
     public static Pattern htmlCommentPattern() {
         if (Html_Comment_Pattern == null) {
             Html_Comment_Pattern = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
