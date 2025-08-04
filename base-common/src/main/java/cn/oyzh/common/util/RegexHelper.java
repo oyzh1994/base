@@ -18,9 +18,9 @@ public class RegexHelper {
     public static Pattern jsonPattern() {
         if (Json_Pattern == null) {
             String regex =
-                    // 1. 字符串（最高优先级，确保包含:的字符串被完整匹配）
-                    "(?<string>\"(\\\\\"|\\\\\\\\|\\\\n|\\\\r|[^\"\\\\])*\")|" +
-                            // 2. 结构符号（优先级低于字符串）
+                    // 1. 字符串（使用占有型量词*+阻止回溯，避免栈溢出）
+                    "(?<string>\"(\\\\\"|\\\\\\\\|\\\\n|\\\\r|[^\"\\\\])*+\")|" +
+                            // 2. 结构符号
                             "(?<braceOpen>\\{)|(?<braceClose>\\})|" +
                             "(?<bracketOpen>\\[)|(?<bracketClose>\\])|" +
                             "(?<comma>,)|(?<colon>:)|" +
