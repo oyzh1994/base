@@ -4255,6 +4255,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RENAME, SNIPPET);
     }
 
+    public static String comment() {
+        return I18nResourceBundle.i18nString(COMMENT);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
