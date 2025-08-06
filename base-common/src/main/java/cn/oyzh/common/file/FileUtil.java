@@ -51,7 +51,7 @@ public class FileUtil {
     public static File touch(File file) {
         if (file != null) {
             try {
-                if (!file.exists()) {
+                if (!file.exists() && file.getParentFile() != null) {
                     file.getParentFile().mkdirs();
                     file.createNewFile();
                 }
