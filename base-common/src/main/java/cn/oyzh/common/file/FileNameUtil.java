@@ -464,6 +464,36 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否asm类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isAsmType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "asm");
+    }
+
+    /**
+     * 是否proto类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isProtobufType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "proto");
+    }
+
+    /**
+     * 是否less类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLessType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "less");
+    }
+
+    /**
      * 是否lua类型
      *
      * @param fileType 文件类型
