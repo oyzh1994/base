@@ -152,6 +152,66 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否perl类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPerlType(String fileType) {
+        return "perl".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否php类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPhpType(String fileType) {
+        return "php".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否rust类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRustType(String fileType) {
+        return "rs".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否dart类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDartType(String fileType) {
+        return "dart".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否actionscript类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isActionScriptType(String fileType) {
+        return "actionscript".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否scala类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isScalaType(String fileType) {
+        return "scala".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否jpg类型
      *
      * @param fileType 文件类型
