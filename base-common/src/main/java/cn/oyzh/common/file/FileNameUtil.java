@@ -182,6 +182,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否ruby类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRubyType(String fileType) {
+        return "ruby".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否dart类型
      *
      * @param fileType 文件类型
