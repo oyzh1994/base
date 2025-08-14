@@ -135,4 +135,23 @@ public class ResourceUtil {
         }
         return "file:" + url;
     }
+
+    /**
+     * 获取路径
+     *
+     * @param url 地址
+     * @return 本地路径
+     */
+    public static String getPath(String url) {
+        try {
+            String path = ResourceUtil.class.getResource(url).toURI().getPath();
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+            return path;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
 }
