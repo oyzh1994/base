@@ -20,6 +20,11 @@ public class ReflectUtil {
         return getFieldValue(field, object);
     }
 
+    public static <T> T getFieldValue2(Object object, String fieldName) {
+        Field field = getField2(object.getClass(), fieldName);
+        return getFieldValue(field, object);
+    }
+
     public static <T> T getFieldValue(Field field, Object object) {
         if(field == null) {
             return null;
@@ -59,6 +64,10 @@ public class ReflectUtil {
 
     public static Field getField(Class<?> beanClass, String fieldName) throws SecurityException {
         return getField(beanClass, fieldName, true, false);
+    }
+
+    public static Field getField2(Class<?> beanClass, String fieldName) throws SecurityException {
+        return getField(beanClass, fieldName, true, true);
     }
 
     public static Field getField(Class<?> beanClass, String fieldName, boolean withDeclared, boolean withSuper) throws SecurityException {
