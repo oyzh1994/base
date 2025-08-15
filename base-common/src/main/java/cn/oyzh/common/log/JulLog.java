@@ -143,22 +143,22 @@ public class JulLog {
 
     public static boolean isDebugEnabled() {
         JulLevel level = JulLevel.ofLevel(LOGGER.getLevel());
-        return level.ordinal() >= JulLevel.DEBUG.ordinal();
+        return level.ordinal() <= JulLevel.DEBUG.ordinal();
     }
 
     public static boolean isInfoEnabled() {
         JulLevel level = JulLevel.ofLevel(LOGGER.getLevel());
-        return level.ordinal() >= JulLevel.INFO.ordinal();
+        return level.ordinal() <= JulLevel.INFO.ordinal();
     }
 
     public static boolean isWarnEnabled() {
         JulLevel level = JulLevel.ofLevel(LOGGER.getLevel());
-        return level.ordinal() >= JulLevel.WARN.ordinal();
+        return level.ordinal() <= JulLevel.WARN.ordinal();
     }
 
     public static boolean isErrorEnabled() {
         JulLevel level = JulLevel.ofLevel(LOGGER.getLevel());
-        return level.ordinal() >= JulLevel.ERROR.ordinal();
+        return level.ordinal() <= JulLevel.ERROR.ordinal();
     }
 
     public static Logger getLogger() {
