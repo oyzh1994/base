@@ -145,7 +145,7 @@ public class ResourceUtil {
     public static String getPath(String url) {
         try {
             String path = ResourceUtil.class.getResource(url).toURI().getPath();
-            if (path.startsWith("/")) {
+            if (OSUtil.isWindows() && path.startsWith("/")) {
                 path = path.substring(1);
             }
             return path;
