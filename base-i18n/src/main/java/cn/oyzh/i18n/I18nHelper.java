@@ -163,6 +163,8 @@ public class I18nHelper {
 
     public static final String COMMENT = "base.comment";
 
+    public static final String LAYOUT = "base.layout";
+
     public static final String CAN_NOT = "base.canNot";
 
     public static final String IS = "base.is";
@@ -4257,6 +4259,10 @@ public class I18nHelper {
 
     public static String comment() {
         return I18nResourceBundle.i18nString(COMMENT);
+    }
+
+    public static String layout() {
+        return I18nResourceBundle.i18nString(LAYOUT);
     }
 
     public String fileUploadFailed() {
