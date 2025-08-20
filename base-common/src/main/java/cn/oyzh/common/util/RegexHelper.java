@@ -13,8 +13,10 @@ public class RegexHelper {
     /**
      * json正则模式
      */
+    @Deprecated
     private static Pattern Json_Pattern;
 
+    @Deprecated
     public static Pattern jsonPattern() {
         if (Json_Pattern == null) {
             String regex =
@@ -35,8 +37,10 @@ public class RegexHelper {
     /**
      * json符号正则模式
      */
+    @Deprecated
     private static Pattern Json_Symbol_Pattern;
 
+    @Deprecated
     public static Pattern jsonSymbolPattern() {
         if (Json_Symbol_Pattern == null) {
             Json_Symbol_Pattern = Pattern.compile("[{}|\\[\\]]");
@@ -47,8 +51,10 @@ public class RegexHelper {
     /**
      * json键正则模式
      */
+    @Deprecated
     private static Pattern Json_Key_Pattern;
 
+    @Deprecated
     public static Pattern jsonKeyPattern() {
         if (Json_Key_Pattern == null) {
 //            Json_Key_Pattern = Pattern.compile("\"(.*?)\"(?=\\s*:)");
@@ -60,8 +66,10 @@ public class RegexHelper {
     /**
      * json值正则模式
      */
+    @Deprecated
     private static Pattern Json_Value_Pattern;
 
+    @Deprecated
     public static Pattern jsonValuePattern() {
         if (Json_Value_Pattern == null) {
 //            String regex = "(\"[^\"]*\"|\\d+\\.?\\d*|true|false|null|\\{.*?\\}|\\[.*?\\])";
@@ -87,8 +95,10 @@ public class RegexHelper {
     /**
      * xml标签正则模式
      */
+    @Deprecated
     private static Pattern Xml_Pattern;
 
+    @Deprecated
     public static Pattern xmlPattern() {
         if (Xml_Pattern == null) {
             Xml_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-\\.]+)([^>]*)>");
@@ -99,8 +109,10 @@ public class RegexHelper {
     /**
      * xml注释正则模式
      */
+    @Deprecated
     private static Pattern Xml_Comment_Pattern;
 
+    @Deprecated
     public static Pattern xmlCommentPattern() {
         if (Xml_Comment_Pattern == null) {
             Xml_Comment_Pattern = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
@@ -111,8 +123,10 @@ public class RegexHelper {
     /**
      * xml属性正则模式
      */
+    @Deprecated
     private static Pattern Xml_Attribute_Pattern;
 
+    @Deprecated
     public static Pattern xmlAttributePattern() {
         if (Xml_Attribute_Pattern == null) {
             String regex = "(\\s+)([a-zA-Z_:][a-zA-Z0-9_:.-]*)(\\s*=\\s*)(?:\"([^\"]*)\"|'([^']*)')";
@@ -124,8 +138,10 @@ public class RegexHelper {
     /**
      * html标签正则模式
      */
+    @Deprecated
     private static Pattern Html_Pattern;
 
+    @Deprecated
     public static Pattern htmlPattern() {
         if (Html_Pattern == null) {
             Html_Pattern = Pattern.compile("<(/?[a-zA-Z0-9_\\-\\.]+)([^>]*)>");
@@ -136,8 +152,10 @@ public class RegexHelper {
     /**
      * html注释正则模式
      */
+    @Deprecated
     private static Pattern Html_Comment_Pattern;
 
+    @Deprecated
     public static Pattern htmlCommentPattern() {
         if (Html_Comment_Pattern == null) {
             Html_Comment_Pattern = Pattern.compile("<!--.*?-->", Pattern.DOTALL);
@@ -148,8 +166,10 @@ public class RegexHelper {
     /**
      * html属性正则模式
      */
+    @Deprecated
     private static Pattern Html_Attribute_Pattern;
 
+    @Deprecated
     public static Pattern htmlAttributePattern() {
         if (Html_Attribute_Pattern == null) {
             String regex = "(\\s+)([a-zA-Z_][a-zA-Z0-9_-]*)(\\s*=\\s*)(?:\"([^\"]*)\"|'([^']*)'|([^\"'\\s>]+))";
@@ -161,8 +181,10 @@ public class RegexHelper {
     /**
      * yaml正则模式
      */
+    @Deprecated
     private static Pattern YAML_Pattern;
 
+    @Deprecated
     public static Pattern yamlPattern() {
         if (YAML_Pattern == null) {
             String regex = "^\\s*(#.*)|(\\s*)(([^:#\\s]+):\\s*(.*?)(?:\\s*#(.*))?)$";
@@ -174,8 +196,10 @@ public class RegexHelper {
     /**
      * properties正则模式
      */
+    @Deprecated
     private static Pattern Properties_Pattern;
 
+    @Deprecated
     public static Pattern propertiesPattern() {
         if (Properties_Pattern == null) {
             String regex = "^\\s*" +
@@ -191,8 +215,10 @@ public class RegexHelper {
     /**
      * css正则模式
      */
+    @Deprecated
     private static Pattern CSS_Pattern;
 
+    @Deprecated
     public static Pattern cssPattern() {
         if (CSS_Pattern == null) {
             // 按优先级排序的CSS语法正则表达式
@@ -225,8 +251,10 @@ public class RegexHelper {
     /**
      * java正则模式
      */
+    @Deprecated
     private static Pattern JAVA_Pattern;
 
+    @Deprecated
     public static Pattern javaPattern() {
         if (JAVA_Pattern == null) {
             String regex = "(?x)" +
@@ -248,8 +276,10 @@ public class RegexHelper {
     /**
      * python正则模式
      */
+    @Deprecated
     private static Pattern PYTHON_Pattern;
 
+    @Deprecated
     public static Pattern pythonPattern() {
         if (PYTHON_Pattern == null) {
 
@@ -288,8 +318,10 @@ public class RegexHelper {
     /**
      * javascript正则模式
      */
+    @Deprecated
     private static Pattern JAVASRIPT_Pattern;
 
+    @Deprecated
     public static Pattern javascriptPattern() {
         if (JAVASRIPT_Pattern == null) {
             String regex = "(?x)" +
