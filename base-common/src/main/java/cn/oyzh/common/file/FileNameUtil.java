@@ -158,7 +158,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isPerlType(String fileType) {
-        return "perl".equalsIgnoreCase(fileType);
+        return "pl".equalsIgnoreCase(fileType);
     }
 
     /**
@@ -188,7 +188,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isRubyType(String fileType) {
-        return "ruby".equalsIgnoreCase(fileType);
+        return "rb".equalsIgnoreCase(fileType);
     }
 
     /**
@@ -1035,6 +1035,27 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否jsonc类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJsoncType(String fileType) {
+        return "jsonc".equalsIgnoreCase(fileType);
+    }
+
+
+    /**
+     * 是否jsonl类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJsonlType(String fileType) {
+        return "jsonl".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否java类型
      *
      * @param fileType 文件类型
@@ -1095,6 +1116,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否vbs类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isVimType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "vim", "vimrc", "gvimrc", "nvimrc", "_vimrc", "vmb", "ideavimrc");
+    }
+
+    /**
      * 是否python类型
      *
      * @param fileType 文件类型
@@ -1142,6 +1173,16 @@ public class FileNameUtil {
      */
     public static boolean isTextType(String fileType) {
         return "text".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否tex类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTexType(String fileType) {
+        return "tex".equalsIgnoreCase(fileType);
     }
 
     /**
@@ -1332,6 +1373,316 @@ public class FileNameUtil {
      */
     public static boolean isCerType(String fileType) {
         return "cer".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否clojure类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isClojureType(String fileType) {
+        return "clj".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否coffeescript类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCoffeeScriptType(String fileType) {
+        return "coffee".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否cuda类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isCudaType(String fileType) {
+        return "cu".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否diff类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDiffType(String fileType) {
+        return "diff".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否dockerfile类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isDockerfileType(String fileType) {
+        return "dockerfile".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否erlang类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isErlangType(String fileType) {
+        return "erl".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否fsharp类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isFsharpType(String fileType) {
+        return "fs".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否go类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGoType(String fileType) {
+        return "go".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否groovy类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGroovyType(String fileType) {
+        return "groovy".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否Handlebars类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isHandlebarsType(String fileType) {
+        return "hbs".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否hlsl类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isHlslType(String fileType) {
+        return "hlsl".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否julia类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isJuliaType(String fileType) {
+        return "julia".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否kconfig类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isKconfigType(String fileType) {
+        return "kconfig".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否latex类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isLatexType(String fileType) {
+        return "ltx".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否makefile类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isMakefileType(String fileType) {
+        return "makefile".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ObjectiveC类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isObjectiveCType(String fileType) {
+        return "m".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否ObjectiveCPP类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isObjectiveCPPType(String fileType) {
+        return "mm".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否Powershell类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPowershellType(String fileType) {
+        return "ps1".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否pug类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isPugType(String fileType) {
+        return "pug".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否r类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRType(String fileType) {
+        return "r".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否razor类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRazorType(String fileType) {
+        return "razor".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否Restructuredtext类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isRestructuredtextType(String fileType) {
+        return "rst".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否scss类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isScssType(String fileType) {
+        return "scss".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否shaderlab类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isShaderlabType(String fileType) {
+        return "shader".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否swift类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSwiftType(String fileType) {
+        return "swift".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否twig类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTwigType(String fileType) {
+        return "twig".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否xsl类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isXslType(String fileType) {
+        return "xsl".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否asciidoc类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isAsciidocType(String fileType) {
+        return StringUtil.equalsAnyIgnoreCase(fileType, "ad","asc","adoc","asciidoc");
+    }
+
+    /**
+     * 是否bibtex类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isBibtexType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "bib");
+    }
+
+    /**
+     * 是否GitRebase类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGitRebaseType(String fileType) {
+        return StringUtil.equalsIgnoreCase(fileType, "git-rebase-todo");
+    }
+
+    /**
+     * 是否SearchResult类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSearchResultType(String fileType) {
+        return "code-search".equalsIgnoreCase(fileType);
     }
 
     /**
