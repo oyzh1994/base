@@ -1142,7 +1142,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isCType(String fileType) {
-        return "c".equalsIgnoreCase(fileType);
+        return StringUtil.equalsAnyIgnoreCase(fileType, "c", "h");
     }
 
     /**
@@ -1152,7 +1152,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isCppType(String fileType) {
-        return "cpp".equalsIgnoreCase(fileType);
+        return StringUtil.equalsAnyIgnoreCase(fileType, "cpp", "hpp", "hxx");
     }
 
     /**
@@ -1652,7 +1652,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isAsciidocType(String fileType) {
-        return StringUtil.equalsAnyIgnoreCase(fileType, "ad","asc","adoc","asciidoc");
+        return StringUtil.equalsAnyIgnoreCase(fileType, "ad", "asc", "adoc", "asciidoc");
     }
 
     /**
@@ -1683,6 +1683,26 @@ public class FileNameUtil {
      */
     public static boolean isSearchResultType(String fileType) {
         return "code-search".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否sas类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isSasType(String fileType) {
+        return "sas".equalsIgnoreCase(fileType);
+    }
+
+    /**
+     * 是否gitignore类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isGitIgnoreType(String fileType) {
+        return "gitignore".equalsIgnoreCase(fileType);
     }
 
     /**
