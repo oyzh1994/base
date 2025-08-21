@@ -297,6 +297,10 @@ public class I18nHelper {
 
     public static final String FORMAT = "base.format";
 
+    public static final String FORMATTING = "base.formatting";
+
+    public static final String DOCUMENT = "base.document";
+
     public static final String INVALID = "base.invalid";
 
     public static final String PARSE = "base.parse";
@@ -2308,6 +2312,18 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(MOVE);
     }
 
+    public static String moveToTheEndOfTheDocument() {
+        return I18nResourceBundle.i18nString("base.moveToTheEndOfTheDocument");
+    }
+
+    public static String moveToTheBeginningOfTheDocument() {
+        return I18nResourceBundle.i18nString("base.moveToTheBeginningOfTheDocument");
+    }
+
+    public static String wordWrap() {
+        return I18nResourceBundle.i18nString("base.wordWrap");
+    }
+
     public static String next() {
         return I18nResourceBundle.i18nString(NEXT);
     }
@@ -4263,6 +4279,14 @@ public class I18nHelper {
 
     public static String layout() {
         return I18nResourceBundle.i18nString(LAYOUT);
+    }
+
+    public static String cut() {
+        return I18nResourceBundle.i18nString(CUT);
+    }
+
+    public static String formattingDocument() {
+        return I18nResourceBundle.i18nString(FORMATTING, DOCUMENT);
     }
 
     public String fileUploadFailed() {

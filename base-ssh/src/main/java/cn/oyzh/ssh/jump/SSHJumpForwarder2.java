@@ -34,6 +34,7 @@ import org.eclipse.jgit.internal.transport.sshd.JGitSshClient;
 import org.eclipse.jgit.internal.transport.sshd.agent.JGitSshAgentFactory;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.sshd.KeyPasswordProvider;
+import org.eclipse.jgit.transport.sshd.agent.ConnectorFactory;
 
 import java.security.KeyPair;
 import java.time.Duration;
@@ -85,8 +86,8 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         // 创建客户端
         JGitSshClient sshClient = (JGitSshClient) builder.build();
         // ssh agent处理
-        if (connect.isSSHAgentAuth()) {
-            sshClient.setAgentFactory(new JGitSshAgentFactory(SSHAgentConnectorFactory.INSTANCE, null));
+        if (connect.isSSHAgentAuth() || connect.isForwardAgent()) {
+            sshClient.setAgentFactory(new SSHAgentConnectorFactory());
         }
         // 优先的认证方式
         String methods = UserAuthPasswordFactory.PASSWORD;

@@ -2,6 +2,10 @@ package cn.oyzh.ssh.util;
 
 import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.util.StringUtil;
+import org.apache.sshd.agent.local.ChannelAgentForwardingFactory;
+import org.apache.sshd.common.FactoryManager;
+import org.apache.sshd.common.channel.ChannelFactory;
+import org.eclipse.jgit.internal.transport.sshd.agent.JGitSshAgentFactory;
 import org.eclipse.jgit.internal.transport.sshd.agent.connector.PageantConnector;
 import org.eclipse.jgit.internal.transport.sshd.agent.connector.UnixDomainSocketConnector;
 import org.eclipse.jgit.transport.sshd.agent.Connector;
@@ -18,12 +22,19 @@ import java.util.List;
  * @author oyzh
  * @since 2025-06-30
  */
-public class SSHAgentConnectorFactory implements ConnectorFactory {
+public class SSHAgentConnectorFactory extends JGitSshAgentFactory implements ConnectorFactory {
 
-    /**
-     * 当前实例
-     */
-    public static final SSHAgentConnectorFactory INSTANCE = new SSHAgentConnectorFactory();
+    public SSHAgentConnectorFactory() {
+        this(ConnectorFactory.getDefault(), null);
+    }
+
+    public SSHAgentConnectorFactory(File homeDir) {
+        this(ConnectorFactory.getDefault(), homeDir);
+    }
+
+    public SSHAgentConnectorFactory(ConnectorFactory factory, File homeDir) {
+        super(factory, homeDir);
+    }
 
     @Override
     public Connector create(String identityAgent, File homeDir) throws IOException {
@@ -54,5 +65,10 @@ public class SSHAgentConnectorFactory implements ConnectorFactory {
     @Override
     public ConnectorDescriptor getDefaultConnector() {
         return null;
+    }
+
+    @Override
+    public List<ChannelFactory> getChannelForwardingFactories(FactoryManager manager) {
+        return List.of(ChannelAgentForwardingFactory.OPENSSH, ChannelAgentForwardingFactory.IETF);
     }
 }

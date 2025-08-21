@@ -61,6 +61,12 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
     private String authMethod;
 
     /**
+     * 客户端转发
+     */
+    @Column
+    private boolean forwardAgent;
+
+    /**
      * 证书路径
      */
     @Column
@@ -247,6 +253,14 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
         this.certificatePwd = certificatePwd;
     }
 
+    public boolean isForwardAgent() {
+        return forwardAgent;
+    }
+
+    public void setForwardAgent(boolean forwardAgent) {
+        this.forwardAgent = forwardAgent;
+    }
+
     @Override
     public String toString() {
         return "SSHConnect{" +
@@ -258,8 +272,9 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
                 ", password='" + password + '\'' +
                 ", timeout=" + timeout +
                 ", authMethod='" + authMethod + '\'' +
-                ", certificatePwd='" + certificatePwd + '\'' +
+                ", forwardAgent=" + forwardAgent +
                 ", certificatePath='" + certificatePath + '\'' +
+                ", certificatePwd='" + certificatePwd + '\'' +
                 ", certificatePubKey='" + certificatePubKey + '\'' +
                 ", certificatePriKey='" + certificatePriKey + '\'' +
                 '}';
