@@ -35,6 +35,7 @@ public class JdbcHelper {
         setParams(statement, params);
         int update = statement.executeUpdate();
         statement.close();
+        connection.commit();
         return update;
     }
 
