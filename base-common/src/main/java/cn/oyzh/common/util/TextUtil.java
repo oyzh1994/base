@@ -615,6 +615,11 @@ public class TextUtil {
             isJson = StringUtil.contains(json, "[") && StringUtil.contains(json, "]")
                     && StringUtil.contains(json, ":") && StringUtil.contains(json, "\"");
         }
+        if (isJson && StringUtil.startWithAny(json.trim(), "{", "]") && StringUtil.endWithAny(json.trim(), "}", "]")) {
+
+        } else {
+            isJson = false;
+        }
         return isJson;
     }
 
@@ -648,8 +653,9 @@ public class TextUtil {
      * @return 类型
      */
     public static byte detectType(Object rawData) {
-        if (rawData instanceof byte[]) {
-            return 5;
+        if (rawData instanceof byte[] arr) {
+            // return 5;
+            rawData = new String(arr);
         }
         if (rawData instanceof String str) {
             if (isJsonStr(str)) {
