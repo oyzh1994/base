@@ -4289,6 +4289,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FORMATTING, DOCUMENT);
     }
 
+    public static String moveTo() {
+        return I18nResourceBundle.i18nString(MOVE, TO);
+    }
+
+    public static String openConnect() {
+        return I18nResourceBundle.i18nString(OPEN, CONNECT);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
