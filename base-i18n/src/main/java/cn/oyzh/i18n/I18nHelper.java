@@ -2280,6 +2280,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ABOUT);
     }
 
+    public static String aboutTitle() {
+        return I18nResourceBundle.i18nString("base.title.about");
+    }
+
     public static String collapse() {
         return I18nResourceBundle.i18nString(COLLAPSE);
     }
