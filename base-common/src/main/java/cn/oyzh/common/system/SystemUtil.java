@@ -74,8 +74,9 @@ public class SystemUtil {
      */
     public static void gcInterval(int interval) {
         JulLog.debug("gc interval in {}ms", interval);
-        TaskManager.cancelInterval("gc:task");
-        TaskManager.startInterval("gc:task", SystemUtil::gc, interval);
+        //TaskManager.cancelInterval("gc:task");
+        //TaskManager.startInterval("gc:task", SystemUtil::gc, interval);
+        TaskManager.startInterval(SystemUtil::gc, interval);
     }
 
     /**
@@ -106,6 +107,7 @@ public class SystemUtil {
     public static String tmpdir() {
         return System.getProperty("java.io.tmpdir");
     }
+
     /**
      * 获取用户目录
      *

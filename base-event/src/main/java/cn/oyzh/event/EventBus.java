@@ -58,7 +58,7 @@ public class EventBus {
             } else if (delay) {// 延迟
                 TaskManager.startDelay(func, delayMillis);
             } else if (async) {// 异步
-                TaskManager.start(func);
+                TaskManager.startSync(func);
             } else {// 正常执行
                 func.run();
             }

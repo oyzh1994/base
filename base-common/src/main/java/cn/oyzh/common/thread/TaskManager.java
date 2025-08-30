@@ -20,11 +20,13 @@ public class TaskManager {
     /**
      * 延迟任务列表
      */
+    @Deprecated
     private static final WeakCache<String, Future<?>> DELAY_TASKS = CacheUtil.newWeakCache();
 
     /**
      * 循环任务列表
      */
+    @Deprecated
     private static final WeakCache<String, Future<?>> INTERVAL_TASKS = CacheUtil.newWeakCache();
 
     /**
@@ -33,8 +35,10 @@ public class TaskManager {
      * @param key   唯一标识
      * @param task  任务
      * @param delay 延迟时间
+     * @return 任务
      */
-    public static void startDelay(String key, IRunnable task, int delay) {
+    @Deprecated
+    public static Future<?> startDelay(String key, IRunnable task, int delay) {
         Future<?> future = DELAY_TASKS.get(key);
         if (future != null && !future.isDone()) {
             ExecutorUtil.cancel(future);
@@ -58,6 +62,7 @@ public class TaskManager {
         }
         future = ExecutorUtil.start(myTask, delay);
         DELAY_TASKS.put(key, future);
+        return future;
     }
 
     /**
@@ -65,6 +70,7 @@ public class TaskManager {
      *
      * @param key 唯一标识
      */
+    @Deprecated
     public static void cancelDelay(String key) {
         Future<?> future = DELAY_TASKS.get(key);
         if (future != null) {
@@ -82,6 +88,7 @@ public class TaskManager {
      * @param task     任务
      * @param interval 定时时间
      */
+    @Deprecated
     public static void startInterval(String key, Runnable task, int interval) {
         startInterval(key, task, interval, 0);
     }
@@ -95,6 +102,7 @@ public class TaskManager {
      * @param delay    延迟时间
      * @return 对象
      */
+    @Deprecated
     public static Future<?> startInterval(String key, Runnable task, int interval, int delay) {
         Future<?> future = INTERVAL_TASKS.get(key);
         if (future != null && !future.isDone()) {
@@ -110,6 +118,7 @@ public class TaskManager {
      *
      * @param key 唯一标识
      */
+    @Deprecated
     public static Future<?> cancelInterval(String key) {
         Future<?> future = INTERVAL_TASKS.get(key);
         if (future != null) {
@@ -119,6 +128,32 @@ public class TaskManager {
             INTERVAL_TASKS.remove(key);
         }
         return future;
+    }
+
+    /**
+     * 同步执行
+     *
+     * @param task 任务
+     * @return 对象
+     */
+    public static Future<?> startSync(Runnable task) {
+        if (task != null) {
+            return ExecutorUtil.submit(task);
+        }
+        return null;
+    }
+
+    /**
+     * 异步执行
+     *
+     * @param task 任务
+     * @return 对象
+     */
+    public static Future<?> startAsync(Runnable task) {
+        if (task != null) {
+            return CompletableFuture.runAsync(task, ExecutorUtil.executor());
+        }
+        return null;
     }
 
     /**
@@ -136,12 +171,42 @@ public class TaskManager {
     }
 
     /**
+     * 开始定时任务
+     *
+     * @param task     任务
+     * @param interval 定时时间
+     * @return 对象
+     */
+    public static Future<?> startInterval(Runnable task, int interval) {
+        if (task != null) {
+            return ExecutorUtil.start(task, 0, interval);
+        }
+        return null;
+    }
+
+    /**
+     * 开始定时任务
+     *
+     * @param task     任务
+     * @param interval 定时时间
+     * @param delay    延迟时间
+     * @return 对象
+     */
+    public static Future<?> startInterval(Runnable task, int interval, int delay) {
+        if (task != null) {
+            return ExecutorUtil.start(task, delay, interval);
+        }
+        return null;
+    }
+
+    /**
      * 开始超时任务
      *
      * @param task    任务
      * @param timeout 超时时间
+     * @return 对象
      */
-    public static void startTimeout(Runnable task, int timeout) {
+    public static Future<?> startTimeout(Runnable task, int timeout) {
         if (task != null) {
             // 创建一个异步任务
             CompletableFuture<Void> future = CompletableFuture.runAsync(task, ExecutorUtil.executor());
@@ -152,18 +217,7 @@ public class TaskManager {
                 // 如果任务超时，这里会被执行
                 future.cancel(true);
             }
-        }
-    }
-
-    /**
-     * 开始任务
-     *
-     * @param task 任务
-     * @return 任务
-     */
-    public static Future<?> start(Runnable task) {
-        if (task != null) {
-            return ExecutorUtil.submit(task);
+            return future;
         }
         return null;
     }
