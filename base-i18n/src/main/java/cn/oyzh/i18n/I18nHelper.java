@@ -2652,6 +2652,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RELOAD);
     }
 
+    public static String reloadDatabase() {
+        return I18nResourceBundle.i18nString(RELOAD, DATABASE);
+    }
+
     public static String addTable() {
         return I18nResourceBundle.i18nString(ADD, TABLE);
     }
