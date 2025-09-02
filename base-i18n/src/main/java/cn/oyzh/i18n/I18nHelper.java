@@ -2428,6 +2428,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(UN_COLLECT);
     }
 
+    public static String unCollectKey() {
+        return I18nResourceBundle.i18nString(UN_COLLECT, KEY);
+    }
+
     public static String addNode() {
         return I18nResourceBundle.i18nString(ADD, NODE);
     }
@@ -4179,6 +4183,10 @@ public class I18nHelper {
 
     public static String collectFile() {
         return I18nResourceBundle.i18nString(COLLECT, FILE);
+    }
+
+    public static String collectKey() {
+        return I18nResourceBundle.i18nString(COLLECT, KEY);
     }
 
     public static String addBucket() {

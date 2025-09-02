@@ -164,7 +164,7 @@ public class H2StandardOperator extends JdbcStandardOperator {
                     } else {
                         sql.append(" AND ");
                     }
-                    sql.append(queryParam.getName());
+                    sql.append(JdbcUtil.wrap(queryParam.getName()));
                     sql.append(queryParam.getOperator());
                     sql.append(JdbcUtil.wrapData(queryParam.getData()));
                 }
