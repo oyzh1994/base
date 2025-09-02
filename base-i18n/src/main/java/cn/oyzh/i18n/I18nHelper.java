@@ -2023,6 +2023,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(KEY, FILTER);
     }
 
+    public static String filterKey() {
+        return I18nResourceBundle.i18nString(FILTER,KEY);
+    }
+
     public static String saveConnection() {
         return I18nResourceBundle.i18nString(SAVE, CONNECTION);
     }
