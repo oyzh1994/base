@@ -289,7 +289,13 @@ public class FileUtil {
         return source.renameTo(target);
     }
 
-    public static boolean clean(File source) {
+    /**
+     * 清空文件内容
+     *
+     * @param source 文件
+     * @return 结果
+     */
+    public static boolean cleanFileContent(File source) {
         if (source != null && source.exists() && !source.isDirectory() && !source.isAbsolute()) {
             try (FileOutputStream fos = new FileOutputStream(source)) {
                 fos.write(new byte[]{});
@@ -379,5 +385,34 @@ public class FileUtil {
 
     public static void forceMkdir(File dir) {
         mkdir(dir);
+    }
+
+    /**
+     * 清空目录
+     *
+     * @param directory 目录
+     * @return 结果
+     */
+    public static boolean cleanDir(File directory) {
+        if (directory == null || !directory.exists() || !directory.isDirectory()) {
+            return true;
+        }
+        final File[] files = directory.listFiles();
+        if (null != files) {
+            for (File childFile : files) {
+                boolean result = false;
+                // 删除目录
+                if (childFile.isDirectory()) {
+                    result = cleanDir(childFile);
+                } else if (childFile.isFile()) {// 删除文件
+                    result = del(childFile);
+                }
+                if (!result) {
+                    return false;
+                }
+            }
+        }
+        // 删除目录自身
+        return del(directory);
     }
 }
