@@ -615,7 +615,7 @@ public class TextUtil {
             isJson = StringUtil.contains(json, "[") && StringUtil.contains(json, "]")
                     && StringUtil.contains(json, ":") && StringUtil.contains(json, "\"");
         }
-        if (isJson && StringUtil.startWithAny(json.trim(), "{", "]") && StringUtil.endWithAny(json.trim(), "}", "]")) {
+        if (isJson && StringUtil.startWithAny(json.trim(), "{", "[") && StringUtil.endWithAny(json.trim(), "}", "]")) {
 
         } else {
             isJson = false;
