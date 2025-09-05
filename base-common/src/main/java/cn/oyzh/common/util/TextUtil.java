@@ -553,7 +553,7 @@ public class TextUtil {
      * @return 结果
      */
     public static boolean isHtmlStr(String str) {
-        return StringUtil.containsIgnoreCase(str, "</html>") && StringUtil.containsIgnoreCase(str, "</body>");
+        return StringUtil.containsIgnoreCase(str, "<html>") && StringUtil.containsIgnoreCase(str, "</html>");
     }
 
     /**
