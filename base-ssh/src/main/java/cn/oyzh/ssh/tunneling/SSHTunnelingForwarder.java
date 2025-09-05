@@ -16,6 +16,7 @@ import java.util.List;
  * @author oyzh
  * @since 2025/04/16
  */
+@Deprecated
 public class SSHTunnelingForwarder extends SSHForwarder {
 
     /**

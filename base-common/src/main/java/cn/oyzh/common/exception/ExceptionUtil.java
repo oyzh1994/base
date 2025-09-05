@@ -57,7 +57,7 @@ public class ExceptionUtil {
      * @param ex 异常
      * @return 结果
      */
-    public static boolean isInterrupt(Exception ex) {
+    public static boolean isInterrupt(Throwable ex) {
         if (hasMessage(ex, "canceled", "interrupt")) {
             return true;
         }

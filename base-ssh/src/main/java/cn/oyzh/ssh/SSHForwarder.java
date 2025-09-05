@@ -14,6 +14,7 @@ import java.util.Set;
  * @author oyzh
  * @since 2025/04/16
  */
+@Deprecated
 public class SSHForwarder {
 
     /**

@@ -1,7 +1,6 @@
 package cn.oyzh.common.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -20,7 +19,7 @@ public class IOUtil {
     private IOUtil() {
     }
 
-    public static void closeQuietly(Closeable closeable) {
+    public static void closeQuietly(AutoCloseable closeable) {
         close(closeable);
     }
 

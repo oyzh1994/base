@@ -8,7 +8,6 @@ import cn.oyzh.ssh.SSHForwarder;
 import cn.oyzh.ssh.domain.SSHConnect;
 import cn.oyzh.ssh.util.JschUtil;
 import cn.oyzh.ssh.util.SSHHolder;
-import cn.oyzh.ssh.util.SSHUtil;
 import com.jcraft.jsch.AgentIdentityRepository;
 import com.jcraft.jsch.AgentProxyException;
 import com.jcraft.jsch.Identity;
@@ -24,6 +23,7 @@ import java.util.List;
  * @author oyzh
  * @since 2025/04/15
  */
+@Deprecated
 public class SSHJumpForwarder extends SSHForwarder {
 
     /**
