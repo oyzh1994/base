@@ -99,6 +99,21 @@ public class StringUtil {
         return string == null || string.isBlank();
     }
 
+    /**
+     * 是否任意字符为空
+     *
+     * @param strings 字符列表
+     * @return 结果
+     */
+    public static boolean isAnyBlank(String... strings) {
+        for (String string : strings) {
+            if (isBlank(string)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isNotBlank(String string) {
         return !isBlank(string);
     }
