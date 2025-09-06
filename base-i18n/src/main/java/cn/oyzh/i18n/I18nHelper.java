@@ -1165,6 +1165,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DATA);
     }
 
+    public static String dataHistory() {
+        return I18nResourceBundle.i18nString(DATA, HISTORY);
+    }
+
+    public static String view1History() {
+        return I18nResourceBundle.i18nString(VIEW1, HISTORY);
+    }
+
     public static String importData() {
         return I18nResourceBundle.i18nString(IMPORT, DATA);
     }
@@ -1507,6 +1515,11 @@ public class I18nHelper {
 
     public static String delete() {
         return I18nResourceBundle.i18nString(DELETE);
+    }
+
+
+    public static String deleteHistory() {
+        return I18nResourceBundle.i18nString(DELETE, HISTORY);
     }
 
     public static String deleteBucket() {
@@ -2026,7 +2039,7 @@ public class I18nHelper {
     }
 
     public static String filterKey() {
-        return I18nResourceBundle.i18nString(FILTER,KEY);
+        return I18nResourceBundle.i18nString(FILTER, KEY);
     }
 
     public static String saveConnection() {
@@ -2724,6 +2737,14 @@ public class I18nHelper {
 
     public static String refreshData() {
         return I18nResourceBundle.i18nString(REFRESH, DATA);
+    }
+
+    public static String restoreHistory() {
+        return I18nResourceBundle.i18nString(RESTORE, HISTORY);
+    }
+
+    public static String refreshHistory() {
+        return I18nResourceBundle.i18nString(REFRESH, HISTORY);
     }
 
     public static String moveUp() {
