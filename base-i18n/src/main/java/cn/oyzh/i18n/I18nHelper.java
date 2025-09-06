@@ -4291,6 +4291,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(EDIT, SNIPPET);
     }
 
+    public static String editQuery() {
+        return I18nResourceBundle.i18nString(EDIT, QUERY);
+    }
+
     public static String deleteSnippet() {
         return I18nResourceBundle.i18nString(DELETE, SNIPPET);
     }
