@@ -1193,6 +1193,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CONTENT, ALREADY_EXISTS);
     }
 
+    public static String authAlreadyExists() {
+        return I18nResourceBundle.i18nString(AUTH, ALREADY_EXISTS);
+    }
+
     public static String nodeAlreadyExists() {
         return I18nResourceBundle.i18nString(NODE, ALREADY_EXISTS);
     }
@@ -1517,9 +1521,12 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE);
     }
 
-
     public static String deleteHistory() {
         return I18nResourceBundle.i18nString(DELETE, HISTORY);
+    }
+
+    public static String deleteAuth() {
+        return I18nResourceBundle.i18nString(DELETE, AUTH);
     }
 
     public static String deleteBucket() {
@@ -4346,6 +4353,10 @@ public class I18nHelper {
 
     public static String openConnect() {
         return I18nResourceBundle.i18nString(OPEN, CONNECT);
+    }
+
+    public static String copyAuth() {
+        return I18nResourceBundle.i18nString(COPY, AUTH);
     }
 
     public String fileUploadFailed() {
