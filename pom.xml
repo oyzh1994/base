@@ -47,7 +47,7 @@
         <h2.version>2.3.232</h2.version>
         <poi.version>5.4.1</poi.version>
         <base.version>1.0.2</base.version>
-        <sshd.version>2.15.0</sshd.version>
+        <sshd.version>2.16.0</sshd.version>
         <jsch.version>2.27.2</jsch.version>
         <sshj.version>0.40.0</sshj.version>
         <zxing.version>3.5.3</zxing.version>
@@ -121,13 +121,6 @@
                 <groupId>io.github.oyzh1994</groupId>
                 <artifactId>base-event</artifactId>
                 <version>${base.version}</version>
-            </dependency>
-            <!-- ssh类库 -->
-            <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
-            <dependency>
-                <groupId>com.github.mwiede</groupId>
-                <artifactId>jsch</artifactId>
-                <version>${jsch.version}</version>
             </dependency>
             <!-- 测试类库 -->
             <dependency>

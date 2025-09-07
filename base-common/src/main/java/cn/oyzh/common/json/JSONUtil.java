@@ -52,6 +52,88 @@ public class JSONUtil {
     }
 
     /**
+     * 压缩
+     *
+     * @param json 对象
+     * @return json压缩字符串
+     */
+    public static String toCompress(String json) {
+        if (json == null || json.isEmpty()) {
+            return json;
+        }
+        StringBuilder compressed = new StringBuilder();
+        int length = json.length();
+        int index = 0;
+        boolean inString = false;
+        char currentChar;
+        while (index < length) {
+            currentChar = json.charAt(index);
+
+            // 处理字符串中的内容（保留字符串内部的空格）
+            if (currentChar == '"') {
+                compressed.append(currentChar);
+                index++;
+
+                // 处理字符串内部，包括转义的引号
+                while (index < length) {
+                    currentChar = json.charAt(index);
+                    compressed.append(currentChar);
+                    index++;
+
+                    // 遇到未转义的引号，退出字符串模式
+                    if (currentChar == '"' && json.charAt(index - 2) != '\\') {
+                        inString = false;
+                        break;
+                    }
+                    inString = true;
+                }
+                continue;
+            }
+
+            // 如果在字符串内部，直接任何字符（包括空格）
+            if (inString) {
+                compressed.append(currentChar);
+                index++;
+                continue;
+            }
+
+            // 跳过空格、制表符、换行符等空白字符
+            if (Character.isWhitespace(currentChar)) {
+                index++;
+                continue;
+            }
+
+            // 处理单行注释 //
+            if (currentChar == '/' && index + 1 < length && json.charAt(index + 1) == '/') {
+                // 跳过直到换行符
+                while (index < length && json.charAt(index) != '\n') {
+                    index++;
+                }
+                continue;
+            }
+
+            // 处理多行注释 /* */
+            if (currentChar == '/' && index + 1 < length && json.charAt(index + 1) == '*') {
+                index += 2;
+                // 跳过直到 */
+                while (index + 1 < length) {
+                    if (json.charAt(index) == '*' && json.charAt(index + 1) == '/') {
+                        index += 2;
+                        break;
+                    }
+                    index++;
+                }
+                continue;
+            }
+
+            // 保留其他字符
+            compressed.append(currentChar);
+            index++;
+        }
+        return compressed.toString();
+    }
+
+    /**
      * 转换为json字符串
      *
      * @param obj 对象
