@@ -2,6 +2,7 @@ package cn.oyzh.common.network;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
@@ -100,9 +101,10 @@ public class ProxyUtil {
 
     /**
      * socks握手
-     * @param sock 连接通道
-     * @param addr 地址
-     * @param proxyUser 代理用户
+     *
+     * @param sock          连接通道
+     * @param addr          地址
+     * @param proxyUser     代理用户
      * @param proxyPassword 代理密码
      * @throws IOException 异常
      */
@@ -114,5 +116,15 @@ public class ProxyUtil {
         socksPerformHandler.setProxyUsername(proxyUser);
         socksPerformHandler.setProxyPassword(proxyPassword);
         socksPerformHandler.performSocksHandshake(sock, addr);
+    }
+
+    /**
+     * 是否需要代理
+     *
+     * @param proxy 代理对象
+     * @return 结果
+     */
+    public static boolean isNeedProxy(Proxy proxy) {
+        return proxy != null && proxy.type() != Proxy.Type.DIRECT;
     }
 }
