@@ -32,21 +32,21 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ssh密钥库 -->
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk18on</artifactId>
-            <version>${bouncycastle.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk18on</artifactId>
-            <version>${bouncycastle.version}</version>
-            <scope>provided</scope>
-        </dependency>
+        <!-- &lt;!&ndash; ssh密钥库 &ndash;&gt; -->
+        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on &ndash;&gt; -->
+        <!-- <dependency> -->
+        <!--     <groupId>org.bouncycastle</groupId> -->
+        <!--     <artifactId>bcprov-jdk18on</artifactId> -->
+        <!--     <version>${bouncycastle.version}</version> -->
+        <!--     <scope>provided</scope> -->
+        <!-- </dependency> -->
+        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on &ndash;&gt; -->
+        <!-- <dependency> -->
+        <!--     <groupId>org.bouncycastle</groupId> -->
+        <!--     <artifactId>bcpkix-jdk18on</artifactId> -->
+        <!--     <version>${bouncycastle.version}</version> -->
+        <!--     <scope>provided</scope> -->
+        <!-- </dependency> -->
 
         <!-- https://mvnrepository.com/artifact/com.hierynomus/sshj -->
         <dependency>
