@@ -61,7 +61,7 @@ public class NumberUtil {
     /**
      * 解析大小
      *
-     * @param size  大小
+     * @param size 大小
      * @return 结果
      */
     public static double parseSize(String size) {
@@ -96,7 +96,11 @@ public class NumberUtil {
      */
     public static double scale(double size, Integer scale) {
         DecimalFormat df = new DecimalFormat("#." + "0".repeat(scale));
-        return Double.parseDouble(df.format(size));
+        String result = df.format(size);
+        if (result.contains(",")) {
+            result = result.replace(",", "");
+        }
+        return Double.parseDouble(result);
     }
 
     public static boolean isLT(Number n1, Number n2) {
