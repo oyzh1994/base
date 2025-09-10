@@ -10,7 +10,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 线程工具类
@@ -98,38 +97,38 @@ public class ThreadUtil {
         return thread;
     }
 
-    /**
-     * 开始运行线程
-     *
-     * @param task 任务
-     */
-    public static void startWithError(IRunnable task) throws Throwable {
-        startWithError(task, null);
-    }
+    // /**
+    //  * 开始运行线程
+    //  *
+    //  * @param task 任务
+    //  */
+    // public static void startWithError(IRunnable task) throws Throwable {
+    //     startWithError(task, null);
+    // }
 
-    /**
-     * 开始运行线程
-     *
-     * @param task   任务
-     * @param finish 结束回调
-     */
-    public static void startWithError(IRunnable task, Runnable finish) throws Throwable {
-        AtomicReference<Throwable> ref = new AtomicReference<>();
-        start(() -> {
-            try {
-                task.run();
-            } catch (Exception ex) {
-                ref.set(ex);
-            } finally {
-                if (finish != null) {
-                    finish.run();
-                }
-            }
-        });
-        if (ref.get() != null) {
-            throw ref.get();
-        }
-    }
+    // /**
+    //  * 开始运行线程
+    //  *
+    //  * @param task   任务
+    //  * @param finish 结束回调
+    //  */
+    // public static void startWithError(IRunnable task, Runnable finish) throws Throwable {
+    //     AtomicReference<Throwable> ref = new AtomicReference<>();
+    //     start(() -> {
+    //         try {
+    //             task.run();
+    //         } catch (Exception ex) {
+    //             ref.set(ex);
+    //         } finally {
+    //             if (finish != null) {
+    //                 finish.run();
+    //             }
+    //         }
+    //     });
+    //     if (ref.get() != null) {
+    //         throw ref.get();
+    //     }
+    // }
 
     /**
      * 创建线程
