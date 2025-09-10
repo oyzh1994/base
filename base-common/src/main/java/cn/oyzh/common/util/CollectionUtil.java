@@ -186,9 +186,8 @@ public class CollectionUtil {
         return String.join(lineSeparator, collection);
     }
 
-    public static List<String> removeBlank(List<String> elements) {
+    public static void removeBlank(List<String> elements) {
         elements.removeIf(StringUtil::isBlank);
-        return elements;
     }
 
     public static <T> T removeRandom(Map<?, T> map) {
