@@ -143,8 +143,19 @@ public class ResourceUtil {
      * @return 本地路径
      */
     public static String getPath(String url) {
+        return getPath(url, ResourceUtil.class);
+    }
+
+    /**
+     * 获取路径
+     *
+     * @param url   地址
+     * @param clazz 类
+     * @return 本地路径
+     */
+    public static String getPath(String url, Class<?> clazz) {
         try {
-            String path = ResourceUtil.class.getResource(url).toURI().getPath();
+            String path = clazz.getResource(url).toURI().getPath();
             if (OSUtil.isWindows() && path.startsWith("/")) {
                 path = path.substring(1);
             }
