@@ -19,6 +19,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -414,5 +416,19 @@ public class FileUtil {
         }
         // 删除目录自身
         return del(directory);
+    }
+
+    /**
+     * 写入utf8数据行
+     *
+     * @param list 数据列表
+     * @param file 文件
+     */
+    public static void writeUtf8Lines(Collection<String> list, File file) {
+        StringBuilder builder = new StringBuilder();
+        for (String s : list) {
+            builder.append(s).append(System.lineSeparator());
+        }
+        writeString(builder.toString(), file);
     }
 }
