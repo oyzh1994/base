@@ -590,7 +590,7 @@ public class FileNameUtil {
      * @return 结果
      */
     public static boolean isGzType(String fileType) {
-        return StringUtil.equalsIgnoreCase(fileType, "gz");
+        return StringUtil.equalsAnyIgnoreCase(fileType, "gz", "tgz");
     }
 
     /**
