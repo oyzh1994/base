@@ -31,10 +31,8 @@ import org.apache.sshd.common.signature.Signature;
 import org.apache.sshd.common.util.net.SshdSocketAddress;
 import org.apache.sshd.core.CoreModuleProperties;
 import org.eclipse.jgit.internal.transport.sshd.JGitSshClient;
-import org.eclipse.jgit.internal.transport.sshd.agent.JGitSshAgentFactory;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.sshd.KeyPasswordProvider;
-import org.eclipse.jgit.transport.sshd.agent.ConnectorFactory;
 
 import java.security.KeyPair;
 import java.time.Duration;
@@ -129,6 +127,13 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         sshClient.setKeyPasswordProviderFactory(() -> (KeyPasswordProvider) CredentialsProvider.getDefault());
         // 心跳
         sshClient.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, Duration.ofSeconds(60));
+        // 其他参数
+        int timeout = connect.getTimeout();
+        CoreModuleProperties.SOCKET_KEEPALIVE.set(sshClient, true);
+        CoreModuleProperties.ALLOW_DHG1_KEX_FALLBACK.set(sshClient, true);
+        CoreModuleProperties.HEARTBEAT_INTERVAL.set(sshClient, Duration.ofSeconds(60));
+        CoreModuleProperties.IO_CONNECT_TIMEOUT.set(sshClient, Duration.ofMillis(timeout));
+        CoreModuleProperties.FORWARD_REQUEST_TIMEOUT.set(sshClient, Duration.ofMillis(timeout));
         // 添加到列表
         this.clients.add(sshClient);
         return sshClient;
@@ -145,11 +150,11 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
 
         // 超时时间
         int timeout = connect.getTimeout();
-
-        // 由于二次验证会要求更多时间，优化下此处的验证时间
-        if (connect.isPasswordAuth() && timeout < 15000) {
-            timeout = 15000;
-        }
+        //
+        // // 由于二次验证会要求更多时间，优化下此处的验证时间
+        // if (connect.isPasswordAuth() && timeout < 15000) {
+        //     timeout = 15000;
+        // }
 
         // 会话连接参数
         HostConfigEntry entry = new HostConfigEntry();
