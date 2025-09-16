@@ -255,7 +255,7 @@ public class Paging<T> {
      *
      * @return 分页数据
      */
-    private List<T> pageData() {
+    public List<T> pageData() {
         long start = this.limit * this.currentPage;
         long end = Math.min(start + this.limit, this.count);
         return this.dataList.subList((int) start, (int) end);
