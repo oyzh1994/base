@@ -20,7 +20,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -326,6 +325,10 @@ public class FileUtil {
         return exist(new File(file));
     }
 
+    public static List<File> getAllFiles(String folder) {
+        return getAllFiles(new File(folder));
+    }
+
     public static List<File> getAllFiles(File folder) {
         List<File> fileList = new ArrayList<>();
         getAllFiles(folder, fileList);
@@ -343,6 +346,17 @@ public class FileUtil {
                 }
             }
         }
+    }
+
+    /**
+     * 获取全部文件
+     *
+     * @param folder   目录
+     * @param callback 回调
+     * @throws Exception 异常
+     */
+    public static void getAllFiles(String folder, ExceptionConsumer<File> callback) throws Exception {
+        getAllFiles(new File(folder), callback);
     }
 
     /**
