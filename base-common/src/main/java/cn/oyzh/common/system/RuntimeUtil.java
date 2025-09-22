@@ -2,13 +2,13 @@ package cn.oyzh.common.system;
 
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.thread.ProcessExecResult;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -279,23 +279,72 @@ public class RuntimeUtil {
                 process = Runtime.getRuntime().exec(cmdArr, null);
             }
             // 读取命令的输出
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
-            StringBuilder sb = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                sb.append(line).append(System.lineSeparator());
+            BufferedReader inReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder input = new StringBuilder();
+            while ((line = inReader.readLine()) != null) {
+                input.append(line).append(System.lineSeparator());
             }
+            // 读取命令的输出
+            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            StringBuilder error = new StringBuilder();
+            while ((line = errReader.readLine()) != null) {
+                error.append(line).append(System.lineSeparator());
+            }
+            JulLog.info("exec input:{}", input.toString());
+            JulLog.error("exec error:{}", error.toString());
             // 等待命令执行完成
             int exitCode = process.waitFor();
             JulLog.debug("Runtime executed with exit code:{}", exitCode);
             // while (sb.toString().endsWith("\r") || sb.toString().endsWith("\n")) {
             //     sb.deleteCharAt(sb.length() - 1);
             // }
-            return sb.toString();
+            if (input.isEmpty()) {
+                return error.toString();
+            }
+            return input.toString();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public static ProcessExecResult execForResult(String... cmdArr) {
+        ProcessExecResult result = new ProcessExecResult();
+        try {
+            // 执行命令
+            Process process;
+            if (cmdArr.length == 1) {
+                process = Runtime.getRuntime().exec(cmdArr[0], null);
+            } else {
+                process = Runtime.getRuntime().exec(cmdArr, null);
+            }
+            // 读取命令的输出
+            String line;
+            BufferedReader inReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder input = new StringBuilder();
+            while ((line = inReader.readLine()) != null) {
+                input.append(line).append(System.lineSeparator());
+            }
+            // 读取命令的输出
+            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            StringBuilder error = new StringBuilder();
+            while ((line = errReader.readLine()) != null) {
+                error.append(line).append(System.lineSeparator());
+            }
+            JulLog.info("exec input:{}", input.toString());
+            JulLog.error("exec error:{}", error.toString());
+            // 等待命令执行完成
+            int exitCode = process.waitFor();
+            JulLog.debug("Runtime executed with exit code:{}", exitCode);
+            result.setExitCode(exitCode);
+            result.setInput(input.toString());
+            result.setError(error.toString());
+            return result;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
     }
 
     public static Process exec(String cmd) {
