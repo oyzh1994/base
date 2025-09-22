@@ -107,75 +107,85 @@ public class ProcessExecBuilder {
         return process;
     }
 
+    /**
+     * 抓取正常输出
+     *
+     * @param process 进程
+     * @return 输出
+     * @throws IOException 异常
+     */
+    private String doCatchInput(Process process) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        InputStream stream = process.getInputStream();
+        if (OSUtil.isWindows() || stream.available() > 0) {
+            JulLog.info("process input--->start");
+            // 获取进程的标准输出流
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
+            // 读取输出并打印到控制台
+            while (process.isAlive() || stream.available() > 0) {
+                String line = reader.readLine();
+                if (line != null) {
+                    JulLog.info(line);
+                    builder.append(line);
+                }
+            }
+            stream.close();
+            reader.close();
+            JulLog.info("process input--->end");
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 抓取异常输出
+     *
+     * @param process 进程
+     * @return 输出
+     * @throws IOException 异常
+     */
+    private String doCatchError(Process process) throws IOException {
+        StringBuilder builder = new StringBuilder();
+        InputStream stream = process.getErrorStream();
+        if (OSUtil.isWindows() || stream.available() > 0) {
+            JulLog.error("process error--->start");
+            // 获取进程的标准输出流
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
+            // 读取输出并打印到控制台
+            while (process.isAlive() || stream.available() > 0) {
+                String line = reader.readLine();
+                if (line != null) {
+                    JulLog.error(line);
+                    builder.append(line);
+                }
+            }
+            stream.close();
+            reader.close();
+            JulLog.error("process error--->end");
+        }
+        return builder.toString();
+    }
+
+    /**
+     * 执行命令
+     *
+     * @return 结果
+     * @throws IOException          异常
+     * @throws InterruptedException 异常
+     */
     public ProcessExecResult exec() throws IOException, InterruptedException {
         Process process = this.build();
         ProcessExecResult execResult = new ProcessExecResult();
-        Thread inputThread = null;
-        if (this.catchInput) {
-            inputThread = ThreadUtil.startVirtual(() -> {
-                try {
-                    InputStream stream = process.getInputStream();
-                    if (OSUtil.isWindows() || stream.available() > 0) {
-                        JulLog.info("process input--->start");
-                        // 获取进程的标准输出流
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
-                        StringBuilder builder = new StringBuilder();
-                        // 读取输出并打印到控制台
-                        while (process.isAlive() || stream.available() > 0) {
-                            String line = reader.readLine();
-                            if (line != null) {
-                                JulLog.info(line);
-                                builder.append(line);
-                            }
-                        }
-                        stream.close();
-                        reader.close();
-                        execResult.setInput(builder.toString());
-                        JulLog.info("process input--->end");
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
-        Thread errorThread = null;
-        if (this.catchError) {
-            errorThread = ThreadUtil.startVirtual(() -> {
-                try {
-                    InputStream stream = process.getErrorStream();
-                    if (OSUtil.isWindows() || stream.available() > 0) {
-                        JulLog.error("process error--->start");
-                        // 获取进程的标准输出流
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(stream, this.charset));
-                        StringBuilder builder = new StringBuilder();
-                        // 读取输出并打印到控制台
-                        while (process.isAlive() || stream.available() > 0) {
-                            String line = reader.readLine();
-                            if (line != null) {
-                                JulLog.error(line);
-                                builder.append(line);
-                            }
-                        }
-                        stream.close();
-                        reader.close();
-                        execResult.setError(builder.toString());
-                        JulLog.error("process error--->end");
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
         // 等待进程执行完成
         // 已设置超时时间
         if (this.timeout > 0) {
             boolean waitFor = process.waitFor(this.timeout, TimeUnit.MILLISECONDS);
-            // 等待读取结束
-            if (inputThread != null) {
-                inputThread.join();
+            // 抓取正常输出
+            if (this.catchInput) {
+                execResult.setInput(this.doCatchInput(process));
             }
-            if (errorThread != null) {
-                errorThread.join();
+            // 抓取异常输出
+            if (this.catchError) {
+                execResult.setInput(this.doCatchError(process));
             }
             if (!waitFor) {
                 process.destroyForcibly();
@@ -185,12 +195,13 @@ public class ProcessExecBuilder {
             execResult.setExitCode(process.exitValue());
         } else {// 未设置超时时间
             int code = process.waitFor();
-            // 等待读取结束
-            if (inputThread != null) {
-                inputThread.join();
+            // 抓取正常输出
+            if (this.catchInput) {
+                execResult.setInput(this.doCatchInput(process));
             }
-            if (errorThread != null) {
-                errorThread.join();
+            // 抓取异常输出
+            if (this.catchError) {
+                execResult.setInput(this.doCatchError(process));
             }
             // 设置执行结果
             execResult.setExitCode(code);
