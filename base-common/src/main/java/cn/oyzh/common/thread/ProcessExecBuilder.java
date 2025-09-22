@@ -34,7 +34,6 @@ public class ProcessExecBuilder {
     private List<String> command;
 
     {
-
         if (OSUtil.isWindows()) {
             this.charset = Charset.forName(System.getProperty("sun.jnu.encoding"));
         } else {
@@ -113,7 +112,7 @@ public class ProcessExecBuilder {
         ProcessExecResult execResult = new ProcessExecResult();
         Thread inputThread = null;
         if (this.catchInput) {
-            inputThread = ThreadUtil.start(() -> {
+            inputThread = ThreadUtil.startVirtual(() -> {
                 try {
                     InputStream stream = process.getInputStream();
                     if (OSUtil.isWindows() || stream.available() > 0) {
@@ -141,7 +140,7 @@ public class ProcessExecBuilder {
         }
         Thread errorThread = null;
         if (this.catchError) {
-            errorThread = ThreadUtil.start(() -> {
+            errorThread = ThreadUtil.startVirtual(() -> {
                 try {
                     InputStream stream = process.getErrorStream();
                     if (OSUtil.isWindows() || stream.available() > 0) {
@@ -178,17 +177,12 @@ public class ProcessExecBuilder {
             if (errorThread != null) {
                 errorThread.join();
             }
-            if (waitFor) {
-                int code = process.exitValue();
-                // 设置执行结果
-                execResult.setExitCode(code);
-            } else {
+            if (!waitFor) {
                 process.destroyForcibly();
                 execResult.setTimedOut(true);
-                int code = process.exitValue();
-                // 设置执行结果
-                execResult.setExitCode(code);
             }
+            // 设置执行结果
+            execResult.setExitCode(process.exitValue());
         } else {// 未设置超时时间
             int code = process.waitFor();
             // 等待读取结束
