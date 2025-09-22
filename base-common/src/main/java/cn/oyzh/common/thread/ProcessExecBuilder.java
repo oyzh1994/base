@@ -99,30 +99,44 @@ public class ProcessExecBuilder {
         return this.env.get(key);
     }
 
+    //public Process build() throws IOException {
+    //    if (this.command == null || this.command.isEmpty()) {
+    //        throw new IllegalArgumentException("command is empty");
+    //    }
+    //    Process process;
+    //    ProcessBuilder pb = new ProcessBuilder(this.command);
+    //    if (FileUtil.isDirectory(this.directory)) {
+    //        pb.directory(this.directory);
+    //    }
+    //    pb.environment().putAll(this.env);
+    //    process = pb.start();
+    //    return process;
+    //}
+
     public Process build() throws IOException {
         if (this.command == null || this.command.isEmpty()) {
             throw new IllegalArgumentException("command is empty");
         }
-        Process process;
-        //if (FileUtil.isDirectory(this.directory)) {
-        ProcessBuilder pb = new ProcessBuilder(this.command);
-        if (FileUtil.isDirectory(this.directory)) {
-            pb.directory(this.directory);
+        // 将映射转换为字符串数组
+        String[] envArray = new String[env.size()];
+        int i = 0;
+        for (Map.Entry<String, String> entry : env.entrySet()) {
+            envArray[i++] = entry.getKey() + "=" + entry.getValue();
         }
-        pb.environment().putAll(this.env);
-        process = pb.start();
-        //if (this.command.size() > 1) {
-        //    process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), null, this.directory);
-        //} else {
-        //    process = Runtime.getRuntime().exec(this.command.getFirst(), null, this.directory);
-        //}
-        //} else {
-        //    if (this.command.size() > 1) {
-        //        process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), null, null);
-        //    } else {
-        //        process = Runtime.getRuntime().exec(this.command.getFirst(), null, null);
-        //    }
-        //}
+        Process process;
+        if (FileUtil.isDirectory(this.directory)) {
+            if (this.command.size() > 1) {
+                process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), envArray, this.directory);
+            } else {
+                process = Runtime.getRuntime().exec(this.command.getFirst(), envArray, this.directory);
+            }
+        } else {
+            if (this.command.size() > 1) {
+                process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), envArray, null);
+            } else {
+                process = Runtime.getRuntime().exec(this.command.getFirst(), envArray, null);
+            }
+        }
         return process;
     }
 
