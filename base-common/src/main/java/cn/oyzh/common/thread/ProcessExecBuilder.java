@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,6 +32,8 @@ public class ProcessExecBuilder {
     private boolean catchInput = true;
 
     private boolean catchError = true;
+
+    private Map<String, String> env = new HashMap<>();
 
     private List<String> command;
 
@@ -86,24 +90,39 @@ public class ProcessExecBuilder {
         return this;
     }
 
+    public ProcessExecBuilder env(String key, String value) {
+        this.env.put(key, value);
+        return this;
+    }
+
+    public String env(String key) {
+        return this.env.get(key);
+    }
+
     public Process build() throws IOException {
         if (this.command == null || this.command.isEmpty()) {
             throw new IllegalArgumentException("command is empty");
         }
         Process process;
+        //if (FileUtil.isDirectory(this.directory)) {
+        ProcessBuilder pb = new ProcessBuilder(this.command);
         if (FileUtil.isDirectory(this.directory)) {
-            if (this.command.size() > 1) {
-                process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), null, this.directory);
-            } else {
-                process = Runtime.getRuntime().exec(this.command.getFirst(), null, this.directory);
-            }
-        } else {
-            if (this.command.size() > 1) {
-                process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), null, null);
-            } else {
-                process = Runtime.getRuntime().exec(this.command.getFirst(), null, null);
-            }
+            pb.directory(this.directory);
         }
+        pb.environment().putAll(this.env);
+        process = pb.start();
+        //if (this.command.size() > 1) {
+        //    process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), null, this.directory);
+        //} else {
+        //    process = Runtime.getRuntime().exec(this.command.getFirst(), null, this.directory);
+        //}
+        //} else {
+        //    if (this.command.size() > 1) {
+        //        process = Runtime.getRuntime().exec(this.command.toArray(new String[]{}), null, null);
+        //    } else {
+        //        process = Runtime.getRuntime().exec(this.command.getFirst(), null, null);
+        //    }
+        //}
         return process;
     }
 
