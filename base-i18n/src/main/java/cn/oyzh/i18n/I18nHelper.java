@@ -805,6 +805,8 @@ public class I18nHelper {
 
     public static final String OPEN = "base.open";
 
+    public static final String SFTP = "base.sftp";
+
     public static final String TERMINAL = "base.terminal";
 
     public static final String LOCAL = "base.local";
@@ -4353,6 +4355,10 @@ public class I18nHelper {
 
     public static String openConnect() {
         return I18nResourceBundle.i18nString(OPEN, CONNECT);
+    }
+
+    public static String openSFTP() {
+        return I18nResourceBundle.i18nString(OPEN, SFTP);
     }
 
     public static String copyAuth() {
