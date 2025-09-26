@@ -445,4 +445,18 @@ public class FileUtil {
         }
         writeString(builder.toString(), file);
     }
+
+    public static String tmpPath() {
+        return System.getProperty("java.io.tmpdir");
+    }
+
+    public static File tmpdir() {
+        return new File(tmpPath());
+    }
+
+    public static File newTmpFile(String tempFile) {
+        return new File(tmpPath(), tempFile);
+    }
+
+
 }

@@ -45,6 +45,10 @@ public class I18nHelper {
 
     public static final String TRANSPORT = "base.transport";
 
+    public static final String TRANSFER = "base.transfer";
+
+    public static final String PACKAGE = "base.package";
+
     public static final String SERVICE_NAME = "base.serviceName";
 
     public static final String CHECK = "base.check";
@@ -1125,6 +1129,10 @@ public class I18nHelper {
 
     public static String moreInfo() {
         return I18nResourceBundle.i18nString(MORE, INFO);
+    }
+
+    public static String packageTransfer() {
+        return I18nResourceBundle.i18nString(PACKAGE, TRANSFER);
     }
 
     public static String export() {
@@ -3916,6 +3924,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(UPLOAD, FAILED);
     }
 
+    public static String uploadSuccess() {
+        return I18nResourceBundle.i18nString(UPLOAD, SUCCESS);
+    }
+
+    public static String uploadFinished() {
+        return I18nResourceBundle.i18nString(UPLOAD, FINISHED);
+    }
+
     public static String uploadIng() {
         return I18nResourceBundle.i18nString(UPLOAD, ING);
     }
@@ -4203,6 +4219,10 @@ public class I18nHelper {
 
     public static String compress() {
         return I18nResourceBundle.i18nString(COMPRESS);
+    }
+
+    public static String compressFailed() {
+        return I18nResourceBundle.i18nString(COMPRESS, FAILED);
     }
 
     public static String unCompress() {
@@ -4527,6 +4547,10 @@ public class I18nHelper {
 
     public static String editFile() {
         return I18nResourceBundle.i18nString(EDIT, FILE);
+    }
+
+    public static String packageUpload() {
+        return I18nResourceBundle.i18nString(PACKAGE, UPLOAD);
     }
 
     public static String view1File() {
