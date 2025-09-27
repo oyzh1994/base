@@ -2,6 +2,12 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.store.jdbc.param.PageParam;
+import cn.oyzh.store.jdbc.param.QueryParam;
+import cn.oyzh.store.jdbc.param.QueryParams;
+import cn.oyzh.store.jdbc.param.SelectParam;
+import cn.oyzh.store.jdbc.sqlite.DeleteParam;
+import cn.oyzh.store.jdbc.sqlite.OrderByParam;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

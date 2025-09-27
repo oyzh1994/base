@@ -5,13 +5,13 @@
 //import cn.oyzh.common.util.CollectionUtil;
 //import cn.oyzh.common.util.StringUtil;
 //import cn.oyzh.store.jdbc.ColumnDefinition;
-//import cn.oyzh.store.jdbc.DeleteParam;
+//import cn.oyzh.store.jdbc.sqlite.DeleteParam;
 //import cn.oyzh.store.jdbc.JdbcConn;
 //import cn.oyzh.store.jdbc.JdbcHelper;
 //import cn.oyzh.store.jdbc.JdbcManager;
 //import cn.oyzh.store.jdbc.JdbcStandardOperator;
 //import cn.oyzh.store.jdbc.JdbcUtil;
-//import cn.oyzh.store.jdbc.QueryParam;
+//import cn.oyzh.store.jdbc.param.QueryParam;
 //import cn.oyzh.store.jdbc.TableDefinition;
 //
 //import java.sql.ResultSet;

@@ -1,5 +1,8 @@
-package cn.oyzh.store.jdbc;
+package cn.oyzh.store.jdbc.sqlite;
 
+
+import cn.oyzh.store.jdbc.param.QueryParam;
+import cn.oyzh.store.jdbc.param.QueryParams;
 
 /**
  * 删除参数

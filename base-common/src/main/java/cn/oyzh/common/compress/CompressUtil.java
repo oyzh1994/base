@@ -22,6 +22,9 @@ import java.util.List;
 /**
  * 压缩工具类（压缩类型通过参数指定）
  * 支持格式：ZIP、TAR、TAR_GZ
+ *
+ * @author oyzh
+ * @since 2025/09/26
  */
 public class CompressUtil {
 

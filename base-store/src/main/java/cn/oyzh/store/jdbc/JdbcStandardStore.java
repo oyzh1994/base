@@ -2,6 +2,11 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.store.jdbc.h2.H2StandardOperator;
+import cn.oyzh.store.jdbc.param.PageParam;
+import cn.oyzh.store.jdbc.param.QueryParam;
+import cn.oyzh.store.jdbc.param.QueryParams;
+import cn.oyzh.store.jdbc.param.SelectParam;
+import cn.oyzh.store.jdbc.sqlite.DeleteParam;
 //import cn.oyzh.store.jdbc.sqlite.SqliteStandardOperator;
 
 import java.io.Serializable;
