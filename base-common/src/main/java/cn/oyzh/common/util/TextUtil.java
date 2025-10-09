@@ -537,6 +537,22 @@ public class TextUtil {
     }
 
     /**
+     * 将十六进制转换为字符串字节数组
+     *
+     * @param s 十六进制字符串
+     * @return 字节数组
+     */
+    public static byte[] hexStrToBytes(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
+    }
+
+    /**
      * 是否xml字符串
      *
      * @param str 字符串

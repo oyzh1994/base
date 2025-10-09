@@ -58,6 +58,7 @@
         <netty.version>4.2.6.Final</netty.version>
         <fastjson.version>2.0.59</fastjson.version>
         <bouncycastle.version>1.82</bouncycastle.version>
+        <bouncycastle-lts.version>2.73.9</bouncycastle-lts.version>
         <jgit.version>7.4.0.202509020913-r</jgit.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <maven.compiler.source>21</maven.compiler.source>
