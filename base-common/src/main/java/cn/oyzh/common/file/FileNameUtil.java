@@ -1714,10 +1714,10 @@ public class FileNameUtil {
     public static String concat(String... paths) {
         StringBuilder builder = new StringBuilder();
         for (String path : paths) {
-            builder.append(path);
-            if (!path.endsWith(File.separator)) {
+            if (!path.startsWith(File.separator)&&!builder.toString().endsWith(File.separator)) {
                 builder.append(File.separator);
             }
+            builder.append(path);
         }
         return builder.toString();
     }
