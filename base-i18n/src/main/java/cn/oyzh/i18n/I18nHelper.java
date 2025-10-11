@@ -2280,6 +2280,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLEAR);
     }
 
+    public static String clearSyncData() {
+        return I18nResourceBundle.i18nString(CLEAR, SYNC, DATA);
+    }
+
     public static String copy() {
         return I18nResourceBundle.i18nString(COPY);
     }
