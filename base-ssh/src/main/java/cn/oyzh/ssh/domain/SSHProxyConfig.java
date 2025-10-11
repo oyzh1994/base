@@ -3,6 +3,7 @@ package cn.oyzh.ssh.domain;
 import cn.oyzh.common.object.ObjectCopier;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;
+import com.alibaba.fastjson2.annotation.JSONField;
 
 import java.io.Serializable;
 
@@ -98,26 +99,32 @@ public class SSHProxyConfig implements Serializable, ObjectCopier<SSHProxyConfig
         this.protocol = protocol;
     }
 
+    @JSONField(serialize = false, deserialize = false)
     public boolean isHttpProxy() {
         return "http".equalsIgnoreCase(this.protocol);
     }
 
+    @JSONField(serialize = false, deserialize = false)
     public boolean isSocksProxy() {
         return StringUtil.equalsAnyIgnoreCase(this.protocol, "socks", "socks4", "socks5");
     }
 
+    @JSONField(serialize = false, deserialize = false)
     public boolean isSocks4Proxy() {
         return "socks4".equalsIgnoreCase(this.protocol);
     }
 
+    @JSONField(serialize = false, deserialize = false)
     public boolean isSocks5Proxy() {
         return "socks5".equalsIgnoreCase(this.protocol);
     }
 
+    @JSONField(serialize = false, deserialize = false)
     public boolean isNoneProxy() {
         return !this.isSocksProxy() && !this.isHttpProxy();
     }
 
+    @JSONField(serialize = false, deserialize = false)
     public boolean isPasswordAuth() {
         return "password".equalsIgnoreCase(this.authType);
     }

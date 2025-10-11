@@ -1003,16 +1003,32 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(IMPORT, CONNECTION, FAIL);
     }
 
+    public static String importDataFail() {
+        return I18nResourceBundle.i18nString(IMPORT, DATA, FAIL);
+    }
+
     public static String importConnectionSuccess() {
         return I18nResourceBundle.i18nString(IMPORT, CONNECTION, SUCCESS);
+    }
+
+    public static String importDataSuccess() {
+        return I18nResourceBundle.i18nString(IMPORT, DATA, SUCCESS);
     }
 
     public static String exportConnectionFail() {
         return I18nResourceBundle.i18nString(EXPORT, CONNECTION, FAIL);
     }
 
+    public static String exportDataFail() {
+        return I18nResourceBundle.i18nString(EXPORT, DATA, FAIL);
+    }
+
     public static String exportConnectionSuccess() {
         return I18nResourceBundle.i18nString(EXPORT, CONNECTION, SUCCESS);
+    }
+
+    public static String exportDataSuccess() {
+        return I18nResourceBundle.i18nString(EXPORT, DATA, SUCCESS);
     }
 
     public static String operationTimout() {
