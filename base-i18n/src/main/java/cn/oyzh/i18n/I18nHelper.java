@@ -461,6 +461,10 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String SYNC = "base.sync";
+
+    public static final String TOKEN = "base.token";
+
     public static final String THIS = "base.this";
 
     public static final String CUT = "base.cut";
@@ -4399,6 +4403,10 @@ public class I18nHelper {
 
     public static String copyAuth() {
         return I18nResourceBundle.i18nString(COPY, AUTH);
+    }
+
+    public static String sync() {
+        return I18nResourceBundle.i18nString(SYNC);
     }
 
     public String fileUploadFailed() {
