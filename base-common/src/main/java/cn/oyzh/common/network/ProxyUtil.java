@@ -3,9 +3,14 @@ package cn.oyzh.common.network;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.net.ProxySelector;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.URI;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author oyzh
@@ -126,5 +131,61 @@ public class ProxyUtil {
      */
     public static boolean isNeedProxy(Proxy proxy) {
         return proxy != null && proxy.type() != Proxy.Type.DIRECT;
+    }
+
+    /**
+     * 创建HTTP代理的ProxySelector
+     *
+     * @param host 地址
+     * @param port 端口
+     * @return ProxySelector
+     */
+    public static ProxySelector createHttpProxySelector(String host, int port) {
+        return new ProxySelector() {
+            private final List<Proxy> proxies = new ArrayList<>();
+
+            {
+                proxies.add(new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port)));
+            }
+
+            @Override
+            public List<Proxy> select(URI uri) {
+                return proxies;
+            }
+
+            @Override
+            public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+                System.err.println("连接到HTTP代理失败: " + sa + ", URI: " + uri);
+                throw new RuntimeException("连接到HTTP代理失败: " + sa + ", URI: " + uri);
+            }
+        };
+    }
+
+    /**
+     * 创建SOCKS代理的ProxySelector
+     *
+     * @param host 地址
+     * @param port 端口
+     * @return ProxySelector
+     */
+    public static ProxySelector createSocksProxySelector(String host, int port) {
+        return new ProxySelector() {
+            private final List<Proxy> proxies = new ArrayList<>();
+
+            {
+                proxies.add(new Proxy(Proxy.Type.SOCKS, new InetSocketAddress(host, port)));
+            }
+
+            @Override
+            public List<Proxy> select(URI uri) {
+                return proxies;
+            }
+
+            @Override
+            public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+                System.err.println("连接到SOCKS代理失败: " + sa + ", URI: " + uri);
+                throw new RuntimeException("连接到SOCKS代理失败: " + sa + ", URI: " + uri);
+            }
+        };
     }
 }
