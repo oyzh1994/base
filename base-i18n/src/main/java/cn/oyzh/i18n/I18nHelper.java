@@ -55,6 +55,8 @@ public class I18nHelper {
 
     public static final String NODE = "base.node";
 
+    public static final String ROOT = "base.root";
+
     public static final String NODES = "base.nodes";
 
     public static final String KEY = "base.key";
@@ -4411,6 +4413,10 @@ public class I18nHelper {
 
     public static String sync() {
         return I18nResourceBundle.i18nString(SYNC);
+    }
+
+    public static String rootNode() {
+        return I18nResourceBundle.i18nString(ROOT, NODE);
     }
 
     public String fileUploadFailed() {
