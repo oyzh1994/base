@@ -52,6 +52,26 @@ public class JSONUtil {
     }
 
     /**
+     * 取消美化
+     *
+     * @param str 对象
+     * @return json取消美化字符串
+     */
+    public static String unPretty(String str) {
+        if (str != null) {
+            StringBuilder builder = new StringBuilder();
+            char[] chars = str.toCharArray();
+            for (char aChar : chars) {
+                if (aChar != '\r' && aChar != '\t' && aChar != '\n') {
+                    builder.append(aChar);
+                }
+            }
+            return builder.toString();
+        }
+        return null;
+    }
+
+    /**
      * 压缩
      *
      * @param json 对象
