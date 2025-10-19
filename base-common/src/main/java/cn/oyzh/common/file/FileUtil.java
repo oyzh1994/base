@@ -1,6 +1,7 @@
 package cn.oyzh.common.file;
 
 import cn.oyzh.common.function.ExceptionConsumer;
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.BufferedReader;
@@ -456,6 +457,28 @@ public class FileUtil {
 
     public static File newTmpFile(String tempFile) {
         return new File(tmpPath(), tempFile);
+    }
+
+    /**
+     * 复制文件
+     *
+     * @param source 源
+     * @param target 目标
+     * @throws Exception 异常
+     */
+    public static void copy(File source, File target) throws Exception {
+        if (!target.exists()) {
+            touch(target);
+        }
+        int len;
+        byte[] buffer = new byte[1024];
+        FileInputStream in = new FileInputStream(source);
+        FileOutputStream out = new FileOutputStream(target);
+        while ((len = in.read(buffer)) != -1) {
+            out.write(buffer, 0, len);
+        }
+        IOUtil.close(in);
+        IOUtil.close(out);
     }
 
 
