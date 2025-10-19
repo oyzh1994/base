@@ -1,5 +1,7 @@
 package cn.oyzh.common.system;
 
+import cn.oyzh.common.util.StringUtil;
+
 /**
  * 系统工具类
  *
@@ -42,5 +44,49 @@ public class OSUtil {
      */
     public static boolean isMacOS() {
         return getOSType().contains("MAC");
+    }
+
+    /**
+     * 是否arm32架构
+     *
+     * @return 结果
+     */
+    public static boolean isArm32() {
+        // 获取系统架构
+        String osArch = System.getProperty("os.arch");
+        return StringUtil.containsAnyIgnoreCase(osArch, "arm");
+    }
+
+    /**
+     * 是否arm64架构
+     *
+     * @return 结果
+     */
+    public static boolean isAarch64() {
+        // 获取系统架构
+        String osArch = System.getProperty("os.arch");
+        return StringUtil.containsAnyIgnoreCase(osArch, "aarch64", "arm64");
+    }
+
+    /**
+     * 是否x64架构
+     *
+     * @return 结果
+     */
+    public static boolean isX64() {
+        // 获取系统架构
+        String osArch = System.getProperty("os.arch");
+        return StringUtil.containsAnyIgnoreCase(osArch, "x86_64", "amd64");
+    }
+
+    /**
+     * 是否x86架构
+     *
+     * @return 结果
+     */
+    public static boolean isX86() {
+        // 获取系统架构
+        String osArch = System.getProperty("os.arch");
+        return StringUtil.contains(osArch, "x86");
     }
 }
