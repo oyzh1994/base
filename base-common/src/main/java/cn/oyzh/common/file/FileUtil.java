@@ -19,6 +19,9 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -120,8 +123,24 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 是否目录
+     *
+     * @param dir 目录
+     * @return 结果
+     */
     public static boolean isDirectory(File dir) {
         return dir != null && dir.isDirectory();
+    }
+
+    /**
+     * 是否目录
+     *
+     * @param dir 目录
+     * @return 结果
+     */
+    public static boolean isDirectory(String dir) {
+        return dir != null && isDirectory(new File(dir));
     }
 
     public static boolean del(String file) {
@@ -410,6 +429,16 @@ public class FileUtil {
      * @param directory 目录
      * @return 结果
      */
+    public static boolean cleanDir(String directory) {
+        return cleanDir(new File(directory));
+    }
+
+    /**
+     * 清空目录
+     *
+     * @param directory 目录
+     * @return 结果
+     */
     public static boolean cleanDir(File directory) {
         if (directory == null || !directory.exists() || !directory.isDirectory()) {
             return true;
@@ -455,31 +484,122 @@ public class FileUtil {
         return new File(tmpPath());
     }
 
+    /**
+     * 创建临时文件
+     *
+     * @param tempFile 临时文件名称
+     * @return 临时文件
+     */
     public static File newTmpFile(String tempFile) {
         return new File(tmpPath(), tempFile);
     }
 
     /**
-     * 复制文件
+     * 复制文件/目录
+     *
+     * @param source 源
+     * @param target 目标
+     * @throws Exception 异常
+     */
+    public static void copy(String source, String target) throws Exception {
+        copy(new File(source), new File(target));
+    }
+
+    /**
+     * 复制文件/目录
      *
      * @param source 源
      * @param target 目标
      * @throws Exception 异常
      */
     public static void copy(File source, File target) throws Exception {
-        if (!target.exists()) {
-            touch(target);
+        if (source.isDirectory() && target.isFile()) {
+            throw new InvalidPathException(target.getPath(), "not dir");
         }
-        int len;
-        byte[] buffer = new byte[1024];
-        FileInputStream in = new FileInputStream(source);
-        FileOutputStream out = new FileOutputStream(target);
-        while ((len = in.read(buffer)) != -1) {
-            out.write(buffer, 0, len);
+        if (!source.exists()) {
+            throw new FileNotFoundException("源文件/目录不存在: " + source.getAbsolutePath());
         }
-        IOUtil.close(in);
-        IOUtil.close(out);
+        if (source.isFile()) {
+            // 目标为目录，则把源文件复制到目标目录
+            if (target.isDirectory()) {
+                copyFile(source, new File(target, source.getName()));
+            } else { // 处理文件复制
+                copyFile(source, target);
+            }
+        } else if (source.isDirectory()) {
+            // 处理目录复制
+            copyDirectory(source, target);
+        } else {
+            throw new IOException("不支持的文件类型: " + source.getAbsolutePath());
+        }
     }
 
+    /**
+     * 复制单个文件
+     *
+     * @param sourceFile 源文件
+     * @param targetFile 目标文件
+     */
+    public static void copyFile(String sourceFile, String targetFile) throws IOException {
+        copyFile(new File(sourceFile), new File(targetFile));
+    }
+
+    /**
+     * 复制单个文件
+     *
+     * @param sourceFile 源文件
+     * @param targetFile 目标文件
+     */
+    public static void copyFile(File sourceFile, File targetFile) throws IOException {
+        // 如果目标是目录，则在目录下创建同名文件
+        if (targetFile.isDirectory()) {
+            targetFile = new File(targetFile, sourceFile.getName());
+        }
+
+        // 确保目标文件的父目录存在
+        File parentDir = targetFile.getParentFile();
+        mkdir(parentDir);
+
+        // 使用NIO的Files.copy方法，支持覆盖已存在的文件
+        Files.copy(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    /**
+     * 复制目录（递归处理子文件和子目录）
+     *
+     * @param sourceDir 源目录
+     * @param targetDir 目标目录
+     */
+    public static void copyDirectory(File sourceDir, File targetDir) throws IOException {
+        // 如果目标目录不存在，则创建
+        mkdir(targetDir);
+
+        // 获取源目录下的所有文件和子目录
+        File[] files = sourceDir.listFiles();
+        if (files == null) {
+            throw new IOException("无法读取目录内容: " + sourceDir.getAbsolutePath());
+        }
+
+        // 递归复制每个子文件/子目录
+        for (File file : files) {
+            File targetFile = new File(targetDir, file.getName());
+            if (file.isFile()) {
+                copyFile(file, targetFile);
+            } else if (file.isDirectory()) {
+                copyDirectory(file, targetFile);
+            }
+        }
+    }
+
+
+    /**
+     * 是否文件
+     *
+     * @param file 文件
+     * @return 结果
+     */
+    public static boolean isFile(String file) {
+        return file != null && new File(file).isFile();
+    }
 
 }
