@@ -21,6 +21,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -130,7 +132,7 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean isDirectory(File dir) {
-        return dir != null && dir.isDirectory();
+        return dir != null && Files.isDirectory(dir.toPath());
     }
 
     /**
@@ -143,6 +145,12 @@ public class FileUtil {
         return dir != null && isDirectory(new File(dir));
     }
 
+    /**
+     * 删除
+     *
+     * @param file 文件
+     * @return 结果
+     */
     public static boolean del(String file) {
         if (file != null) {
             return del(new File(file));
@@ -150,6 +158,12 @@ public class FileUtil {
         return false;
     }
 
+    /**
+     * 删除
+     *
+     * @param file 文件
+     * @return 结果
+     */
     public static boolean del(File file) {
         if (file != null) {
             return file.delete();
@@ -303,20 +317,57 @@ public class FileUtil {
         }
     }
 
-    public static boolean move(File source, File target, boolean override) {
-        if (target.exists() && !override) {
-            return false;
+    /**
+     * 移动文件
+     * 1. source为文件，target为文件，直接覆盖
+     * 2. source为目录，target为目录，直接覆盖
+     * 3. source为文件，target为目录，移动到target
+     *
+     * @param source   源文件
+     * @param target   目标文件
+     * @param override 是否覆盖
+     * @return 结果
+     * @throws IOException 异常
+     */
+    public static boolean move(File source, File target, boolean override) throws IOException {
+        Path sPath = source.toPath();
+        Path tPath = target.toPath();
+        if (target.exists() && Files.isSameFile(sPath, tPath)) {
+            return true;
         }
-        return source.renameTo(target);
+        if (source.isFile() && Files.isRegularFile(tPath)) {
+            if (target.exists() && !override) {
+                return false;
+            }
+            return source.renameTo(target);
+        }
+        if (source.isDirectory() && Files.isDirectory(tPath)) {
+            if (target.exists() && !override) {
+                return false;
+            }
+            Files.move(sPath, tPath);
+            del(source);
+            return true;
+        }
+        if (source.isFile() && Files.isDirectory(tPath)) {
+            File tFile = new File(target, source.getName());
+            if (tFile.exists() && !override) {
+                return false;
+            }
+            Files.move(sPath, tFile.toPath());
+            del(source);
+            return true;
+        }
+        return false;
     }
 
     /**
-     * 清空文件内容
+     * 清空文件
      *
      * @param source 文件
      * @return 结果
      */
-    public static boolean cleanFileContent(File source) {
+    public static boolean cleanFile(File source) {
         if (source != null && source.exists() && !source.isDirectory() && !source.isAbsolute()) {
             try (FileOutputStream fos = new FileOutputStream(source)) {
                 fos.write(new byte[]{});
@@ -507,6 +558,10 @@ public class FileUtil {
 
     /**
      * 复制文件/目录
+     * <p>
+     * 1. source为文件，target为文件，复制内容
+     * 2. source为目录，target为目录，复制内容
+     * 3. source为文件，target为目录，复制内容到target
      *
      * @param source 源
      * @param target 目标
@@ -526,7 +581,7 @@ public class FileUtil {
             } else { // 处理文件复制
                 copyFile(source, target);
             }
-        } else if (source.isDirectory()) {
+        } else if (source.isDirectory() && target.isDirectory()) {
             // 处理目录复制
             copyDirectory(source, target);
         } else {
@@ -570,6 +625,16 @@ public class FileUtil {
      * @param sourceDir 源目录
      * @param targetDir 目标目录
      */
+    public static void copyDirectory(String sourceDir, String targetDir) throws IOException {
+        copyDirectory(new File(sourceDir), new File(targetDir));
+    }
+
+    /**
+     * 复制目录（递归处理子文件和子目录）
+     *
+     * @param sourceDir 源目录
+     * @param targetDir 目标目录
+     */
     public static void copyDirectory(File sourceDir, File targetDir) throws IOException {
         // 如果目标目录不存在，则创建
         mkdir(targetDir);
@@ -591,7 +656,6 @@ public class FileUtil {
         }
     }
 
-
     /**
      * 是否文件
      *
@@ -599,7 +663,10 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean isFile(String file) {
-        return file != null && new File(file).isFile();
+        if (file == null) {
+            return false;
+        }
+        return Files.isRegularFile(new File(file).toPath());
     }
 
 }
