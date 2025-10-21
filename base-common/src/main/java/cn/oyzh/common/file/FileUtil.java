@@ -1,7 +1,7 @@
 package cn.oyzh.common.file;
 
+import cn.oyzh.common.exception.InvalidParamException;
 import cn.oyzh.common.function.ExceptionConsumer;
-import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.BufferedReader;
@@ -22,7 +22,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -318,7 +317,30 @@ public class FileUtil {
     }
 
     /**
-     * 移动文件
+     * 移动文件到文件夹
+     * 3. source为文件，target为目录，移动到target
+     *
+     * @param source   源文件
+     * @param override 是否覆盖
+     * @return 结果
+     * @throws IOException 异常
+     */
+    public static boolean moveFile(File source, File dir, boolean override) throws IOException {
+        if (!source.exists() || !source.isFile()) {
+            throw new InvalidParamException(source.getPath());
+        }
+        if (!dir.exists() || !dir.isDirectory()) {
+            throw new InvalidParamException(dir.getPath());
+        }
+        File tFile = new File(dir, source.getName());
+        if (tFile.exists() && !override) {
+            return false;
+        }
+        return source.renameTo(tFile);
+    }
+
+    /**
+     * 移动文件夹
      * 1. source为文件，target为文件，直接覆盖
      * 2. source为目录，target为目录，直接覆盖
      * 3. source为文件，target为目录，移动到target
@@ -329,36 +351,51 @@ public class FileUtil {
      * @return 结果
      * @throws IOException 异常
      */
-    public static boolean move(File source, File target, boolean override) throws IOException {
+    public static boolean moveDir(File source, File target, boolean override) throws IOException {
+        if (!source.exists() || !source.isDirectory()) {
+            throw new InvalidParamException(source.getPath());
+        }
+        if (!target.exists() && target.isDirectory()) {
+            throw new InvalidParamException(target.getPath());
+        }
+        if (target.exists() && !override) {
+            return false;
+        }
         Path sPath = source.toPath();
         Path tPath = target.toPath();
         if (target.exists() && Files.isSameFile(sPath, tPath)) {
-            return true;
+            return false;
         }
-        if (source.isFile() && Files.isRegularFile(tPath)) {
-            if (target.exists() && !override) {
-                return false;
-            }
-            return source.renameTo(target);
+        Files.move(sPath, tPath);
+        del(source);
+        return true;
+    }
+
+    /**
+     * 重命名文件
+     *
+     * @param source   源文件
+     * @param target   目标文件
+     * @param override 是否覆盖
+     * @return 结果
+     * @throws IOException 异常
+     */
+    public static boolean renameFile(File source, File target, boolean override) throws IOException {
+        if (!source.exists() || !source.isFile()) {
+            throw new InvalidParamException(source.getPath());
         }
-        if (source.isDirectory() && Files.isDirectory(tPath)) {
-            if (target.exists() && !override) {
-                return false;
-            }
-            Files.move(sPath, tPath);
-            del(source);
-            return true;
+        if (!target.exists() && target.isFile()) {
+            throw new InvalidParamException(target.getPath());
         }
-        if (source.isFile() && Files.isDirectory(tPath)) {
-            File tFile = new File(target, source.getName());
-            if (tFile.exists() && !override) {
-                return false;
-            }
-            Files.move(sPath, tFile.toPath());
-            del(source);
-            return true;
+        if (target.exists() && !override) {
+            return false;
         }
-        return false;
+        Path sPath = source.toPath();
+        Path tPath = target.toPath();
+        if (target.exists() && Files.isSameFile(sPath, tPath)) {
+            return false;
+        }
+        return source.renameTo(target);
     }
 
     /**
