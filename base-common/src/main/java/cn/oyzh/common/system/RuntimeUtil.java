@@ -1,6 +1,5 @@
 package cn.oyzh.common.system;
 
-import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.ProcessExecResult;
 
@@ -8,8 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.concurrent.TimeUnit;
 
 /**
  * runtime工具类
@@ -433,25 +430,25 @@ public class RuntimeUtil {
         try {
             // 执行命令
             Process process = Runtime.getRuntime().exec(cmd, envp, dir);
-            String line;
-            // 读取命令的输出
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder input = new StringBuilder();
-            while ((line = inputReader.readLine()) != null) {
-                input.append(line);
-            }
-            if (!input.isEmpty()) {
-                JulLog.info("exec result:{}", input.toString());
-            }
-            // 读取错误的输出
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder err = new StringBuilder();
-            while ((line = errReader.readLine()) != null) {
-                err.append(line);
-            }
-            if (!err.isEmpty()) {
-                JulLog.error("exec error:{}", err.toString());
-            }
+            // String line;
+            // // 读取命令的输出
+            // BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            // StringBuilder input = new StringBuilder();
+            // while ((line = inputReader.readLine()) != null) {
+            //     input.append(line);
+            // }
+            // if (!input.isEmpty()) {
+            //     JulLog.info("exec result:{}", input.toString());
+            // }
+            // // 读取错误的输出
+            // BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            // StringBuilder err = new StringBuilder();
+            // while ((line = errReader.readLine()) != null) {
+            //     err.append(line);
+            // }
+            // if (!err.isEmpty()) {
+            //     JulLog.error("exec error:{}", err.toString());
+            // }
             return process;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -471,25 +468,25 @@ public class RuntimeUtil {
         try {
             // 执行命令
             Process process = Runtime.getRuntime().exec(cmdArr, envp, dir);
-            String line;
-            // 读取命令的输出
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder input = new StringBuilder();
-            while ((line = inputReader.readLine()) != null) {
-                input.append(line);
-            }
-            if (!input.isEmpty()) {
-                JulLog.info("exec result:{}", input.toString());
-            }
-            // 读取错误的输出
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder err = new StringBuilder();
-            while ((line = errReader.readLine()) != null) {
-                err.append(line);
-            }
-            if (!err.isEmpty()) {
-                JulLog.error("exec error:{}", err.toString());
-            }
+            // String line;
+            // // 读取命令的输出
+            // BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            // StringBuilder input = new StringBuilder();
+            // while ((line = inputReader.readLine()) != null) {
+            //     input.append(line);
+            // }
+            // if (!input.isEmpty()) {
+            //     JulLog.info("exec result:{}", input.toString());
+            // }
+            // // 读取错误的输出
+            // BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            // StringBuilder err = new StringBuilder();
+            // while ((line = errReader.readLine()) != null) {
+            //     err.append(line);
+            // }
+            // if (!err.isEmpty()) {
+            //     JulLog.error("exec error:{}", err.toString());
+            // }
             return process;
         } catch (Exception ex) {
             ex.printStackTrace();
