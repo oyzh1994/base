@@ -191,6 +191,19 @@ public class ProcessUtil {
     }
 
     /**
+     * 判断是否运行在appImage格式下
+     *
+     * @return 结果
+     */
+    public static boolean isRunningInAppImage() {
+        // 检查 APPIMAGE 或 APPDIR 环境变量是否存在
+        String appImagePath = System.getenv("APPIMAGE");
+        String appDir = System.getenv("APPDIR");
+        return (appImagePath != null && !appImagePath.isEmpty())
+                || (appDir != null && !appDir.isEmpty());
+    }
+
+    /**
      * 重启应用
      * 适用于安装包
      *
@@ -230,6 +243,23 @@ public class ProcessUtil {
                 JulLog.warn("未找到程序路径，执行重启失败！");
             }
         } else if (OSUtil.isLinux()) {
+            // 运行在appImage格式中
+            if (isRunningInAppImage()) {
+                JulLog.info("running in AppImage...");
+                String appImagePath = System.getenv("APPIMAGE");
+                // 工作目录
+                dir = new File(appImagePath).getParentFile();
+                // 构建重启命令
+                ProcessBuilder builder = new ProcessBuilder("nohup", appImagePath, "&");
+                // 设置运行目录
+                builder.directory(dir);
+                // 打印命令
+                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+                // 执行重启命令
+                builder.start();
+                return;
+            }
+
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
                 javaPath += "/bin/java";
             } else {
