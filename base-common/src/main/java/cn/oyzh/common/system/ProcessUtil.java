@@ -257,19 +257,19 @@ public class ProcessUtil {
             //     env.put("LD_LIBRARY_PATH", "/path/to/appimage/libs:" + env.getOrDefault("LD_LIBRARY_PATH", ""));
             //     // 设置运行目录
             //     builder.directory(dir);
-            // } else {
-                if (!FileUtil.exist(javaPath + "/bin/javaw")) {
-                    javaPath += "/bin/java";
-                } else {
-                    javaPath += "/bin/javaw";
-                }
-                // 类路径
-                String classPath = System.getProperty("java.class.path");
-                // 构建重启命令
-                builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
-                // 设置运行目录
-                builder.directory(dir);
             // }
+            // 类路径
+            String classPath = System.getProperty("java.class.path");
+            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
+                javaPath += "/bin/java";
+            } else {
+                javaPath += "/bin/javaw";
+            }
+
+            // 构建重启命令
+            builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+            // 设置运行目录
+            builder.directory(dir);
             // 打印命令
             JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
             // 执行重启命令
