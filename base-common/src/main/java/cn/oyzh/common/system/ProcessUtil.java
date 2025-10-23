@@ -244,30 +244,45 @@ public class ProcessUtil {
                 JulLog.warn("未找到程序路径，执行重启失败！");
             }
         } else if (OSUtil.isLinux()) {
-            ProcessBuilder builder;
-            // 运行在appImage格式中
-            // if (isRunningInAppImage()) {
-            //     JulLog.info("running in AppImage...");
-            //     String appImagePath = System.getenv("APPIMAGE");
-            //     // 工作目录
-            //     dir = new File(appImagePath).getParentFile();
-            //     // 构建重启命令
-            //     builder = new ProcessBuilder("nohup", appImagePath, "&");
-            //     Map<String, String> env = builder.environment();
-            //     env.put("LD_LIBRARY_PATH", "/path/to/appimage/libs:" + env.getOrDefault("LD_LIBRARY_PATH", ""));
-            //     // 设置运行目录
-            //     builder.directory(dir);
-            // }
             // 类路径
             String classPath = System.getProperty("java.class.path");
+            // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
+            if (ProcessUtil.isRunningInAppImage()) {
+                // 打印appImagePath路径
+                String appImagePath = System.getenv("APPIMAGE");
+                JulLog.info("appImagePath:" + appImagePath);
+                // 寻找app主目录
+                String appDir = "";
+                String appDirBak = "";
+                // 重新处理路径
+                for (String s : classPath.split("/")) {
+                    if (StringUtil.isNotBlank(s)) {
+                        appDir += "/" + s;
+                    }
+                    if (s.startsWith(".mount_")) {
+                        appDirBak = appDir + "_bak";
+                        break;
+                    }
+                }
+                // 复制目录
+                FileUtil.copyDirectory(appDir, appDirBak);
+                // 替换为新路径
+                javaPath = javaPath.replace(appDir, appDirBak);
+                classPath = classPath.replace(appDir, appDirBak);
+                // 打印信息
+                JulLog.info("appDir:{}", appDir);
+                JulLog.info("javaPath:{}", javaPath);
+                JulLog.info("classPath:{}", classPath);
+                // 工作目录重新处理
+                dir = new File(javaPath).getParentFile();
+            }
             if (!FileUtil.exist(javaPath + "/bin/javaw")) {
                 javaPath += "/bin/java";
             } else {
                 javaPath += "/bin/javaw";
             }
-
             // 构建重启命令
-            builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+            ProcessBuilder builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
             // 设置运行目录
             builder.directory(dir);
             // 打印命令
