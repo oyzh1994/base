@@ -577,6 +577,8 @@ public class I18nHelper {
 
     public static final String ELEMENT = "base.element";
 
+    public static final String GET = "base.get";
+
     public static final String KEY_TYPE = "base.keyType";
 
     public static final String MOVED = "base.moved";
@@ -961,6 +963,16 @@ public class I18nHelper {
 
     public static final String LIST = "base.list";
 
+    public static final String SET = "base.set";
+
+    public static final String SET1 = "base.set1";
+
+    public static final String ZSET = "base.zset";
+
+    public static final String HASH = "base.hash";
+
+    public static final String STREAM = "base.stream";
+
     public static final String TOOLS = "base.tools";
 
     public static final String CHILD_NUMBER = "base.childNumber";
@@ -1099,6 +1111,26 @@ public class I18nHelper {
 
     public static String string() {
         return I18nResourceBundle.i18nString(STRING);
+    }
+
+    public static String list() {
+        return I18nResourceBundle.i18nString(LIST);
+    }
+
+    public static String set1() {
+        return I18nResourceBundle.i18nString(SET1);
+    }
+
+    public static String zset() {
+        return I18nResourceBundle.i18nString(ZSET);
+    }
+
+    public static String hash() {
+        return I18nResourceBundle.i18nString(HASH);
+    }
+
+    public static String stream() {
+        return I18nResourceBundle.i18nString(STREAM);
     }
 
     public static String hex() {
@@ -4417,6 +4449,10 @@ public class I18nHelper {
 
     public static String rootNode() {
         return I18nResourceBundle.i18nString(ROOT, NODE);
+    }
+
+    public static String getKeyTypeFail() {
+        return I18nResourceBundle.i18nString(GET, KEY_TYPE, FAIL);
     }
 
     public String fileUploadFailed() {
