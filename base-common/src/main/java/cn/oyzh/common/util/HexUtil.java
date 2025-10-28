@@ -33,4 +33,21 @@ public class HexUtil {
         }
         return hexStr;
     }
+
+    /**
+     * 编码为hex字符串
+     *
+     * @param bytes       数据
+     * @param toLowerCase 是否转为小写
+     * @return 结果
+     */
+    public static String encodeHexStr(byte[] bytes, boolean toLowerCase) {
+        if (bytes == null || bytes.length == 0) {
+            return "";
+        }
+        if (toLowerCase) {
+            return bytesToHex(bytes, false);
+        }
+        return bytesToHex(bytes, true);
+    }
 }
