@@ -1714,10 +1714,10 @@ public class FileNameUtil {
     public static String concat(String... paths) {
         StringBuilder builder = new StringBuilder();
         for (String path : paths) {
-            builder.append(path);
-            if (!path.endsWith(File.separator)) {
+            if (!path.startsWith(File.separator)&&!builder.toString().endsWith(File.separator)) {
                 builder.append(File.separator);
             }
+            builder.append(path);
         }
         return builder.toString();
     }
@@ -1728,5 +1728,46 @@ public class FileNameUtil {
             return null;
         }
         return fileName.substring(index + 1);
+    }
+
+    /**
+     * 获取父路径
+     *
+     * @param path 路径
+     * @return 父路径
+     */
+    public static String parent(String path) {
+        if (StringUtil.isEmpty(path)) {
+            return path;
+        }
+        if (!path.contains("/")) {
+            return null;
+        }
+        int index = path.lastIndexOf("/");
+        if (index == 0) {
+            return "/";
+        }
+        return path.substring(0, index);
+    }
+
+    public static String name(String path) {
+        if (StringUtil.isEmpty(path)) {
+            return path;
+        }
+        return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+    public static String concat(String src, String name) {
+        src = src.replace("\\", "/");
+        name = name.replace("\\", "/");
+        String path;
+        if (src.endsWith("/") && name.startsWith("/")) {
+            path = src + name.substring(1);
+        } else if (!src.endsWith("/") && !name.startsWith("/")) {
+            path = src + "/" + name;
+        } else {
+            path = src + name;
+        }
+        return path;
     }
 }

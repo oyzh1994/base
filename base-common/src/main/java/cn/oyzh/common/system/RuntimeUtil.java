@@ -1,6 +1,5 @@
 package cn.oyzh.common.system;
 
-import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.ProcessExecResult;
 
@@ -8,8 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.concurrent.TimeUnit;
 
 /**
  * runtime工具类
@@ -32,161 +29,161 @@ public class RuntimeUtil {
         return count;
     }
 
-    /**
-     * 执行并等待
-     *
-     * @param cmd 命令
-     * @return 执行结果
-     * @throws Exception 异常
-     */
-    public static int execAndWait(String cmd) throws Exception {
-        return execAndWait(cmd, (File) null);
-    }
+    // /**
+    //  * 执行并等待
+    //  *
+    //  * @param cmd 命令
+    //  * @return 执行结果
+    //  * @throws Exception 异常
+    //  */
+    // public static int execAndWait(String cmd) throws Exception {
+    //     return execAndWait(cmd, (File) null);
+    // }
+    //
+    // /**
+    //  * 执行并等待
+    //  *
+    //  * @param cmd 命令
+    //  * @param dir 执行目录
+    //  * @return 执行结果
+    //  * @throws Exception 异常
+    //  */
+    // public static int execAndWait(String cmd, String dir) throws Exception {
+    //     return execAndWait(cmd, new File(dir));
+    // }
+    //
+    // /**
+    //  * 执行并等待
+    //  *
+    //  * @param cmd 命令
+    //  * @param dir 执行目录
+    //  * @return 执行结果
+    //  * @throws Exception 异常
+    //  */
+    // public static int execAndWait(String cmd, File dir) throws Exception {
+    //     Charset charset;
+    //     if (OSUtil.isWindows()) {
+    //         charset = Charset.forName(System.getProperty("sun.jnu.encoding"));
+    //     } else {
+    //         charset = Charset.defaultCharset();
+    //     }
+    //     return execAndWait(cmd, dir, true, true, charset, -1);
+    // }
 
-    /**
-     * 执行并等待
-     *
-     * @param cmd 命令
-     * @param dir 执行目录
-     * @return 执行结果
-     * @throws Exception 异常
-     */
-    public static int execAndWait(String cmd, String dir) throws Exception {
-        return execAndWait(cmd, new File(dir));
-    }
-
-    /**
-     * 执行并等待
-     *
-     * @param cmd 命令
-     * @param dir 执行目录
-     * @return 执行结果
-     * @throws Exception 异常
-     */
-    public static int execAndWait(String cmd, File dir) throws Exception {
-        Charset charset;
-        if (OSUtil.isWindows()) {
-            charset = Charset.forName(System.getProperty("sun.jnu.encoding"));
-        } else {
-            charset = Charset.defaultCharset();
-        }
-        return execAndWait(cmd, dir, true, true, charset, -1);
-    }
-
-    /**
-     * 执行并等待
-     *
-     * @param cmd         命令
-     * @param dir         执行目录
-     * @param printInput  打印输入内容
-     * @param printError  打印异常内容
-     * @param charset     流字符集
-     * @param execTimeout 执行超时
-     * @return 执行结果
-     * @throws Exception 异常
-     */
-    public static int execAndWait(String cmd, File dir, boolean printInput, boolean printError, Charset charset, int execTimeout) throws Exception {
-        int code = -1;
-        try {
-            Charset streamCharset = charset == null ? Charset.defaultCharset() : charset;
-            JulLog.info("execAndWait start cmd:{} dir:{} printInput:{} printError:{}", cmd, dir, printInput, printError);
-            // ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", cmd);
-            // if (FileUtil.isDirectory(dir)) {
-            //     builder.directory(dir);
-            // } else {
-            //     builder.directory(null);
-            // }
-            // builder.redirectErrorStream(true);
-            // Process process = builder.start();
-            Process process;
-            if (FileUtil.isDirectory(dir)) {
-                process = Runtime.getRuntime().exec(cmd, null, dir);
-            } else {
-                process = Runtime.getRuntime().exec(cmd, null);
-            }
-            // if (process.getInputStream().available() <= 0) {
-            //     process.waitFor(1000, TimeUnit.MILLISECONDS);
-            // }
-            // DownLatch latch;
-            // if (printInput && printError) {
-            //    latch = DownLatch.of(2);
-            //} else if (printError || printInput) {
-            //    latch = DownLatch.of();
-            //} else {
-            //    latch = null;
-            //}
-            Thread inputThread = null, errorThread = null;
-            if (printInput) {
-                inputThread = new Thread(() -> {
-                    try {
-                        // TODO: 特别注意，windows需要hold住，需要直接尝试读取流
-                        if (OSUtil.isWindows() || process.getInputStream().available() > 0) {
-                            JulLog.info("process input--->start");
-                            // 获取进程的标准输出流
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), streamCharset));
-                            // 读取输出并打印到控制台
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                JulLog.info(line);
-                            }
-                            JulLog.info("process input--->end");
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                        //} finally {
-                        //    latch.countDown();
-                    }
-                });
-                inputThread.start();
-            }
-            if (printError) {
-                errorThread = new Thread(() -> {
-                    try {
-                        // TODO: 特别注意，windows需要hold住，需要直接尝试读取流
-                        if (OSUtil.isWindows() || process.getErrorStream().available() > 0) {
-                            JulLog.error("process error--->start");
-                            // 获取进程的标准输出流
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), streamCharset));
-                            // 读取输出并打印到控制台
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                JulLog.error(line);
-                            }
-                            JulLog.error("process error--->end");
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                        //} finally {
-                        //    latch.countDown();
-                    }
-                });
-                errorThread.start();
-            }
-            if (inputThread != null) {
-                inputThread.join();
-            }
-            if (errorThread != null) {
-                errorThread.join();
-            }
-            if (execTimeout == -1) {
-                // if (latch != null) {
-                //    latch.await();
-                //}
-                code = process.waitFor();
-            } else {
-                // if (latch != null) {
-                //    latch.await(execTimeout);
-                //}
-                // 等待进程执行完成
-                if (process.waitFor(execTimeout, TimeUnit.MILLISECONDS)) {
-                    code = process.exitValue();
-                }
-            }
-        } finally {
-            JulLog.info("execAndWait finish code:{}", code);
-        }
-        return code;
-    }
+    // /**
+    //  * 执行并等待
+    //  *
+    //  * @param cmd         命令
+    //  * @param dir         执行目录
+    //  * @param printInput  打印输入内容
+    //  * @param printError  打印异常内容
+    //  * @param charset     流字符集
+    //  * @param execTimeout 执行超时
+    //  * @return 执行结果
+    //  * @throws Exception 异常
+    //  */
+    // public static int execAndWait(String cmd, File dir, boolean printInput, boolean printError, Charset charset, int execTimeout) throws Exception {
+    //     int code = -1;
+    //     try {
+    //         Charset streamCharset = charset == null ? Charset.defaultCharset() : charset;
+    //         JulLog.info("execAndWait start cmd:{} dir:{} printInput:{} printError:{}", cmd, dir, printInput, printError);
+    //         // ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c", cmd);
+    //         // if (FileUtil.isDirectory(dir)) {
+    //         //     builder.directory(dir);
+    //         // } else {
+    //         //     builder.directory(null);
+    //         // }
+    //         // builder.redirectErrorStream(true);
+    //         // Process process = builder.start();
+    //         Process process;
+    //         if (FileUtil.isDirectory(dir)) {
+    //             process = Runtime.getRuntime().exec(cmd, null, dir);
+    //         } else {
+    //             process = Runtime.getRuntime().exec(cmd, null);
+    //         }
+    //         // if (process.getInputStream().available() <= 0) {
+    //         //     process.waitFor(1000, TimeUnit.MILLISECONDS);
+    //         // }
+    //         // DownLatch latch;
+    //         // if (printInput && printError) {
+    //         //    latch = DownLatch.of(2);
+    //         //} else if (printError || printInput) {
+    //         //    latch = DownLatch.of();
+    //         //} else {
+    //         //    latch = null;
+    //         //}
+    //         Thread inputThread = null, errorThread = null;
+    //         if (printInput) {
+    //             inputThread = new Thread(() -> {
+    //                 try {
+    //                     // TODO: 特别注意，windows需要hold住，需要直接尝试读取流
+    //                     if (OSUtil.isWindows() || process.getInputStream().available() > 0) {
+    //                         JulLog.info("process input--->start");
+    //                         // 获取进程的标准输出流
+    //                         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), streamCharset));
+    //                         // 读取输出并打印到控制台
+    //                         String line;
+    //                         while ((line = reader.readLine()) != null) {
+    //                             JulLog.info(line);
+    //                         }
+    //                         JulLog.info("process input--->end");
+    //                     }
+    //                 } catch (IOException e) {
+    //                     throw new RuntimeException(e);
+    //                     //} finally {
+    //                     //    latch.countDown();
+    //                 }
+    //             });
+    //             inputThread.start();
+    //         }
+    //         if (printError) {
+    //             errorThread = new Thread(() -> {
+    //                 try {
+    //                     // TODO: 特别注意，windows需要hold住，需要直接尝试读取流
+    //                     if (OSUtil.isWindows() || process.getErrorStream().available() > 0) {
+    //                         JulLog.error("process error--->start");
+    //                         // 获取进程的标准输出流
+    //                         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream(), streamCharset));
+    //                         // 读取输出并打印到控制台
+    //                         String line;
+    //                         while ((line = reader.readLine()) != null) {
+    //                             JulLog.error(line);
+    //                         }
+    //                         JulLog.error("process error--->end");
+    //                     }
+    //                 } catch (IOException e) {
+    //                     throw new RuntimeException(e);
+    //                     //} finally {
+    //                     //    latch.countDown();
+    //                 }
+    //             });
+    //             errorThread.start();
+    //         }
+    //         if (inputThread != null) {
+    //             inputThread.join();
+    //         }
+    //         if (errorThread != null) {
+    //             errorThread.join();
+    //         }
+    //         if (execTimeout == -1) {
+    //             // if (latch != null) {
+    //             //    latch.await();
+    //             //}
+    //             code = process.waitFor();
+    //         } else {
+    //             // if (latch != null) {
+    //             //    latch.await(execTimeout);
+    //             //}
+    //             // 等待进程执行完成
+    //             if (process.waitFor(execTimeout, TimeUnit.MILLISECONDS)) {
+    //                 code = process.exitValue();
+    //             }
+    //         }
+    //     } finally {
+    //         JulLog.info("execAndWait finish code:{}", code);
+    //     }
+    //     return code;
+    // }
 
     // /**
     //  * 执行并等待
@@ -269,111 +266,189 @@ public class RuntimeUtil {
     //     return code;
     // }
 
-    public static String execForStr(String... cmdArr) {
-        try {
-            // 执行命令
-            Process process;
-            if (cmdArr.length == 1) {
-                process = Runtime.getRuntime().exec(cmdArr[0], null);
-            } else {
-                process = Runtime.getRuntime().exec(cmdArr, null);
-            }
-            // 读取命令的输出
-            String line;
-            BufferedReader inReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder input = new StringBuilder();
-            while ((line = inReader.readLine()) != null) {
-                input.append(line).append(System.lineSeparator());
-            }
-            // 读取命令的输出
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder error = new StringBuilder();
-            while ((line = errReader.readLine()) != null) {
-                error.append(line).append(System.lineSeparator());
-            }
-            JulLog.info("exec input:{}", input.toString());
-            JulLog.error("exec error:{}", error.toString());
-            // 等待命令执行完成
-            int exitCode = process.waitFor();
-            JulLog.debug("Runtime executed with exit code:{}", exitCode);
-            // while (sb.toString().endsWith("\r") || sb.toString().endsWith("\n")) {
-            //     sb.deleteCharAt(sb.length() - 1);
-            // }
-            if (input.isEmpty()) {
-                return error.toString();
-            }
-            return input.toString();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    /**
+     * 执行并返回字符传
+     *
+     * @param cmd 命令
+     * @return 结果
+     */
+    public static String execForStr(String cmd) {
+        // 执行命令
+        ProcessExecResult result = execForResult(cmd);
+        if (result == null) {
+            return null;
         }
-        return null;
+        if (result.getInput() != null) {
+            return result.getInput();
+        }
+        return result.getError();
     }
 
-    public static ProcessExecResult execForResult(String... cmdArr) {
-        ProcessExecResult result = new ProcessExecResult();
+    /**
+     * 执行并返回字符传
+     *
+     * @param cmdArr 命令列表
+     * @return 结果
+     */
+    public static String execForStr(String[] cmdArr) {
+        // 执行命令
+        ProcessExecResult result = execForResult(cmdArr);
+        if (result == null) {
+            return null;
+        }
+        if (result.getInput() != null) {
+            return result.getInput();
+        }
+        return result.getError();
+    }
+
+    /**
+     * 执行并返回结果
+     *
+     * @param cmd 命令
+     * @return 结果
+     */
+    public static ProcessExecResult execForResult(String cmd) {
+        return execForResult(cmd, null, null);
+    }
+
+    /**
+     * 执行并返回结果
+     *
+     * @param cmdArr 命令列表
+     * @return 结果
+     */
+    public static ProcessExecResult execForResult(String[] cmdArr) {
+        return execForResult(cmdArr, null, null);
+    }
+
+    /**
+     * 执行并返回结果
+     *
+     * @param cmdArr 命令列表
+     * @param envp   环境
+     * @param dir    文件
+     * @return 结果
+     */
+    public static ProcessExecResult execForResult(String[] cmdArr, String[] envp, File dir) {
+        ProcessExecResult result = null;
         try {
             // 执行命令
-            Process process;
-            if (cmdArr.length == 1) {
-                process = Runtime.getRuntime().exec(cmdArr[0], null);
-            } else {
-                process = Runtime.getRuntime().exec(cmdArr, null);
+            Process process = exec(cmdArr, envp, dir);
+            if (process != null) {
+                result = getProcessResult(process);
             }
-            // 读取命令的输出
-            String line;
-            BufferedReader inReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder input = new StringBuilder();
-            while ((line = inReader.readLine()) != null) {
-                input.append(line).append(System.lineSeparator());
-            }
-            // 读取命令的输出
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder error = new StringBuilder();
-            while ((line = errReader.readLine()) != null) {
-                error.append(line).append(System.lineSeparator());
-            }
-            JulLog.info("exec input:{}", input.toString());
-            JulLog.error("exec error:{}", error.toString());
-            // 等待命令执行完成
-            int exitCode = process.waitFor();
-            JulLog.debug("Runtime executed with exit code:{}", exitCode);
-            result.setExitCode(exitCode);
-            result.setInput(input.toString());
-            result.setError(error.toString());
-            return result;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return result;
     }
 
+    /**
+     * 执行并返回结果
+     *
+     * @param cmd  命令
+     * @param envp 环境
+     * @param dir  文件
+     * @return 结果
+     */
+    public static ProcessExecResult execForResult(String cmd, String[] envp, File dir) {
+        ProcessExecResult result = null;
+        try {
+            // 执行命令
+            Process process = exec(cmd, envp, dir);
+            if (process != null) {
+                result = getProcessResult(process);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * 获取进程结果
+     *
+     * @param process 进程
+     * @return 结果
+     */
+    private static ProcessExecResult getProcessResult(Process process) throws IOException, InterruptedException {
+        ProcessExecResult result = new ProcessExecResult();
+        // 读取命令的输出
+        String line;
+        BufferedReader inReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        StringBuilder input = new StringBuilder();
+        while ((line = inReader.readLine()) != null) {
+            input.append(line).append(System.lineSeparator());
+        }
+        // 读取命令的输出
+        BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        StringBuilder error = new StringBuilder();
+        while ((line = errReader.readLine()) != null) {
+            error.append(line).append(System.lineSeparator());
+        }
+        JulLog.info("exec input:{}", input.toString());
+        JulLog.error("exec error:{}", error.toString());
+        // 等待命令执行完成
+        int exitCode = process.waitFor();
+        JulLog.debug("Runtime executed with exit code:{}", exitCode);
+        result.setExitCode(exitCode);
+        result.setInput(input.toString());
+        result.setError(error.toString());
+        return result;
+    }
+
+    /**
+     * 执行命令
+     *
+     * @param cmd 命令
+     * @return 进程
+     */
     public static Process exec(String cmd) {
         return exec(cmd, null, null);
     }
 
+    /**
+     * 执行命令
+     *
+     * @param cmdArr 命令列表
+     * @return 进程
+     */
+    public static Process exec(String[] cmdArr) {
+        return exec(cmdArr, null, null);
+    }
+
+    /**
+     * 执行命令
+     *
+     * @param cmd  命令
+     * @param envp 环境
+     * @param dir  目录
+     * @return 进程
+     */
     public static Process exec(String cmd, String[] envp, File dir) {
         try {
             // 执行命令
             Process process = Runtime.getRuntime().exec(cmd, envp, dir);
-            String line;
-            // 读取命令的输出
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder input = new StringBuilder();
-            while ((line = inputReader.readLine()) != null) {
-                input.append(line);
-            }
-            if (!input.isEmpty()) {
-                JulLog.info("exec result:{}", input.toString());
-            }
-            // 读取错误的输出
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder err = new StringBuilder();
-            while ((line = errReader.readLine()) != null) {
-                err.append(line);
-            }
-            if (!err.isEmpty()) {
-                JulLog.error("exec error:{}", err.toString());
-            }
+            // String line;
+            // // 读取命令的输出
+            // BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            // StringBuilder input = new StringBuilder();
+            // while ((line = inputReader.readLine()) != null) {
+            //     input.append(line);
+            // }
+            // if (!input.isEmpty()) {
+            //     JulLog.info("exec result:{}", input.toString());
+            // }
+            // // 读取错误的输出
+            // BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            // StringBuilder err = new StringBuilder();
+            // while ((line = errReader.readLine()) != null) {
+            //     err.append(line);
+            // }
+            // if (!err.isEmpty()) {
+            //     JulLog.error("exec error:{}", err.toString());
+            // }
             return process;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -381,33 +456,37 @@ public class RuntimeUtil {
         return null;
     }
 
-    public static Process exec(String[] cmdArr) {
-        return exec(cmdArr, null, null);
-    }
-
+    /**
+     * 执行命令
+     *
+     * @param cmdArr 命令列表
+     * @param envp   环境
+     * @param dir    目录
+     * @return 进程
+     */
     public static Process exec(String[] cmdArr, String[] envp, File dir) {
         try {
             // 执行命令
             Process process = Runtime.getRuntime().exec(cmdArr, envp, dir);
-            String line;
-            // 读取命令的输出
-            BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder input = new StringBuilder();
-            while ((line = inputReader.readLine()) != null) {
-                input.append(line);
-            }
-            if (!input.isEmpty()) {
-                JulLog.info("exec result:{}", input.toString());
-            }
-            // 读取错误的输出
-            BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            StringBuilder err = new StringBuilder();
-            while ((line = errReader.readLine()) != null) {
-                err.append(line);
-            }
-            if (!err.isEmpty()) {
-                JulLog.error("exec error:{}", err.toString());
-            }
+            // String line;
+            // // 读取命令的输出
+            // BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            // StringBuilder input = new StringBuilder();
+            // while ((line = inputReader.readLine()) != null) {
+            //     input.append(line);
+            // }
+            // if (!input.isEmpty()) {
+            //     JulLog.info("exec result:{}", input.toString());
+            // }
+            // // 读取错误的输出
+            // BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            // StringBuilder err = new StringBuilder();
+            // while ((line = errReader.readLine()) != null) {
+            //     err.append(line);
+            // }
+            // if (!err.isEmpty()) {
+            //     JulLog.error("exec error:{}", err.toString());
+            // }
             return process;
         } catch (Exception ex) {
             ex.printStackTrace();

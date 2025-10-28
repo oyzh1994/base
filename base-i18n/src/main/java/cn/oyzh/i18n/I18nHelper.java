@@ -55,6 +55,8 @@ public class I18nHelper {
 
     public static final String NODE = "base.node";
 
+    public static final String ROOT = "base.root";
+
     public static final String NODES = "base.nodes";
 
     public static final String KEY = "base.key";
@@ -461,6 +463,10 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String SYNC = "base.sync";
+
+    public static final String TOKEN = "base.token";
+
     public static final String THIS = "base.this";
 
     public static final String CUT = "base.cut";
@@ -570,6 +576,8 @@ public class I18nHelper {
     public static final String UPDATE_BY_CURRENT_TIMESTAMP = "base.updateByCurrentTimestamp";
 
     public static final String ELEMENT = "base.element";
+
+    public static final String GET = "base.get";
 
     public static final String KEY_TYPE = "base.keyType";
 
@@ -955,6 +963,16 @@ public class I18nHelper {
 
     public static final String LIST = "base.list";
 
+    public static final String SET = "base.set";
+
+    public static final String SET1 = "base.set1";
+
+    public static final String ZSET = "base.zset";
+
+    public static final String HASH = "base.hash";
+
+    public static final String STREAM = "base.stream";
+
     public static final String TOOLS = "base.tools";
 
     public static final String CHILD_NUMBER = "base.childNumber";
@@ -1003,16 +1021,32 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(IMPORT, CONNECTION, FAIL);
     }
 
+    public static String importDataFail() {
+        return I18nResourceBundle.i18nString(IMPORT, DATA, FAIL);
+    }
+
     public static String importConnectionSuccess() {
         return I18nResourceBundle.i18nString(IMPORT, CONNECTION, SUCCESS);
+    }
+
+    public static String importDataSuccess() {
+        return I18nResourceBundle.i18nString(IMPORT, DATA, SUCCESS);
     }
 
     public static String exportConnectionFail() {
         return I18nResourceBundle.i18nString(EXPORT, CONNECTION, FAIL);
     }
 
+    public static String exportDataFail() {
+        return I18nResourceBundle.i18nString(EXPORT, DATA, FAIL);
+    }
+
     public static String exportConnectionSuccess() {
         return I18nResourceBundle.i18nString(EXPORT, CONNECTION, SUCCESS);
+    }
+
+    public static String exportDataSuccess() {
+        return I18nResourceBundle.i18nString(EXPORT, DATA, SUCCESS);
     }
 
     public static String operationTimout() {
@@ -1077,6 +1111,26 @@ public class I18nHelper {
 
     public static String string() {
         return I18nResourceBundle.i18nString(STRING);
+    }
+
+    public static String list() {
+        return I18nResourceBundle.i18nString(LIST);
+    }
+
+    public static String set1() {
+        return I18nResourceBundle.i18nString(SET1);
+    }
+
+    public static String zset() {
+        return I18nResourceBundle.i18nString(ZSET);
+    }
+
+    public static String hash() {
+        return I18nResourceBundle.i18nString(HASH);
+    }
+
+    public static String stream() {
+        return I18nResourceBundle.i18nString(STREAM);
     }
 
     public static String hex() {
@@ -2258,6 +2312,10 @@ public class I18nHelper {
 
     public static String clear() {
         return I18nResourceBundle.i18nString(CLEAR);
+    }
+
+    public static String clearSyncData() {
+        return I18nResourceBundle.i18nString(CLEAR, SYNC, DATA);
     }
 
     public static String copy() {
@@ -4383,6 +4441,18 @@ public class I18nHelper {
 
     public static String copyAuth() {
         return I18nResourceBundle.i18nString(COPY, AUTH);
+    }
+
+    public static String sync() {
+        return I18nResourceBundle.i18nString(SYNC);
+    }
+
+    public static String rootNode() {
+        return I18nResourceBundle.i18nString(ROOT, NODE);
+    }
+
+    public static String getKeyTypeFail() {
+        return I18nResourceBundle.i18nString(GET, KEY_TYPE, FAIL);
     }
 
     public String fileUploadFailed() {

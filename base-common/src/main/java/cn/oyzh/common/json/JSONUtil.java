@@ -52,85 +52,67 @@ public class JSONUtil {
     }
 
     /**
+     // * 取消美化
+     // *
+     // * @param str 对象
+     // * @return json取消美化字符串
+     // */
+    //public static String unPretty(String str) {
+    //    if (str != null) {
+    //        StringBuilder builder = new StringBuilder();
+    //        char[] chars = str.toCharArray();
+    //        for (char aChar : chars) {
+    //            if (aChar != '\r' && aChar != '\t' && aChar != '\n') {
+    //                builder.append(aChar);
+    //            }
+    //        }
+    //        return builder.toString();
+    //    }
+    //    return null;
+    //}
+
+    /**
      * 压缩
      *
      * @param json 对象
      * @return json压缩字符串
      */
     public static String toCompress(String json) {
-        if (json == null || json.isEmpty()) {
-            return json;
-        }
-        StringBuilder compressed = new StringBuilder();
-        int length = json.length();
-        int index = 0;
+        StringBuilder result = new StringBuilder();
         boolean inString = false;
-        char currentChar;
-        while (index < length) {
-            currentChar = json.charAt(index);
-
-            // 处理字符串中的内容（保留字符串内部的空格）
-            if (currentChar == '"') {
-                compressed.append(currentChar);
-                index++;
-
-                // 处理字符串内部，包括转义的引号
-                while (index < length) {
-                    currentChar = json.charAt(index);
-                    compressed.append(currentChar);
-                    index++;
-
-                    // 遇到未转义的引号，退出字符串模式
-                    if (currentChar == '"' && json.charAt(index - 2) != '\\') {
-                        inString = false;
-                        break;
-                    }
-                    inString = true;
-                }
+        boolean escaping = false;
+        for (int i = 0; i < json.length(); i++) {
+            char c = json.charAt(i);
+            if (escaping) {
+                // 当前字符是转义序列的一部分
+                result.append(c);
+                escaping = false;
                 continue;
             }
-
-            // 如果在字符串内部，直接任何字符（包括空格）
+            if (c == '\\') {
+                // 开始转义序列
+                result.append(c);
+                escaping = true;
+                continue;
+            }
+            if (c == '\"') {
+                // 遇到引号
+                result.append(c);
+                inString = !inString; // 切换字符串状态
+                continue;
+            }
             if (inString) {
-                compressed.append(currentChar);
-                index++;
-                continue;
-            }
-
-            // 跳过空格、制表符、换行符等空白字符
-            if (Character.isWhitespace(currentChar)) {
-                index++;
-                continue;
-            }
-
-            // 处理单行注释 //
-            if (currentChar == '/' && index + 1 < length && json.charAt(index + 1) == '/') {
-                // 跳过直到换行符
-                while (index < length && json.charAt(index) != '\n') {
-                    index++;
+                // 在字符串内，保留所有字符
+                result.append(c);
+            } else {
+                // 在字符串外，保留所有非空白字符和必要的结构字符
+                // 只去除真正的格式空白（空格、制表符、换行、回车）
+                if (c != ' ' && c != '\t' && c != '\n' && c != '\r') {
+                    result.append(c);
                 }
-                continue;
             }
-
-            // 处理多行注释 /* */
-            if (currentChar == '/' && index + 1 < length && json.charAt(index + 1) == '*') {
-                index += 2;
-                // 跳过直到 */
-                while (index + 1 < length) {
-                    if (json.charAt(index) == '*' && json.charAt(index + 1) == '/') {
-                        index += 2;
-                        break;
-                    }
-                    index++;
-                }
-                continue;
-            }
-
-            // 保留其他字符
-            compressed.append(currentChar);
-            index++;
         }
-        return compressed.toString();
+        return result.toString();
     }
 
     /**

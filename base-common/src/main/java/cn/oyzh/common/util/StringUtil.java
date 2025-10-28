@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -383,6 +384,14 @@ public class StringUtil {
             builder.append(space).append(o.toString());
         }
         return builder.substring(space.length());
+    }
+
+    public static String join(String space, Object[] array) {
+        return join(space, Arrays.asList(array));
+    }
+
+    public static String join(String space, String[] array) {
+        return join(space, Arrays.asList(array));
     }
 
     public static String replaceOneTime(String original, String target, String replacement) {
