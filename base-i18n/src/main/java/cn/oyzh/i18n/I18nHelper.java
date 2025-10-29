@@ -3834,6 +3834,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLONE, CONNECT);
     }
 
+    public static String cloneTable() {
+        return I18nResourceBundle.i18nString(CLONE, TABLE);
+    }
+
     public static String cloneSession() {
         return I18nResourceBundle.i18nString(CLONE, SESSION);
     }
