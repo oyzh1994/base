@@ -2858,6 +2858,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(OPEN, VIEW);
     }
 
+    public static String openEvent() {
+        return I18nResourceBundle.i18nString(OPEN, EVENT);
+    }
+
     public static String deleteView() {
         return I18nResourceBundle.i18nString(DELETE, VIEW);
     }
@@ -3076,6 +3080,10 @@ public class I18nHelper {
 
     public static String renameView() {
         return I18nResourceBundle.i18nString(RENAME, VIEW);
+    }
+
+    public static String renameEvent() {
+        return I18nResourceBundle.i18nString(RENAME, EVENT);
     }
 
     public static String clearTable() {
