@@ -3074,6 +3074,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RENAME, TABLE);
     }
 
+    public static String renameView() {
+        return I18nResourceBundle.i18nString(RENAME, VIEW);
+    }
+
     public static String clearTable() {
         return I18nResourceBundle.i18nString(CLEAR, TABLE);
     }
