@@ -161,6 +161,8 @@ public class I18nHelper {
 
     public static final String DATA = "base.data";
 
+    public static final String COLUMN = "base.column";
+
     public static final String SERVER = "base.server";
 
     public static final String PERSISTENT = "base.persistent";
@@ -1657,6 +1659,26 @@ public class I18nHelper {
 
     public static String invalidData() {
         return I18nResourceBundle.i18nString(INVALID, DATA);
+    }
+
+    public static String invalidColumn() {
+        return I18nResourceBundle.i18nString(INVALID, COLUMN);
+    }
+
+    public static String invalidIndex() {
+        return I18nResourceBundle.i18nString(INVALID, INDEX);
+    }
+
+    public static String invalidForeignKey() {
+        return I18nResourceBundle.i18nString(INVALID, FOREIGN_KEY);
+    }
+
+    public static String invalidCheck() {
+        return I18nResourceBundle.i18nString(INVALID, CHECK);
+    }
+
+    public static String invalidTrigger() {
+        return I18nResourceBundle.i18nString(INVALID, TRIGGER);
     }
 
     public static String copySuccess() {

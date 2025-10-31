@@ -154,7 +154,7 @@ public class StringUtil {
         if (source != null && target != null) {
             return source.equalsIgnoreCase(target);
         }
-        return false;
+        return Objects.equals(source, target);
     }
 
     public static boolean equalsAny(String source, String... strings) {
