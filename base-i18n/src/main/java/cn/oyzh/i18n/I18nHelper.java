@@ -21,6 +21,10 @@ public class I18nHelper {
 
     public static final String FAIL = "base.fail";
 
+    public static final String SYSTEM = "base.system";
+
+    public static final String FOLLOW = "base.follow";
+
     public static final String FAILED = "base.failed";
 
     public static final String BUCKET = "base.bucket";
@@ -168,6 +172,8 @@ public class I18nHelper {
     public static final String STRUCTURE = "base.structure";
 
     public static final String CONTENT = "base.content";
+
+    public static final String CUSTOM = "base.custom";
 
     public static final String COMMENT = "base.comment";
 
@@ -1251,6 +1257,10 @@ public class I18nHelper {
 
     public static String content() {
         return I18nResourceBundle.i18nString(CONTENT);
+    }
+
+    public static String custom() {
+        return I18nResourceBundle.i18nString(CUSTOM);
     }
 
     public static String contentAlreadyExists() {
@@ -4469,6 +4479,14 @@ public class I18nHelper {
 
     public static String getKeyTypeFail() {
         return I18nResourceBundle.i18nString(GET, KEY_TYPE, FAIL);
+    }
+
+    public static String system() {
+        return I18nResourceBundle.i18nString(SYSTEM);
+    }
+
+    public static String followSystem() {
+        return I18nResourceBundle.i18nString(FOLLOW, SYSTEM);
     }
 
     public String fileUploadFailed() {
