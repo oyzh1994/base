@@ -151,6 +151,8 @@ public class I18nHelper {
 
     public static final String RUN_SQL_FILE = "base.runSqlFile";
 
+    public static final String SELECTED = "base.selected";
+
     public static final String EXPORT_IN_PROGRESS = "base.exportInProgress";
 
     public static final String DUMP_IN_PROGRESS = "base.dumpInProgress";
@@ -3272,6 +3274,10 @@ public class I18nHelper {
 
     public static String runSqlFile() {
         return I18nResourceBundle.i18nString(RUN_SQL_FILE);
+    }
+
+    public static String runSelected() {
+        return I18nResourceBundle.i18nString(RUN, SELECTED);
     }
 
     public static String runImage() {
