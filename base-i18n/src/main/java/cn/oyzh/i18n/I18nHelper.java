@@ -473,6 +473,12 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String AS = "base.as";
+
+    public static final String INSERT = "base.insert";
+
+    public static final String STATEMENT = "base.statement";
+
     public static final String SYNC = "base.sync";
 
     public static final String TOKEN = "base.token";
@@ -2354,6 +2360,10 @@ public class I18nHelper {
 
     public static String copy() {
         return I18nResourceBundle.i18nString(COPY);
+    }
+
+    public static String copyAsInsertStatement() {
+        return I18nResourceBundle.i18nString(COPY, AS, INSERT, STATEMENT);
     }
 
     public static String copyThisSession() {
