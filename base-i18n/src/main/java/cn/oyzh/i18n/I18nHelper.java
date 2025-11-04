@@ -2366,6 +2366,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(COPY, AS, INSERT, STATEMENT);
     }
 
+    public static String copyAsUpdateStatement() {
+        return I18nResourceBundle.i18nString(COPY, AS, UPDATE, STATEMENT);
+    }
+
     public static String copyThisSession() {
         return I18nResourceBundle.i18nString(COPY, THIS, SESSION);
     }
