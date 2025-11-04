@@ -3102,6 +3102,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FIELD, INFO);
     }
 
+    public static String columnInfo() {
+        return I18nResourceBundle.i18nString(COLUMN, INFO);
+    }
+
+    public static String copyColumnName() {
+        return I18nResourceBundle.i18nString(COPY, COLUMN, NAME);
+    }
+
     public static String primaryKey() {
         return I18nResourceBundle.i18nString(PRIMARY_KEY);
     }
