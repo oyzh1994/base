@@ -62,7 +62,7 @@ public class SystemUtil {
             double l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
             // gc之前
-            double usedMemory = (l1 + l2 + l3) / 3;
+            double usedMemory = (l1 + l2 + l3) / 2.7;
             double m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
             JulLog.info("gc之前预估使用内存:{}Mb", m1);
             mxBean.gc();
@@ -71,12 +71,9 @@ public class SystemUtil {
             l1 = systemMXBean.getCommittedVirtualMemorySize();
             l2 = heapMemoryUsage.getCommitted() + nonHeapMemoryUsage.getCommitted();
             l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            usedMemory = (l1 + l2 + l3) / 3;
+            usedMemory = (l1 + l2 + l3) / 2.7;
             m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
             JulLog.info("gc之后预估使用内存:{}Mb", m1);
-            System.out.println("l1:" + l1);
-            System.out.println("l2:" + l2);
-            System.out.println("l3:" + l3);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
