@@ -3146,6 +3146,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLEAR, TABLE);
     }
 
+    public static String clearTableData() {
+        return I18nResourceBundle.i18nString(CLEAR, TABLE, DATA);
+    }
+
     public static String truncate() {
         return I18nResourceBundle.i18nString(TRUNCATE);
     }
