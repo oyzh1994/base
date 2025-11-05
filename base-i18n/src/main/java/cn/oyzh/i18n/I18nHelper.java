@@ -603,6 +603,8 @@ public class I18nHelper {
 
     public static final String NEW_NAME = "base.newName";
 
+    public static final String NEW = "base.new";
+
     public static final String TTL = "base.ttl";
 
     public static final String CALC = "base.calc";
@@ -1911,6 +1913,10 @@ public class I18nHelper {
 
     public static String newName() {
         return I18nResourceBundle.i18nString(NEW_NAME);
+    }
+
+    public static String newQuery() {
+        return I18nResourceBundle.i18nString(NEW, QUERY);
     }
 
     public static String ttlUpdated() {
