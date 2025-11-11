@@ -187,6 +187,20 @@ public class I18nHelper {
 
     public static final String IS = "base.is";
 
+    public static final String IS1 = "base.is1";
+
+    public static final String GT = "base.gt";
+
+    public static final String GT_EQ = "base.gtEq";
+
+    public static final String LT = "base.lt";
+
+    public static final String LT_EQ = "base.ltEq";
+
+    public static final String EQ = "base.eq";
+
+    public static final String NULL = "base.null";
+
     public static final String EMPTY = "base.empty";
 
     public static final String OPERATION = "base.operation";
@@ -983,6 +997,8 @@ public class I18nHelper {
 
     public static final String LIST = "base.list";
 
+    public static final String IN = "base.in";
+
     public static final String SET = "base.set";
 
     public static final String SET1 = "base.set1";
@@ -1024,6 +1040,10 @@ public class I18nHelper {
     public static final String THEME_CUPERTINO_DARK = "base.theme.cupertinodark";
 
     public static final String THEME_DRACULA = "base.theme.dracula";
+
+    public static final String END = "base.end";
+
+    public static final String WITH = "base.with";
 
     public static String operationFail() {
         return I18nResourceBundle.i18nString(OPERATION, FAIL);
@@ -1993,8 +2013,12 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NAME);
     }
 
-   public static String between() {
+    public static String between() {
         return I18nResourceBundle.i18nString(BETWEEN);
+    }
+
+    public static String notBetween() {
+        return I18nResourceBundle.i18nString(NOT, BETWEEN);
     }
 
     public static String pleaseInputDirName() {
@@ -3474,6 +3498,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CONTAINS);
     }
 
+    public static String notContains() {
+        return I18nResourceBundle.i18nString(NOT, CONTAINS);
+    }
+
     public static String containsCaseSensitive() {
         return I18nResourceBundle.i18nString(CONTAINS_CASE_SENSITIVE);
     }
@@ -3841,6 +3869,15 @@ public class I18nHelper {
     public static String minLatency() {
         return I18nResourceBundle.i18nString(MIN, LATENCY);
     }
+
+    public static String inList() {
+        return I18nResourceBundle.i18nString(IN, LIST);
+    }
+
+    public static String notInList() {
+        return I18nResourceBundle.i18nString(NOT, IN, LIST);
+    }
+
 
     public static String maxLatency() {
         return I18nResourceBundle.i18nString(MAX, LATENCY);
@@ -4555,6 +4592,22 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FOLLOW, SYSTEM);
     }
 
+    public static String endWith() {
+        return I18nResourceBundle.i18nString(END, WITH);
+    }
+
+    public static String notEndWith() {
+        return I18nResourceBundle.i18nString(NOT, END, WITH);
+    }
+
+    public static String startWith() {
+        return I18nResourceBundle.i18nString(START, WITH);
+    }
+
+    public static String notStartWith() {
+        return I18nResourceBundle.i18nString(NOT, START, WITH);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
@@ -4759,4 +4812,39 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(SNIPPET, LIST);
     }
 
+    public static String isNull() {
+        return I18nResourceBundle.i18nString(IS, NULL);
+    }
+
+    public static String notIsNull() {
+        return I18nResourceBundle.i18nString(NOT, IS, NULL);
+    }
+
+    public static String notIsEmpty() {
+        return I18nResourceBundle.i18nString(NOT, IS, EMPTY);
+    }
+
+    public static String gt() {
+        return I18nResourceBundle.i18nString(GT);
+    }
+
+    public static String gtEq() {
+        return I18nResourceBundle.i18nString(GT_EQ);
+    }
+
+    public static String lt() {
+        return I18nResourceBundle.i18nString(LT);
+    }
+
+    public static String ltEq() {
+        return I18nResourceBundle.i18nString(LT_EQ);
+    }
+
+    public static String eq() {
+        return I18nResourceBundle.i18nString(EQ);
+    }
+
+    public static String notEq() {
+        return I18nResourceBundle.i18nString(NOT, EQ);
+    }
 }
