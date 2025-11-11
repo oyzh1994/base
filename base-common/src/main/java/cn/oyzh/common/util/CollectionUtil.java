@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -49,13 +48,20 @@ public class CollectionUtil {
         return null;
     }
 
-    public static <T> T get(Collection<T> list, int index) {
-        if (list != null && !list.isEmpty() && index > 0 && index < list.size()) {
+    /**
+     * 获取数据
+     *
+     * @param collection 集合
+     * @param index      索引
+     * @param <T>        泛型
+     * @return 数据
+     */
+    public static <T> T get(Collection<T> collection, int index) {
+        if (collection != null && !collection.isEmpty() && index >= 0 && index < collection.size()) {
             int i = 0;
-            Iterator<T> iterator = list.iterator();
-            while (iterator.hasNext()) {
+            for (T t : collection) {
                 if (i++ == index) {
-                    return iterator.next();
+                    return t;
                 }
             }
         }

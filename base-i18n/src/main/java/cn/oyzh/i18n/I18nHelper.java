@@ -651,6 +651,8 @@ public class I18nHelper {
 
     public static final String PLEASE = "base.please";
 
+    public static final String BETWEEN = "base.between";
+
     public static final String BASE = "base.base";
 
     public static final String TITLE_HOME = "base.title.home";
@@ -1989,6 +1991,10 @@ public class I18nHelper {
 
     public static String pleaseInputName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NAME);
+    }
+
+   public static String between() {
+        return I18nResourceBundle.i18nString(BETWEEN);
     }
 
     public static String pleaseInputDirName() {
