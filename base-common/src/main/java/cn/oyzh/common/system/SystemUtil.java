@@ -4,7 +4,6 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.common.util.NumberUtil;
-import com.sun.management.OperatingSystemMXBean;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
@@ -53,25 +52,27 @@ public class SystemUtil {
         try {
             // 获取 MXBean 实例
             MemoryMXBean mxBean = getMemoryMXBean();
-            OperatingSystemMXBean systemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+            // OperatingSystemMXBean systemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
             MemoryUsage heapMemoryUsage = mxBean.getHeapMemoryUsage();
             MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
 
-            double l1 = systemMXBean.getCommittedVirtualMemorySize();
+            // double l1 = systemMXBean.getCommittedVirtualMemorySize();
             double l2 = heapMemoryUsage.getCommitted() + nonHeapMemoryUsage.getCommitted();
-            double l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            // double l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
             // gc之前
-            double usedMemory = (l1 + l2 + l3) / 2.7;
+            double usedMemory = l2;
+            // double usedMemory = (l1 + l2 + l3) / 2.7;
             double m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
             JulLog.info("gc之前预估使用内存:{}Mb", m1);
             mxBean.gc();
 
             // gc之后
-            l1 = systemMXBean.getCommittedVirtualMemorySize();
+            // l1 = systemMXBean.getCommittedVirtualMemorySize();
             l2 = heapMemoryUsage.getCommitted() + nonHeapMemoryUsage.getCommitted();
-            l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-            usedMemory = (l1 + l2 + l3) / 2.7;
+            // l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            usedMemory = l2;
+            // usedMemory = (l1 + l2 + l3) / 2.7;
             m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
             JulLog.info("gc之后预估使用内存:{}Mb", m1);
         } catch (Exception ex) {
