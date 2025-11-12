@@ -3963,6 +3963,22 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLONE, TABLE);
     }
 
+    public static String cloneView() {
+        return I18nResourceBundle.i18nString(CLONE, VIEW);
+    }
+
+    public static String cloneFunction() {
+        return I18nResourceBundle.i18nString(CLONE, FUNCTION);
+    }
+
+    public static String cloneProcedure() {
+        return I18nResourceBundle.i18nString(CLONE, PROCEDURE);
+    }
+
+    public static String cloneEvent() {
+        return I18nResourceBundle.i18nString(CLONE, EVENT);
+    }
+
     public static String cloneSession() {
         return I18nResourceBundle.i18nString(CLONE, SESSION);
     }
