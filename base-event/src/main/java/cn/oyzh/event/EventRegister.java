@@ -4,6 +4,7 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.ReflectUtil;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,42 +29,58 @@ public class EventRegister {
      * 注册
      *
      * @param listener 监听器
-     * @return 结果
      */
-    public boolean register(Object listener) {
-        if (listener != null) {
-            Optional<EventSubscriber> optional = subscribers.parallelStream().filter(f -> f.getListener() == listener).findAny();
-            if (optional.isPresent()) {
-                throw new EventListenerAlreadyExistsException(listener);
-            }
-            Class<?> clazz = listener.getClass();
-            Method[] methods = ReflectUtil.getMethods(clazz, true, true);
-            for (Method method : methods) {
-                EventSubscribe subscribe = method.getAnnotation(EventSubscribe.class);
-                if (subscribe != null) {
-                    if (method.getParameterCount() == 1) {
-                        EventSubscriber subscriber = new EventSubscriber(method, listener);
-                        synchronized (this.subscribers) {
-                            this.subscribers.add(subscriber);
-                        }
-                    } else {
-                        JulLog.error("EventSubscribe is found, but parameterCount is not 1,class:{} method:{}", clazz, method.getName());
-                    }
-                }
-            }
-            synchronized (this.subscribers) {
-                this.subscribers.removeIf(EventSubscriber::isInvalid);
-            }
+    public void register(Object listener) {
+        if (listener == null) {
+            return;
         }
-        return false;
+        Optional<EventSubscriber> optional = this.subscribers.parallelStream().filter(f -> f.getListener() == listener).findAny();
+        if (optional.isPresent()) {
+            throw new EventListenerAlreadyExistsException(listener);
+        }
+        Class<?> clazz = listener.getClass();
+        // 寻找方法
+        Method[] methods = ReflectUtil.getMethods(clazz, true, true);
+        for (Method method : methods) {
+            int modifiers = method.getModifiers();
+            EventSubscribe subscribe = method.getAnnotation(EventSubscribe.class);
+            if (subscribe == null) {
+               continue;
+            }
+            if (Modifier.isStatic(modifiers)
+                    || Modifier.isNative(modifiers)
+                    || Modifier.isAbstract(modifiers)
+                    || method.getParameterCount() != 1) {
+                throw new EventSubscribeInvalidException(listener, method);
+            }
+            EventSubscriber subscriber = new EventSubscriber(method, listener);
+            this.subscribers.add(subscriber);
+        }
+        this.subscribers.removeIf(EventSubscriber::isInvalid);
+        JulLog.info("EventSubscribe register listener:{}", listener.getClass());
     }
 
-    public boolean unregister(Object listener) {
-        synchronized (this.subscribers) {
-            return this.subscribers.removeIf(s -> s.isInvalid() || Objects.equals(listener, s.getListener()));
+    /**
+     * 取消注册
+     *
+     * @param listener 监听器
+     */
+    public void unregister(Object listener) {
+        if (listener == null) {
+            return;
         }
+        // synchronized (this.subscribers) {
+        this.subscribers.removeIf(s -> s.isInvalid() || Objects.equals(listener, s.getListener()));
+        // }
+        JulLog.info("EventSubscribe unregister listener:{}", listener.getClass());
     }
 
+    /**
+     * 获取订阅者
+     *
+     * @param event 事件
+     * @return 订阅者列表
+     */
     public List<EventSubscriber> getSubscribers(Object event) {
         if (event == null) {
             return Collections.emptyList();

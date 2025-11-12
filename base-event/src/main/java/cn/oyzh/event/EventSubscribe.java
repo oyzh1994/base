@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * @author oyzh
  * @since 2024-12-27
  */
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 public @interface EventSubscribe {
 }

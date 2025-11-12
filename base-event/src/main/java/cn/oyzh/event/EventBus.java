@@ -14,15 +14,29 @@ import java.util.function.Consumer;
  */
 public class EventBus {
 
-    private Consumer<Exception> exceptionHandler;
+    /**
+     * 异常处理器
+     */
+    protected Consumer<Exception> exceptionHandler;
 
-    private final EventRegister register = new EventRegister();
+    /**
+     * 事件注册器
+     */
+    protected final EventRegister register = new EventRegister();
 
-    private final EventDispatcher dispatcher = new EventDispatcher();
+    /**
+     * 事件调度器
+     */
+    protected final EventDispatcher dispatcher = new EventDispatcher();
 
-    public boolean register(Object listener) {
+    /**
+     * 注册监听器
+     *
+     * @param listener 监听器
+     */
+    public void register(Object listener) {
         try {
-            return this.register.register(listener);
+            this.register.register(listener);
         } catch (Exception ex) {
             if (this.exceptionHandler != null) {
                 this.exceptionHandler.accept(ex);
@@ -30,12 +44,16 @@ public class EventBus {
                 ex.printStackTrace();
             }
         }
-        return false;
     }
 
-    public boolean unregister(Object listener) {
+    /**
+     * 取消注册监听器
+     *
+     * @param listener 监听器
+     */
+    public void unregister(Object listener) {
         try {
-            return this.register.unregister(listener);
+            this.register.unregister(listener);
         } catch (Exception ex) {
             if (this.exceptionHandler != null) {
                 this.exceptionHandler.accept(ex);
@@ -43,14 +61,22 @@ public class EventBus {
                 ex.printStackTrace();
             }
         }
-        return false;
     }
 
+    /**
+     * 发送事件
+     *
+     * @param event       事件
+     * @param config      配置
+     * @param delayMillis 延迟时间
+     * @param <C>         范型
+     */
     public <C extends EventConfig> void post(Object event, C config, Integer delayMillis) {
         if (event != null) {
             boolean verbose = config != null && config.isVerbose();
             boolean delay = delayMillis != null && delayMillis > 0;
             boolean async = config != null && config.isAsync();
+            // 执行函数
             Runnable func = () -> this.doEventPost(event, verbose);
             // 延迟、异步
             if (delay && async) {
@@ -65,6 +91,12 @@ public class EventBus {
         }
     }
 
+    /**
+     * 执行事件发送
+     *
+     * @param event   事件
+     * @param verbose 是否详细信息
+     */
     protected void doEventPost(Object event, boolean verbose) {
         try {
             Long startTime = null;
@@ -89,6 +121,11 @@ public class EventBus {
         }
     }
 
+    /**
+     * 设置异常处理器
+     *
+     * @param exceptionHandler 异常处理器
+     */
     public void exceptionHandler(Consumer<Exception> exceptionHandler) {
         this.exceptionHandler = exceptionHandler;
     }

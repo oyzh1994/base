@@ -18,9 +18,8 @@ public interface EventListener {
     /**
      * 取消注册监听器
      *
-     * @return 结果
      */
-    default boolean unregister() {
-        return EventUtil.unregister(this);
+    default void unregister() {
+        EventUtil.unregister(this);
     }
 }
