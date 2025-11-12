@@ -3178,6 +3178,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RENAME, EVENT);
     }
 
+    public static String renameFunction() {
+        return I18nResourceBundle.i18nString(RENAME, FUNCTION);
+    }
+
+    public static String renameProcedure() {
+        return I18nResourceBundle.i18nString(RENAME, PROCEDURE);
+    }
+
     public static String clearTable() {
         return I18nResourceBundle.i18nString(CLEAR, TABLE);
     }
