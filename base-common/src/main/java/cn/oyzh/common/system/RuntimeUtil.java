@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 /**
  * runtime工具类
@@ -376,13 +377,14 @@ public class RuntimeUtil {
         ProcessExecResult result = new ProcessExecResult();
         // 读取命令的输出
         String line;
-        BufferedReader inReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String charset = OSUtil.isWindows() ? "gbk" : "utf-8";
+        BufferedReader inReader = new BufferedReader(new InputStreamReader(process.getInputStream(), charset));
         StringBuilder input = new StringBuilder();
         while ((line = inReader.readLine()) != null) {
             input.append(line).append(System.lineSeparator());
         }
         // 读取命令的输出
-        BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+        BufferedReader errReader = new BufferedReader(new InputStreamReader(process.getErrorStream(), charset));
         StringBuilder error = new StringBuilder();
         while ((line = errReader.readLine()) != null) {
             error.append(line).append(System.lineSeparator());
