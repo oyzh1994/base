@@ -77,11 +77,15 @@ public class StringUtil {
         return binary.toString();
     }
 
+    /**
+     * 删除最后一个指定的字符
+     *
+     * @param builder StringBuilder对象
+     * @param str     字符
+     */
     public static void deleteLast(StringBuilder builder, String str) {
-        if (builder != null && str != null) {
-            if (builder.toString().endsWith(str)) {
-                builder.deleteCharAt(builder.length() - 1);
-            }
+        if (builder != null && str != null && builder.toString().contains(str)) {
+            builder.deleteCharAt(builder.lastIndexOf(str));
         }
     }
 
