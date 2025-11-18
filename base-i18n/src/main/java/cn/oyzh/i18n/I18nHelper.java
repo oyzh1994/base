@@ -2105,6 +2105,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RECEIVED, MESSAGE);
     }
 
+    public static String messageSent() {
+        return I18nResourceBundle.i18nString(MESSAGE, SENT);
+    }
+
     public static String connectionClosed() {
         return I18nResourceBundle.i18nString(CONNECTION, CLOSED);
     }
