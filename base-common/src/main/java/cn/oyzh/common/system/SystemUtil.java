@@ -9,6 +9,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 系统工具类
@@ -93,10 +94,25 @@ public class SystemUtil {
     }
 
     /**
+     * gc标志位
+     */
+    private static final AtomicBoolean GC_FLAG = new AtomicBoolean(false);
+
+    /**
      * 延迟gc
      */
     public static void gcLater() {
-        ThreadUtil.startVirtual(SystemUtil::gc);
+        ThreadUtil.start(() -> {
+            if (GC_FLAG.get()) {
+                return;
+            }
+            try {
+                GC_FLAG.set(true);
+                SystemUtil.gc();
+            } finally {
+                GC_FLAG.set(false);
+            }
+        });
     }
 
     /**
