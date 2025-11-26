@@ -270,6 +270,14 @@ public class Paging<T> {
         return pageNo;
     }
 
+    public long count() {
+        return this.count;
+    }
+
+    public long limit() {
+        return this.limit;
+    }
+
     public long countPage() {
         return this.countPage;
     }

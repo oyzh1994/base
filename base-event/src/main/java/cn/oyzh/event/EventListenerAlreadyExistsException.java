@@ -9,6 +9,6 @@ package cn.oyzh.event;
 public class EventListenerAlreadyExistsException extends RuntimeException {
 
     public EventListenerAlreadyExistsException(Object listener) {
-        super("Listener " + listener + " already exists");
+        super("Event listener " + listener + " already exists");
     }
 }

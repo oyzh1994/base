@@ -3,7 +3,7 @@ package cn.oyzh.common.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -48,13 +48,20 @@ public class CollectionUtil {
         return null;
     }
 
-    public static <T> T get(Collection<T> list, int index) {
-        if (list != null && !list.isEmpty() && index > 0 && index < list.size()) {
+    /**
+     * 获取数据
+     *
+     * @param collection 集合
+     * @param index      索引
+     * @param <T>        泛型
+     * @return 数据
+     */
+    public static <T> T get(Collection<T> collection, int index) {
+        if (collection != null && !collection.isEmpty() && index >= 0 && index < collection.size()) {
             int i = 0;
-            Iterator<T> iterator = list.iterator();
-            while (iterator.hasNext()) {
+            for (T t : collection) {
                 if (i++ == index) {
-                    return iterator.next();
+                    return t;
                 }
             }
         }
@@ -242,5 +249,29 @@ public class CollectionUtil {
             return 0;
         }
         return collection.size();
+    }
+
+    /**
+     * 创建一个新的ArrayList
+     *
+     * @param <T> 范型
+     * @return ArrayList
+     */
+    public static <T> ArrayList<T> newArrayList() {
+        return new ArrayList<>();
+    }
+
+    /**
+     * 排序
+     *
+     * @param collection 集合
+     * @param comparator 比较器
+     * @param <T>        范型
+     * @return 排序后的集合
+     */
+    public static <T> List<T> sort(Collection<T> collection, Comparator<T> comparator) {
+        List<T> list = new ArrayList<>(collection);
+        list.sort(comparator);
+        return list;
     }
 }

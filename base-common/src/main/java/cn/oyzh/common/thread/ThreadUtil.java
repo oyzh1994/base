@@ -26,6 +26,7 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
+    @Deprecated
     public static Thread startVirtual(Runnable task) {
         return Thread.ofVirtual().start(task);
     }
@@ -36,6 +37,7 @@ public class ThreadUtil {
      *
      * @param tasks 任务列表
      */
+    @Deprecated
     public static void submitVirtual(List<Runnable> tasks) {
         if (CollectionUtil.isNotEmpty(tasks)) {
             try (ExecutorService service = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -58,6 +60,7 @@ public class ThreadUtil {
      *
      * @param task 任务
      */
+    @Deprecated
     public static void submitVirtual(Runnable task) {
         if (task != null) {
             submitVirtual(Collections.singletonList(task));
@@ -70,6 +73,7 @@ public class ThreadUtil {
      *
      * @param tasks 任务列表
      */
+    @Deprecated
     public static <V> List<V> invokeVirtual(List<Callable<V>> tasks) {
         List<V> results = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(tasks)) {
@@ -146,6 +150,7 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
+    @Deprecated
     public static Thread newThreadVirtual(Runnable task) {
         return Thread.ofVirtual().unstarted(task);
     }
@@ -171,8 +176,7 @@ public class ThreadUtil {
      */
     public static void submit(List<Runnable> tasks) {
         if (CollectionUtil.isNotEmpty(tasks)) {
-            ExecutorService service = Executors.newCachedThreadPool();
-            try {
+            try (ExecutorService service = Executors.newCachedThreadPool()) {
                 List<Future<?>> futures = new ArrayList<>(tasks.size());
                 for (Runnable task : tasks) {
                     futures.add(service.submit(task));
@@ -184,8 +188,6 @@ public class ThreadUtil {
                         ex.printStackTrace();
                     }
                 }
-            } finally {
-                service.shutdown();
             }
             // DownLatch latch = DownLatch.of(tasks.size());
             // for (Runnable task : tasks) {

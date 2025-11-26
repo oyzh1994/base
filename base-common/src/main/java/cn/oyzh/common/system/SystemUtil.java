@@ -9,6 +9,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * 系统工具类
@@ -21,6 +22,7 @@ public class SystemUtil {
     /**
      * 移除可选属性
      */
+    @Deprecated
     public static void removeOptionalProperties() {
         Properties properties = System.getProperties();
         properties.remove("java.vendor");
@@ -49,18 +51,30 @@ public class SystemUtil {
      */
     public static void gc() {
         try {
-            // 获取 MemoryMXBean 实例
+            // 获取 MXBean 实例
             MemoryMXBean mxBean = getMemoryMXBean();
-            // 获取堆内存信息
+            // OperatingSystemMXBean systemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
             MemoryUsage heapMemoryUsage = mxBean.getHeapMemoryUsage();
-            // 获取非堆内存信息
             MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
-            long usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
-            double m1 = NumberUtil.scale(usedMemory * 1D / 1024 / 1024, 2);
+
+            // double l1 = systemMXBean.getCommittedVirtualMemorySize();
+            double l2 = heapMemoryUsage.getCommitted() + nonHeapMemoryUsage.getCommitted();
+            // double l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+
+            // gc之前
+            double usedMemory = l2;
+            // double usedMemory = (l1 + l2 + l3) / 2.7;
+            double m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
             JulLog.info("gc之前预估使用内存:{}Mb", m1);
             mxBean.gc();
-            usedMemory = heapMemoryUsage.getUsed() + nonHeapMemoryUsage.getUsed();
-            m1 = NumberUtil.scale(usedMemory * 1D / 1024 / 1024, 2);
+
+            // gc之后
+            // l1 = systemMXBean.getCommittedVirtualMemorySize();
+            l2 = heapMemoryUsage.getCommitted() + nonHeapMemoryUsage.getCommitted();
+            // l3 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            usedMemory = l2;
+            // usedMemory = (l1 + l2 + l3) / 2.7;
+            m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
             JulLog.info("gc之后预估使用内存:{}Mb", m1);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -74,16 +88,31 @@ public class SystemUtil {
      */
     public static void gcInterval(int interval) {
         JulLog.debug("gc interval in {}ms", interval);
-        //TaskManager.cancelInterval("gc:task");
-        //TaskManager.startInterval("gc:task", SystemUtil::gc, interval);
+        // TaskManager.cancelInterval("gc:task");
+        // TaskManager.startInterval("gc:task", SystemUtil::gc, interval);
         TaskManager.startInterval(SystemUtil::gc, interval);
     }
+
+    /**
+     * gc标志位
+     */
+    private static final AtomicBoolean GC_FLAG = new AtomicBoolean(false);
 
     /**
      * 延迟gc
      */
     public static void gcLater() {
-        ThreadUtil.startVirtual(SystemUtil::gc);
+        ThreadUtil.start(() -> {
+            if (GC_FLAG.get()) {
+                return;
+            }
+            try {
+                GC_FLAG.set(true);
+                SystemUtil.gc();
+            } finally {
+                GC_FLAG.set(false);
+            }
+        });
     }
 
     /**

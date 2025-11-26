@@ -714,6 +714,16 @@ public class FileNameUtil {
     }
 
     /**
+     * 是否toml类型
+     *
+     * @param fileType 文件类型
+     * @return 结果
+     */
+    public static boolean isTomlType(String fileType) {
+        return "toml".equalsIgnoreCase(fileType);
+    }
+
+    /**
      * 是否ini类型
      *
      * @param fileType 文件类型

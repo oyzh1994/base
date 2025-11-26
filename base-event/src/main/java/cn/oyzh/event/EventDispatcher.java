@@ -14,6 +14,14 @@ import java.util.List;
  */
 public class EventDispatcher {
 
+    /**
+     * 发送数据
+     *
+     * @param event       事件
+     * @param subscribers 订阅者列表
+     * @throws InvocationTargetException 异常
+     * @throws IllegalAccessException    异常
+     */
     public void post(Object event, List<EventSubscriber> subscribers) throws InvocationTargetException, IllegalAccessException {
         if (event != null) {
             if (CollectionUtil.isNotEmpty(subscribers)) {
@@ -21,7 +29,7 @@ public class EventDispatcher {
                     subscriber.doInvoke(event);
                 }
             } else {
-                JulLog.warn("subscribers is empty, post event:{} fail!", event.getClass().getName());
+                JulLog.warn("Event subscribers is empty, post event:{} fail!", event.getClass().getName());
             }
         }
     }

@@ -21,6 +21,10 @@ public class I18nHelper {
 
     public static final String FAIL = "base.fail";
 
+    public static final String SYSTEM = "base.system";
+
+    public static final String FOLLOW = "base.follow";
+
     public static final String FAILED = "base.failed";
 
     public static final String BUCKET = "base.bucket";
@@ -147,6 +151,8 @@ public class I18nHelper {
 
     public static final String RUN_SQL_FILE = "base.runSqlFile";
 
+    public static final String SELECTED = "base.selected";
+
     public static final String EXPORT_IN_PROGRESS = "base.exportInProgress";
 
     public static final String DUMP_IN_PROGRESS = "base.dumpInProgress";
@@ -156,6 +162,8 @@ public class I18nHelper {
     public static final String IMPORT = "base.import";
 
     public static final String DATA = "base.data";
+
+    public static final String COLUMN = "base.column";
 
     public static final String SERVER = "base.server";
 
@@ -169,6 +177,8 @@ public class I18nHelper {
 
     public static final String CONTENT = "base.content";
 
+    public static final String CUSTOM = "base.custom";
+
     public static final String COMMENT = "base.comment";
 
     public static final String LAYOUT = "base.layout";
@@ -176,6 +186,20 @@ public class I18nHelper {
     public static final String CAN_NOT = "base.canNot";
 
     public static final String IS = "base.is";
+
+    public static final String IS1 = "base.is1";
+
+    public static final String GT = "base.gt";
+
+    public static final String GT_EQ = "base.gtEq";
+
+    public static final String LT = "base.lt";
+
+    public static final String LT_EQ = "base.ltEq";
+
+    public static final String EQ = "base.eq";
+
+    public static final String NULL = "base.null";
 
     public static final String EMPTY = "base.empty";
 
@@ -463,6 +487,12 @@ public class I18nHelper {
 
     public static final String COPY = "base.copy";
 
+    public static final String AS = "base.as";
+
+    public static final String INSERT = "base.insert";
+
+    public static final String STATEMENT = "base.statement";
+
     public static final String SYNC = "base.sync";
 
     public static final String TOKEN = "base.token";
@@ -587,6 +617,8 @@ public class I18nHelper {
 
     public static final String NEW_NAME = "base.newName";
 
+    public static final String NEW = "base.new";
+
     public static final String TTL = "base.ttl";
 
     public static final String CALC = "base.calc";
@@ -632,6 +664,8 @@ public class I18nHelper {
     public static final String LOADING = "base.loading";
 
     public static final String PLEASE = "base.please";
+
+    public static final String BETWEEN = "base.between";
 
     public static final String BASE = "base.base";
 
@@ -963,6 +997,8 @@ public class I18nHelper {
 
     public static final String LIST = "base.list";
 
+    public static final String IN = "base.in";
+
     public static final String SET = "base.set";
 
     public static final String SET1 = "base.set1";
@@ -1004,6 +1040,10 @@ public class I18nHelper {
     public static final String THEME_CUPERTINO_DARK = "base.theme.cupertinodark";
 
     public static final String THEME_DRACULA = "base.theme.dracula";
+
+    public static final String END = "base.end";
+
+    public static final String WITH = "base.with";
 
     public static String operationFail() {
         return I18nResourceBundle.i18nString(OPERATION, FAIL);
@@ -1251,6 +1291,10 @@ public class I18nHelper {
 
     public static String content() {
         return I18nResourceBundle.i18nString(CONTENT);
+    }
+
+    public static String custom() {
+        return I18nResourceBundle.i18nString(CUSTOM);
     }
 
     public static String contentAlreadyExists() {
@@ -1649,6 +1693,26 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(INVALID, DATA);
     }
 
+    public static String invalidColumn() {
+        return I18nResourceBundle.i18nString(INVALID, COLUMN);
+    }
+
+    public static String invalidIndex() {
+        return I18nResourceBundle.i18nString(INVALID, INDEX);
+    }
+
+    public static String invalidForeignKey() {
+        return I18nResourceBundle.i18nString(INVALID, FOREIGN_KEY);
+    }
+
+    public static String invalidCheck() {
+        return I18nResourceBundle.i18nString(INVALID, CHECK);
+    }
+
+    public static String invalidTrigger() {
+        return I18nResourceBundle.i18nString(INVALID, TRIGGER);
+    }
+
     public static String copySuccess() {
         return I18nResourceBundle.i18nString(COPY, SUCCESS);
     }
@@ -1873,6 +1937,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NEW_NAME);
     }
 
+    public static String newQuery() {
+        return I18nResourceBundle.i18nString(NEW, QUERY);
+    }
+
     public static String ttlUpdated() {
         return I18nResourceBundle.i18nString(TTL, UPDATED);
     }
@@ -1943,6 +2011,14 @@ public class I18nHelper {
 
     public static String pleaseInputName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NAME);
+    }
+
+    public static String between() {
+        return I18nResourceBundle.i18nString(BETWEEN);
+    }
+
+    public static String notBetween() {
+        return I18nResourceBundle.i18nString(NOT, BETWEEN);
     }
 
     public static String pleaseInputDirName() {
@@ -2027,6 +2103,10 @@ public class I18nHelper {
 
     public static String receivedMessage() {
         return I18nResourceBundle.i18nString(RECEIVED, MESSAGE);
+    }
+
+    public static String messageSent() {
+        return I18nResourceBundle.i18nString(MESSAGE, SENT);
     }
 
     public static String connectionClosed() {
@@ -2320,6 +2400,14 @@ public class I18nHelper {
 
     public static String copy() {
         return I18nResourceBundle.i18nString(COPY);
+    }
+
+    public static String copyAsInsertStatement() {
+        return I18nResourceBundle.i18nString(COPY, AS, INSERT, STATEMENT);
+    }
+
+    public static String copyAsUpdateStatement() {
+        return I18nResourceBundle.i18nString(COPY, AS, UPDATE, STATEMENT);
     }
 
     public static String copyThisSession() {
@@ -2858,6 +2946,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(OPEN, VIEW);
     }
 
+    public static String openEvent() {
+        return I18nResourceBundle.i18nString(OPEN, EVENT);
+    }
+
     public static String deleteView() {
         return I18nResourceBundle.i18nString(DELETE, VIEW);
     }
@@ -3050,6 +3142,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FIELD, INFO);
     }
 
+    public static String columnInfo() {
+        return I18nResourceBundle.i18nString(COLUMN, INFO);
+    }
+
+    public static String copyColumnName() {
+        return I18nResourceBundle.i18nString(COPY, COLUMN, NAME);
+    }
+
     public static String primaryKey() {
         return I18nResourceBundle.i18nString(PRIMARY_KEY);
     }
@@ -3074,8 +3174,28 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RENAME, TABLE);
     }
 
+    public static String renameView() {
+        return I18nResourceBundle.i18nString(RENAME, VIEW);
+    }
+
+    public static String renameEvent() {
+        return I18nResourceBundle.i18nString(RENAME, EVENT);
+    }
+
+    public static String renameFunction() {
+        return I18nResourceBundle.i18nString(RENAME, FUNCTION);
+    }
+
+    public static String renameProcedure() {
+        return I18nResourceBundle.i18nString(RENAME, PROCEDURE);
+    }
+
     public static String clearTable() {
         return I18nResourceBundle.i18nString(CLEAR, TABLE);
+    }
+
+    public static String clearTableData() {
+        return I18nResourceBundle.i18nString(CLEAR, TABLE, DATA);
     }
 
     public static String truncate() {
@@ -3228,6 +3348,10 @@ public class I18nHelper {
 
     public static String runSqlFile() {
         return I18nResourceBundle.i18nString(RUN_SQL_FILE);
+    }
+
+    public static String runSelected() {
+        return I18nResourceBundle.i18nString(RUN, SELECTED);
     }
 
     public static String runImage() {
@@ -3384,6 +3508,10 @@ public class I18nHelper {
 
     public static String contains() {
         return I18nResourceBundle.i18nString(CONTAINS);
+    }
+
+    public static String notContains() {
+        return I18nResourceBundle.i18nString(NOT, CONTAINS);
     }
 
     public static String containsCaseSensitive() {
@@ -3754,6 +3882,15 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(MIN, LATENCY);
     }
 
+    public static String inList() {
+        return I18nResourceBundle.i18nString(IN, LIST);
+    }
+
+    public static String notInList() {
+        return I18nResourceBundle.i18nString(NOT, IN, LIST);
+    }
+
+
     public static String maxLatency() {
         return I18nResourceBundle.i18nString(MAX, LATENCY);
     }
@@ -3832,6 +3969,26 @@ public class I18nHelper {
 
     public static String cloneConnect() {
         return I18nResourceBundle.i18nString(CLONE, CONNECT);
+    }
+
+    public static String cloneTable() {
+        return I18nResourceBundle.i18nString(CLONE, TABLE);
+    }
+
+    public static String cloneView() {
+        return I18nResourceBundle.i18nString(CLONE, VIEW);
+    }
+
+    public static String cloneFunction() {
+        return I18nResourceBundle.i18nString(CLONE, FUNCTION);
+    }
+
+    public static String cloneProcedure() {
+        return I18nResourceBundle.i18nString(CLONE, PROCEDURE);
+    }
+
+    public static String cloneEvent() {
+        return I18nResourceBundle.i18nString(CLONE, EVENT);
     }
 
     public static String cloneSession() {
@@ -4455,6 +4612,30 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(GET, KEY_TYPE, FAIL);
     }
 
+    public static String system() {
+        return I18nResourceBundle.i18nString(SYSTEM);
+    }
+
+    public static String followSystem() {
+        return I18nResourceBundle.i18nString(FOLLOW, SYSTEM);
+    }
+
+    public static String endWith() {
+        return I18nResourceBundle.i18nString(END, WITH);
+    }
+
+    public static String notEndWith() {
+        return I18nResourceBundle.i18nString(NOT, END, WITH);
+    }
+
+    public static String startWith() {
+        return I18nResourceBundle.i18nString(START, WITH);
+    }
+
+    public static String notStartWith() {
+        return I18nResourceBundle.i18nString(NOT, START, WITH);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
@@ -4659,4 +4840,39 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(SNIPPET, LIST);
     }
 
+    public static String isNull() {
+        return I18nResourceBundle.i18nString(IS, NULL);
+    }
+
+    public static String notIsNull() {
+        return I18nResourceBundle.i18nString(NOT, IS, NULL);
+    }
+
+    public static String notIsEmpty() {
+        return I18nResourceBundle.i18nString(NOT, IS, EMPTY);
+    }
+
+    public static String gt() {
+        return I18nResourceBundle.i18nString(GT);
+    }
+
+    public static String gtEq() {
+        return I18nResourceBundle.i18nString(GT_EQ);
+    }
+
+    public static String lt() {
+        return I18nResourceBundle.i18nString(LT);
+    }
+
+    public static String ltEq() {
+        return I18nResourceBundle.i18nString(LT_EQ);
+    }
+
+    public static String eq() {
+        return I18nResourceBundle.i18nString(EQ);
+    }
+
+    public static String notEq() {
+        return I18nResourceBundle.i18nString(NOT, EQ);
+    }
 }

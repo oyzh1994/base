@@ -9,8 +9,14 @@ package cn.oyzh.event;
  */
 public class EventConfig {
 
+    /**
+     * 是否异步
+     */
     protected Boolean async;
 
+    /**
+     * 是否详细信息
+     */
     protected Boolean verbose;
 
     public boolean isAsync() {
@@ -21,10 +27,19 @@ public class EventConfig {
         return verbose != null && verbose;
     }
 
+    /**
+     * 同步配置
+     */
     public static EventConfig SYNC = new EventConfig();
 
+    /**
+     * 异步配置
+     */
     public static EventConfig ASYNC = new EventConfig();
 
+    /**
+     * 默认配置
+     */
     public static EventConfig DEFAULT = new EventConfig();
 
     static {

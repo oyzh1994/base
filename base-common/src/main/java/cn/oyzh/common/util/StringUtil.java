@@ -77,11 +77,15 @@ public class StringUtil {
         return binary.toString();
     }
 
+    /**
+     * 删除最后一个指定的字符
+     *
+     * @param builder StringBuilder对象
+     * @param str     字符
+     */
     public static void deleteLast(StringBuilder builder, String str) {
-        if (builder != null && str != null) {
-            if (builder.toString().endsWith(str)) {
-                builder.deleteCharAt(builder.length() - 1);
-            }
+        if (builder != null && str != null && builder.toString().contains(str)) {
+            builder.deleteCharAt(builder.lastIndexOf(str));
         }
     }
 
@@ -154,7 +158,7 @@ public class StringUtil {
         if (source != null && target != null) {
             return source.equalsIgnoreCase(target);
         }
-        return false;
+        return Objects.equals(source, target);
     }
 
     public static boolean equalsAny(String source, String... strings) {
@@ -512,5 +516,60 @@ public class StringUtil {
      */
     public static int length(String str) {
         return str == null ? 0 : str.length();
+    }
+
+    /**
+     * 如果内容为空，则转为null
+     *
+     * @param str 内容
+     * @return 结果
+     */
+    public static String emptyToNull(String str) {
+        if (isEmpty(str)) {
+            return null;
+        }
+        return str;
+    }
+
+    /**
+     * 比较大小
+     *
+     * @param str1       字符1
+     * @param str2       字符2
+     * @param nullIsLess null为更小值
+     * @return 结果
+     */
+    public static int compare(CharSequence str1, CharSequence str2, boolean nullIsLess) {
+        if (str1 == str2) {
+            return 0;
+        }
+        if (str1 == null) {
+            return nullIsLess ? -1 : 1;
+        }
+        if (str2 == null) {
+            return nullIsLess ? 1 : -1;
+        }
+        return str1.toString().compareTo(str2.toString());
+    }
+
+    /**
+     * 移除尾部内容
+     *
+     * @param str    内容
+     * @param source 源
+     * @param target 目标
+     * @return 结果
+     */
+    public static String replaceLast(String str, String source, String target) {
+        if (str == null || source == null || target == null) {
+            return str;
+        }
+        int index = str.lastIndexOf(source);
+        if (index == -1) {
+            return str;
+        }
+        String s1 = str.substring(0, index);
+        String s2 = str.substring(index + source.length());
+        return s1 + target + s2;
     }
 }
