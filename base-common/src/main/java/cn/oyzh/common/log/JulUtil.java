@@ -24,13 +24,8 @@ public class JulUtil {
     public static File getLogFile() {
         String projectName = SysConst.projectName();
         String fileName = DateHelper.formatDate() + ".log";
-        String filePath;
-        // 正式环境
-        if (JarUtil.isInJar()) {
-            filePath = SysConst.storeDir() + "logs" + File.separator;
-        } else {// 开发环境
-            filePath = System.getProperty("user.dir") + File.separator + "logs" + File.separator;
-        }
+        // 日志目录
+        String filePath = getLogsDir();
         if (StringUtil.isNotBlank(projectName)) {
             filePath += projectName + "-";
         }
@@ -40,5 +35,21 @@ public class JulUtil {
             FileUtil.touch(file);
         }
         return file;
+    }
+
+    /**
+     * 获取日志目录
+     *
+     * @return 结果
+     */
+    public static String getLogsDir() {
+        String filePath;
+        // 正式环境
+        if (JarUtil.isInJar()) {
+            filePath = SysConst.storeDir() + "logs" + File.separator;
+        } else {// 开发环境
+            filePath = System.getProperty("user.dir") + File.separator + "logs" + File.separator;
+        }
+        return filePath;
     }
 }
