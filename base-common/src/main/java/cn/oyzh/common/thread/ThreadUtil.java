@@ -36,7 +36,6 @@ public class ThreadUtil {
      *
      * @param tasks 任务列表
      */
-    @Deprecated
     public static void submitVirtual(List<Runnable> tasks) {
         if (CollectionUtil.isNotEmpty(tasks)) {
             try (ExecutorService service = Executors.newVirtualThreadPerTaskExecutor()) {
