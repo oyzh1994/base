@@ -3052,6 +3052,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, DIR);
     }
 
+    public static String pleaseSelectDatabase() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, DATABASE);
+    }
+
     public static String collation() {
         return I18nResourceBundle.i18nString(COLLATION);
     }
