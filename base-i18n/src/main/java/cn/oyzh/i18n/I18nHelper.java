@@ -4642,6 +4642,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NOT, START, WITH);
     }
 
+    public static String contentIsSend() {
+        return I18nResourceBundle.i18nString(CONTENT, IS, SEND);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
