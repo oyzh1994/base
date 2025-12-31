@@ -2,6 +2,8 @@ package cn.oyzh.common.file;
 
 import cn.oyzh.common.exception.InvalidParamException;
 import cn.oyzh.common.function.ExceptionConsumer;
+import cn.oyzh.common.system.OSUtil;
+import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.BufferedReader;
@@ -151,10 +153,7 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean del(String file) {
-        if (file != null) {
-            return del(new File(file));
-        }
-        return false;
+        return del(new File(file), false);
     }
 
     /**
@@ -164,10 +163,51 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean del(File file) {
-        if (file != null) {
-            return file.delete();
+        return del(file, false);
+    }
+
+    /**
+     * 删除
+     *
+     * @param file  文件
+     * @param force 是否强制删除
+     * @return 结果
+     */
+    public static boolean del(String file, boolean force) {
+        return del(new File(file), force);
+    }
+
+    /**
+     * 删除
+     *
+     * @param file  文件
+     * @param force 强制
+     * @return 结果
+     */
+    public static boolean del(File file, boolean force) {
+        if (file == null) {
+            return false;
         }
-        return false;
+        boolean success = false;
+        try {
+            success = file.delete();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        if (!success && force) {
+            try {
+                if (OSUtil.isWindows()) {
+                    String[] cmdArr = {"rmdir", "/s", "/q", file.getPath()};
+                    RuntimeUtil.execForStr(cmdArr);
+                } else {
+                    RuntimeUtil.exec("rm -rf \"" + file + "\"", null, file.getParentFile());
+                }
+                success = true;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return success;
     }
 
     public static byte[] readBytes(String file) {
@@ -351,6 +391,22 @@ public class FileUtil {
      * @return 结果
      * @throws IOException 异常
      */
+    public static boolean moveDir(String source, String target, boolean override) throws IOException {
+        return moveDir(new File(source), new File(target), override);
+    }
+
+    /**
+     * 移动文件夹
+     * 1. source为文件，target为文件，直接覆盖
+     * 2. source为目录，target为目录，直接覆盖
+     * 3. source为文件，target为目录，移动到target
+     *
+     * @param source   源文件
+     * @param target   目标文件
+     * @param override 是否覆盖
+     * @return 结果
+     * @throws IOException 异常
+     */
     public static boolean moveDir(File source, File target, boolean override) throws IOException {
         if (!source.exists() || !source.isDirectory()) {
             throw new InvalidParamException(source.getPath());
@@ -370,6 +426,20 @@ public class FileUtil {
         del(source);
         return true;
     }
+
+    /**
+     * 重命名文件
+     *
+     * @param source   源文件
+     * @param target   目标文件
+     * @param override 是否覆盖
+     * @return 结果
+     * @throws IOException 异常
+     */
+    public static boolean renameFile(String source, String target, boolean override) throws IOException {
+        return renameFile(new File(source), new File(target), override);
+    }
+
 
     /**
      * 重命名文件

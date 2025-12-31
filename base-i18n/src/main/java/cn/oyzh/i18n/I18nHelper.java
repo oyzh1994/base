@@ -871,6 +871,8 @@ public class I18nHelper {
 
     public static final String STOP = "base.stop";
 
+    public static final String STOP1 = "base.stop1";
+
     public static final String RESTART = "base.restart";
 
     public static final String SUBMIT = "base.submit";
@@ -1012,6 +1014,10 @@ public class I18nHelper {
     public static final String TOOLS = "base.tools";
 
     public static final String CHILD_NUMBER = "base.childNumber";
+
+    public static final String LINE_NUMBER = "base.lineNumber";
+
+    public static final String HIDE = "base.hide";
 
     public static final String BYTES = "base.bytes";
 
@@ -3050,6 +3056,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, DIR);
     }
 
+    public static String pleaseSelectDatabase() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, DATABASE);
+    }
+
     public static String collation() {
         return I18nResourceBundle.i18nString(COLLATION);
     }
@@ -4636,6 +4646,19 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NOT, START, WITH);
     }
 
+    public static String contentIsSend() {
+        return I18nResourceBundle.i18nString(CONTENT, IS, SEND);
+    }
+
+    public static String hideLineNum() {
+        return I18nResourceBundle.i18nString(HIDE, LINE_NUMBER);
+    }
+
+
+    public static String showLineNum() {
+        return I18nResourceBundle.i18nString(SHOW, LINE_NUMBER);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
@@ -4676,8 +4699,8 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(START1, CONTAINER);
     }
 
-    public static String stopContainer() {
-        return I18nResourceBundle.i18nString(STOP, CONTAINER);
+    public static String stop1Container() {
+        return I18nResourceBundle.i18nString(STOP1, CONTAINER);
     }
 
     public static String restartContainer() {

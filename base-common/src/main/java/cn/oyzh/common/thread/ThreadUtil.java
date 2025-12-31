@@ -26,7 +26,6 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
-    @Deprecated
     public static Thread startVirtual(Runnable task) {
         return Thread.ofVirtual().start(task);
     }
@@ -37,7 +36,6 @@ public class ThreadUtil {
      *
      * @param tasks 任务列表
      */
-    @Deprecated
     public static void submitVirtual(List<Runnable> tasks) {
         if (CollectionUtil.isNotEmpty(tasks)) {
             try (ExecutorService service = Executors.newVirtualThreadPerTaskExecutor()) {
@@ -60,7 +58,6 @@ public class ThreadUtil {
      *
      * @param task 任务
      */
-    @Deprecated
     public static void submitVirtual(Runnable task) {
         if (task != null) {
             submitVirtual(Collections.singletonList(task));

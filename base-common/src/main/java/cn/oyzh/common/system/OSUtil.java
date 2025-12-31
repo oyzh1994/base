@@ -89,4 +89,25 @@ public class OSUtil {
         String osArch = System.getProperty("os.arch");
         return StringUtil.contains(osArch, "x86");
     }
+
+    /**
+     * 获取平台架构名称
+     *
+     * @return 结果
+     */
+    public static String getArchName() {
+        if (isAarch64()) {
+            return "arm64";
+        }
+        if (isArm32()) {
+            return "arm32";
+        }
+        if (isX64()) {
+            return "amd64";
+        }
+        if (isX86()) {
+            return "x86";
+        }
+        return "unknown";
+    }
 }
