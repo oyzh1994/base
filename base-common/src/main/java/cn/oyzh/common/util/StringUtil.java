@@ -313,11 +313,31 @@ public class StringUtil {
         return builder.toString();
     }
 
-    public static long count(String s, String lineSeparator) {
-        if (s == null || lineSeparator == null) {
+    public static long count(String s, String str) {
+        if (s == null || str == null) {
             return 0;
         }
-        return s.split(lineSeparator).length;
+        return s.split(str).length;
+    }
+
+    /**
+     * 计算字符出现的次数
+     *
+     * @param s 字符串
+     * @param c 字符
+     * @return 次数
+     */
+    public static long count(String s, char c) {
+        if (s == null) {
+            return 0;
+        }
+        long count = 0;
+        for (char c1 : s.toCharArray()) {
+            if (c == c1) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public static String lowerFirst(String str) {
