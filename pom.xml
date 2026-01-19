@@ -45,7 +45,7 @@
 
     <properties>
         <h2.version>2.4.240</h2.version>
-        <poi.version>5.4.1</poi.version>
+        <poi.version>5.5.1</poi.version>
         <base.version>1.0.3</base.version>
         <sshd.version>2.16.0</sshd.version>
         <jsch.version>2.27.3</jsch.version>
@@ -55,11 +55,11 @@
         <slf4j.version>2.0.17</slf4j.version>
         <guava.version>33.5.0-jre</guava.version>
         <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
-        <netty.version>4.2.7.Final</netty.version>
+        <netty.version>4.2.9.Final</netty.version>
         <fastjson.version>2.0.60</fastjson.version>
         <bouncycastle.version>1.82</bouncycastle.version>
         <!-- <bouncycastle-lts.version>2.73.9</bouncycastle-lts.version> -->
-        <jgit.version>7.4.0.202509020913-r</jgit.version>
+        <jgit.version>7.5.0.202512021534-r</jgit.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
