@@ -1,6 +1,9 @@
 package cn.oyzh.common.util;
 
+import java.io.File;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 
@@ -13,6 +16,40 @@ import java.security.ProtectionDomain;
 public class JarUtil {
 
     private JarUtil() {
+    }
+
+    /**
+     * 获取 JAR 目录路径
+     */
+    public static String getJarDir() {
+        String jarPath = getJarPath();
+        if (jarPath != null) {
+
+            return jarPath.substring(0, jarPath.lastIndexOf("/"));
+        }
+        return null;
+    }
+
+    /**
+     * 获取 JAR 文件路径
+     */
+    public static String getJarPath() {
+        try {
+            URL url = JarUtil.class.getProtectionDomain()
+                    .getCodeSource()
+                    .getLocation();
+            String jarPath = URLDecoder.decode(
+                    url.getFile(),
+                    StandardCharsets.UTF_8.name()
+            );
+            String path = new File(jarPath).getAbsolutePath();
+            path = path.substring(path.indexOf("file:/"), path.indexOf("!/"));
+            path = path.substring(5);
+            return path;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
