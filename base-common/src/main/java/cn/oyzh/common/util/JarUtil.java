@@ -24,7 +24,6 @@ public class JarUtil {
     public static String getJarDir() {
         String jarPath = getJarPath();
         if (jarPath != null) {
-
             return jarPath.substring(0, jarPath.lastIndexOf("/"));
         }
         return null;
