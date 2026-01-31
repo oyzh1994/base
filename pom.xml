@@ -61,9 +61,9 @@
         <!-- <bouncycastle-lts.version>2.73.9</bouncycastle-lts.version> -->
         <jgit.version>7.5.0.202512021534-r</jgit.version>
         <commons-compress.version>1.28.0</commons-compress.version>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot-maven-plugin.version>2.7.18</spring-boot-maven-plugin.version>
     </properties>
