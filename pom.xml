@@ -65,7 +65,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot-maven-plugin.version>2.7.18</spring-boot-maven-plugin.version>
+        <spring-boot-maven-plugin.version>4.0.2</spring-boot-maven-plugin.version>
     </properties>
 
     <!-- 声明仓库 -->
