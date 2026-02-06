@@ -3008,6 +3008,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, TRIGGER);
     }
 
+    public static String deleteTunneling() {
+        return I18nResourceBundle.i18nString(DELETE, TUNNELING);
+    }
+
     public static String pleaseSelectField() {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, FIELD);
     }
