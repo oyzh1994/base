@@ -793,6 +793,8 @@ public class I18nHelper {
 
     public static final String UPDATE_TIME = "base.updateTime";
 
+    public static final String UPDATE_DATE = "base.updateDate";
+
     public static final String LOAD = "base.load";
 
     public static final String VIDEO = "base.video";
@@ -2334,6 +2336,10 @@ public class I18nHelper {
 
     public static String updateTime() {
         return I18nResourceBundle.i18nString(UPDATE_TIME);
+    }
+
+    public static String updateDate() {
+        return I18nResourceBundle.i18nString(UPDATE_DATE);
     }
 
     public static String loadFail() {
