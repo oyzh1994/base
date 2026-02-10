@@ -2045,6 +2045,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, PROCEDURE, NAME);
     }
 
+    public static String pleaseInputPassword() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, PASSWORD);
+    }
+
     public static String pleaseInputEventName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, EVENT, NAME);
     }

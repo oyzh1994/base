@@ -57,8 +57,7 @@
         <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
         <netty.version>4.2.9.Final</netty.version>
         <fastjson.version>2.0.60</fastjson.version>
-        <bouncycastle.version>1.82</bouncycastle.version>
-        <!-- <bouncycastle-lts.version>2.73.9</bouncycastle-lts.version> -->
+        <bouncycastle.version>1.83</bouncycastle.version>
         <jgit.version>7.5.0.202512021534-r</jgit.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <maven.compiler.source>21</maven.compiler.source>
