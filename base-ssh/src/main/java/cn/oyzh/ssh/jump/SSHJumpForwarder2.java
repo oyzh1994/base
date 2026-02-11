@@ -1,5 +1,6 @@
 package cn.oyzh.ssh.jump;
 
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.CollectionUtil;
@@ -13,6 +14,7 @@ import com.jcraft.jsch.JSchException;
 import org.apache.sshd.client.ClientBuilder;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.auth.keyboard.UserAuthKeyboardInteractiveFactory;
+import org.apache.sshd.client.auth.keyboard.UserInteraction;
 import org.apache.sshd.client.auth.password.UserAuthPasswordFactory;
 import org.apache.sshd.client.auth.pubkey.UserAuthPublicKeyFactory;
 import org.apache.sshd.client.config.hosts.HostConfigEntry;
@@ -34,6 +36,7 @@ import org.eclipse.jgit.internal.transport.sshd.JGitSshClient;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.sshd.KeyPasswordProvider;
 
+import java.io.IOException;
 import java.security.KeyPair;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -46,6 +49,16 @@ import java.util.List;
  * @since 2025/07/02
  */
 public class SSHJumpForwarder2 extends SSHForwarder2 {
+
+    private UserInteraction userInteraction;
+
+    public UserInteraction getUserInteraction() {
+        return userInteraction;
+    }
+
+    public void setUserInteraction(UserInteraction userInteraction) {
+        this.userInteraction = userInteraction;
+    }
 
     /**
      * 初始化客户端
@@ -125,6 +138,10 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
                 UserAuthPasswordFactory.INSTANCE,
                 UserAuthPublicKeyFactory.INSTANCE
         ));
+        // 交互式认证
+        if (this.userInteraction != null) {
+            sshClient.setUserInteraction(this.userInteraction);
+        }
         // 测试环境使用，生产环境需替换
         sshClient.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
         // 设置密码工厂
@@ -145,12 +162,26 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         return sshClient;
     }
 
+//    /**
+//     * 认证失败回调
+//     */
+//    protected Function<SSHConnect, SSHConnect> verifyFailureCallback;
+//
+//    public void setVerifyFailureCallback(Function<SSHConnect, SSHConnect> verifyFailureCallback) {
+//        this.verifyFailureCallback = verifyFailureCallback;
+//    }
+//
+//    public Function<SSHConnect, SSHConnect> getVerifyFailureCallback() {
+//        return verifyFailureCallback;
+//    }
+
     /**
      * 初始化ssh会话
      *
      * @throws JSchException 异常
      */
     public ClientSession initSession(SSHConnect connect) throws Exception {
+//        try {
         // 初始化客户端
         SshClient sshClient = this.initClient(connect);
 
@@ -176,8 +207,13 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         if (connect.isPasswordAuth()) {
             session.addPasswordIdentity(connect.getPassword());
         } else if (connect.isCertificateAuth()) {// 证书
+            String priKeyFile = connect.getCertificatePath();
+            // 检查私钥是否存在
+            if (!FileUtil.exist(priKeyFile)) {
+                throw new IOException("certificate file:" + priKeyFile + " not exist");
+            }
             // 加载证书
-            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
+            Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(priKeyFile, connect.getCertificatePwd());
             //  设置证书认证
             for (KeyPair keyPair : keyPairs) {
                 session.addPublicKeyIdentity(keyPair);
@@ -195,6 +231,17 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         session.auth().verify(timeout);
         JulLog.info("ssh连接成功 connect:{}", connect);
         return session;
+//        } catch (SshException ex) {
+//            if (this.verifyFailureCallback == null || ex.getDisconnectCode() != SshConstants.SSH2_DISCONNECT_NO_MORE_AUTH_METHODS_AVAILABLE) {
+//                throw ex;
+//            }
+//            // 处理认证失败业务
+//            SSHConnect connect1 = this.verifyFailureCallback.apply(connect);
+//            if (connect1 != null) {
+//                return this.initSession(connect1);
+//            }
+//        }
+//        return null;
     }
 
     /**
@@ -234,5 +281,12 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
             }
         }
         return forwardPort;
+    }
+
+    @Override
+    public void close() {
+        super.close();
+        this.userInteraction = null;
+//        this.verifyFailureCallback = null;
     }
 }
