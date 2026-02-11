@@ -88,28 +88,34 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
             sshClient.setAgentFactory(new SSHAgentConnectorFactory());
         }
         // 优先的认证方式
-        String methods = UserAuthPasswordFactory.PASSWORD;
-        // 密码
-        if (connect.isPasswordAuth()) {
-            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.KB_INTERACTIVE, UserAuthPasswordFactory.PASSWORD}, ",");
-            // sshClient.addPasswordIdentity(connect.getPassword());
-        } else if (connect.isSSHAgentAuth()) {// ssh agent
-            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.PUBLIC_KEY, UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.KB_INTERACTIVE}, ",");
-        } else if (connect.isCertificateAuth()) {// 证书
-            methods = UserAuthPasswordFactory.PUBLIC_KEY;
-            // // 加载证书
-            // Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
-            // //  设置证书认证
-            // for (KeyPair keyPair : keyPairs) {
-            //     sshClient.addPublicKeyIdentity(keyPair);
-            // }
-        } else if (connect.isKeyAuth()) {// 密钥
-            methods = UserAuthPasswordFactory.PUBLIC_KEY;
-            // Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
-            // //  设置证书认证
-            // for (KeyPair keyPair : keyPairs) {
-            //     sshClient.addPublicKeyIdentity(keyPair);
-            // }
+        String methods;
+//        // 密码
+//        if (connect.isPasswordAuth()) {
+//            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.KB_INTERACTIVE, UserAuthPasswordFactory.PASSWORD}, ",");
+//            // sshClient.addPasswordIdentity(connect.getPassword());
+//        } else if (connect.isSSHAgentAuth()) {// ssh agent
+//            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.PUBLIC_KEY, UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.KB_INTERACTIVE}, ",");
+//        } else if (connect.isCertificateAuth()) {// 证书
+//            methods = UserAuthPasswordFactory.PUBLIC_KEY;
+//            // // 加载证书
+//            // Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysFromFile(connect.getCertificatePath(), connect.getCertificatePwd());
+//            // //  设置证书认证
+//            // for (KeyPair keyPair : keyPairs) {
+//            //     sshClient.addPublicKeyIdentity(keyPair);
+//            // }
+//        } else if (connect.isKeyAuth()) {// 密钥
+//            methods = UserAuthPasswordFactory.PUBLIC_KEY;
+//            // Iterable<KeyPair> keyPairs = SSHKeyUtil.loadKeysForStr(connect.getCertificatePriKey(), connect.getCertificatePwd());
+//            // //  设置证书认证
+//            // for (KeyPair keyPair : keyPairs) {
+//            //     sshClient.addPublicKeyIdentity(keyPair);
+//            // }
+//        }
+        // 公钥、ssh agent
+        if (connect.isCertificateAuth() || connect.isSSHAgentAuth()) {
+            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.KB_INTERACTIVE, UserAuthPasswordFactory.PUBLIC_KEY, UserAuthPasswordFactory.PASSWORD}, ",");
+        } else {// 密码
+            methods = ArrayUtil.join(new String[]{UserAuthPasswordFactory.KB_INTERACTIVE, UserAuthPasswordFactory.PASSWORD, UserAuthPasswordFactory.PUBLIC_KEY}, ",");
         }
         // 设置优先认证方式
         CoreModuleProperties.PREFERRED_AUTHS.set(sshClient, methods);
@@ -119,8 +125,6 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
                 UserAuthPasswordFactory.INSTANCE,
                 UserAuthPublicKeyFactory.INSTANCE
         ));
-        // 启动客户端
-        sshClient.start();
         // 测试环境使用，生产环境需替换
         sshClient.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
         // 设置密码工厂
@@ -136,6 +140,8 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         CoreModuleProperties.FORWARD_REQUEST_TIMEOUT.set(sshClient, Duration.ofMillis(timeout));
         // 添加到列表
         this.clients.add(sshClient);
+        // 启动客户端
+        sshClient.start();
         return sshClient;
     }
 
