@@ -135,24 +135,26 @@ public class SSHKeyUtil {
     /**
      * 获取密钥长度
      *
-     * @param key 密钥
+     * @param key      密钥
+     * @param password 密码
      * @return 长度
      */
-    public static int getKeySize(String key) {
+    public static int getKeySize(String key, String password) throws Exception {
         if (StringUtil.isNotEmpty(key)) {
-            try {
-                // 将PEM字符串转换为PrivateKey
-                Iterable<KeyPair> pairs = SecurityUtils.loadKeyPairIdentities(
-                        null,
-                        null,
-                        new ByteArrayInputStream(key.getBytes()),
-                        null
-                );
-                if (pairs != null && pairs.iterator().hasNext()) {
-                    return KeyUtils.getKeySize(pairs.iterator().next().getPrivate());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            FilePasswordProvider passwordProvider = null;
+            // 证书密码
+            if (StringUtil.isNotBlank(password)) {
+                passwordProvider = FilePasswordProvider.of(password);
+            }
+            // 将PEM字符串转换为PrivateKey
+            Iterable<KeyPair> pairs = SecurityUtils.loadKeyPairIdentities(
+                    null,
+                    null,
+                    new ByteArrayInputStream(key.getBytes()),
+                    passwordProvider
+            );
+            if (pairs != null && pairs.iterator().hasNext()) {
+                return KeyUtils.getKeySize(pairs.iterator().next().getPrivate());
             }
         }
         return -1;
@@ -161,24 +163,26 @@ public class SSHKeyUtil {
     /**
      * 获取密钥类型
      *
-     * @param key 密钥
+     * @param key      密钥
+     * @param password 密码
      * @return 类型
      */
-    public static String getKeyType(String key) {
+    public static String getKeyType(String key, String password) throws Exception {
         if (StringUtil.isNotEmpty(key)) {
-            try {
-                // 将PEM字符串转换为PrivateKey
-                Iterable<KeyPair> pairs = SecurityUtils.loadKeyPairIdentities(
-                        null,
-                        null,
-                        new ByteArrayInputStream(key.getBytes()),
-                        null
-                );
-                if (pairs != null && pairs.iterator().hasNext()) {
-                    return KeyUtils.getKeyType(pairs.iterator().next().getPrivate());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            FilePasswordProvider passwordProvider = null;
+            // 证书密码
+            if (StringUtil.isNotBlank(password)) {
+                passwordProvider = FilePasswordProvider.of(password);
+            }
+            // 将PEM字符串转换为PrivateKey
+            Iterable<KeyPair> pairs = SecurityUtils.loadKeyPairIdentities(
+                    null,
+                    null,
+                    new ByteArrayInputStream(key.getBytes()),
+                    passwordProvider
+            );
+            if (pairs != null && pairs.iterator().hasNext()) {
+                return KeyUtils.getKeyType(pairs.iterator().next().getPrivate());
             }
         }
         return null;
@@ -205,18 +209,17 @@ public class SSHKeyUtil {
      * @throws Exception 异常
      */
     public static Iterable<KeyPair> loadKeysForBytes(byte[] key, String password) throws Exception {
-        FilePasswordProvider passwordFinder = null;
+        FilePasswordProvider passwordProvider = null;
         // 证书密码
         if (StringUtil.isNotBlank(password)) {
-            passwordFinder = FilePasswordProvider.of(password);
+            passwordProvider = FilePasswordProvider.of(password);
         }
-        Iterable<KeyPair> keyPairs = SecurityUtils.loadKeyPairIdentities(
+        return SecurityUtils.loadKeyPairIdentities(
                 null,
                 null,
                 new ByteArrayInputStream(key),
-                passwordFinder
+                passwordProvider
         );
-        return keyPairs;
     }
 
     /**
@@ -228,17 +231,17 @@ public class SSHKeyUtil {
      * @throws Exception 异常
      */
     public static Iterable<KeyPair> loadKeysFromFile(String path, String password) throws Exception {
-        FilePasswordProvider passwordFinder = null;
+        FilePasswordProvider passwordProvider = null;
         // 证书密码
         if (StringUtil.isNotBlank(password)) {
-            passwordFinder = FilePasswordProvider.of(password);
+            passwordProvider = FilePasswordProvider.of(password);
         }
         FileInputStream fis = new FileInputStream(path);
         Iterable<KeyPair> keyPairs = SecurityUtils.loadKeyPairIdentities(
                 null,
                 null,
                 fis,
-                passwordFinder
+                passwordProvider
         );
         IOUtil.close(fis);
         return keyPairs;

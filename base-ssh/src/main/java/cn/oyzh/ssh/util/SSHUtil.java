@@ -238,4 +238,27 @@ public class SSHUtil {
         }
         return sockFile;
     }
+
+//    /**
+//     * 设置跳板机标识
+//     *
+//     * @param entry 配置
+//     */
+//    public static void setMiddle(HostConfigEntry entry) {
+//        entry.setProperty("middle", "true");
+//    }
+//
+//    /**
+//     * 是否跳板机
+//     *
+//     * @param session 会话
+//     */
+//    public static boolean isMiddle(ClientSession session) {
+//        if (session instanceof JGitClientSession session1) {
+//            String obj = session1.getHostConfigEntry().getProperty("middle");
+//            return "true".equalsIgnoreCase(obj);
+//        }
+//        return false;
+//    }
+
 }

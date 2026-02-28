@@ -793,6 +793,8 @@ public class I18nHelper {
 
     public static final String UPDATE_TIME = "base.updateTime";
 
+    public static final String UPDATE_DATE = "base.updateDate";
+
     public static final String LOAD = "base.load";
 
     public static final String VIDEO = "base.video";
@@ -2043,6 +2045,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, PROCEDURE, NAME);
     }
 
+    public static String pleaseInputPassword() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, PASSWORD);
+    }
+
     public static String pleaseInputEventName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, EVENT, NAME);
     }
@@ -2334,6 +2340,10 @@ public class I18nHelper {
 
     public static String updateTime() {
         return I18nResourceBundle.i18nString(UPDATE_TIME);
+    }
+
+    public static String updateDate() {
+        return I18nResourceBundle.i18nString(UPDATE_DATE);
     }
 
     public static String loadFail() {
@@ -3010,6 +3020,10 @@ public class I18nHelper {
 
     public static String deleteTunneling() {
         return I18nResourceBundle.i18nString(DELETE, TUNNELING);
+    }
+
+    public static String deleteJumpHost() {
+        return I18nResourceBundle.i18nString(DELETE, JUMP_HOST);
     }
 
     public static String pleaseSelectField() {

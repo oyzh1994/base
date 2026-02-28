@@ -44,9 +44,9 @@ public class TransUtil {
         if (locale == Locale.ITALY || locale == Locale.ITALIAN) {
             return "it";
         }
-        if (locale == I18nLocales.ZH_WYW) {
-            return "wyw";
-        }
+//        if (locale == I18nLocales.ZH_WYW) {
+//            return "wyw";
+//        }
         if (locale == I18nLocales.ZH_YUE) {
             return "yue";
         }

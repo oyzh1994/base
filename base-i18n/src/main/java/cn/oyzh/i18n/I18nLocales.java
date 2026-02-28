@@ -16,7 +16,7 @@ public class I18nLocales {
 
     public static Locale ZH_YUE = Locale.of("zh", "yue");
 
-    public static Locale ZH_WYW = Locale.of("zh", "wyw");
+//    public static Locale ZH_WYW = Locale.of("zh", "wyw");
 
     public static Locale RU = Locale.of("ru");
 
@@ -58,7 +58,7 @@ public class I18nLocales {
         locales.add(new I1n8Locale(Locale.PRC.toString(), Locale.PRC, "中文（简体）", "中文简体"));
         locales.add(new I1n8Locale(Locale.TAIWAN.toString(), Locale.TAIWAN, "中文（繁体）", "中文繁体"));
         locales.add(new I1n8Locale(ZH_YUE.toString(), ZH_YUE, "中文（粵語）", "中文粤语"));
-        locales.add(new I1n8Locale(ZH_WYW.toString(), ZH_WYW, "中文（文言文）", "中文文言文"));
+//        locales.add(new I1n8Locale(ZH_WYW.toString(), ZH_WYW, "中文（文言文）", "中文文言文"));
         locales.add(new I1n8Locale(Locale.ENGLISH.toString(), Locale.ENGLISH, "English", "英语"));
         locales.add(new I1n8Locale(Locale.JAPAN.toString(), Locale.JAPAN, "日本語", "日语"));
         locales.add(new I1n8Locale(Locale.GERMAN.toString(), Locale.GERMAN, "Deutsch", "德语"));
