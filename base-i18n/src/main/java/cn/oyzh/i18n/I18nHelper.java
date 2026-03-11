@@ -1019,6 +1019,8 @@ public class I18nHelper {
 
     public static final String CHILD_NUMBER = "base.childNumber";
 
+    public static final String TAG = "base.tag";
+
     public static final String LINE_NUMBER = "base.lineNumber";
 
     public static final String HIDE = "base.hide";
@@ -4678,9 +4680,12 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(HIDE, LINE_NUMBER);
     }
 
-
     public static String showLineNum() {
         return I18nResourceBundle.i18nString(SHOW, LINE_NUMBER);
+    }
+
+    public static String updateTag() {
+        return I18nResourceBundle.i18nString(UPDATE, TAG);
     }
 
     public String fileUploadFailed() {
