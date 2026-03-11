@@ -247,6 +247,8 @@ public class I18nHelper {
 
     public static final String FILE = "base.file";
 
+    public static final String SAVED = "base.saved";
+
     public static final String MONTHS = "base.months";
 
     public static final String MINUTES = "base.minutes";
@@ -1383,6 +1385,10 @@ public class I18nHelper {
 
     public static String file() {
         return I18nResourceBundle.i18nString(FILE);
+    }
+
+    public static String fileSaved() {
+        return I18nResourceBundle.i18nString(FILE, SAVED);
     }
 
     public static String not() {
