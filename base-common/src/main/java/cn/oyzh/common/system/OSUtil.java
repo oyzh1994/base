@@ -19,14 +19,23 @@ public class OSUtil {
         return System.getProperty("os.name").toUpperCase();
     }
 
+    private static Boolean isLinux;
+
     /**
      * 是否linux
      *
      * @return 结果
      */
-    public static boolean isLinux() {
-        return getOSType().contains("LINUX");
+    public synchronized static boolean isLinux() {
+        if (isLinux == null) {
+            synchronized (OSUtil.class) {
+                isLinux = getOSType().contains("LINUX");
+            }
+        }
+        return isLinux;
     }
+
+    private static Boolean isWindows;
 
     /**
      * 是否windows
@@ -34,8 +43,15 @@ public class OSUtil {
      * @return 结果
      */
     public static boolean isWindows() {
-        return getOSType().contains("WINDOWS");
+        if (isWindows == null) {
+            synchronized (OSUtil.class) {
+                isWindows = getOSType().contains("WINDOWS");
+            }
+        }
+        return isWindows;
     }
+
+    private static Boolean isMacos;
 
     /**
      * 是否macos
@@ -43,8 +59,15 @@ public class OSUtil {
      * @return 结果
      */
     public static boolean isMacOS() {
-        return getOSType().contains("MAC");
+        if (isMacos == null) {
+            synchronized (OSUtil.class) {
+                isMacos = getOSType().contains("MAC");
+            }
+        }
+        return isMacos;
     }
+
+    private static Boolean isArm32;
 
     /**
      * 是否arm32架构
@@ -52,10 +75,17 @@ public class OSUtil {
      * @return 结果
      */
     public static boolean isArm32() {
-        // 获取系统架构
-        String osArch = System.getProperty("os.arch");
-        return StringUtil.containsAnyIgnoreCase(osArch, "arm");
+        if (isArm32 == null) {
+            synchronized (OSUtil.class) {
+                // 获取系统架构
+                String osArch = System.getProperty("os.arch");
+                isArm32 = StringUtil.containsAnyIgnoreCase(osArch, "arm");
+            }
+        }
+        return isArm32;
     }
+
+    private static Boolean isAarch64;
 
     /**
      * 是否arm64架构
@@ -63,10 +93,17 @@ public class OSUtil {
      * @return 结果
      */
     public static boolean isAarch64() {
-        // 获取系统架构
-        String osArch = System.getProperty("os.arch");
-        return StringUtil.containsAnyIgnoreCase(osArch, "aarch64", "arm64");
+        if (isAarch64 == null) {
+            synchronized (OSUtil.class) {
+                // 获取系统架构
+                String osArch = System.getProperty("os.arch");
+                isAarch64 = StringUtil.containsAnyIgnoreCase(osArch, "aarch64", "arm64");
+            }
+        }
+        return isAarch64;
     }
+
+    private static Boolean isX64;
 
     /**
      * 是否x64架构
@@ -74,10 +111,17 @@ public class OSUtil {
      * @return 结果
      */
     public static boolean isX64() {
-        // 获取系统架构
-        String osArch = System.getProperty("os.arch");
-        return StringUtil.containsAnyIgnoreCase(osArch, "x86_64", "amd64");
+        if (isX64 == null) {
+            synchronized (OSUtil.class) {
+                // 获取系统架构
+                String osArch = System.getProperty("os.arch");
+                isX64 = StringUtil.containsAnyIgnoreCase(osArch, "x86_64", "amd64");
+            }
+        }
+        return isX64;
     }
+
+    private static Boolean isX86;
 
     /**
      * 是否x86架构
@@ -85,9 +129,14 @@ public class OSUtil {
      * @return 结果
      */
     public static boolean isX86() {
-        // 获取系统架构
-        String osArch = System.getProperty("os.arch");
-        return StringUtil.contains(osArch, "x86");
+        if (isX86 == null) {
+            synchronized (OSUtil.class) {
+                // 获取系统架构
+                String osArch = System.getProperty("os.arch");
+                isX86 = StringUtil.containsAnyIgnoreCase(osArch, "x86");
+            }
+        }
+        return isX86;
     }
 
     /**
