@@ -5,6 +5,7 @@ import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.common.util.NumberUtil;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
@@ -144,5 +145,37 @@ public class SystemUtil {
      */
     public static String userHome() {
         return System.getProperty("user.home");
+    }
+
+    /**
+     * 获取用户目录
+     *
+     * @return 用户目录
+     */
+    public static String userDir() {
+        return System.getProperty("user.dir");
+    }
+
+    /**
+     * 打开系统目录
+     * @param path 文件路径
+     */
+    public static void openFolderViaCommand(String path) {
+        ProcessBuilder builder = new ProcessBuilder();
+        try {
+            if (OSUtil.isWindows()) {
+                // Windows：使用 explorer 打开目录
+                builder.command("explorer", path);
+            } else if (OSUtil.isMacOS()) {
+                // macOS：使用 open 命令
+                builder.command("open", path);
+            } else if (OSUtil.isLinux()) {
+                // Linux/Unix：使用 xdg-open
+                builder.command("xdg-open", path);
+            }
+            builder.start();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }
