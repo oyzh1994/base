@@ -39,7 +39,7 @@ public class JarUtil {
                     .getLocation();
             String jarPath = URLDecoder.decode(
                     url.getFile(),
-                    StandardCharsets.UTF_8.name()
+                    StandardCharsets.UTF_8
             );
             String path = new File(jarPath).getAbsolutePath();
             path = path.substring(path.indexOf("file:/"), path.indexOf("!/"));
@@ -51,19 +51,26 @@ public class JarUtil {
         }
     }
 
+    private static Boolean isInJar;
+
     /**
      * 是否运行在jar中
      *
      * @return 结果
      */
     public static boolean isInJar() {
-        // 获取当前类的保护域（ProtectionDomain）
-        ProtectionDomain protectionDomain = JarUtil.class.getProtectionDomain();
-        // 获取保护域的CodeSource
-        CodeSource codeSource = protectionDomain.getCodeSource();
-        // 获取CodeSource的Location
-        URL location = codeSource.getLocation();
-        // 检查URL的协议是否为"jar"
-        return location.getProtocol().equals("jar");
+        if (isInJar == null) {
+            synchronized (JarUtil.class) {
+                // 获取当前类的保护域（ProtectionDomain）
+                ProtectionDomain protectionDomain = JarUtil.class.getProtectionDomain();
+                // 获取保护域的CodeSource
+                CodeSource codeSource = protectionDomain.getCodeSource();
+                // 获取CodeSource的Location
+                URL location = codeSource.getLocation();
+                // 检查URL的协议是否为"jar"
+                isInJar = location.getProtocol().equals("jar");
+            }
+        }
+        return isInJar;
     }
 }
