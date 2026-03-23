@@ -61,14 +61,20 @@ public class JarUtil {
     public static boolean isInJar() {
         if (isInJar == null) {
             synchronized (JarUtil.class) {
-                // 获取当前类的保护域（ProtectionDomain）
-                ProtectionDomain protectionDomain = JarUtil.class.getProtectionDomain();
-                // 获取保护域的CodeSource
-                CodeSource codeSource = protectionDomain.getCodeSource();
-                // 获取CodeSource的Location
-                URL location = codeSource.getLocation();
-                // 检查URL的协议是否为"jar"
-                isInJar = location.getProtocol().equals("jar");
+                try {
+                    // 获取当前类的保护域（ProtectionDomain）
+                    ProtectionDomain protectionDomain = JarUtil.class.getProtectionDomain();
+                    // 获取保护域的CodeSource
+                    CodeSource codeSource = protectionDomain.getCodeSource();
+                    // 获取CodeSource的Location
+                    URL location = codeSource.getLocation();
+                    // 检查URL的协议是否为"jar"
+                    isInJar = location.getProtocol().equals("jar");
+                } catch (Exception e) {
+                    String className = JarUtil.class.getName().replace('.', '/') + ".class";
+                    String classPath = JarUtil.class.getResource("/" + className).toString();
+                    isInJar = classPath.startsWith("jar:");
+                }
             }
         }
         return isInJar;
