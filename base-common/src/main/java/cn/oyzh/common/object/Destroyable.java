@@ -1,10 +1,5 @@
 package cn.oyzh.common.object;
 
-import cn.oyzh.common.util.BooleanUtil;
-
-import java.util.Map;
-import java.util.WeakHashMap;
-
 /**
  * 可销毁接口
  *
@@ -13,33 +8,33 @@ import java.util.WeakHashMap;
  */
 public interface Destroyable {
 
-    /**
-     * 销毁对象记录
-     */
-    Map<Destroyable, Boolean> DESTROYED = new WeakHashMap<>();
+//    /**
+//     * 销毁对象记录
+//     */
+//    Map<Destroyable, Boolean> DESTROYED = new WeakHashMap<>();
 
     /**
      * 执行销毁
      */
     void destroy();
 
-    /**
-     * 是否已销毁
-     *
-     * @return 结果
-     */
-    default boolean isDestroyed() {
-        boolean result = BooleanUtil.isTrue(DESTROYED.get(this));
-        if (result) {
-            DESTROYED.remove(this);
-        }
-        return result;
-    }
-
-    /**
-     * 标记为已销毁
-     */
-    default void markDestroyed() {
-        DESTROYED.put(this, true);
-    }
+//    /**
+//     * 是否已销毁
+//     *
+//     * @return 结果
+//     */
+//    default boolean isDestroyed() {
+//        boolean result = BooleanUtil.isTrue(DESTROYED.get(this));
+//        if (result) {
+//            DESTROYED.remove(this);
+//        }
+//        return result;
+//    }
+//
+//    /**
+//     * 标记为已销毁
+//     */
+//    default void markDestroyed() {
+//        DESTROYED.put(this, true);
+//    }
 }
