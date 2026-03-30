@@ -3,6 +3,7 @@ package cn.oyzh.common.log;
 import cn.oyzh.common.SysConst;
 import cn.oyzh.common.date.DateHelper;
 import cn.oyzh.common.file.FileUtil;
+import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.JarUtil;
 import cn.oyzh.common.util.StringUtil;
 
@@ -48,7 +49,7 @@ public class JulUtil {
         if (JarUtil.isInJar()) {
             filePath = SysConst.storeDir() + "logs" + File.separator;
         } else {// 开发环境
-            filePath = System.getProperty("user.dir") + File.separator + "logs" + File.separator;
+            filePath = SystemUtil.userDir() + File.separator + "logs" + File.separator;
         }
         return filePath;
     }

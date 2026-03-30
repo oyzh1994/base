@@ -247,6 +247,8 @@ public class I18nHelper {
 
     public static final String FILE = "base.file";
 
+    public static final String SAVED = "base.saved";
+
     public static final String MONTHS = "base.months";
 
     public static final String MINUTES = "base.minutes";
@@ -374,6 +376,8 @@ public class I18nHelper {
     public static final String CONNECT = "base.connect";
 
     public static final String REGION = "base.region";
+
+    public static final String PROTOCOL = "base.protocol";
 
     public static final String SESSION = "base.session";
 
@@ -536,6 +540,16 @@ public class I18nHelper {
     public static final String NOT_SUPPORT = "base.notSupport";
 
     public static final String NAME = "base.name";
+
+    public static final String BAUD_RATE = "base.baudRate";
+
+    public static final String NUM_DATA_BITS = "base.numDataBits";
+
+    public static final String PARITY_BITS = "base.parityBits";
+
+    public static final String NUM_STOP_BITS = "base.numStopBits";
+
+    public static final String FLOW_CONTROL = "base.flowControl";
 
     public static final String TRAY = "base.tray";
 
@@ -835,6 +849,10 @@ public class I18nHelper {
 
     public static final String UPDATE = "base.update";
 
+    public static final String DOMAIN = "base.domain";
+
+    public static final String SERIAL_PORT = "base.serialPort";
+
     public static final String GENERAL = "base.general";
 
     public static final String DEPRECATED = "base.deprecated";
@@ -1016,6 +1034,8 @@ public class I18nHelper {
     public static final String TOOLS = "base.tools";
 
     public static final String CHILD_NUMBER = "base.childNumber";
+
+    public static final String TAG = "base.tag";
 
     public static final String LINE_NUMBER = "base.lineNumber";
 
@@ -1383,6 +1403,10 @@ public class I18nHelper {
 
     public static String file() {
         return I18nResourceBundle.i18nString(FILE);
+    }
+
+    public static String fileSaved() {
+        return I18nResourceBundle.i18nString(FILE, SAVED);
     }
 
     public static String not() {
@@ -3999,6 +4023,11 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLONE, CONNECT);
     }
 
+
+    public static String copyConnect() {
+        return I18nResourceBundle.i18nString(COPY, CONNECT);
+    }
+
     public static String cloneTable() {
         return I18nResourceBundle.i18nString(CLONE, TABLE);
     }
@@ -4540,6 +4569,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(SHARE, FILE);
     }
 
+    public static String shareName() {
+        return I18nResourceBundle.i18nString(SHARE, NAME);
+    }
+
     public static String minutes() {
         return I18nResourceBundle.i18nString(MINUTES);
     }
@@ -4672,9 +4705,52 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(HIDE, LINE_NUMBER);
     }
 
-
     public static String showLineNum() {
         return I18nResourceBundle.i18nString(SHOW, LINE_NUMBER);
+    }
+
+    public static String updateTag() {
+        return I18nResourceBundle.i18nString(UPDATE, TAG);
+    }
+
+    public static String domain() {
+        return I18nResourceBundle.i18nString(DOMAIN);
+    }
+
+    public static String serialPortName() {
+        return I18nResourceBundle.i18nString(SERIAL_PORT, NAME);
+    }
+
+    public static String portName() {
+        return I18nResourceBundle.i18nString(PORT, NAME);
+    }
+
+    public static String baudRate() {
+        return I18nResourceBundle.i18nString(BAUD_RATE);
+    }
+
+    public static String numDataBits() {
+        return I18nResourceBundle.i18nString(NUM_DATA_BITS);
+    }
+
+    public static String parityBits() {
+        return I18nResourceBundle.i18nString(PARITY_BITS);
+    }
+
+    public static String numStopBits() {
+        return I18nResourceBundle.i18nString(NUM_STOP_BITS);
+    }
+
+    public static String flowControl() {
+        return I18nResourceBundle.i18nString(FLOW_CONTROL);
+    }
+
+    public static String region() {
+        return I18nResourceBundle.i18nString(REGION);
+    }
+
+    public static String protocol() {
+        return I18nResourceBundle.i18nString(PROTOCOL);
     }
 
     public String fileUploadFailed() {

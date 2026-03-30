@@ -55,20 +55,26 @@
         <slf4j.version>2.0.17</slf4j.version>
         <guava.version>33.5.0-jre</guava.version>
         <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
-        <netty.version>4.2.9.Final</netty.version>
-        <fastjson.version>2.0.60</fastjson.version>
+        <netty.version>4.2.10.Final</netty.version>
+        <fastjson.version>2.0.61</fastjson.version>
         <bouncycastle.version>1.83</bouncycastle.version>
-        <jgit.version>7.5.0.202512021534-r</jgit.version>
+        <jgit.version>7.6.0.202603022253-r</jgit.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot-maven-plugin.version>4.0.2</spring-boot-maven-plugin.version>
+        <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
+        <spring-boot-maven-plugin.version>4.0.5</spring-boot-maven-plugin.version>
     </properties>
 
     <!-- 声明仓库 -->
     <repositories>
+        <repository>
+            <id>center</id>
+            <name>center</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
         <repository>
             <id>aliyun</id>
             <name>aliyun</name>
@@ -78,11 +84,6 @@
             <id>tencent</id>
             <name>tencent</name>
             <url>https://mirrors.tencent.com/nexus/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>center</id>
-            <name>center</name>
-            <url>https://repo1.maven.org/maven2/</url>
         </repository>
         <!-- <repository> -->
         <!--     <id>jetbrains</id> -->
@@ -150,6 +151,8 @@
                     <target>${maven.compiler.release}</target>
                     <release>${maven.compiler.release}</release>
                     <encoding>UTF-8</encoding>
+                    <debug>false</debug>
+                    <debuglevel>none</debuglevel>
                 </configuration>
             </plugin>
         </plugins>

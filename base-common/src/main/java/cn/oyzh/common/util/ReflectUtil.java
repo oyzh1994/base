@@ -26,7 +26,7 @@ public class ReflectUtil {
     }
 
     public static <T> T getFieldValue(Field field, Object object) {
-        if(field == null) {
+        if (field == null) {
             return null;
         }
         try {
@@ -174,10 +174,31 @@ public class ReflectUtil {
         return invoke(obj, method, params);
     }
 
+    /**
+     * 调用
+     * @param obj 对象
+     * @param method 方法
+     * @param params 参数
+     * @return 结果
+     */
     public static Object invoke(Object obj, Method method, Object... params) {
         if (method != null) {
+            method.setAccessible(true);
+            return invokeOnly(obj, method, params);
+        }
+        return null;
+    }
+
+    /**
+     * 仅调用
+     * @param obj 对象
+     * @param method 方法
+     * @param params 参数
+     * @return 结果
+     */
+    public static Object invokeOnly(Object obj, Method method, Object... params) {
+        if (method != null) {
             try {
-                method.setAccessible(true);
                 return method.invoke(obj, params);
             } catch (Exception ex) {
                 ex.printStackTrace();
