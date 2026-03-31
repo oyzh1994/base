@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 
 /**
  * runtime工具类
@@ -389,8 +388,12 @@ public class RuntimeUtil {
         while ((line = errReader.readLine()) != null) {
             error.append(line).append(System.lineSeparator());
         }
-        JulLog.info("exec input:{}", input.toString());
-        JulLog.error("exec error:{}", error.toString());
+        if (!input.isEmpty()) {
+            JulLog.info("exec input:{}", input.toString());
+        }
+        if (!error.isEmpty()) {
+            JulLog.error("exec error:{}", error.toString());
+        }
         // 等待命令执行完成
         int exitCode = process.waitFor();
         JulLog.debug("Runtime executed with exit code:{}", exitCode);
