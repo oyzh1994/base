@@ -70,7 +70,6 @@ public class ThreadUtil {
      *
      * @param tasks 任务列表
      */
-    @Deprecated
     public static <V> List<V> invokeVirtual(List<Callable<V>> tasks) {
         List<V> results = new ArrayList<>();
         if (CollectionUtil.isNotEmpty(tasks)) {
