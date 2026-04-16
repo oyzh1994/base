@@ -198,10 +198,10 @@ public class JSONUtil {
      * @param <T>  对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(String json, Class<T> beanClass) {
+    public static <T> List<T> toList(String json, Class<T> beanClass) {
         try {
             JSONArray array = JSONArray.parseArray(json);
-            return array.toJavaList(beanClass);
+            return toList(array, beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -215,12 +215,26 @@ public class JSONUtil {
      * @param <T>   对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(JSONArray array, Class<T> beanClass) {
-        try {
-            return array.toJavaList(beanClass);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public static <T> List<T> toList(JSONArray array, Class<T> beanClass) {
+        if (array != null) {
+            try {
+                return array.toJavaList(beanClass);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * 转换为java对象列表
+     *
+     * @param object json对象
+     * @param <T>    对象泛型
+     * @return java对象列表
+     */
+    public static <T> List<T> toList(JSONObject object, String key, Class<T> beanClass) {
+        JSONArray array = object.getJSONArray(key);
+        return toList(array, beanClass);
     }
 }
