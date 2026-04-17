@@ -603,6 +603,16 @@ public class TextUtil {
     }
 
     /**
+     * 是否python字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isPythonStr(String str) {
+        return StringUtil.startWith(str, "#!/usr/bin/python");
+    }
+
+    /**
      * 是否二进制字符串
      *
      * @param str 字符串
@@ -632,7 +642,7 @@ public class TextUtil {
                     && StringUtil.contains(json, ":") && StringUtil.contains(json, "\"");
         }
         if (isJson && StringUtil.startWithAny(json.trim(), "{", "[") && StringUtil.endWithAny(json.trim(), "}", "]")) {
-
+            isJson = JSONUtil.isJson(json);
         } else {
             isJson = false;
         }
@@ -685,6 +695,9 @@ public class TextUtil {
             }
             if (isHtmlStr(str)) {
                 return 4;
+            }
+            if (isPythonStr(str)) {
+                return 10;
             }
             if (isCssStr(str)) {
                 return 7;
