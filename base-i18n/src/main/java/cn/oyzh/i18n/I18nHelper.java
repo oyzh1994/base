@@ -3402,6 +3402,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RUN_SQL_FILE);
     }
 
+    public static String run() {
+        return I18nResourceBundle.i18nString(RUN);
+    }
+
     public static String runSelected() {
         return I18nResourceBundle.i18nString(RUN, SELECTED);
     }
