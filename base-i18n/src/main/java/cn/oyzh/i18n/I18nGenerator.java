@@ -6,8 +6,8 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.i18n.baidu.TransApi;
 import cn.oyzh.i18n.baidu.TransUtil;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

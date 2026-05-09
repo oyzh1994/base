@@ -1,9 +1,9 @@
 package cn.oyzh.common.json;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.JSONWriter;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +25,7 @@ public class JSONUtil {
     public static String toPretty(Object obj) {
         if (obj != null) {
             try {
-                return JSON.toJSONString(obj, JSONWriter.Feature.PrettyFormat);
+                return JSON.toJSONString(obj, SerializerFeature.PrettyFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -43,7 +43,7 @@ public class JSONUtil {
         if (str != null) {
             try {
                 Object json = JSON.parse(str);
-                return JSON.toJSONString(json, JSONWriter.Feature.PrettyFormat);
+                return JSON.toJSONString(json, SerializerFeature.PrettyFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -154,7 +154,7 @@ public class JSONUtil {
      * @return json对象
      */
     public static JSONObject parseObject(String json) {
-        com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
+        JSONObject object = JSONObject.parseObject(json);
         if (object != null) {
             return new JSONObject(object);
         }
@@ -168,13 +168,12 @@ public class JSONUtil {
      * @return json树组
      */
     public static JSONArray parseArray(String json) {
-        com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
+        JSONArray array = JSONArray.parseArray(json);
         if (array != null) {
             return new JSONArray(array);
         }
         return new JSONArray();
     }
-
 
     /**
      * 解析为bean
@@ -184,7 +183,7 @@ public class JSONUtil {
      */
     public static <T> T toBean(String json, Class<T> beanClass) {
         try {
-            com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
+            JSONObject object = JSONObject.parseObject(json);
             return object.toJavaObject(beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -199,10 +198,10 @@ public class JSONUtil {
      * @param <T>  对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(String json, Class<T> beanClass) {
+    public static <T> List<T> toList(String json, Class<T> beanClass) {
         try {
-            com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
-            return array.toJavaList(beanClass);
+            JSONArray array = JSONArray.parseArray(json);
+            return toList(array, beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -216,12 +215,26 @@ public class JSONUtil {
      * @param <T>   对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(JSONArray array, Class<T> beanClass) {
-        try {
-            return array.toList(beanClass);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public static <T> List<T> toList(JSONArray array, Class<T> beanClass) {
+        if (array != null) {
+            try {
+                return array.toJavaList(beanClass);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * 转换为java对象列表
+     *
+     * @param object json对象
+     * @param <T>    对象泛型
+     * @return java对象列表
+     */
+    public static <T> List<T> toList(JSONObject object, String key, Class<T> beanClass) {
+        JSONArray array = object.getJSONArray(key);
+        return toList(array, beanClass);
     }
 }

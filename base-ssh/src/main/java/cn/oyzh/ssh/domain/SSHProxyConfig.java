@@ -3,7 +3,7 @@ package cn.oyzh.ssh.domain;
 import cn.oyzh.common.object.ObjectCopier;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;
-import com.alibaba.fastjson2.annotation.JSONField;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
 

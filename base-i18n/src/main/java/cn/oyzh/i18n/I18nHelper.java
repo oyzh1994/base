@@ -3402,6 +3402,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RUN_SQL_FILE);
     }
 
+    public static String run() {
+        return I18nResourceBundle.i18nString(RUN);
+    }
+
     public static String runSelected() {
         return I18nResourceBundle.i18nString(RUN, SELECTED);
     }
@@ -4023,9 +4027,12 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLONE, CONNECT);
     }
 
-
     public static String copyConnect() {
         return I18nResourceBundle.i18nString(COPY, CONNECT);
+    }
+
+    public static String copyInfo() {
+        return I18nResourceBundle.i18nString(COPY, INFO);
     }
 
     public static String cloneTable() {
