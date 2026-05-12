@@ -38,6 +38,7 @@ public class FileReadConfig {
 
     /**
      * 数据行开始索引
+     * 注意，起始下标为1
      */
     private Integer dataRowStarts;
 
