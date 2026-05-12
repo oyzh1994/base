@@ -48,7 +48,7 @@ public class JdbcConn implements AutoCloseable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return this.status.get() == 1;
+        return this.status.get() == 0;
     }
 
     /**
