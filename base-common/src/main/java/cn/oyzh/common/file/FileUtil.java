@@ -440,7 +440,6 @@ public class FileUtil {
         return renameFile(new File(source), new File(target), override);
     }
 
-
     /**
      * 重命名文件
      *
@@ -475,7 +474,7 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean cleanFile(File source) {
-        if (source != null && source.exists() && !source.isDirectory() && !source.isAbsolute()) {
+        if (source != null && source.exists() && !source.isDirectory() && source.isFile()) {
             try (FileOutputStream fos = new FileOutputStream(source)) {
                 fos.write(new byte[]{});
                 return true;
