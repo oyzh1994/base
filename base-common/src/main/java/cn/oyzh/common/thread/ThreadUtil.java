@@ -86,6 +86,19 @@ public class ThreadUtil {
     }
 
     /**
+     * 执行任务列表，并活得结果
+     * TODO: 虚拟线程，轻量级别，适合io密集型任务
+     *
+     * @param task 任务
+     */
+    public static <V> V invokeVirtual(Callable<V> task) {
+        if (task != null) {
+            return invokeVirtual(Collections.singletonList(task)).getFirst();
+        }
+        return null;
+    }
+
+    /**
      * 开始运行线程
      *
      * @param task 任务
@@ -146,7 +159,6 @@ public class ThreadUtil {
      * @param task 任务
      * @return 线程
      */
-    @Deprecated
     public static Thread newThreadVirtual(Runnable task) {
         return Thread.ofVirtual().unstarted(task);
     }
@@ -165,7 +177,7 @@ public class ThreadUtil {
     }
 
     /**
-     * 执行任务列表
+     * 执行任务列表，同步执行
      * TODO: 物理线程，重量级别，适合cpu密集型任务
      *
      * @param tasks 任务列表
@@ -200,6 +212,46 @@ public class ThreadUtil {
     }
 
     /**
+     * 执行任务列表，同步执行
+     * TODO: 物理线程，重量级别，适合cpu密集型任务
+     *
+     * @param task 任务
+     */
+    public static void submit(Runnable task) {
+        if (task != null) {
+            submit(Collections.singletonList(task));
+        }
+    }
+
+    /**
+     * 执行任务列表，异步执行
+     * TODO: 物理线程，重量级别，适合cpu密集型任务
+     *
+     * @param tasks 任务列表
+     */
+    public static void submitAsync(List<Runnable> tasks) {
+        if (CollectionUtil.isNotEmpty(tasks)) {
+            try (ExecutorService service = Executors.newCachedThreadPool()) {
+                for (Runnable task : tasks) {
+                    service.submit(task);
+                }
+            }
+        }
+    }
+
+    /**
+     * 执行任务列表，异步执行
+     * TODO: 物理线程，重量级别，适合cpu密集型任务
+     *
+     * @param task 任务
+     */
+    public static void submitAsync(Runnable task) {
+        if (task != null) {
+            submitAsync(Collections.singletonList(task));
+        }
+    }
+
+    /**
      * 执行任务列表，并拿到返回结果
      * TODO: 物理线程，重量级别，适合cpu密集型任务
      *
@@ -229,6 +281,22 @@ public class ThreadUtil {
         }
         return Collections.emptyList();
     }
+
+    /**
+     * 执行任务列表，并拿到返回结果
+     * TODO: 物理线程，重量级别，适合cpu密集型任务
+     *
+     * @param task 任务
+     * @param <V>  结果泛型
+     * @return 结果列表
+     */
+    public static <V> V invoke(Callable<V> task) {
+        if (task != null) {
+            return invoke(Collections.singletonList(task)).getFirst();
+        }
+        return null;
+    }
+
 
     /**
      * 休眠

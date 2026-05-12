@@ -712,4 +712,26 @@ public class TextUtil {
         }
         return 6;
     }
+
+    /**
+     * 获取最后一行
+     *
+     * @param content 内容
+     * @return 结果
+     */
+    public static String getLastLine(String content) {
+        return getLastLine(content, System.lineSeparator());
+    }
+
+    /**
+     * 获取最后一行
+     *
+     * @param content       内容
+     * @param lineSeparator 行分隔符
+     * @return 结果
+     */
+    public static String getLastLine(String content, String lineSeparator) {
+        int lastNewline = content.lastIndexOf(System.lineSeparator());
+        return lastNewline >= 0 ? content.substring(lastNewline + 1) : content;
+    }
 }
