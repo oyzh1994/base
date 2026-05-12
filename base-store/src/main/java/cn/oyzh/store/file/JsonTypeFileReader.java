@@ -3,8 +3,8 @@ package cn.oyzh.store.file;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.json.JSONUtil;
 import cn.oyzh.common.util.IOUtil;
-import com.alibaba.fastjson.JSONReader;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONReader;
 
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
@@ -57,7 +57,9 @@ public class JsonTypeFileReader extends TypeFileReader {
                 FileRecord record = new FileRecord();
                 for (Map.Entry<String, Object> entry : object.entrySet()) {
                     FileColumn column = this.columns.column(entry.getKey());
-                    record.put(column.getPosition(), entry.getValue());
+                    if (column != null) {
+                        record.put(column.getPosition(), entry.getValue());
+                    }
                 }
                 return record;
             } catch (Exception ex) {

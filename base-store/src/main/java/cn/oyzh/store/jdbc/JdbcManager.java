@@ -70,7 +70,7 @@ public class JdbcManager {
             dbFile = System.getProperty("user.dir") + File.separator + "temp_db";
         }
         Connection connection;
-        String url = "";
+        String url;
         if (dialect == JdbcDialect.H2) {
             url = "jdbc:h2:file:" + dbFile;
             String cacheSize = JdbcConst.dbCacheSize();

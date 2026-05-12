@@ -155,11 +155,14 @@ public class ResourceUtil {
      */
     public static String getPath(String url, Class<?> clazz) {
         try {
-            String path = clazz.getResource(url).toURI().getPath();
-            if (OSUtil.isWindows() && path.startsWith("/")) {
-                path = path.substring(1);
+            URL url1 = clazz.getResource(url);
+            if (url1 != null) {
+                String path = url1.toURI().getPath();
+                if (OSUtil.isWindows() && path.startsWith("/")) {
+                    path = path.substring(1);
+                }
+                return path;
             }
-            return path;
         } catch (Exception ex) {
             ex.printStackTrace();
         }

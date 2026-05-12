@@ -56,6 +56,9 @@ public class ExcelTypeFileReader extends TypeFileReader {
     @Override
     public FileRecord readRecord() {
         Sheet sheet = this.workbook.getSheetAt(0);
+        if (this.currentRowIndex > sheet.getLastRowNum()) {
+            return null;
+        }
         Row row = sheet.getRow(this.currentRowIndex++);
         if (row != null) {
             FileRecord record = new FileRecord();

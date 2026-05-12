@@ -2,6 +2,10 @@ package cn.oyzh.store.jdbc.h2;
 
 import cn.oyzh.common.util.CollectionUtil;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -30,14 +34,14 @@ public class H2Util {
         if (data instanceof CharSequence sequence) {
             return "'" + sequence + "'";
         }
-        return "'" + data.toString() + "'";
+        return "'" + data + "'";
     }
 
     public static String toSqlType(Class<?> javaType) {
         if (CollectionUtil.contains(List.of(Long.class, long.class), javaType)) {
             return "bigint";
         }
-        if (CollectionUtil.contains(List.of(Integer.class, int.class, Short.class, short.class), javaType)) {
+        if (CollectionUtil.contains(List.of(Integer.class, int.class), javaType)) {
             return "integer";
         }
         if (CollectionUtil.contains(List.of(Short.class, short.class), javaType)) {
@@ -46,7 +50,7 @@ public class H2Util {
         if (CollectionUtil.contains(List.of(Byte.class, byte.class, Boolean.class, boolean.class), javaType)) {
             return "TINYINT";
         }
-        if (CollectionUtil.contains(List.of(String.class, StringBuilder.class, StringBuilder.class, Character.class, char.class), javaType)) {
+        if (CollectionUtil.contains(List.of(String.class, StringBuilder.class, StringBuffer.class, Character.class, char.class), javaType)) {
             return "varchar";
         }
         if (CollectionUtil.contains(List.of(Float.class, float.class), javaType)) {
@@ -57,6 +61,15 @@ public class H2Util {
         }
         if (CollectionUtil.contains(List.of(Byte[].class, byte[].class), javaType)) {
             return "blob";
+        }
+        if (CollectionUtil.contains(List.of(Date.class, java.util.Date.class, LocalDateTime.class), javaType)) {
+            return "timestamp";
+        }
+        if (CollectionUtil.contains(List.of(LocalDate.class), javaType)) {
+            return "date";
+        }
+        if (CollectionUtil.contains(List.of(LocalTime.class), javaType)) {
+            return "time";
         }
         return "varchar";
     }

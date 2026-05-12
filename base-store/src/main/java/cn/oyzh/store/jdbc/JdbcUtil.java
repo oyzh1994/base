@@ -74,6 +74,9 @@ public class JdbcUtil {
     }
 
     public static int toInt(Object sqlData) {
+        if (sqlData == null) {
+            throw new IllegalArgumentException("sqlData");
+        }
         if (sqlData instanceof Number n) {
             return n.intValue();
         }
@@ -88,6 +91,9 @@ public class JdbcUtil {
     }
 
     public static long toLong(Object sqlData) {
+        if (sqlData == null) {
+            throw new IllegalArgumentException("sqlData");
+        }
         if (sqlData instanceof Number n) {
             return n.longValue();
         }
@@ -105,6 +111,9 @@ public class JdbcUtil {
     }
 
     public static double toDouble(Object sqlData) {
+        if (sqlData == null) {
+            throw new IllegalArgumentException("sqlData");
+        }
         if (sqlData instanceof Number n) {
             return n.doubleValue();
         }
@@ -119,6 +128,9 @@ public class JdbcUtil {
     }
 
     public static float toFloat(Object sqlData) {
+        if (sqlData == null) {
+            throw new IllegalArgumentException("sqlData");
+        }
         if (sqlData instanceof Number n) {
             return n.floatValue();
         }
@@ -133,6 +145,9 @@ public class JdbcUtil {
     }
 
     public static short toShort(Object sqlData) {
+        if (sqlData == null) {
+            throw new IllegalArgumentException("sqlData");
+        }
         if (sqlData instanceof Number n) {
             return n.shortValue();
         }
@@ -147,7 +162,10 @@ public class JdbcUtil {
     }
 
     public static char toChar(Object sqlData) {
-        if (sqlData instanceof String n) {
+        if (sqlData == null) {
+            throw new IllegalArgumentException("sqlData");
+        }
+        if (sqlData instanceof CharSequence n) {
             return n.charAt(0);
         }
         return 0;
@@ -169,6 +187,13 @@ public class JdbcUtil {
         }
         if (sqlData instanceof byte[] bytes) {
             return bytes;
+        }
+        if (sqlData instanceof Byte[] bytes) {
+            byte[] bytes1 = new byte[bytes.length];
+            for (int i = 0; i < bytes.length; i++) {
+                bytes1[i] = bytes[i];
+            }
+            return bytes1;
         }
         return null;
     }
@@ -297,7 +322,12 @@ public class JdbcUtil {
             return toZonedDateTime(sqlData);
         }
         if (javaType == Byte[].class) {
-            return toBytes(sqlData);
+            byte[] bytes = toBytes(sqlData);
+            Byte[] bytes1 = new Byte[bytes.length];
+            for (int i = 0; i < bytes.length; i++) {
+                bytes1[i] = bytes[i];
+            }
+            return bytes1;
         }
         if (javaType == byte[].class) {
             return toBytes(sqlData);

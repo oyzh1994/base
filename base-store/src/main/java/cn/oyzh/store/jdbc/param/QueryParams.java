@@ -23,7 +23,7 @@ public class QueryParams extends ArrayList<QueryParam> {
     }
 
     public void add(String name, Object data, String operator) {
-        this.add(new QueryParam(name, data));
+        this.add(new QueryParam(name, data, operator));
     }
 
     public static QueryParams of(QueryParam param) {
