@@ -1,9 +1,6 @@
 package cn.oyzh.store.jdbc.param;
 
 
-import cn.oyzh.store.jdbc.sqlite.OrderByParam;
-import cn.oyzh.store.jdbc.sqlite.OrderByParams;
-
 import java.util.ArrayList;
 import java.util.List;
 

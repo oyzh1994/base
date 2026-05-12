@@ -6,8 +6,8 @@ import cn.oyzh.store.jdbc.param.PageParam;
 import cn.oyzh.store.jdbc.param.QueryParam;
 import cn.oyzh.store.jdbc.param.QueryParams;
 import cn.oyzh.store.jdbc.param.SelectParam;
-import cn.oyzh.store.jdbc.sqlite.DeleteParam;
-import cn.oyzh.store.jdbc.sqlite.OrderByParam;
+import cn.oyzh.store.jdbc.param.DeleteParam;
+import cn.oyzh.store.jdbc.param.OrderByParam;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
