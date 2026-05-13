@@ -11,7 +11,6 @@ import cn.oyzh.ssh.domain.SSHConnect;
 import cn.oyzh.ssh.util.SSHAgentConnectorFactory;
 import cn.oyzh.ssh.util.SSHKeyUtil;
 import cn.oyzh.ssh.util.SSHUtil;
-import com.jcraft.jsch.JSchException;
 import org.apache.sshd.client.ClientBuilder;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.auth.keyboard.UserAuthKeyboardInteractiveFactory;
