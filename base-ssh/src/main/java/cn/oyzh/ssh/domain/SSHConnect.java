@@ -4,6 +4,8 @@ import cn.oyzh.common.object.ObjectCopier;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * ssh连接信息
  *
@@ -238,11 +240,11 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
     }
 
     public byte[] getCertificatePubKeyBytes() {
-        return certificatePubKey == null ? null : certificatePubKey.getBytes();
+        return certificatePubKey == null ? null : certificatePubKey.getBytes(StandardCharsets.UTF_8);
     }
 
     public byte[] getCertificatePriKeyBytes() {
-        return certificatePriKey == null ? null : certificatePriKey.getBytes();
+        return certificatePriKey == null ? null : certificatePriKey.getBytes(StandardCharsets.UTF_8);
     }
 
     public String getCertificatePwd() {
