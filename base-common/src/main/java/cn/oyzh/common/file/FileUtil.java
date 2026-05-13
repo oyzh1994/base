@@ -262,9 +262,9 @@ public class FileUtil {
     }
 
     public static List<String> readLines(InputStream stream, Charset charset) {
-        try {
-            InputStreamReader reader = new InputStreamReader(stream, charset);
-            BufferedReader bufferedReader = new BufferedReader(reader);
+        try (InputStreamReader reader = new InputStreamReader(stream, charset);
+             BufferedReader bufferedReader = new BufferedReader(reader);
+        ) {
             try (reader; bufferedReader) {
                 List<String> list = new ArrayList<>();
                 String line;

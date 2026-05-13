@@ -14,12 +14,12 @@ public class I18nManager {
     /**
      * 默认区域
      */
-    public static Locale defaultLocale = Locale.PRC;
+    public  final static Locale defaultLocale = Locale.PRC;
 
     /**
      * 当前区域
      */
-    private static Locale currentLocale;
+    private volatile static Locale currentLocale;
 
     /**
      * 获取当前区域
@@ -63,6 +63,8 @@ public class I18nManager {
         try {
             // 设置当前区域
             currentLocale = locale;
+            // 清除缓存
+            I18nResourceBundle.clearResource();
             // 设置系统区域
             Locale.setDefault(currentLocale);
         } catch (Exception ex) {

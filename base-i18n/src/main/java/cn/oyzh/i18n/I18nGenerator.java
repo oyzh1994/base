@@ -36,7 +36,10 @@ public class I18nGenerator {
      * @throws IOException 异常
      */
     public static int i18nTranslate(String skFilePath, String cnI18nFile, String targetI18nFile, Locale targetLocale) throws IOException {
-        List<String> list = FileUtil.readLines(new FileInputStream(skFilePath), StandardCharsets.UTF_8);
+        List<String> list;
+        try (FileInputStream fis = new FileInputStream(skFilePath)) {
+            list = FileUtil.readLines(fis, StandardCharsets.UTF_8);
+        }
         if (list.size() < 2) {
             throw new RuntimeException("invalid baidu app!");
         }
@@ -53,7 +56,10 @@ public class I18nGenerator {
 
         // 中文属性
         Properties cnProp = new Properties();
-        cnProp.load(new FileInputStream(cnI18nFile));
+
+        try (FileInputStream fis = new FileInputStream(cnI18nFile)) {
+            cnProp.load(fis);
+        }
 
         // 目标属性
         Properties targetProp = new Properties();
@@ -61,7 +67,9 @@ public class I18nGenerator {
         if (!FileUtil.exist(targetI18nFile)) {
             FileUtil.touch(targetI18nFile);
         }
-        targetProp.load(new FileInputStream(targetI18nFile));
+        try (FileInputStream fis = new FileInputStream(targetI18nFile)) {
+            targetProp.load(fis);
+        }
 
         int count = 0;
         int failCount = 0;
@@ -96,14 +104,18 @@ public class I18nGenerator {
                 }
                 // 存储数据
                 if (count % 10 == 0) {
-                    targetProp.store(new FileOutputStream(targetI18nFile), null);
+                    try (FileOutputStream fos = new FileOutputStream(targetI18nFile)) {
+                        targetProp.store(fos, null);
+                    }
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
         // 存储数据
-        targetProp.store(new FileOutputStream(targetI18nFile), null);
+        try (FileOutputStream fos = new FileOutputStream(targetI18nFile)) {
+            targetProp.store(fos, null);
+        }
         return count;
     }
 
@@ -124,11 +136,15 @@ public class I18nGenerator {
         }
         // 中文属性
         Properties cnProp = new Properties();
-        cnProp.load(new FileInputStream(cnI18nFile));
+        try (FileInputStream fis = new FileInputStream(cnI18nFile)) {
+            cnProp.load(fis);
+        }
 
         // 目标属性
         Properties targetProp = new Properties();
-        targetProp.load(new FileInputStream(targetI18nFile));
+        try (FileInputStream fis = new FileInputStream(targetI18nFile)) {
+            targetProp.load(fis);
+        }
 
         // 遍历中文key
         for (Object key : cnProp.keySet()) {
@@ -145,49 +161,49 @@ public class I18nGenerator {
                 }
                 // 句号
                 if (!source.contains("。") && target.contains("。")) {
-                    target = target.replaceAll("。", ".");
+                    target = target.replace("。", ".");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
                 // 逗号
                 if (!source.contains("，") && target.contains("，")) {
-                    target = target.replaceAll("，", ",");
+                    target = target.replace("，", ",");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
                 // 冒号1
                 if (!source.contains("：") && target.contains("：")) {
-                    target = target.replaceAll("：", ":");
+                    target = target.replace("：", ":");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
                 // 冒号2
                 if (!source.contains(": ") && target.contains(": ")) {
-                    target = target.replaceAll(": ", ":");
+                    target = target.replace(": ", ":");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
                 // 除号1
                 if (!source.contains(" / ") && target.contains(" / ")) {
-                    target = target.replaceAll(" / ", "/");
+                    target = target.replace(" / ", "/");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
                 // 分号1
                 if (!source.contains("; ") && target.contains("; ")) {
-                    target = target.replaceAll("; ", ";");
+                    target = target.replace("; ", ";");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
                 // 分号2
                 if (!source.contains("； ") && target.contains("； ")) {
-                    target = target.replaceAll("； ", ";");
+                    target = target.replace("； ", ";");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
                 // 分号3
                 if (!source.contains("；") && target.contains("；")) {
-                    target = target.replaceAll("；", ";");
+                    target = target.replace("；", ";");
                     JulLog.info("correction:{} key:{}={}={}", targetLocale.getLanguage(), key, source, target);
                     targetProp.setProperty((String) key, target);
                 }
@@ -214,6 +230,8 @@ public class I18nGenerator {
             }
         }
         // 存储数据
-        targetProp.store(new FileOutputStream(targetI18nFile), null);
+        try (FileOutputStream fos = new FileOutputStream(targetI18nFile)) {
+            targetProp.store(fos, null);
+        }
     }
 }
