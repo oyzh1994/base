@@ -20,7 +20,7 @@ public class I18nLocales {
 
     public static Locale RU = Locale.of("ru");
 
-    public static Locale DAN = Locale.of("dan");
+    public static Locale DA = Locale.of("da");
 
     public static Locale PT = Locale.of("pt");
 
@@ -28,27 +28,25 @@ public class I18nLocales {
 
     public static Locale EL = Locale.of("el");
 
-    public static Locale FIN = Locale.of("fin");
+    public static Locale FI = Locale.of("fi");
 
-    public static Locale SLO = Locale.of("slo");
+    public static Locale SL = Locale.of("sl");
 
-    public static Locale ARA = Locale.of("ara");
+    public static Locale AR = Locale.of("ar");
 
     public static Locale NL = Locale.of("nl");
 
-    public static Locale EST = Locale.of("est");
+    public static Locale ES = Locale.of("es");
 
     public static Locale CS = Locale.of("cs");
 
-    public static Locale SWE = Locale.of("swe");
+    public static Locale SV = Locale.of("sv");
 
-    public static Locale VIE = Locale.of("vie");
-
-    public static Locale SPA = Locale.of("spa");
+    public static Locale VI = Locale.of("vi");
 
     public static Locale PL = Locale.of("pl");
 
-    public static Locale ROM = Locale.of("rom");
+    public static Locale RO = Locale.of("ro");
 
     public static Locale HU = Locale.of("hu");
 
@@ -66,21 +64,21 @@ public class I18nLocales {
         locales.add(new I1n8Locale(Locale.FRANCE.toString(), Locale.FRANCE, "Français", "法语"));
         locales.add(new I1n8Locale(Locale.ITALY.toString(), Locale.ITALY, "Italiano", "意大利语"));
         locales.add(new I1n8Locale(RU.toString(), RU, "Русский", "俄语"));
-        locales.add(new I1n8Locale(DAN.toString(), DAN, "Dansk", "丹麦语"));
+        locales.add(new I1n8Locale(DA.toString(), DA, "Dansk", "丹麦语"));
         locales.add(new I1n8Locale(PT.toString(), PT, "Português", "葡萄牙语"));
         locales.add(new I1n8Locale(TH.toString(), TH, "ไทย", "台语"));
         locales.add(new I1n8Locale(EL.toString(), EL, "Ελληνικά", "希腊语"));
-        locales.add(new I1n8Locale(FIN.toString(), FIN, "Suomi", "芬兰语"));
-        locales.add(new I1n8Locale(SLO.toString(), SLO, "slovenski jezik", "斯洛文尼亚语"));
-        locales.add(new I1n8Locale(ARA.toString(), ARA, "بالعربية", "阿拉伯语"));
+        locales.add(new I1n8Locale(FI.toString(), FI, "Suomi", "芬兰语"));
+        locales.add(new I1n8Locale(SL.toString(), SL, "slovenski jezik", "斯洛文尼亚语"));
+        locales.add(new I1n8Locale(AR.toString(), AR, "بالعربية", "阿拉伯语"));
         locales.add(new I1n8Locale(NL.toString(), NL, "Nederlands", "荷兰语"));
-        locales.add(new I1n8Locale(EST.toString(), EST, "Eesti keel", "爱沙尼亚语"));
+        locales.add(new I1n8Locale(ES.toString(), ES, "Eesti keel", "爱沙尼亚语"));
         locales.add(new I1n8Locale(CS.toString(), CS, "Čeština", "捷克语"));
-        locales.add(new I1n8Locale(SWE.toString(), SWE, "Svenska språket", "瑞典语"));
-        locales.add(new I1n8Locale(VIE.toString(), VIE, "Tiếng Việt", "越南语"));
-        locales.add(new I1n8Locale(SPA.toString(), SPA, "Español", "西班牙语"));
+        locales.add(new I1n8Locale(SV.toString(), SV, "Svenska språket", "瑞典语"));
+        locales.add(new I1n8Locale(VI.toString(), VI, "Tiếng Việt", "越南语"));
+        locales.add(new I1n8Locale(ES.toString(), ES, "Español", "西班牙语"));
         locales.add(new I1n8Locale(PL.toString(), PL, "Język polski", "波兰语"));
-        locales.add(new I1n8Locale(ROM.toString(), ROM, "română", "罗马尼亚语"));
+        locales.add(new I1n8Locale(RO.toString(), RO, "română", "罗马尼亚语"));
         locales.add(new I1n8Locale(HU.toString(), HU, "Magyar nyelv", "匈牙利语"));
     }
 
