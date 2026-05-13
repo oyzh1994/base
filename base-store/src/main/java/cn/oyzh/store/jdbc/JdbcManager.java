@@ -150,15 +150,17 @@ public class JdbcManager {
      */
     public static void destroy() {
         try {
-            JdbcConn conn = JdbcManager.takeoff();
-            Statement statement = conn.createStatement();
-            statement.execute("SHUTDOWN");
-            IOUtil.close(statement);
+            if (JdbcManager.dialect == JdbcDialect.H2) {
+                JdbcConn conn = JdbcManager.takeoff();
+                Statement statement = conn.createStatement();
+                statement.execute("SHUTDOWN");
+                IOUtil.close(statement);
+            }
             for (JdbcConn jdbcConn : CONNECTIONS) {
                 IOUtil.close(jdbcConn);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

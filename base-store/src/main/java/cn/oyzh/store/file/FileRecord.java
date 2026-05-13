@@ -15,29 +15,26 @@ public class FileRecord extends HashMap<Integer, Object> {
         if (val == null) {
             return null;
         }
-        if (val.getClass() == String.class) {
-            if (clazz == String.class) {
-                return val;
-            }
-            if (clazz.isAssignableFrom(Integer.class)) {
+        if (CharSequence.class.isAssignableFrom(clazz)) {
+            if (clazz == Integer.class || clazz == int.class) {
                 return Integer.valueOf(val.toString());
             }
-            if (clazz.isAssignableFrom(Long.class)) {
+            if (clazz == Long.class || clazz == long.class) {
                 return Long.valueOf(val.toString());
             }
-            if (clazz.isAssignableFrom(Float.class)) {
+            if (clazz == Float.class || clazz == float.class) {
                 return Float.valueOf(val.toString());
             }
-            if (clazz.isAssignableFrom(Double.class)) {
+            if (clazz == Double.class || clazz == double.class) {
                 return Double.valueOf(val.toString());
             }
-            if (clazz.isAssignableFrom(Byte.class)) {
+            if (clazz == Byte.class || clazz == byte.class) {
                 return Byte.valueOf(val.toString());
             }
-            if (clazz.isAssignableFrom(Number.class)) {
+            if (clazz == Number.class) {
                 return Double.valueOf(val.toString());
             }
         }
-        return val;
+        return val.toString();
     }
 }

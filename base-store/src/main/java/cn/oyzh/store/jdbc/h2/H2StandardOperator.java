@@ -3,14 +3,14 @@ package cn.oyzh.store.jdbc.h2;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.store.jdbc.ColumnDefinition;
-import cn.oyzh.store.jdbc.param.DeleteParam;
 import cn.oyzh.store.jdbc.JdbcConn;
 import cn.oyzh.store.jdbc.JdbcHelper;
 import cn.oyzh.store.jdbc.JdbcManager;
 import cn.oyzh.store.jdbc.JdbcStandardOperator;
 import cn.oyzh.store.jdbc.JdbcUtil;
-import cn.oyzh.store.jdbc.param.QueryParam;
 import cn.oyzh.store.jdbc.TableDefinition;
+import cn.oyzh.store.jdbc.param.DeleteParam;
+import cn.oyzh.store.jdbc.param.QueryParam;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,35 +50,34 @@ public class H2StandardOperator extends JdbcStandardOperator {
     protected void alterTable() throws SQLException {
         JdbcConn connection = JdbcManager.takeoff();
         try {
+            connection.setAutoCommit(false);
             String tableName = this.tableName();
             List<String> deletedColumns = new ArrayList<>();
             List<ColumnDefinition> addedColumns = new ArrayList<>();
             List<ColumnDefinition> changedColumns = new ArrayList<>();
             for (ColumnDefinition column : this.columns()) {
                 ResultSet resultSet = connection.getColumns(tableName, column.getColumnName());
-                try (resultSet) {
-                    // 字段不存在
-                    if (!resultSet.next()) {
-                        addedColumns.add(column);
-                        continue;
-                    }
-                    // 字段类型不相同
-                    String typeName = resultSet.getString("TYPE_NAME");
-                    if (!H2Util.checkSqlType(column.getColumnType(), typeName)) {
-                        changedColumns.add(column);
-                    }
+                // 字段不存在
+                if (!resultSet.next()) {
+                    addedColumns.add(column);
+                    continue;
                 }
+                // 字段类型不相同
+                String typeName = resultSet.getString("TYPE_NAME");
+                if (!H2Util.checkSqlType(column.getColumnType(), typeName)) {
+                    changedColumns.add(column);
+                }
+                resultSet.close();
             }
             ResultSet resultSet = connection.getColumns(tableName, null);
-            try (resultSet) {
-                while (resultSet.next()) {
-                    // 字段被删除
-                    String columnName = resultSet.getString("COLUMN_NAME");
-                    if (!this.tableDefinition.hasColumn(columnName)) {
-                        deletedColumns.add(columnName);
-                    }
+            while (resultSet.next()) {
+                // 字段被删除
+                String columnName = resultSet.getString("COLUMN_NAME");
+                if (!this.tableDefinition.hasColumn(columnName)) {
+                    deletedColumns.add(columnName);
                 }
             }
+            resultSet.close();
             if (!deletedColumns.isEmpty() || !addedColumns.isEmpty() || !changedColumns.isEmpty()) {
                 // 删除
                 for (String column : deletedColumns) {
@@ -118,7 +117,11 @@ public class H2StandardOperator extends JdbcStandardOperator {
                     JdbcHelper.executeUpdate(connection, sql.toString());
                 }
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            connection.rollback();
         } finally {
+            connection.setAutoCommit(true);
             JdbcManager.giveback(connection);
         }
     }

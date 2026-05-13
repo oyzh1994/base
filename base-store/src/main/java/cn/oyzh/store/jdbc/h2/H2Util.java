@@ -87,6 +87,12 @@ public class H2Util {
         if (sqlType.equalsIgnoreCase("double") && typeName.equalsIgnoreCase("DOUBLE PRECISION")) {
             return true;
         }
+        if (sqlType.equalsIgnoreCase("byte") && typeName.equalsIgnoreCase("TINYINT")) {
+            return true;
+        }
+        if (sqlType.equalsIgnoreCase("boolean") && typeName.equalsIgnoreCase("TINYINT")) {
+            return true;
+        }
         return false;
     }
 }

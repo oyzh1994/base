@@ -73,7 +73,7 @@ public class FileReadConfig {
         return this;
     }
 
-    public char fieldSeparator() {
+    public Character fieldSeparator() {
         return this.fieldSeparator;
     }
 

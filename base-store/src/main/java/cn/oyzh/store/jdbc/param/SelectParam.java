@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class SelectParam {
 
-    public static final SelectParam EMPTY = new SelectParam();
+//    public static final SelectParam EMPTY = new SelectParam();
 
     private Long limit;
 

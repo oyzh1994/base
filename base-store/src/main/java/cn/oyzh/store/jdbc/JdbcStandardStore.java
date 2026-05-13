@@ -126,7 +126,7 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
     }
 
     public List<M> selectList() {
-        return this.selectList(SelectParam.EMPTY);
+        return this.selectList((SelectParam) null);
     }
 
     public List<M> selectList(QueryParam queryParam) {

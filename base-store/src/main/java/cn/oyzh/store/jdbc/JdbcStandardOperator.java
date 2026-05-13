@@ -2,12 +2,12 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.store.jdbc.param.DeleteParam;
+import cn.oyzh.store.jdbc.param.OrderByParam;
 import cn.oyzh.store.jdbc.param.PageParam;
 import cn.oyzh.store.jdbc.param.QueryParam;
 import cn.oyzh.store.jdbc.param.QueryParams;
 import cn.oyzh.store.jdbc.param.SelectParam;
-import cn.oyzh.store.jdbc.param.DeleteParam;
-import cn.oyzh.store.jdbc.param.OrderByParam;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -252,7 +252,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
     public List<Map<String, Object>> selectList(SelectParam selectParam) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT ");
-        if (CollectionUtil.isEmpty(selectParam.getQueryColumns())) {
+        if (selectParam == null || CollectionUtil.isEmpty(selectParam.getQueryColumns())) {
             sql.append("*");
         } else {
             for (String queryColumn : selectParam.getQueryColumns()) {

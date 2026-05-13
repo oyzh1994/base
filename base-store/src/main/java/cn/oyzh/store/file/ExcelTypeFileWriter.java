@@ -88,7 +88,7 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
      * @param flush  是否刷新
      * @throws Exception 异常
      */
-    private void writeRecord(FileRecord record, boolean flush) throws Exception {
+    protected void writeRecord(FileRecord record, boolean flush) throws Exception {
         // 获取当前页
         Sheet sheet;
         if (this.xlsRowIndex < 1) {
