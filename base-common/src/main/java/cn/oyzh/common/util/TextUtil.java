@@ -33,6 +33,7 @@ public class TextUtil {
      * @param fullMatch   是否全文匹配
      * @return 索引位置
      */
+    @Deprecated
     public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
         if (text == null || word == null) {
             return -1;
@@ -59,6 +60,52 @@ public class TextUtil {
             start = text.indexOf(word, formIndex);
         }
         return start;
+    }
+
+    /**
+     * 搜索索引，正则模式
+     *
+     * @param text        文字
+     * @param word        词汇
+     * @param formIndex   开始位置
+     * @param compareCase 是否比较大小写
+     * @param regex       是否正则匹配
+     * @return 索引位置
+     */
+    public static MatchText findText(String text, String word, Integer formIndex, boolean compareCase, boolean regex) {
+        if (text == null || word == null) {
+            return MatchText.NOT_FOUND;
+        }
+        if (text.length() < word.length()) {
+            return MatchText.NOT_FOUND;
+        }
+        // 全文匹配
+        if (regex) {
+            Pattern pattern = compareCase ? Pattern.compile(word) : Pattern.compile(word, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(text);
+            matcher.region(formIndex, text.length());
+            if (matcher.find()) {
+                return new MatchText(matcher.start(), matcher.group());
+            }
+        } else {
+            if (!compareCase) {
+                text = text.toLowerCase();
+                word = word.toLowerCase();
+            }
+            // 搜索索引
+            int start;
+            if (formIndex == null) {
+                start = text.indexOf(word);
+            } else {
+                start = text.indexOf(word, formIndex);
+            }
+            return new MatchText(start, word);
+        }
+        return MatchText.NOT_FOUND;
+    }
+
+    public record MatchText(int index, String text) {
+        public static final MatchText NOT_FOUND = new MatchText(-1, null);
     }
 
     /**
