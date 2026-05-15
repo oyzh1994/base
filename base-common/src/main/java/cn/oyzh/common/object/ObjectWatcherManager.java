@@ -1,7 +1,7 @@
 package cn.oyzh.common.object;
 
 import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.thread.ThreadUtil;
+import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.util.StringUtil;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class ObjectWatcherManager {
             JulLog.warn("Object watcher is disabled.");
         } else {
             JulLog.info("Object watcher is enabled.");
-            ThreadUtil.startVirtual(ObjectWatcherManager::doWatch);
+            TaskManager.startInterval(ObjectWatcherManager::doWatch, 5000, 0);
         }
     }
 
@@ -37,29 +37,27 @@ public class ObjectWatcherManager {
      * 执行观察
      */
     private static void doWatch() {
-        while (true) {
-            try {
-                // 空的观察者
-                List<ObjectWatcher> emptyWatchers = null;
-                for (ObjectWatcher watcher : WATCHERS) {
-                    if (watcher.doClear()) {
-                        if (emptyWatchers == null) {
-                            emptyWatchers = new ArrayList<>();
-                        }
-                        emptyWatchers.add(watcher);
+        try {
+            // 空的观察者
+            List<ObjectWatcher> emptyWatchers = null;
+            for (ObjectWatcher watcher : WATCHERS) {
+                if (watcher.doClear()) {
+                    if (emptyWatchers == null) {
+                        emptyWatchers = new ArrayList<>();
                     }
+                    emptyWatchers.add(watcher);
                 }
-                // 执行移除
-                if (emptyWatchers != null) {
-                    WATCHERS.removeAll(emptyWatchers);
-                }
-                if (!WATCHERS.isEmpty()) {
-                    System.gc();
-                }
-                ThreadUtil.sleep(3000);
-            } catch (Throwable ex) {
-                ex.printStackTrace();
             }
+            // 执行移除
+            if (emptyWatchers != null) {
+                WATCHERS.removeAll(emptyWatchers);
+            }
+            if (!WATCHERS.isEmpty()) {
+                System.gc();
+                System.out.println("watchers.size=" + WATCHERS.size());
+            }
+        } catch (Throwable ex) {
+            ex.printStackTrace();
         }
     }
 
