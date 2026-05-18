@@ -57,6 +57,17 @@ public class ReflectUtil {
         }
     }
 
+    public static void setFieldValue2(String fieldName, Object value, Object object) {
+        Field field;
+        if (object instanceof Class<?> clazz) {
+            field = getField2(clazz, fieldName);
+            setFieldValue(field, value, null);
+        } else {
+            field = getField2(object.getClass(), fieldName);
+            setFieldValue(field, value, object);
+        }
+    }
+
     public static void clearFieldValue(Field field, Object object) throws SecurityException, IllegalAccessException {
         field.setAccessible(true);
         field.set(object, null);

@@ -27,6 +27,10 @@ public class ObjectWatcher {
         this.name = name == null ? node.getClass().getSimpleName() : name;
     }
 
+    public Object getObject() {
+        return this.reference.get();
+    }
+
     /**
      * 执行清除
      * @return 结果

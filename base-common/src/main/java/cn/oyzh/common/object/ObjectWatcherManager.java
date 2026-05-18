@@ -54,6 +54,9 @@ public class ObjectWatcherManager {
             }
             if (!WATCHERS.isEmpty()) {
                 System.gc();
+                for (ObjectWatcher watcher : WATCHERS) {
+                    System.out.println("watcher=" + watcher.getObject());
+                }
                 System.out.println("watchers.size=" + WATCHERS.size());
             }
         } catch (Throwable ex) {
@@ -68,6 +71,7 @@ public class ObjectWatcherManager {
      */
     public static void push(ObjectWatcher watcher) {
         if (watcher != null) {
+            System.out.println("add watcher=" + watcher.getObject());
             WATCHERS.add(watcher);
         }
     }
