@@ -29,7 +29,7 @@ public class ObjectWatcherManager {
             JulLog.warn("Object watcher is disabled.");
         } else {
             JulLog.info("Object watcher is enabled.");
-            TaskManager.startInterval(ObjectWatcherManager::doWatch, 5000, 0);
+            TaskManager.startInterval(ObjectWatcherManager::doWatch, 3000, 0);
         }
     }
 
