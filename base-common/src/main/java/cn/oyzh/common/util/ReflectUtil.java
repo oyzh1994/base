@@ -109,6 +109,10 @@ public class ReflectUtil {
         return allFields;
     }
 
+    public static Method getMethod(Object obj, String methodName, Class<?>... paramTypes) throws SecurityException {
+        return getMethod(obj.getClass(), methodName, true, false, paramTypes);
+    }
+
     public static Method getMethod(Class<?> beanClass, String methodName, Class<?>... paramTypes) throws SecurityException {
         return getMethod(beanClass, methodName, true, false, paramTypes);
     }
