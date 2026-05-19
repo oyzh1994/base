@@ -592,4 +592,17 @@ public class StringUtil {
         String s2 = str.substring(index + source.length());
         return s1 + target + s2;
     }
+
+    /**
+     * 移除最后一个字符
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String removeLast(String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
+        return str.substring(0, str.length() - 1);
+    }
 }
