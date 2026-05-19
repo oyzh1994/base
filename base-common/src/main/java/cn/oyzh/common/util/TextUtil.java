@@ -69,37 +69,22 @@ public class TextUtil {
      * @param word        词汇
      * @param formIndex   开始位置
      * @param compareCase 是否比较大小写
+     * @param wholeWord   是否全字匹配
      * @param regex       是否正则匹配
      * @return 索引位置
      */
-    public static MatchText findText(String text, String word, Integer formIndex, boolean compareCase, boolean regex) {
+    public static MatchText findText(String text, String word, Integer formIndex, boolean compareCase, boolean wholeWord, boolean regex) {
         if (text == null || word == null) {
             return MatchText.NOT_FOUND;
         }
         if (text.length() < word.length()) {
             return MatchText.NOT_FOUND;
         }
-        // 全文匹配
-        if (regex) {
-            Pattern pattern = compareCase ? Pattern.compile(word) : Pattern.compile(word, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(text);
-            matcher.region(formIndex, text.length());
-            if (matcher.find()) {
-                return new MatchText(matcher.start(), matcher.group());
-            }
-        } else {
-            if (!compareCase) {
-                text = text.toLowerCase();
-                word = word.toLowerCase();
-            }
-            // 搜索索引
-            int start;
-            if (formIndex == null) {
-                start = text.indexOf(word);
-            } else {
-                start = text.indexOf(word, formIndex);
-            }
-            return new MatchText(start, word);
+        Pattern pattern = RegexUtil.createSearchPattern(word, compareCase, wholeWord, regex);
+        Matcher matcher = pattern.matcher(text);
+        matcher.region(formIndex, text.length());
+        if (matcher.find()) {
+            return new MatchText(matcher.start(), matcher.group());
         }
         return MatchText.NOT_FOUND;
     }
