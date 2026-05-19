@@ -46,6 +46,8 @@ public class ObjectWatcherManager {
                         emptyWatchers = new ArrayList<>();
                     }
                     emptyWatchers.add(watcher);
+                } else {
+                    System.out.println("watcher=" + watcher.getObject());
                 }
             }
             // 执行移除
@@ -54,9 +56,6 @@ public class ObjectWatcherManager {
             }
             if (!WATCHERS.isEmpty()) {
                 System.gc();
-                for (ObjectWatcher watcher : WATCHERS) {
-                    System.out.println("watcher=" + watcher.getObject());
-                }
                 System.out.println("watchers.size=" + WATCHERS.size());
             }
         } catch (Throwable ex) {

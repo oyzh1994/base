@@ -48,7 +48,7 @@ public class JSONUtil {
                 ex.printStackTrace();
             }
         }
-        return null;
+        return str;
     }
 
     /**
