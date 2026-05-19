@@ -1,7 +1,7 @@
 package cn.oyzh.common.object;
 
 import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.thread.TaskManager;
+import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.util.ArrayList;
@@ -24,12 +24,15 @@ public class ObjectWatcherManager {
      */
     private static final List<ObjectWatcher> WATCHERS = new ArrayList<>();
 
-    static {
+    /**
+     * 初始化任务
+     */
+    private static void init() {
         if (ObjectWatcherManager.isDisabled()) {
             JulLog.warn("Object watcher is disabled.");
         } else {
             JulLog.info("Object watcher is enabled.");
-            TaskManager.startInterval(ObjectWatcherManager::doWatch, 3000, 0);
+            ThreadUtil.startVirtual(ObjectWatcherManager::doWatch);
         }
     }
 
@@ -37,29 +40,35 @@ public class ObjectWatcherManager {
      * 执行观察
      */
     private static void doWatch() {
-        try {
-            // 空的观察者
-            List<ObjectWatcher> emptyWatchers = null;
-            for (ObjectWatcher watcher : WATCHERS) {
-                if (watcher.doClear()) {
-                    if (emptyWatchers == null) {
-                        emptyWatchers = new ArrayList<>();
+        while (true) {
+            if (isDisabled()) {
+                break;
+            }
+            try {
+                // 空的观察者
+                List<ObjectWatcher> emptyWatchers = null;
+                for (ObjectWatcher watcher : WATCHERS) {
+                    if (watcher.doClear()) {
+                        if (emptyWatchers == null) {
+                            emptyWatchers = new ArrayList<>();
+                        }
+                        emptyWatchers.add(watcher);
+                    } else {
+                        System.out.println("watcher=" + watcher.getObject());
                     }
-                    emptyWatchers.add(watcher);
-                } else {
-                    System.out.println("watcher=" + watcher.getObject());
                 }
+                // 执行移除
+                if (emptyWatchers != null) {
+                    WATCHERS.removeAll(emptyWatchers);
+                }
+                if (!WATCHERS.isEmpty()) {
+                    System.gc();
+                    System.out.println("watchers.size=" + WATCHERS.size());
+                }
+                ThreadUtil.sleep(10_000);
+            } catch (Throwable ex) {
+                ex.printStackTrace();
             }
-            // 执行移除
-            if (emptyWatchers != null) {
-                WATCHERS.removeAll(emptyWatchers);
-            }
-            if (!WATCHERS.isEmpty()) {
-                System.gc();
-                System.out.println("watchers.size=" + WATCHERS.size());
-            }
-        } catch (Throwable ex) {
-            ex.printStackTrace();
         }
     }
 
@@ -105,6 +114,7 @@ public class ObjectWatcherManager {
      */
     public static void disable() {
         System.setProperty(WATCHER_DISABLE, "1");
+        init();
     }
 
     /**
@@ -112,6 +122,7 @@ public class ObjectWatcherManager {
      */
     public static void enable() {
         System.clearProperty(WATCHER_DISABLE);
+        init();
     }
 
     /**
