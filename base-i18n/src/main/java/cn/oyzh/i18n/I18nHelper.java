@@ -293,6 +293,8 @@ public class I18nHelper {
 
     public static final String DIR = "base.dir";
 
+    public static final String PARENT = "base.parent";
+
     public static final String CONTAINER = "base.container";
 
     public static final String PAUSE = "base.pause";
@@ -3880,6 +3882,11 @@ public class I18nHelper {
 
     public static String loadMore() {
         return I18nResourceBundle.i18nString(LOAD, MORE);
+    }
+
+
+    public static String parentDir() {
+        return I18nResourceBundle.i18nString(PARENT, DIR);
     }
 
     public static String schema() {
