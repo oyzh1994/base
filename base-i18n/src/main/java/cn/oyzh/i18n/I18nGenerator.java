@@ -46,9 +46,9 @@ public class I18nGenerator {
         if (!FileUtil.exist(cnI18nFile)) {
             throw new RuntimeException("invalid file : " + cnI18nFile);
         }
-//        if (!FileUtil.exist(targetI18nFile)) {
-//            throw new RuntimeException("invalid file : " + targetI18nFile);
-//        }
+        if (!FileUtil.exist(targetI18nFile)) {
+            throw new RuntimeException("invalid file : " + targetI18nFile);
+        }
         // 初始化百度信息
         String appid = list.getFirst();
         String securityKey = list.get(1);
