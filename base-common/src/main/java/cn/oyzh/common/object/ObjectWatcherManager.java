@@ -45,27 +45,29 @@ public class ObjectWatcherManager {
                 break;
             }
             try {
-                // 空的观察者
-                List<ObjectWatcher> emptyWatchers = null;
-                for (ObjectWatcher watcher : WATCHERS) {
-                    if (watcher.doClear()) {
-                        if (emptyWatchers == null) {
-                            emptyWatchers = new ArrayList<>();
+                synchronized (WATCHERS) {
+                    // 空的观察者
+                    List<ObjectWatcher> emptyWatchers = null;
+                    for (ObjectWatcher watcher : WATCHERS) {
+                        if (watcher.doClear()) {
+                            if (emptyWatchers == null) {
+                                emptyWatchers = new ArrayList<>();
+                            }
+                            emptyWatchers.add(watcher);
+                        } else {
+                            System.out.println("watcher=" + watcher.getObject());
                         }
-                        emptyWatchers.add(watcher);
-                    } else {
-                        System.out.println("watcher=" + watcher.getObject());
+                    }
+                    // 执行移除
+                    if (emptyWatchers != null) {
+                        WATCHERS.removeAll(emptyWatchers);
+                    }
+                    if (!WATCHERS.isEmpty()) {
+                        System.gc();
+                        System.out.println("watchers.size=" + WATCHERS.size());
                     }
                 }
-                // 执行移除
-                if (emptyWatchers != null) {
-                    WATCHERS.removeAll(emptyWatchers);
-                }
-                if (!WATCHERS.isEmpty()) {
-                    System.gc();
-                    System.out.println("watchers.size=" + WATCHERS.size());
-                }
-                ThreadUtil.sleep(10_000);
+                ThreadUtil.sleep(3_000);
             } catch (Throwable ex) {
                 ex.printStackTrace();
             }
@@ -102,6 +104,13 @@ public class ObjectWatcherManager {
      */
     public static ObjectWatcher watch(Object object, String name) {
         if (ObjectWatcherManager.isEnabled() && object != null) {
+            synchronized (WATCHERS) {
+                for (ObjectWatcher watcher : WATCHERS) {
+                    if (watcher.getObject() == object) {
+                        return watcher;
+                    }
+                }
+            }
             ObjectWatcher watcher = new ObjectWatcher(object, name);
             ObjectWatcherManager.push(watcher);
             return watcher;
