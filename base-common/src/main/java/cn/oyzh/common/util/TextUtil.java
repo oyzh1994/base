@@ -75,10 +75,10 @@ public class TextUtil {
      */
     public static MatchText findText(String text, String word, Integer formIndex, boolean compareCase, boolean wholeWord, boolean regex) {
         if (text == null || word == null) {
-            return MatchText.NOT_FOUND;
+            return MatchText.INVALID;
         }
         if (text.length() < word.length()) {
-            return MatchText.NOT_FOUND;
+            return MatchText.INVALID;
         }
         Pattern pattern = RegexUtil.createSearchPattern(word, compareCase, wholeWord, regex);
         Matcher matcher = pattern.matcher(text);
@@ -96,6 +96,7 @@ public class TextUtil {
      * @param text  文本
      */
     public record MatchText(int index, String text) {
+        public static final MatchText INVALID = new MatchText(-2, null);
         public static final MatchText NOT_FOUND = new MatchText(-1, null);
     }
 
