@@ -80,9 +80,14 @@ public class TextUtil {
         if (text.length() < word.length()) {
             return MatchText.INVALID;
         }
+        if (text.isEmpty() || word.isEmpty()) {
+            return MatchText.INVALID;
+        }
         Pattern pattern = RegexUtil.createSearchPattern(word, compareCase, wholeWord, regex);
         Matcher matcher = pattern.matcher(text);
-        matcher.region(formIndex, text.length());
+        if (formIndex != null) {
+            matcher.region(formIndex, text.length());
+        }
         if (matcher.find()) {
             return new MatchText(matcher.start(), matcher.group());
         }
