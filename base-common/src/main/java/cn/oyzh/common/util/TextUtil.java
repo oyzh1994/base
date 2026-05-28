@@ -23,44 +23,44 @@ public class TextUtil {
     private TextUtil() {
     }
 
-    /**
-     * 搜索索引
-     *
-     * @param text        文字
-     * @param word        词汇
-     * @param formIndex   开始位置
-     * @param compareCase 是否比较大小写
-     * @param fullMatch   是否全文匹配
-     * @return 索引位置
-     */
-    @Deprecated
-    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
-        if (text == null || word == null) {
-            return -1;
-        }
-        if (text.length() < word.length()) {
-            return -1;
-        }
-        if (!compareCase) {
-            text = text.toLowerCase();
-            word = word.toLowerCase();
-        }
-        // 全文匹配
-        if (fullMatch) {
-            if (text.equals(word)) {
-                return 0;
-            }
-            return -1;
-        }
-        // 搜索索引
-        int start;
-        if (formIndex == null) {
-            start = text.indexOf(word);
-        } else {
-            start = text.indexOf(word, formIndex);
-        }
-        return start;
-    }
+//    /**
+//     * 搜索索引
+//     *
+//     * @param text        文字
+//     * @param word        词汇
+//     * @param formIndex   开始位置
+//     * @param compareCase 是否比较大小写
+//     * @param fullMatch   是否全文匹配
+//     * @return 索引位置
+//     */
+//    @Deprecated
+//    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
+//        if (text == null || word == null) {
+//            return -1;
+//        }
+//        if (text.length() < word.length()) {
+//            return -1;
+//        }
+//        if (!compareCase) {
+//            text = text.toLowerCase();
+//            word = word.toLowerCase();
+//        }
+//        // 全文匹配
+//        if (fullMatch) {
+//            if (text.equals(word)) {
+//                return 0;
+//            }
+//            return -1;
+//        }
+//        // 搜索索引
+//        int start;
+//        if (formIndex == null) {
+//            start = text.indexOf(word);
+//        } else {
+//            start = text.indexOf(word, formIndex);
+//        }
+//        return start;
+//    }
 
     /**
      * 搜索索引，正则模式
