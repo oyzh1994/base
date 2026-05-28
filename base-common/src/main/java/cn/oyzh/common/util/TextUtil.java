@@ -77,11 +77,11 @@ public class TextUtil {
         if (text == null || word == null) {
             return MatchText.INVALID;
         }
-        if (text.length() < word.length()) {
-            return MatchText.INVALID;
-        }
         if (text.isEmpty() || word.isEmpty()) {
             return MatchText.INVALID;
+        }
+        if (text.length() < word.length()) {
+            return MatchText.NOT_FOUND;
         }
         Pattern pattern = RegexUtil.createSearchPattern(word, compareCase, wholeWord, regex);
         Matcher matcher = pattern.matcher(text);
