@@ -17,13 +17,13 @@ import java.util.Locale;
  */
 public class I18nGeneratorTest {
 
-    private final String skFile = "/Users/oyzh/Desktop/baidu_trans.sk";
-    //     private final String skFile = "C:\\Users\\Administrator\\Desktop\\baidu_trans.sk";
+    //private final String skFile = "/Users/oyzh/Desktop/baidu_trans.sk";
+    private final String skFile = "C:\\Users\\Administrator\\Desktop\\baidu_trans.sk";
     //    private final String skFile = "C:\\Users\\oyzh\\OneDrive\\桌面\\baidu_trans.sk";
 
-    private final String baseDir1 = "/Users/oyzh/IdeaProjects/oyzh/base/base-i18n/src/main/resources";
-    //     private final String baseDir1 = "C:\\Users\\Administrator\\IdeaProjects\\base\\base-i18n\\src\\main\\resources";
-    //    private final String baseDir1 = "C:\\Users\\oyzh\\Projects\\base\\base-i18n\\src\\main\\resources";
+    //private final String baseDir1 = "/Users/oyzh/IdeaProjects/oyzh/base/base-i18n/src/main/resources";
+    private final String baseDir1 = "C:\\Users\\Administrator\\IdeaProjects\\base\\base-i18n\\src\\main\\resources";
+    //private final String baseDir1 = "C:\\Users\\oyzh\\Projects\\base\\base-i18n\\src\\main\\resources";
 
     private final String baseDir2 = "/Users/oyzh/IdeaProjects/oyzh/easyredis/src/main/resources";
     //    private final String baseDir2 = "C:\\Users\\Administrator\\IdeaProjects\\easyredis\\src\\main\\resources";
@@ -94,7 +94,7 @@ public class I18nGeneratorTest {
         try {
             String name = I18nLocales.getLocaleName(locale);
             String cnI18nFile = path + "/" + prefix + "i18n_zh_CN.properties";
-            String targetI18nFile = path + "/i18n_" + name + ".properties";
+            String targetI18nFile = path + "/" + prefix + "i18n_" + name + ".properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
             I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
             if (!locale.getCountry().isEmpty()) {

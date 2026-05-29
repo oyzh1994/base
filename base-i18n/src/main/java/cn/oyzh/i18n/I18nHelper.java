@@ -325,6 +325,8 @@ public class I18nHelper {
 
     public static final String FOLDER = "base.folder";
 
+    public static final String FOLDER1 = "base.folder1";
+
     public static final String TOUCH_FILE = "base.touchFile";
 
     public static final String MKDIR = "base.mkdir";
@@ -2227,6 +2229,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, FOLDER, NAME);
     }
 
+    public static String pleaseInputFolder1Name() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, FOLDER1, NAME);
+    }
+
     public static String keyFilter() {
         return I18nResourceBundle.i18nString(KEY, FILTER);
     }
@@ -2504,6 +2510,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, FOLDER);
     }
 
+    public static String addFolder1() {
+        return I18nResourceBundle.i18nString(ADD, FOLDER1);
+    }
+
+    public static String addDirectory() {
+        return I18nResourceBundle.i18nString(ADD, DIR);
+    }
+
     public static String submit() {
         return I18nResourceBundle.i18nString(SUBMIT);
     }
@@ -2732,6 +2746,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, FOLDER);
     }
 
+    public static String deleteFolder1() {
+        return I18nResourceBundle.i18nString(DELETE, FOLDER1);
+    }
+
     public static String editConnect() {
         return I18nResourceBundle.i18nString(EDIT, CONNECT);
     }
@@ -2770,6 +2788,10 @@ public class I18nHelper {
 
     public static String renameFolder() {
         return I18nResourceBundle.i18nString(RENAME, FOLDER);
+    }
+
+    public static String renameFolder1() {
+        return I18nResourceBundle.i18nString(RENAME, FOLDER1);
     }
 
     public static String renameKey() {
