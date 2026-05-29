@@ -2223,6 +2223,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, GROUP, NAME);
     }
 
+    public static String pleaseInputFolderName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, FOLDER, NAME);
+    }
+
     public static String keyFilter() {
         return I18nResourceBundle.i18nString(KEY, FILTER);
     }
@@ -2496,6 +2500,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, GROUP);
     }
 
+    public static String addFolder() {
+        return I18nResourceBundle.i18nString(ADD, FOLDER);
+    }
+
     public static String submit() {
         return I18nResourceBundle.i18nString(SUBMIT);
     }
@@ -2720,6 +2728,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, GROUP);
     }
 
+    public static String deleteFolder() {
+        return I18nResourceBundle.i18nString(DELETE, FOLDER);
+    }
+
     public static String editConnect() {
         return I18nResourceBundle.i18nString(EDIT, CONNECT);
     }
@@ -2754,6 +2766,10 @@ public class I18nHelper {
 
     public static String renameGroup() {
         return I18nResourceBundle.i18nString(RENAME, GROUP);
+    }
+
+    public static String renameFolder() {
+        return I18nResourceBundle.i18nString(RENAME, FOLDER);
     }
 
     public static String renameKey() {
