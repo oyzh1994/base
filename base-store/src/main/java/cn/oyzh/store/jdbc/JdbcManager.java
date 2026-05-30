@@ -90,6 +90,7 @@ public class JdbcManager {
         } else {
             url = "jdbc:sqlite:" + dbFile;
         }
+        //ReflectUtil.setFieldValue("MIN_GROW", (int)32 * 1024, WriteBuffer.class);
         connection = DriverManager.getConnection(url);
         JdbcConn jdbcConn = new JdbcConn(connection);
         CONNECTIONS.add(jdbcConn);
