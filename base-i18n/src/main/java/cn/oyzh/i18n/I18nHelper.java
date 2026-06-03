@@ -1935,6 +1935,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, DOCUMENT);
     }
 
+    public static String updateDocument() {
+        return I18nResourceBundle.i18nString(UPDATE, DOCUMENT);
+    }
+
+    public static String updateDocumentFail() {
+        return I18nResourceBundle.i18nString(UPDATE, DOCUMENT, FAIL);
+    }
+
     public static String addDocumentFail() {
         return I18nResourceBundle.i18nString(ADD, DOCUMENT, FAIL);
     }
