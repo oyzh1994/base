@@ -1,8 +1,10 @@
 package cn.oyzh.common.json;
 
+import cn.oyzh.common.util.IOUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONValidator;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.Collections;
@@ -138,10 +140,15 @@ public class JSONUtil {
      */
     public static boolean isJson(String json) {
         if (json != null && !json.isBlank() && (json.contains("{") || json.contains("["))) {
+            JSONValidator validator = null;
             try {
-                return JSON.isValid(json);
+                validator = JSONValidator.from(json);
+                return validator.validate();
+                //                return JSON.isValid(json);
             } catch (Exception ex) {
                 ex.printStackTrace();
+            } finally {
+                IOUtil.close(validator);
             }
         }
         return false;

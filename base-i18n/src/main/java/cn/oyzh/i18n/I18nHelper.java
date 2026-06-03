@@ -615,6 +615,8 @@ public class I18nHelper {
 
     public static final String COLLATION = "base.collation";
 
+    public static final String COLLECTION = "base.collection";
+
     public static final String COLLECTIONS = "base.collections";
 
     public static final String AUTO_INCREMENT = "base.autoIncrement";
@@ -1929,6 +1931,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD);
     }
 
+    public static String addDocument() {
+        return I18nResourceBundle.i18nString(ADD, DOCUMENT);
+    }
+
+    public static String addDocumentFail() {
+        return I18nResourceBundle.i18nString(ADD, DOCUMENT, FAIL);
+    }
+
     public static String explain() {
         return I18nResourceBundle.i18nString(EXPLAIN);
     }
@@ -2227,6 +2237,10 @@ public class I18nHelper {
 
     public static String pleaseInputFolderName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, FOLDER, NAME);
+    }
+
+    public static String pleaseInputCollectionName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, COLLECTION, NAME);
     }
 
     public static String pleaseInputFolder1Name() {
@@ -2926,6 +2940,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, TABLE);
     }
 
+    public static String addCollection() {
+        return I18nResourceBundle.i18nString(ADD, COLLECTION);
+    }
+
     public static String openProcedure() {
         return I18nResourceBundle.i18nString(OPEN, PROCEDURE);
     }
@@ -3064,6 +3082,10 @@ public class I18nHelper {
 
     public static String openTable() {
         return I18nResourceBundle.i18nString(OPEN, TABLE);
+    }
+
+    public static String openCollection() {
+        return I18nResourceBundle.i18nString(OPEN, COLLECTION);
     }
 
     public static String example() {
@@ -3290,6 +3312,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CLEAR, TABLE, DATA);
     }
 
+    public static String clearCollectionData() {
+        return I18nResourceBundle.i18nString(CLEAR, COLLECTION, DATA);
+    }
+
+    public static String clearCollection() {
+        return I18nResourceBundle.i18nString(CLEAR, COLLECTION);
+    }
+
     public static String truncate() {
         return I18nResourceBundle.i18nString(TRUNCATE);
     }
@@ -3300,6 +3330,10 @@ public class I18nHelper {
 
     public static String deleteTable() {
         return I18nResourceBundle.i18nString(DELETE, TABLE);
+    }
+
+    public static String deleteCollection() {
+        return I18nResourceBundle.i18nString(DELETE, COLLECTION);
     }
 
     public static String tableInfo() {
@@ -4803,6 +4837,14 @@ public class I18nHelper {
 
     public static String protocol() {
         return I18nResourceBundle.i18nString(PROTOCOL);
+    }
+
+    public static String dataInvalid() {
+        return I18nResourceBundle.i18nString(DATA, INVALID);
+    }
+
+    public static String documentInvalid() {
+        return I18nResourceBundle.i18nString(DOCUMENT, INVALID);
     }
 
     public String fileUploadFailed() {
