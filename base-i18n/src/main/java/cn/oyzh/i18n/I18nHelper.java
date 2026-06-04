@@ -275,6 +275,8 @@ public class I18nHelper {
 
     public static final String UPLOAD = "base.upload";
 
+    public static final String DATE = "base.date";
+
     public static final String SKIP = "base.skip";
 
     public static final String RETRY = "base.retry";
@@ -339,6 +341,8 @@ public class I18nHelper {
 
     public static final String DOCUMENT = "base.document";
 
+    public static final String CHUNK_SIZE = "base.chunkSize";
+
     public static final String INVALID = "base.invalid";
 
     public static final String PARSE = "base.parse";
@@ -360,6 +364,8 @@ public class I18nHelper {
     public static final String TITLE_CONNECT_TRANSPORT = "base.title.connect.transport";
 
     public static final String FILE_NAME = "base.fileName";
+
+    public static final String LENGTH = "base.length";
 
     public static final String FILE_PATH = "base.filePath";
 
@@ -1471,6 +1477,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FILE_NAME);
     }
 
+    public static String length() {
+        return I18nResourceBundle.i18nString(LENGTH);
+    }
+
     public static String charset() {
         return I18nResourceBundle.i18nString(CHARSET);
     }
@@ -2249,6 +2259,10 @@ public class I18nHelper {
 
     public static String pleaseInputCollectionName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, COLLECTION, NAME);
+    }
+
+    public static String pleaseInputBucketName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, BUCKET, NAME);
     }
 
     public static String pleaseInputFolder1Name() {
@@ -3096,6 +3110,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(OPEN, COLLECTION);
     }
 
+    public static String openBucket() {
+        return I18nResourceBundle.i18nString(OPEN, BUCKET);
+    }
+
     public static String example() {
         return I18nResourceBundle.i18nString(EXAMPLE);
     }
@@ -3326,6 +3344,10 @@ public class I18nHelper {
 
     public static String clearCollection() {
         return I18nResourceBundle.i18nString(CLEAR, COLLECTION);
+    }
+
+    public static String clearBucket() {
+        return I18nResourceBundle.i18nString(CLEAR, BUCKET);
     }
 
     public static String truncate() {
@@ -4286,8 +4308,16 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(UPLOAD);
     }
 
+    public static String uploadDate() {
+        return I18nResourceBundle.i18nString(UPLOAD, DATE);
+    }
+
     public static String uploadFailed() {
         return I18nResourceBundle.i18nString(UPLOAD, FAILED);
+    }
+
+    public static String uploadFileFailed() {
+        return I18nResourceBundle.i18nString(UPLOAD, FILE, FAILED);
     }
 
     public static String uploadSuccess() {
@@ -4853,6 +4883,14 @@ public class I18nHelper {
 
     public static String documentInvalid() {
         return I18nResourceBundle.i18nString(DOCUMENT, INVALID);
+    }
+
+    public static String chunkSize() {
+        return I18nResourceBundle.i18nString(CHUNK_SIZE);
+    }
+
+    public static String id() {
+        return I18nResourceBundle.i18nString(ID);
     }
 
     public String fileUploadFailed() {

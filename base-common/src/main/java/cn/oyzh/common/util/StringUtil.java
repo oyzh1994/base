@@ -605,4 +605,24 @@ public class StringUtil {
         }
         return str.substring(0, str.length() - 1);
     }
+
+    /**
+     * 转换为大写
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String toUpperCase(String str) {
+        return str == null ? null : str.toUpperCase();
+    }
+
+    /**
+     * 转换为小写
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String toLowerCase(String str) {
+        return str == null ? null : str.toLowerCase();
+    }
 }
