@@ -4893,6 +4893,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ID);
     }
 
+    public static String restart() {
+        return I18nResourceBundle.i18nString(RESTART);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
