@@ -1,6 +1,5 @@
 package cn.oyzh.common.json;
 
-import cn.oyzh.common.util.IOUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -141,7 +140,7 @@ public class JSONUtil {
     public static boolean isJson(String json) {
         if (json != null && !json.isBlank() && (json.contains("{") || json.contains("["))) {
             try {
-                JSONValidator.from(json).validate();
+                return JSONValidator.from(json).validate();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
