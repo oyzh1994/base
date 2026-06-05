@@ -1,11 +1,11 @@
 package cn.oyzh.common.json;
 
 import cn.oyzh.common.util.IOUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.JSONValidator;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONValidator;
+import com.alibaba.fastjson2.JSONWriter;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +27,7 @@ public class JSONUtil {
     public static String toPretty(Object obj) {
         if (obj != null) {
             try {
-                return JSON.toJSONString(obj, SerializerFeature.PrettyFormat);
+                return JSON.toJSONString(obj, JSONWriter.Feature.PrettyFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -45,7 +45,7 @@ public class JSONUtil {
         if (str != null) {
             try {
                 Object json = JSON.parse(str);
-                return JSON.toJSONString(json, SerializerFeature.PrettyFormat);
+                return JSON.toJSONString(json, JSONWriter.Feature.PrettyFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -140,15 +140,10 @@ public class JSONUtil {
      */
     public static boolean isJson(String json) {
         if (json != null && !json.isBlank() && (json.contains("{") || json.contains("["))) {
-            JSONValidator validator = null;
             try {
-                validator = JSONValidator.from(json);
-                return validator.validate();
-                //                return JSON.isValid(json);
+                JSONValidator.from(json).validate();
             } catch (Exception ex) {
                 ex.printStackTrace();
-            } finally {
-                IOUtil.close(validator);
             }
         }
         return false;
