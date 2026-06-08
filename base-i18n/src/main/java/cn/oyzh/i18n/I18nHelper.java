@@ -135,6 +135,8 @@ public class I18nHelper {
 
     public static final String ALL_TYPE = "base.allType";
 
+    public static final String JS_TYPE = "base.jsType";
+
     public static final String JSON_TYPE = "base.jsonType";
 
     public static final String PNG_TYPE = "base.pngType";
@@ -3496,6 +3498,10 @@ public class I18nHelper {
 
     public static String allType() {
         return I18nResourceBundle.i18nString(ALL_TYPE);
+    }
+
+    public static String jsType() {
+        return I18nResourceBundle.i18nString(JS_TYPE);
     }
 
     public static String jsonType() {

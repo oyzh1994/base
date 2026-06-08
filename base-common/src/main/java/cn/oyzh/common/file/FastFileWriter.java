@@ -36,6 +36,7 @@ public class FastFileWriter implements Closeable {
                 line += "\n";
             }
             this.writer.append(line);
+            this.fulsh();
         }
     }
 
@@ -50,6 +51,7 @@ public class FastFileWriter implements Closeable {
                 }
             }
             this.writer.append(sb.toString());
+            this.fulsh();
         }
     }
 
@@ -78,20 +80,25 @@ public class FastFileWriter implements Closeable {
         }
     }
 
+    public void fulsh() throws IOException {
+        this.writer.flush();
+    }
+
     @Override
     public void close() {
         try {
             if (this.writer != null) {
+                this.fulsh();
                 this.writer.close();
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        this.close();
-        super.finalize();
-    }
+    //
+    //    @Override
+    //    protected void finalize() throws Throwable {
+    //        this.close();
+    //        super.finalize();
+    //    }
 }
