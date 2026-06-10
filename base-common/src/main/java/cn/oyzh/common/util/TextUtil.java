@@ -775,8 +775,8 @@ public class TextUtil {
      * @return 结果
      */
     public static String getLastLine(String content, String lineSeparator) {
-        int lastNewline = content.lastIndexOf(System.lineSeparator());
-        return lastNewline >= 0 ? content.substring(lastNewline + 1) : content;
+        int lastNewline = content.lastIndexOf(lineSeparator);
+        return lastNewline >= 0 ? content.substring(lastNewline + lineSeparator.length()) : content;
     }
 
     /**
