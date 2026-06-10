@@ -3,6 +3,8 @@ package cn.oyzh.common.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 反射工具类
@@ -167,13 +169,13 @@ public class ReflectUtil {
         return allMethods;
     }
 
-//    public static Object invoke(Object obj, Method method) throws InvocationTargetException, IllegalAccessException {
-//        if (method == null) {
-//            return null;
-//        }
-//        method.setAccessible(true);
-//        return method.invoke(obj);
-//    }
+    //    public static Object invoke(Object obj, Method method) throws InvocationTargetException, IllegalAccessException {
+    //        if (method == null) {
+    //            return null;
+    //        }
+    //        method.setAccessible(true);
+    //        return method.invoke(obj);
+    //    }
 
     public static Object invoke(Object obj, String methodName, Object... params) {
         Method method;
@@ -191,7 +193,8 @@ public class ReflectUtil {
 
     /**
      * 调用
-     * @param obj 对象
+     *
+     * @param obj    对象
      * @param method 方法
      * @param params 参数
      * @return 结果
@@ -206,7 +209,8 @@ public class ReflectUtil {
 
     /**
      * 仅调用
-     * @param obj 对象
+     *
+     * @param obj    对象
      * @param method 方法
      * @param params 参数
      * @return 结果
@@ -220,5 +224,23 @@ public class ReflectUtil {
             }
         }
         return null;
+    }
+
+    private static List<String> objectMethodNames;
+
+    public static List<String> objectMethodNames() {
+        if (objectMethodNames == null) {
+            objectMethodNames = new ArrayList<>();
+            objectMethodNames.add("toString");
+            objectMethodNames.add("notify");
+            objectMethodNames.add("notifyAll");
+            objectMethodNames.add("wait");
+            objectMethodNames.add("getClass");
+            objectMethodNames.add("hashCode");
+            objectMethodNames.add("equals");
+            objectMethodNames.add("clone");
+            objectMethodNames.add("finalize");
+        }
+        return objectMethodNames;
     }
 }

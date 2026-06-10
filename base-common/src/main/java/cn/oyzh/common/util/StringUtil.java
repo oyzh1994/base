@@ -313,11 +313,28 @@ public class StringUtil {
         return builder.toString();
     }
 
+    /**
+     * 计算字符出现的次数
+     *
+     * @param s   字符
+     * @param str 查找的字符
+     * @return 结果
+     */
     public static long count(String s, String str) {
         if (s == null || str == null) {
             return 0;
         }
-        return s.split(str).length;
+        int index = 0;
+        int count = 0;
+        while (true) {
+            index = s.indexOf(str, index);
+            if (index == -1) {
+                break;
+            }
+            index++;
+            count++;
+        }
+        return count;
     }
 
     /**
