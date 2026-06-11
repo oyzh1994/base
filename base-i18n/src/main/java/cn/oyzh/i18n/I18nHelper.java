@@ -3316,6 +3316,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RENAME, TABLE);
     }
 
+    public static String renameCollection() {
+        return I18nResourceBundle.i18nString(RENAME, COLLECTION);
+    }
+
     public static String renameView() {
         return I18nResourceBundle.i18nString(RENAME, VIEW);
     }

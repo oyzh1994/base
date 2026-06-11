@@ -193,6 +193,22 @@ public class JSONUtil {
     }
 
     /**
+     * 解析为bean
+     *
+     * @param obj 对象
+     * @return java对象
+     */
+    public static <T> T toBean(Object obj, Class<T> beanClass) {
+        try {
+            JSONObject object = JSONObject.parseObject(toJson(obj));
+            return object.toJavaObject(beanClass);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 转换为java对象列表
      *
      * @param json json字符串
