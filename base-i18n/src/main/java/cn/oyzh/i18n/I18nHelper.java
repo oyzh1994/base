@@ -3272,6 +3272,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(DELETE, RECORD);
     }
 
+    public static String deleteDocument() {
+        return I18nResourceBundle.i18nString(DELETE, DOCUMENT);
+    }
+
     public static String setToNull() {
         return I18nResourceBundle.i18nString(SET_TO_NULL);
     }
