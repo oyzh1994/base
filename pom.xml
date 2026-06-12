@@ -56,10 +56,10 @@
         <guava.version>33.5.0-jre</guava.version>
         <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
         <netty.version>4.2.10.Final</netty.version>
-       <fastjson.version>2.0.62</fastjson.version>
+        <fastjson.version>2.0.62</fastjson.version>
         <!-- <fastjson.version>1.2.83</fastjson.version> -->
+        <jgit.version>7.7.0.202606012155-r</jgit.version>
         <bouncycastle.version>1.84</bouncycastle.version>
-        <jgit.version>7.6.0.202603022253-r</jgit.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
