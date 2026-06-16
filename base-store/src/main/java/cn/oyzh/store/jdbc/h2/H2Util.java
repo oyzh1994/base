@@ -22,17 +22,8 @@ public class H2Util {
         if (data == null) {
             return "";
         }
-        if (data instanceof byte[]) {
+        if (data instanceof byte[] || data instanceof Byte[] || data instanceof Number) {
             return data;
-        }
-        if (data instanceof Byte[]) {
-            return data;
-        }
-        if (data instanceof Number) {
-            return data;
-        }
-        if (data instanceof CharSequence sequence) {
-            return "'" + sequence + "'";
         }
         return "'" + data + "'";
     }
