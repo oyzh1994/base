@@ -1337,6 +1337,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(CONTENT);
     }
 
+    public static String contentType() {
+        return I18nResourceBundle.i18nString(CONTENT,TYPE);
+    }
+
     public static String custom() {
         return I18nResourceBundle.i18nString(CUSTOM);
     }
