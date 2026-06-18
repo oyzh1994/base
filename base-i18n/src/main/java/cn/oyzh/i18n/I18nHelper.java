@@ -179,6 +179,8 @@ public class I18nHelper {
 
     public static final String CONTENT = "base.content";
 
+    public static final String CONTENT_TYPE = "base.contentType";
+
     public static final String CUSTOM = "base.custom";
 
     public static final String COMMENT = "base.comment";
@@ -1338,7 +1340,7 @@ public class I18nHelper {
     }
 
     public static String contentType() {
-        return I18nResourceBundle.i18nString(CONTENT,TYPE);
+        return I18nResourceBundle.i18nString(CONTENT_TYPE);
     }
 
     public static String custom() {
@@ -1459,6 +1461,10 @@ public class I18nHelper {
 
     public static String invalidFormat() {
         return I18nResourceBundle.i18nString(INVALID, FORMAT);
+    }
+
+    public static String invalidMetadata() {
+        return I18nResourceBundle.i18nString(INVALID, METADATA);
     }
 
     public static String invalidFile() {
