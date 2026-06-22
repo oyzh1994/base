@@ -153,6 +153,8 @@ public class I18nHelper {
 
     public static final String RUN_SQL_FILE = "base.runSqlFile";
 
+    public static final String RUN_SCRIPT_FILE = "base.runScriptFile";
+
     public static final String SELECTED = "base.selected";
 
     public static final String EXPORT_IN_PROGRESS = "base.exportInProgress";
@@ -508,6 +510,8 @@ public class I18nHelper {
     public static final String AS = "base.as";
 
     public static final String INSERT = "base.insert";
+
+    public static final String SCRIPT = "base.script";
 
     public static final String STATEMENT = "base.statement";
 
@@ -2508,8 +2512,16 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(COPY, AS, INSERT, STATEMENT);
     }
 
+    public static String copyAsInsertScript() {
+        return I18nResourceBundle.i18nString(COPY, AS, INSERT, SCRIPT);
+    }
+
     public static String copyAsUpdateStatement() {
         return I18nResourceBundle.i18nString(COPY, AS, UPDATE, STATEMENT);
+    }
+
+    public static String copyAsUpdateScript() {
+        return I18nResourceBundle.i18nString(COPY, AS, UPDATE, SCRIPT);
     }
 
     public static String copyThisSession() {
@@ -3530,6 +3542,10 @@ public class I18nHelper {
 
     public static String runSqlFile() {
         return I18nResourceBundle.i18nString(RUN_SQL_FILE);
+    }
+
+    public static String runScriptFile() {
+        return I18nResourceBundle.i18nString(RUN_SCRIPT_FILE);
     }
 
     public static String run() {
