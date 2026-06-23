@@ -4691,6 +4691,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, BUCKET);
     }
 
+    public static String bucket() {
+        return I18nResourceBundle.i18nString( BUCKET);
+    }
+
     public static String updateBucket() {
         return I18nResourceBundle.i18nString(UPDATE, BUCKET);
     }
@@ -4941,6 +4945,10 @@ public class I18nHelper {
 
     public static String metadata() {
         return I18nResourceBundle.i18nString(METADATA);
+    }
+
+    public static String collection() {
+        return I18nResourceBundle.i18nString(COLLECTION);
     }
 
     public String fileUploadFailed() {
