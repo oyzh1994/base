@@ -43,7 +43,7 @@ public class EventConfig {
     public static EventConfig DEFAULT = new EventConfig();
 
     static {
-        SYNC.async = true;
+        SYNC.async = false;
         SYNC.verbose = true;
 
         ASYNC.async = true;

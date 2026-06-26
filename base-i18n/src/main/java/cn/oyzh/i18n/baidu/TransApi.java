@@ -30,7 +30,7 @@ public class TransApi {
 
     public String trans(String query, String from, String to) {
         int count = 0;
-        while (count++ < 30) {
+        while (count++ <= 30) {
             String result = this.doTrans(query, from, to);
             if (result == null || (StringUtil.contains(result, "error_msg") && StringUtil.containsAny(result, "Invalid Access Limit", "TIMEOUT"))) {
                 ThreadUtil.sleep(500);

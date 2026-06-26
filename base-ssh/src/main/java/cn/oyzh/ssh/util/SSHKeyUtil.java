@@ -31,21 +31,26 @@ public class SSHKeyUtil {
      */
     public static String[] generateEd25519(int keySize, String password) throws Exception {
         KeyPair keyPair = KeyUtils.generateKeyPair(KeyPairProvider.SSH_ED25519, keySize);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
-        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        OpenSSHKeyEncryptionContext context = null;
-        if (StringUtil.isNotBlank(password)) {
-            context = new OpenSSHKeyEncryptionContext();
-            context.setCipherType("256");
-            context.setPassword(password);
+        ByteArrayOutputStream baos = null;
+        ByteArrayOutputStream baos1 = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
+            baos1 = new ByteArrayOutputStream();
+            OpenSSHKeyEncryptionContext context = null;
+            if (StringUtil.isNotBlank(password)) {
+                context = new OpenSSHKeyEncryptionContext();
+                context.setCipherType("256");
+                context.setPassword(password);
+            }
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
+            String publicKey = baos.toString();
+            String privateKey = baos1.toString();
+            return new String[]{publicKey, privateKey};
+        } finally {
+            IOUtil.close(baos);
+            IOUtil.close(baos1);
         }
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
-        String publicKey = baos.toString();
-        String privateKey = baos1.toString();
-        baos.close();
-        baos1.close();
-        return new String[]{publicKey, privateKey};
     }
 
     /***
@@ -57,21 +62,26 @@ public class SSHKeyUtil {
      */
     public static String[] generateRsa(int keySize, String password) throws Exception {
         KeyPair keyPair = KeyUtils.generateKeyPair(KeyPairProvider.SSH_RSA, keySize);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
-        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        OpenSSHKeyEncryptionContext context = null;
-        if (StringUtil.isNotBlank(password)) {
-            context = new OpenSSHKeyEncryptionContext();
-            context.setCipherType("256");
-            context.setPassword(password);
+        ByteArrayOutputStream baos = null;
+        ByteArrayOutputStream baos1 = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
+            baos1 = new ByteArrayOutputStream();
+            OpenSSHKeyEncryptionContext context = null;
+            if (StringUtil.isNotBlank(password)) {
+                context = new OpenSSHKeyEncryptionContext();
+                context.setCipherType("256");
+                context.setPassword(password);
+            }
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
+            String publicKey = baos.toString();
+            String privateKey = baos1.toString();
+            return new String[]{publicKey, privateKey};
+        } finally {
+            IOUtil.close(baos);
+            IOUtil.close(baos1);
         }
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
-        String publicKey = baos.toString();
-        String privateKey = baos1.toString();
-        baos.close();
-        baos1.close();
-        return new String[]{publicKey, privateKey};
     }
 
     /***
@@ -83,21 +93,26 @@ public class SSHKeyUtil {
      */
     public static String[] generateDsa(int keySize, String password) throws Exception {
         KeyPair keyPair = KeyUtils.generateKeyPair(KeyPairProvider.SSH_DSS, keySize);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
-        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        OpenSSHKeyEncryptionContext context = null;
-        if (StringUtil.isNotBlank(password)) {
-            context = new OpenSSHKeyEncryptionContext();
-            context.setCipherType("256");
-            context.setPassword(password);
+        ByteArrayOutputStream baos = null;
+        ByteArrayOutputStream baos1 = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
+            baos1 = new ByteArrayOutputStream();
+            OpenSSHKeyEncryptionContext context = null;
+            if (StringUtil.isNotBlank(password)) {
+                context = new OpenSSHKeyEncryptionContext();
+                context.setCipherType("256");
+                context.setPassword(password);
+            }
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
+            String publicKey = baos.toString();
+            String privateKey = baos1.toString();
+            return new String[]{publicKey, privateKey};
+        } finally {
+            IOUtil.close(baos);
+            IOUtil.close(baos1);
         }
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
-        String publicKey = baos.toString();
-        String privateKey = baos1.toString();
-        baos.close();
-        baos1.close();
-        return new String[]{publicKey, privateKey};
     }
 
     /***
@@ -115,21 +130,26 @@ public class SSHKeyUtil {
             default -> throw new IllegalStateException("Unexpected value: " + keySize);
         };
         KeyPair keyPair = KeyUtils.generateKeyPair(keyType, keySize);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
-        ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
-        OpenSSHKeyEncryptionContext context = null;
-        if (StringUtil.isNotBlank(password)) {
-            context = new OpenSSHKeyEncryptionContext();
-            context.setCipherType("256");
-            context.setPassword(password);
+        ByteArrayOutputStream baos = null;
+        ByteArrayOutputStream baos1 = null;
+        try {
+            baos = new ByteArrayOutputStream();
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePublicKey(keyPair.getPublic(), null, baos);
+            baos1 = new ByteArrayOutputStream();
+            OpenSSHKeyEncryptionContext context = null;
+            if (StringUtil.isNotBlank(password)) {
+                context = new OpenSSHKeyEncryptionContext();
+                context.setCipherType("256");
+                context.setPassword(password);
+            }
+            OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
+            String publicKey = baos.toString();
+            String privateKey = baos1.toString();
+            return new String[]{publicKey, privateKey};
+        } finally {
+            IOUtil.close(baos);
+            IOUtil.close(baos1);
         }
-        OpenSSHKeyPairResourceWriter.INSTANCE.writePrivateKey(keyPair, null, context, baos1);
-        String publicKey = baos.toString();
-        String privateKey = baos1.toString();
-        baos.close();
-        baos1.close();
-        return new String[]{publicKey, privateKey};
     }
 
     /**
@@ -237,13 +257,16 @@ public class SSHKeyUtil {
             passwordProvider = FilePasswordProvider.of(password);
         }
         FileInputStream fis = new FileInputStream(path);
-        Iterable<KeyPair> keyPairs = SecurityUtils.loadKeyPairIdentities(
-                null,
-                null,
-                fis,
-                passwordProvider
-        );
-        IOUtil.close(fis);
-        return keyPairs;
+        try {
+            Iterable<KeyPair> keyPairs = SecurityUtils.loadKeyPairIdentities(
+                    null,
+                    null,
+                    fis,
+                    passwordProvider
+            );
+            return keyPairs;
+        } finally {
+            IOUtil.close(fis);
+        }
     }
 }

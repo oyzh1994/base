@@ -1,9 +1,6 @@
 package cn.oyzh.store.jdbc.param;
 
 
-import cn.oyzh.store.jdbc.sqlite.OrderByParam;
-import cn.oyzh.store.jdbc.sqlite.OrderByParams;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +10,7 @@ import java.util.List;
  */
 public class SelectParam {
 
-    public static final SelectParam EMPTY = new SelectParam();
+//    public static final SelectParam EMPTY = new SelectParam();
 
     private Long limit;
 

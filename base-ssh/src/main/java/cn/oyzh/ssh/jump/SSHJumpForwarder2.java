@@ -4,13 +4,13 @@ import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.ssh.SSHException;
 import cn.oyzh.ssh.SSHForwarder2;
 import cn.oyzh.ssh.domain.SSHConnect;
 import cn.oyzh.ssh.util.SSHAgentConnectorFactory;
 import cn.oyzh.ssh.util.SSHKeyUtil;
 import cn.oyzh.ssh.util.SSHUtil;
-import com.jcraft.jsch.JSchException;
 import org.apache.sshd.client.ClientBuilder;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.auth.keyboard.UserAuthKeyboardInteractiveFactory;
@@ -41,6 +41,8 @@ import java.security.KeyPair;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ssh跳板转发器
@@ -49,6 +51,11 @@ import java.util.List;
  * @since 2025/07/02
  */
 public class SSHJumpForwarder2 extends SSHForwarder2 {
+
+    /**
+     * 客户端列表
+     */
+    private final Set<SshClient> clients = ConcurrentHashMap.newKeySet();
 
     private UserInteraction userInteraction;
 
@@ -276,6 +283,7 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
                     JulLog.info("ssh跳板机连接成功 本地端口:{} 远程端口:{} connect:{}", localPort, remotePort, connect);
                     forwardPort = localPort;
                 } catch (Exception ex) {
+                    this.close();
                     throw new SSHException(ex);
                 }
             }
@@ -286,7 +294,12 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
     @Override
     public void close() {
         super.close();
-        this.userInteraction = null;
+        // 清理客户端
+        for (SshClient client : this.clients) {
+            IOUtil.close(client);
+        }
+        this.clients.clear();
+//        this.userInteraction = null;
 //        this.verifyFailureCallback = null;
     }
 }

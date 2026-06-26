@@ -472,7 +472,22 @@ public class RuntimeUtil {
     public static Process exec(String[] cmdArr, String[] envp, File dir) {
         try {
             // 执行命令
-            Process process = Runtime.getRuntime().exec(cmdArr, envp, dir);
+//            Process process = Runtime.getRuntime().exec(cmdArr, envp, dir);
+            ProcessBuilder pb = new ProcessBuilder(cmdArr);
+            if (envp != null) {
+                pb.environment().clear();          // 清除继承的环境变量（可选）
+                for (String env : envp) {
+                    if (env.contains("=")) {
+                        String[] parts = env.split("=", 2);
+                        pb.environment().put(parts[0], parts[1]);
+                    }
+                }
+            }
+            if (dir != null) {
+                pb.directory(dir);
+            }
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
             // String line;
             // // 读取命令的输出
             // BufferedReader inputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));

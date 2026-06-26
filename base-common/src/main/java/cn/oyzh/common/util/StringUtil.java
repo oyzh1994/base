@@ -313,11 +313,28 @@ public class StringUtil {
         return builder.toString();
     }
 
+    /**
+     * 计算字符出现的次数
+     *
+     * @param s   字符
+     * @param str 查找的字符
+     * @return 结果
+     */
     public static long count(String s, String str) {
         if (s == null || str == null) {
             return 0;
         }
-        return s.split(str).length;
+        int index = 0;
+        int count = 0;
+        while (true) {
+            index = s.indexOf(str, index);
+            if (index == -1) {
+                break;
+            }
+            index++;
+            count++;
+        }
+        return count;
     }
 
     /**
@@ -591,5 +608,38 @@ public class StringUtil {
         String s1 = str.substring(0, index);
         String s2 = str.substring(index + source.length());
         return s1 + target + s2;
+    }
+
+    /**
+     * 移除最后一个字符
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String removeLast(String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
+        return str.substring(0, str.length() - 1);
+    }
+
+    /**
+     * 转换为大写
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String toUpperCase(String str) {
+        return str == null ? null : str.toUpperCase();
+    }
+
+    /**
+     * 转换为小写
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String toLowerCase(String str) {
+        return str == null ? null : str.toLowerCase();
     }
 }

@@ -48,7 +48,7 @@ public class JdbcConn implements AutoCloseable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return this.status.get() == 1;
+        return this.status.get() == 0;
     }
 
     /**
@@ -57,8 +57,7 @@ public class JdbcConn implements AutoCloseable {
      * @return Connection
      */
     public Connection takeoff() {
-        this.status.set(1);
-        return this.connection;
+        return this.status.compareAndSet(0, 1) ? this.connection : null;
     }
 
     /**

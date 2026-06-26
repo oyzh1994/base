@@ -12,6 +12,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 
 /**
@@ -152,6 +153,18 @@ public class SSHUtil {
 //    }
 
     /**
+     * ansi正则
+     */
+    private static Pattern ANSI_PATTERN;
+
+    private static Pattern ansiPattern(){
+        if (ANSI_PATTERN == null) {
+            ANSI_PATTERN = Pattern.compile("\u001B\\[[;\\d]*[ -/]*[@-~]");
+        }
+        return ANSI_PATTERN;
+    }
+
+    /**
      * 移除ansi字符
      *
      * @param output 内容
@@ -161,9 +174,7 @@ public class SSHUtil {
         if (StringUtil.isBlank(output)) {
             return output;
         }
-        String ansiRegex = "\u001B\\[[;\\d]*[ -/]*[@-~]";
-        output = output.replaceAll(ansiRegex, "");
-        return output;
+        return ansiPattern().matcher(output).replaceAll("");
     }
 
     /**

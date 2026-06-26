@@ -6,7 +6,7 @@ import cn.oyzh.store.jdbc.param.PageParam;
 import cn.oyzh.store.jdbc.param.QueryParam;
 import cn.oyzh.store.jdbc.param.QueryParams;
 import cn.oyzh.store.jdbc.param.SelectParam;
-import cn.oyzh.store.jdbc.sqlite.DeleteParam;
+import cn.oyzh.store.jdbc.param.DeleteParam;
 //import cn.oyzh.store.jdbc.sqlite.SqliteStandardOperator;
 
 import java.io.Serializable;
@@ -126,7 +126,7 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
     }
 
     public List<M> selectList() {
-        return this.selectList(SelectParam.EMPTY);
+        return this.selectList((SelectParam) null);
     }
 
     public List<M> selectList(QueryParam queryParam) {

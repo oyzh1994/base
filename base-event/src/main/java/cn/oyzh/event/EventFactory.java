@@ -18,17 +18,17 @@ public class EventFactory {
     /**
      * 同步配置
      */
-    private static EventConfig syncEventConfig;
+    private static volatile EventConfig syncEventConfig;
 
     /**
      * 异步配置
      */
-    private static EventConfig asyncEventConfig;
+    private static volatile EventConfig asyncEventConfig;
 
     /**
      * 默认配置
      */
-    private static EventConfig defaultEventConfig;
+    private static volatile EventConfig defaultEventConfig;
 
     /**
      * 设置事件总线类
@@ -73,7 +73,11 @@ public class EventFactory {
      */
     public static EventConfig syncEventConfig() {
         if (syncEventConfig == null) {
-            syncEventConfig = EventConfig.SYNC;
+            synchronized (EventFactory.class) {
+                if (defaultEventConfig == null) {
+                    syncEventConfig = EventConfig.SYNC;
+                }
+            }
         }
         return syncEventConfig;
     }
@@ -85,7 +89,11 @@ public class EventFactory {
      */
     public static EventConfig asyncEventConfig() {
         if (asyncEventConfig == null) {
-            asyncEventConfig = EventConfig.ASYNC;
+            synchronized (EventFactory.class) {
+                if (defaultEventConfig == null) {
+                    asyncEventConfig = EventConfig.ASYNC;
+                }
+            }
         }
         return asyncEventConfig;
     }
@@ -97,7 +105,11 @@ public class EventFactory {
      */
     public static EventConfig defaultEventConfig() {
         if (defaultEventConfig == null) {
-            defaultEventConfig = EventConfig.DEFAULT;
+            synchronized (EventFactory.class) {
+                if (defaultEventConfig == null) {
+                    defaultEventConfig = EventConfig.DEFAULT;
+                }
+            }
         }
         return defaultEventConfig;
     }

@@ -23,14 +23,14 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- ssh库 -->
-        <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
-        <dependency>
-            <groupId>com.github.mwiede</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        &lt;!&ndash; ssh库 &ndash;&gt;-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.mwiede/jsch &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.mwiede</groupId>-->
+<!--            <artifactId>jsch</artifactId>-->
+<!--            <version>${jsch.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <!-- &lt;!&ndash; ssh密钥库 &ndash;&gt; -->
         <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on &ndash;&gt; -->
@@ -48,13 +48,13 @@
         <!--     <scope>provided</scope> -->
         <!-- </dependency> -->
 
-        <!-- https://mvnrepository.com/artifact/com.hierynomus/sshj -->
-        <dependency>
-            <groupId>com.hierynomus</groupId>
-            <artifactId>sshj</artifactId>
-            <version>${sshj.version}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.hierynomus/sshj &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.hierynomus</groupId>-->
+<!--            <artifactId>sshj</artifactId>-->
+<!--            <version>${sshj.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.sshd/sshd-common &ndash;&gt; -->
         <!-- <dependency> -->
@@ -100,7 +100,7 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
-            <scope>provided</scope>
+<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>

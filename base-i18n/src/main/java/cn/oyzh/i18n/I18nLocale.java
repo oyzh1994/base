@@ -9,7 +9,7 @@ import java.util.Locale;
  * @author oyzh
  * @since 2025-01-23
  */
-public class I1n8Locale {
+public class I18nLocale {
 
     private String name;
 
@@ -19,7 +19,7 @@ public class I1n8Locale {
 
     private String description;
 
-    public I1n8Locale(String name, Locale locale, String displayName, String description) {
+    public I18nLocale(String name, Locale locale, String displayName, String description) {
         this.name = name;
         this.locale = locale;
         this.displayName = displayName;

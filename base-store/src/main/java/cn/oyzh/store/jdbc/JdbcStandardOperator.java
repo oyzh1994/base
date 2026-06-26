@@ -2,12 +2,12 @@ package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.store.jdbc.param.DeleteParam;
+import cn.oyzh.store.jdbc.param.OrderByParam;
 import cn.oyzh.store.jdbc.param.PageParam;
 import cn.oyzh.store.jdbc.param.QueryParam;
 import cn.oyzh.store.jdbc.param.QueryParams;
 import cn.oyzh.store.jdbc.param.SelectParam;
-import cn.oyzh.store.jdbc.sqlite.DeleteParam;
-import cn.oyzh.store.jdbc.sqlite.OrderByParam;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -189,7 +189,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
     public Map<String, Object> selectOne(SelectParam selectParam) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT ");
-        if (CollectionUtil.isEmpty(selectParam.getQueryColumns())) {
+        if (selectParam == null || CollectionUtil.isEmpty(selectParam.getQueryColumns())) {
             sql.append("*");
         } else {
             for (String queryColumn : selectParam.getQueryColumns()) {
@@ -199,35 +199,37 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
         sql.append(" FROM ");
         sql.append(JdbcUtil.wrap(tableName));
-        if (CollectionUtil.isNotEmpty(selectParam.getQueryParams())) {
-            boolean first = true;
-            for (QueryParam queryParam : selectParam.getQueryParams()) {
-                if (first) {
-                    first = false;
-                    sql.append(" WHERE ");
-                } else {
-                    sql.append(" AND ");
+        if (selectParam != null) {
+            if (CollectionUtil.isNotEmpty(selectParam.getQueryParams())) {
+                boolean first = true;
+                for (QueryParam queryParam : selectParam.getQueryParams()) {
+                    if (first) {
+                        first = false;
+                        sql.append(" WHERE ");
+                    } else {
+                        sql.append(" AND ");
+                    }
+                    sql.append(JdbcUtil.wrap(queryParam.getName()));
+                    sql.append(queryParam.getOperator());
+                    sql.append(JdbcUtil.wrapData(queryParam.getData()));
                 }
-                sql.append(JdbcUtil.wrap(queryParam.getName()));
-                sql.append(queryParam.getOperator());
-                sql.append(JdbcUtil.wrapData(queryParam.getData()));
             }
-        }
-        // 处理order by
-        if (CollectionUtil.isNotEmpty(selectParam.getOrderByParams())) {
-            sql.append(" ORDER BY ");
-            for (OrderByParam orderByParam : selectParam.getOrderByParams()) {
-                sql.append(orderByParam.getName());
-                sql.append(" ");
-                sql.append(orderByParam.getType().toUpperCase()).append(",");
+            // 处理order by
+            if (CollectionUtil.isNotEmpty(selectParam.getOrderByParams())) {
+                sql.append(" ORDER BY ");
+                for (OrderByParam orderByParam : selectParam.getOrderByParams()) {
+                    sql.append(orderByParam.getName());
+                    sql.append(" ");
+                    sql.append(orderByParam.getType().toUpperCase()).append(",");
+                }
+                StringUtil.deleteLast(sql);
             }
-            StringUtil.deleteLast(sql);
-        }
-        // 处理指定位置
-        if (selectParam.getLimit() != null) {
-            sql.append(" LIMIT ").append(selectParam.getLimit());
-            if (selectParam.getOffset() != null) {
-                sql.append(" OFFSET ").append(selectParam.getOffset());
+            // 处理指定位置
+            if (selectParam.getLimit() != null) {
+                sql.append(" LIMIT ").append(selectParam.getLimit());
+                if (selectParam.getOffset() != null) {
+                    sql.append(" OFFSET ").append(selectParam.getOffset());
+                }
             }
         }
         JdbcConn connection = JdbcManager.takeoff();
@@ -252,7 +254,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
     public List<Map<String, Object>> selectList(SelectParam selectParam) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT ");
-        if (CollectionUtil.isEmpty(selectParam.getQueryColumns())) {
+        if (selectParam == null || CollectionUtil.isEmpty(selectParam.getQueryColumns())) {
             sql.append("*");
         } else {
             for (String queryColumn : selectParam.getQueryColumns()) {
@@ -262,35 +264,37 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
         sql.append(" FROM ");
         sql.append(tableName);
-        if (CollectionUtil.isNotEmpty(selectParam.getQueryParams())) {
-            boolean first = true;
-            for (QueryParam queryParam : selectParam.getQueryParams()) {
-                if (first) {
-                    first = false;
-                    sql.append(" WHERE ");
-                } else {
-                    sql.append(" AND ");
+        if (selectParam != null) {
+            if (CollectionUtil.isNotEmpty(selectParam.getQueryParams())) {
+                boolean first = true;
+                for (QueryParam queryParam : selectParam.getQueryParams()) {
+                    if (first) {
+                        first = false;
+                        sql.append(" WHERE ");
+                    } else {
+                        sql.append(" AND ");
+                    }
+                    sql.append(JdbcUtil.wrap(queryParam.getName()));
+                    sql.append(queryParam.getOperator());
+                    sql.append(JdbcUtil.wrapData(queryParam.getData()));
                 }
-                sql.append(JdbcUtil.wrap(queryParam.getName()));
-                sql.append(queryParam.getOperator());
-                sql.append(JdbcUtil.wrapData(queryParam.getData()));
             }
-        }
-        // 处理order by
-        if (CollectionUtil.isNotEmpty(selectParam.getOrderByParams())) {
-            sql.append(" ORDER BY ");
-            for (OrderByParam orderByParam : selectParam.getOrderByParams()) {
-                sql.append(orderByParam.getName());
-                sql.append(" ");
-                sql.append(orderByParam.getType().toUpperCase()).append(",");
+            // 处理order by
+            if (CollectionUtil.isNotEmpty(selectParam.getOrderByParams())) {
+                sql.append(" ORDER BY ");
+                for (OrderByParam orderByParam : selectParam.getOrderByParams()) {
+                    sql.append(orderByParam.getName());
+                    sql.append(" ");
+                    sql.append(orderByParam.getType().toUpperCase()).append(",");
+                }
+                StringUtil.deleteLast(sql);
             }
-            StringUtil.deleteLast(sql);
-        }
-        // 处理指定位置
-        if (selectParam.getLimit() != null) {
-            sql.append(" LIMIT ").append(selectParam.getLimit());
-            if (selectParam.getOffset() != null) {
-                sql.append(" OFFSET ").append(selectParam.getOffset());
+            // 处理指定位置
+            if (selectParam.getLimit() != null) {
+                sql.append(" LIMIT ").append(selectParam.getLimit());
+                if (selectParam.getOffset() != null) {
+                    sql.append(" OFFSET ").append(selectParam.getOffset());
+                }
             }
         }
         JdbcConn connection = JdbcManager.takeoff();
