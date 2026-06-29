@@ -367,10 +367,6 @@ public class StringUtil {
         return builder.toString();
     }
 
-    public static boolean endWith(String str, String endText) {
-        return str != null && str.endsWith(endText);
-    }
-
     public static boolean endWithAny(String str, String... endText) {
         return endsWithAny(str, endText);
     }
@@ -500,12 +496,29 @@ public class StringUtil {
     /**
      * 是否以目标内容结尾
      *
-     * @param str     内容
-     * @param endText 目标内容
+     * @param source     内容
+     * @param target 目标内容
      * @return 结果
      */
-    public static boolean endsWith(String str, String endText) {
-        return endWith(str, endText);
+    public static boolean endsWith(String source, String target) {
+        if (source != null && target != null) {
+            return source.endsWith(target);
+        }
+        return false;
+    }
+
+    /**
+     * 是否以目标内容结尾，忽略大小写
+     *
+     * @param source     内容
+     * @param target 目标内容
+     * @return 结果
+     */
+    public static boolean endsWithIgnoreCase(String source, String target) {
+        if (source != null && target != null) {
+            return source.toLowerCase().endsWith(target.toLowerCase());
+        }
+        return false;
     }
 
     /**
@@ -517,7 +530,7 @@ public class StringUtil {
      */
     public static boolean endsWithAny(String str, String... endText) {
         for (String s : endText) {
-            if (endWith(str, s)) {
+            if (endsWith(str, s)) {
                 return true;
             }
         }
