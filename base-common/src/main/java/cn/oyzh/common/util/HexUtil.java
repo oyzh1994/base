@@ -32,15 +32,11 @@ public class HexUtil {
         if (bytes == null || bytes.length == 0) {
             return "";
         }
-        StringBuilder hexString = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
-            String hex = Integer.toHexString(0xFF & b);
-            if (hex.length() == 1) {
-                hexString.append('0');
-            }
-            hexString.append(hex);
+            sb.append(String.format("%02x", b));
         }
-        String hexStr = hexString.toString();
+        String hexStr = sb.toString();
         if (toUpperCase) {
             return hexStr.toUpperCase();
         }

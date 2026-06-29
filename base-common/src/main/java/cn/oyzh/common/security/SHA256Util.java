@@ -24,7 +24,7 @@ public class SHA256Util {
     public static String sha256Hex(String msg) throws Exception {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] digest = md.digest(msg.getBytes(StandardCharsets.UTF_8));
-        return HexUtil.bytesToHex(digest);
+        return HexUtil.bytesToHex(digest, false);
     }
 
     /**
