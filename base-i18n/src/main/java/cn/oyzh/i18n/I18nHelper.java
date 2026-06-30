@@ -2097,6 +2097,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NAME);
     }
 
+    public static String pleaseInputDatabaseName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT,DATABASE, NAME);
+    }
+
     public static String between() {
         return I18nResourceBundle.i18nString(BETWEEN);
     }
