@@ -673,6 +673,8 @@ public class I18nHelper {
 
     public static final String UNSAVED_AND_CONTINUE = "base.unsavedAndContinue";
 
+    public static final String FILE_TOO_LARGE_AND_CONTINUE = "base.fileTooLargeAndContinue";
+
     public static final String CLOSE_AND_CONTINUE = "base.closeAndContinue";
 
     public static final String FILE_EXISTS_AND_CONTINUE = "base.fileExistsAndContinue";
@@ -5189,5 +5191,10 @@ public class I18nHelper {
 
     public static String notEq() {
         return I18nResourceBundle.i18nString(NOT, EQ);
+    }
+
+    public static String fileTooLargeAndContinue(){
+        return I18nResourceBundle.i18nString(FILE_TOO_LARGE_AND_CONTINUE);
+
     }
 }
