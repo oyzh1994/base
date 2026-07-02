@@ -170,6 +170,13 @@ public class CollectionUtil {
         return null;
     }
 
+    /**
+     * 获取首个元素
+     *
+     * @param collection 集合
+     * @param <T>        范型
+     * @return 结果
+     */
     public static <T> T getFirst(Collection<T> collection) {
         if (collection != null && !collection.isEmpty()) {
             for (T t : collection) {
