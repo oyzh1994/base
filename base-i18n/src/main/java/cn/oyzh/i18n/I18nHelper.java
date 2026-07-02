@@ -3420,6 +3420,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(EDIT, DATABASE);
     }
 
+    public static String editDocument() {
+        return I18nResourceBundle.i18nString(EDIT, DOCUMENT);
+    }
+
     public static String deleteDatabase() {
         return I18nResourceBundle.i18nString(DELETE, DATABASE);
     }
@@ -5149,6 +5153,10 @@ public class I18nHelper {
 
     public static String view1File() {
         return I18nResourceBundle.i18nString(VIEW1, FILE);
+    }
+
+    public static String view1Document() {
+        return I18nResourceBundle.i18nString(VIEW1, DOCUMENT);
     }
 
     public static String certificate() {
