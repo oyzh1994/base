@@ -359,6 +359,8 @@ public class I18nHelper {
 
     public static final String USER = "base.user";
 
+    public static final String USERS = "base.users";
+
     public static final String PROGRAM = "base.program";
 
     public static final String PROGRAM_TIP1 = "base.program.tip1";
@@ -2098,7 +2100,7 @@ public class I18nHelper {
     }
 
     public static String pleaseInputDatabaseName() {
-        return I18nResourceBundle.i18nString(PLEASE, INPUT,DATABASE, NAME);
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, DATABASE, NAME);
     }
 
     public static String between() {
@@ -4698,7 +4700,7 @@ public class I18nHelper {
     }
 
     public static String bucket() {
-        return I18nResourceBundle.i18nString( BUCKET);
+        return I18nResourceBundle.i18nString(BUCKET);
     }
 
     public static String updateBucket() {
@@ -4957,6 +4959,26 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(COLLECTION);
     }
 
+    public static String deleteUser() {
+        return I18nResourceBundle.i18nString(DELETE, USER);
+    }
+
+    public static String user() {
+        return I18nResourceBundle.i18nString(USER);
+    }
+
+    public static String users() {
+        return I18nResourceBundle.i18nString(USERS);
+    }
+
+    public static String createUser() {
+        return I18nResourceBundle.i18nString(CREATE, USER);
+    }
+
+    public static String view1User() {
+        return I18nResourceBundle.i18nString(VIEW1, USER);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
@@ -5197,7 +5219,7 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NOT, EQ);
     }
 
-    public static String fileTooLargeAndContinue(){
+    public static String fileTooLargeAndContinue() {
         return I18nResourceBundle.i18nString(FILE_TOO_LARGE_AND_CONTINUE);
 
     }
