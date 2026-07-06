@@ -195,6 +195,8 @@ public class I18nHelper {
 
     public static final String IS1 = "base.is1";
 
+    public static final String IS2 = "base.is2";
+
     public static final String GT = "base.gt";
 
     public static final String GT_EQ = "base.gtEq";
@@ -4879,8 +4881,8 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NOT, START, WITH);
     }
 
-    public static String contentIsSend() {
-        return I18nResourceBundle.i18nString(CONTENT, IS, SEND);
+    public static String contentIs2Send() {
+        return I18nResourceBundle.i18nString(CONTENT, IS2, SEND);
     }
 
     public static String hideLineNum() {
