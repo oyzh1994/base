@@ -12,7 +12,7 @@
     <name>base-event</name>
     <artifactId>base-event</artifactId>
     <description>
-        基础模块，事件总线的实现
+        base for event
     </description>
 
     <dependencies>

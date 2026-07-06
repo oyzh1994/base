@@ -12,7 +12,7 @@
     <name>base-ssh</name>
     <artifactId>base-ssh</artifactId>
     <description>
-        基础模块，ssh功能的实现
+        base for ssh
     </description>
 
     <dependencies>

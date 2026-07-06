@@ -12,7 +12,7 @@
     <name>base-common</name>
     <artifactId>base-common</artifactId>
     <description>
-        基础模块，通用功能的实现
+        base for common
     </description>
 
     <dependencies>

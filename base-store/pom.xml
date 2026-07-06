@@ -12,7 +12,7 @@
     <name>base-store</name>
     <artifactId>base-store</artifactId>
     <description>
-        基础模块，存储功能的实现
+        base for store
     </description>
 
     <dependencies>

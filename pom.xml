@@ -12,9 +12,9 @@
     </licenses>
     <!-- 项目信息 -->
     <scm>
-        <url>https://gitee.com/oyzh1994/base</url>
-        <connection>scm:git:https://gitee.com/oyzh1994/base</connection>
-        <developerConnection>scm:git:https://gitee.com/oyzh1994/base</developerConnection>
+        <url>https://github.com/oyzh1994/base</url>
+        <connection>scm:git:https://github.com/oyzh1994/base</connection>
+        <developerConnection>scm:git:https://github.com/oyzh1994/base</developerConnection>
     </scm>
     <!-- 开发者信息 -->
     <developers>
@@ -25,11 +25,11 @@
         </developer>
     </developers>
     <!-- 项目主页 -->
-    <url>https://gitee.com/oyzh1994/base</url>
+    <url>https://github.com/oyzh1994/base</url>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <modules>
         <module>base-common</module>
         <module>base-store</module>
@@ -41,11 +41,14 @@
     <packaging>pom</packaging>
     <name>base</name>
     <artifactId>base</artifactId>
-    <description>各种基础功能的实现</description>
+    <description>
+        base modules
+    </description>
 
     <properties>
         <h2.version>2.4.240</h2.version>
         <poi.version>5.5.1</poi.version>
+        <jna.version>5.18.1</jna.version>
         <base.version>1.0.3</base.version>
         <sshd.version>2.18.0</sshd.version>
         <jsch.version>2.28.0</jsch.version>
