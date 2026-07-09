@@ -775,4 +775,19 @@ public class FileUtil {
         return Files.isRegularFile(new File(file).toPath());
     }
 
+    /**
+     * 获取unix模式
+     *
+     * @param path 路径
+     * @return 结果
+     */
+    public static int getUnixMode(Path path) {
+        // 默认权限：目录755，普通文件644
+        int mode = Files.isDirectory(path) ? 0755 : 0644;
+        // 如果文件有可执行权限，加上111
+        if (Files.isExecutable(path)) {
+            mode |= 0111;
+        }
+        return mode;
+    }
 }
