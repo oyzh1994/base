@@ -25,9 +25,12 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 文件工具类
@@ -782,12 +785,44 @@ public class FileUtil {
      * @return 结果
      */
     public static int getUnixMode(Path path) {
-        // 默认权限：目录755，普通文件644
-        int mode = Files.isDirectory(path) ? 0755 : 0644;
-        // 如果文件有可执行权限，加上111
-        if (Files.isExecutable(path)) {
-            mode |= 0111;
+        try {
+            Set<PosixFilePermission> perms = Files.getPosixFilePermissions(path);
+            return posixPermissionsToInt(perms);
+        } catch (IOException | UnsupportedOperationException e) {
+            // 非 POSIX 系统（如 Windows）的回退逻辑
+            int mode = Files.isDirectory(path) ? 0755 : 0644;
+            if (Files.isExecutable(path)) {
+                mode |= 0111;
+            }
+            return mode;
         }
+    }
+
+    /**
+     * 将 POSIX 权限集合转换为八进制模式值（如 "rwxr-xr-x" -> 0755）。
+     */
+    public static int posixPermissionsToInt(Set<PosixFilePermission> perms) {
+        String permStr = PosixFilePermissions.toString(perms); // 如 "rwxr-xr-x"
+        int mode = 0;
+        if (permStr.charAt(0) == 'r')
+            mode |= 0400;
+        if (permStr.charAt(1) == 'w')
+            mode |= 0200;
+        if (permStr.charAt(2) == 'x')
+            mode |= 0100;
+        if (permStr.charAt(3) == 'r')
+            mode |= 0040;
+        if (permStr.charAt(4) == 'w')
+            mode |= 0020;
+        if (permStr.charAt(5) == 'x')
+            mode |= 0010;
+        if (permStr.charAt(6) == 'r')
+            mode |= 0004;
+        if (permStr.charAt(7) == 'w')
+            mode |= 0002;
+        if (permStr.charAt(8) == 'x')
+            mode |= 0001;
         return mode;
     }
+
 }
