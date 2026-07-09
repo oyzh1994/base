@@ -655,4 +655,42 @@ public class StringUtil {
     public static String toLowerCase(String str) {
         return str == null ? null : str.toLowerCase();
     }
+
+    /**
+     * 获取两个字符串的最长公共前缀。
+     * @param a 第一个字符串
+     * @param b 第二个字符串
+     * @return 最长公共前缀，如果没有则返回空字符串 ""
+     */
+    public static String commonPrefix(String a, String b) {
+        if (a == null || b == null) {
+            return "";
+        }
+        int minLength = Math.min(a.length(), b.length());
+        int i = 0;
+        while (i < minLength && a.charAt(i) == b.charAt(i)) {
+            i++;
+        }
+        return a.substring(0, i);
+    }
+
+    /**
+     * 获取多个字符串的最长公共前缀。
+     * @param strs 可变参数字符串数组
+     * @return 最长公共前缀，如果没有则返回 ""
+     */
+    public static String commonPrefix(List<String> strs) {
+        if (strs == null || strs.isEmpty()) {
+            return "";
+        }
+        String prefix = strs.getFirst();
+        for (int i = 1; i < strs.size(); i++) {
+            prefix = commonPrefix(prefix, strs.get(i));
+            if (prefix.isEmpty()) {
+                break; // 已经无公共前缀，提前结束
+            }
+        }
+        return prefix;
+    }
+
 }
