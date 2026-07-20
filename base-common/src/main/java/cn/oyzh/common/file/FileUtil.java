@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.LongAdder;
+import java.util.function.BiConsumer;
 
 /**
  * 文件工具类
@@ -825,4 +827,60 @@ public class FileUtil {
         return mode;
     }
 
+    /**
+     * 计算目录
+     *
+     * @param file      文件
+     * @param fileCount 文件总数
+     * @param fileSize  文件大小
+     */
+    public static void calcDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback) {
+        if (file.isFile()) {
+            if (fileCount != null) {
+                fileCount.add(1);
+            }
+            if (fileSize != null) {
+                fileSize.add(file.length());
+            }
+            if (callback != null) {
+                callback.accept(fileCount, fileSize);
+            }
+        } else {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    calcDir(file1, fileCount, fileSize, callback);
+                }
+            }
+        }
+    }
+
+    /**
+     * 清理目录
+     *
+     * @param file      文件
+     * @param fileCount 文件总数
+     * @param fileSize  文件大小
+     * @param callback  回调函数
+     */
+    public static void clearDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback) {
+        if (file.isFile()) {
+            if (fileCount != null) {
+                fileCount.add(1);
+            }
+            if (fileSize != null) {
+                fileSize.add(file.length());
+            }
+            if (file.delete() && callback != null) {
+                callback.accept(fileCount, fileSize);
+            }
+        } else {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    clearDir(file1, fileCount, fileSize, callback);
+                }
+            }
+        }
+    }
 }
