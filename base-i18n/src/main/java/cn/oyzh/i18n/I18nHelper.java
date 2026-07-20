@@ -85,6 +85,8 @@ public class I18nHelper {
 
     public static final String VIEW1 = "base.view1";
 
+    public static final String PUBLIC_KEY = "base.publicKey";
+
     public static final String TABLE = "base.table";
 
     public static final String TRUNCATE = "base.truncate";
@@ -4985,6 +4987,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(VIEW1, USER);
     }
 
+    public static String publicKey() {
+        return I18nResourceBundle.i18nString(PUBLIC_KEY);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
@@ -5231,6 +5237,5 @@ public class I18nHelper {
 
     public static String fileTooLargeAndContinue() {
         return I18nResourceBundle.i18nString(FILE_TOO_LARGE_AND_CONTINUE);
-
     }
 }
