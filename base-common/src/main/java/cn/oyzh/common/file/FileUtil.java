@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.LongAdder;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * 文件工具类
@@ -833,9 +834,13 @@ public class FileUtil {
      * @param file      文件
      * @param fileCount 文件总数
      * @param fileSize  文件大小
+     * @param filter    过滤器
      */
-    public static void calcDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback) {
+    public static void calcDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback, Function<File, Boolean> filter) {
         if (file.isFile()) {
+            if (filter != null && !filter.apply(file)) {
+                return;
+            }
             if (fileCount != null) {
                 fileCount.add(1);
             }
@@ -849,7 +854,7 @@ public class FileUtil {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File file1 : files) {
-                    calcDir(file1, fileCount, fileSize, callback);
+                    calcDir(file1, fileCount, fileSize, callback, filter);
                 }
             }
         }
@@ -862,9 +867,13 @@ public class FileUtil {
      * @param fileCount 文件总数
      * @param fileSize  文件大小
      * @param callback  回调函数
+     * @param filter    过滤器
      */
-    public static void clearDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback) {
+    public static void clearDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback, Function<File, Boolean> filter) {
         if (file.isFile()) {
+            if (filter != null && !filter.apply(file)) {
+                return;
+            }
             if (fileCount != null) {
                 fileCount.add(1);
             }
@@ -878,7 +887,7 @@ public class FileUtil {
             File[] files = file.listFiles();
             if (files != null) {
                 for (File file1 : files) {
-                    clearDir(file1, fileCount, fileSize, callback);
+                    clearDir(file1, fileCount, fileSize, callback, filter);
                 }
             }
         }
