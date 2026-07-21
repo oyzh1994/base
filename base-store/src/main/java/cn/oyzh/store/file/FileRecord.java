@@ -15,7 +15,7 @@ public class FileRecord extends HashMap<Integer, Object> {
         if (val == null) {
             return null;
         }
-        if (CharSequence.class.isAssignableFrom(clazz)) {
+//        if (CharSequence.class.isAssignableFrom(clazz)) {
             if (clazz == Integer.class || clazz == int.class) {
                 return Integer.valueOf(val.toString());
             }
@@ -34,7 +34,7 @@ public class FileRecord extends HashMap<Integer, Object> {
             if (clazz == Number.class) {
                 return Double.valueOf(val.toString());
             }
-        }
+//        }
         return val.toString();
     }
 }

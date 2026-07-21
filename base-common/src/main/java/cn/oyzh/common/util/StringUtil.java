@@ -367,10 +367,6 @@ public class StringUtil {
         return builder.toString();
     }
 
-    public static boolean endWith(String str, String endText) {
-        return str != null && str.endsWith(endText);
-    }
-
     public static boolean endWithAny(String str, String... endText) {
         return endsWithAny(str, endText);
     }
@@ -500,12 +496,29 @@ public class StringUtil {
     /**
      * 是否以目标内容结尾
      *
-     * @param str     内容
-     * @param endText 目标内容
+     * @param source     内容
+     * @param target 目标内容
      * @return 结果
      */
-    public static boolean endsWith(String str, String endText) {
-        return endWith(str, endText);
+    public static boolean endsWith(String source, String target) {
+        if (source != null && target != null) {
+            return source.endsWith(target);
+        }
+        return false;
+    }
+
+    /**
+     * 是否以目标内容结尾，忽略大小写
+     *
+     * @param source     内容
+     * @param target 目标内容
+     * @return 结果
+     */
+    public static boolean endsWithIgnoreCase(String source, String target) {
+        if (source != null && target != null) {
+            return source.toLowerCase().endsWith(target.toLowerCase());
+        }
+        return false;
     }
 
     /**
@@ -517,7 +530,7 @@ public class StringUtil {
      */
     public static boolean endsWithAny(String str, String... endText) {
         for (String s : endText) {
-            if (endWith(str, s)) {
+            if (endsWith(str, s)) {
                 return true;
             }
         }
@@ -642,4 +655,42 @@ public class StringUtil {
     public static String toLowerCase(String str) {
         return str == null ? null : str.toLowerCase();
     }
+
+    /**
+     * 获取两个字符串的最长公共前缀。
+     * @param a 第一个字符串
+     * @param b 第二个字符串
+     * @return 最长公共前缀，如果没有则返回空字符串 ""
+     */
+    public static String commonPrefix(String a, String b) {
+        if (a == null || b == null) {
+            return "";
+        }
+        int minLength = Math.min(a.length(), b.length());
+        int i = 0;
+        while (i < minLength && a.charAt(i) == b.charAt(i)) {
+            i++;
+        }
+        return a.substring(0, i);
+    }
+
+    /**
+     * 获取多个字符串的最长公共前缀。
+     * @param strs 可变参数字符串数组
+     * @return 最长公共前缀，如果没有则返回 ""
+     */
+    public static String commonPrefix(List<String> strs) {
+        if (strs == null || strs.isEmpty()) {
+            return "";
+        }
+        String prefix = strs.getFirst();
+        for (int i = 1; i < strs.size(); i++) {
+            prefix = commonPrefix(prefix, strs.get(i));
+            if (prefix.isEmpty()) {
+                break; // 已经无公共前缀，提前结束
+            }
+        }
+        return prefix;
+    }
+
 }

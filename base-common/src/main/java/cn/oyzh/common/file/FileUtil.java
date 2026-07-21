@@ -25,9 +25,15 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.LongAdder;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * 文件工具类
@@ -775,4 +781,115 @@ public class FileUtil {
         return Files.isRegularFile(new File(file).toPath());
     }
 
+    /**
+     * 获取unix模式
+     *
+     * @param path 路径
+     * @return 结果
+     */
+    public static int getUnixMode(Path path) {
+        try {
+            Set<PosixFilePermission> perms = Files.getPosixFilePermissions(path);
+            return posixPermissionsToInt(perms);
+        } catch (IOException | UnsupportedOperationException e) {
+            // 非 POSIX 系统（如 Windows）的回退逻辑
+            int mode = Files.isDirectory(path) ? 0755 : 0644;
+            if (Files.isExecutable(path)) {
+                mode |= 0111;
+            }
+            return mode;
+        }
+    }
+
+    /**
+     * 将 POSIX 权限集合转换为八进制模式值（如 "rwxr-xr-x" -> 0755）。
+     */
+    public static int posixPermissionsToInt(Set<PosixFilePermission> perms) {
+        String permStr = PosixFilePermissions.toString(perms); // 如 "rwxr-xr-x"
+        int mode = 0;
+        if (permStr.charAt(0) == 'r')
+            mode |= 0400;
+        if (permStr.charAt(1) == 'w')
+            mode |= 0200;
+        if (permStr.charAt(2) == 'x')
+            mode |= 0100;
+        if (permStr.charAt(3) == 'r')
+            mode |= 0040;
+        if (permStr.charAt(4) == 'w')
+            mode |= 0020;
+        if (permStr.charAt(5) == 'x')
+            mode |= 0010;
+        if (permStr.charAt(6) == 'r')
+            mode |= 0004;
+        if (permStr.charAt(7) == 'w')
+            mode |= 0002;
+        if (permStr.charAt(8) == 'x')
+            mode |= 0001;
+        return mode;
+    }
+
+    /**
+     * 计算目录
+     *
+     * @param file      文件
+     * @param fileCount 文件总数
+     * @param fileSize  文件大小
+     * @param filter    过滤器
+     */
+    public static void calcDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback, Function<File, Boolean> filter) {
+        if (file.isFile()) {
+            if (filter != null && !filter.apply(file)) {
+                return;
+            }
+            if (fileCount != null) {
+                fileCount.add(1);
+            }
+            if (fileSize != null) {
+                fileSize.add(file.length());
+            }
+            if (callback != null) {
+                callback.accept(fileCount, fileSize);
+            }
+        } else {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    calcDir(file1, fileCount, fileSize, callback, filter);
+                }
+            }
+        }
+    }
+
+    /**
+     * 清理目录
+     *
+     * @param file      文件
+     * @param fileCount 文件总数
+     * @param fileSize  文件大小
+     * @param callback  回调函数
+     * @param filter    过滤器
+     */
+    public static void clearDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback, Function<File, Boolean> filter) {
+        if (file.isFile()) {
+            if (filter != null && !filter.apply(file)) {
+                return;
+            }
+            if (fileCount != null) {
+                fileCount.add(1);
+            }
+            if (fileSize != null) {
+                fileSize.add(file.length());
+            }
+            if (file.delete() && callback != null) {
+                callback.accept(fileCount, fileSize);
+            }
+        } else {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    clearDir(file1, fileCount, fileSize, callback, filter);
+                }
+            }
+        }
+    }
 }

@@ -551,50 +551,50 @@ public class TextUtil {
         return builder.toString();
     }
 
-    /**
-     * 将字节数组转换为十六进制字符串
-     *
-     * @param bytes 字节数组
-     * @return 十六进制字符串
-     */
-    public static String bytesToHexStr(byte[] bytes) {
-        return bytesToHexStr(bytes, true);
-    }
+//    /**
+//     * 将字节数组转换为十六进制字符串
+//     *
+//     * @param bytes 字节数组
+//     * @return 十六进制字符串
+//     */
+//    public static String bytesToHexStr(byte[] bytes) {
+//        return bytesToHexStr(bytes, true);
+//    }
+//
+//    /**
+//     * 将字节数组转换为十六进制字符串
+//     *
+//     * @param bytes       字节数组
+//     * @param toUpperCase 大写形式
+//     * @return 十六进制字符串
+//     */
+//    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
+//        StringBuilder hexString = new StringBuilder();
+//        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
+//        for (byte b : bytes) {
+//            hexString.append(String.format("%02X", b));
+//        }
+//        if (toUpperCase) {
+//            return hexString.toString().toUpperCase();
+//        }
+//        return hexString.toString();
+//    }
 
-    /**
-     * 将字节数组转换为十六进制字符串
-     *
-     * @param bytes       字节数组
-     * @param toUpperCase 大写形式
-     * @return 十六进制字符串
-     */
-    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
-        StringBuilder hexString = new StringBuilder();
-        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
-        for (byte b : bytes) {
-            hexString.append(String.format("%02X", b));
-        }
-        if (toUpperCase) {
-            return hexString.toString().toUpperCase();
-        }
-        return hexString.toString();
-    }
-
-    /**
-     * 将十六进制转换为字符串字节数组
-     *
-     * @param s 十六进制字符串
-     * @return 字节数组
-     */
-    public static byte[] hexStrToBytes(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
-    }
+//    /**
+//     * 将十六进制转换为字符串字节数组
+//     *
+//     * @param s 十六进制字符串
+//     * @return 字节数组
+//     */
+//    public static byte[] hexStrToBytes(String s) {
+//        int len = s.length();
+//        byte[] data = new byte[len / 2];
+//        for (int i = 0; i < len; i += 2) {
+//            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+//                    + Character.digit(s.charAt(i + 1), 16));
+//        }
+//        return data;
+//    }
 
     /**
      * 是否xml字符串

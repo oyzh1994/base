@@ -4,7 +4,6 @@ import cn.oyzh.common.SysConst;
 import cn.oyzh.common.date.DateHelper;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.system.SystemUtil;
-import cn.oyzh.common.util.JarUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.File;
@@ -45,12 +44,14 @@ public class JulUtil {
      */
     public static String getLogsDir() {
         String filePath;
-        // 正式环境
-        if (JarUtil.isInJar()) {
-            filePath = SysConst.storeDir() + "logs" + File.separator;
-        } else {// 开发环境
-            filePath = SystemUtil.userDir() + File.separator + "logs" + File.separator;
-        }
+        String baseDir = SysConst.storeDir() == null ? SystemUtil.userDir() : SysConst.storeDir();
+        //        // 正式环境
+        //        if (JarUtil.isInJar()) {
+        filePath = baseDir + "logs" + File.separator;
+        //            filePath = SysConst.storeDir() + "logs" + File.separator;
+        //        } else {// 开发环境
+//                    filePath = SystemUtil.userDir() + File.separator + "logs" + File.separator;
+        //        }
         return filePath;
     }
 }

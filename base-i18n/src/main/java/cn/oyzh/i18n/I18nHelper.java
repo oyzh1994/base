@@ -85,6 +85,8 @@ public class I18nHelper {
 
     public static final String VIEW1 = "base.view1";
 
+    public static final String PUBLIC_KEY = "base.publicKey";
+
     public static final String TABLE = "base.table";
 
     public static final String TRUNCATE = "base.truncate";
@@ -194,6 +196,8 @@ public class I18nHelper {
     public static final String IS = "base.is";
 
     public static final String IS1 = "base.is1";
+
+    public static final String IS2 = "base.is2";
 
     public static final String GT = "base.gt";
 
@@ -358,6 +362,8 @@ public class I18nHelper {
     public static final String PROCESS1 = "base.process1";
 
     public static final String USER = "base.user";
+
+    public static final String USERS = "base.users";
 
     public static final String PROGRAM = "base.program";
 
@@ -672,6 +678,8 @@ public class I18nHelper {
     public static final String MESSAGE_ID = "base.messageId";
 
     public static final String UNSAVED_AND_CONTINUE = "base.unsavedAndContinue";
+
+    public static final String FILE_TOO_LARGE_AND_CONTINUE = "base.fileTooLargeAndContinue";
 
     public static final String CLOSE_AND_CONTINUE = "base.closeAndContinue";
 
@@ -2095,6 +2103,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, NAME);
     }
 
+    public static String pleaseInputDatabaseName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, DATABASE, NAME);
+    }
+
     public static String between() {
         return I18nResourceBundle.i18nString(BETWEEN);
     }
@@ -3412,6 +3424,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(EDIT, DATABASE);
     }
 
+    public static String editDocument() {
+        return I18nResourceBundle.i18nString(EDIT, DOCUMENT);
+    }
+
     public static String deleteDatabase() {
         return I18nResourceBundle.i18nString(DELETE, DATABASE);
     }
@@ -4692,7 +4708,7 @@ public class I18nHelper {
     }
 
     public static String bucket() {
-        return I18nResourceBundle.i18nString( BUCKET);
+        return I18nResourceBundle.i18nString(BUCKET);
     }
 
     public static String updateBucket() {
@@ -4867,8 +4883,8 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(NOT, START, WITH);
     }
 
-    public static String contentIsSend() {
-        return I18nResourceBundle.i18nString(CONTENT, IS, SEND);
+    public static String contentIs2Send() {
+        return I18nResourceBundle.i18nString(CONTENT, IS2, SEND);
     }
 
     public static String hideLineNum() {
@@ -4949,6 +4965,30 @@ public class I18nHelper {
 
     public static String collection() {
         return I18nResourceBundle.i18nString(COLLECTION);
+    }
+
+    public static String deleteUser() {
+        return I18nResourceBundle.i18nString(DELETE, USER);
+    }
+
+    public static String user() {
+        return I18nResourceBundle.i18nString(USER);
+    }
+
+    public static String users() {
+        return I18nResourceBundle.i18nString(USERS);
+    }
+
+    public static String createUser() {
+        return I18nResourceBundle.i18nString(CREATE, USER);
+    }
+
+    public static String view1User() {
+        return I18nResourceBundle.i18nString(VIEW1, USER);
+    }
+
+    public static String publicKey() {
+        return I18nResourceBundle.i18nString(PUBLIC_KEY);
     }
 
     public String fileUploadFailed() {
@@ -5123,6 +5163,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(VIEW1, FILE);
     }
 
+    public static String view1Document() {
+        return I18nResourceBundle.i18nString(VIEW1, DOCUMENT);
+    }
+
     public static String certificate() {
         return I18nResourceBundle.i18nString(CERTIFICATE);
     }
@@ -5189,5 +5233,9 @@ public class I18nHelper {
 
     public static String notEq() {
         return I18nResourceBundle.i18nString(NOT, EQ);
+    }
+
+    public static String fileTooLargeAndContinue() {
+        return I18nResourceBundle.i18nString(FILE_TOO_LARGE_AND_CONTINUE);
     }
 }

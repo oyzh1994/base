@@ -17,118 +17,118 @@ import java.util.concurrent.TimeoutException;
  */
 public class TaskManager {
 
-    /**
-     * 延迟任务列表
-     */
-    @Deprecated
-    private static final WeakCache<String, Future<?>> DELAY_TASKS = CacheUtil.newWeakCache();
+//    /**
+//     * 延迟任务列表
+//     */
+//    @Deprecated
+//    private static final WeakCache<String, Future<?>> DELAY_TASKS = CacheUtil.newWeakCache();
+//
+//    /**
+//     * 循环任务列表
+//     */
+//    @Deprecated
+//    private static final WeakCache<String, Future<?>> INTERVAL_TASKS = CacheUtil.newWeakCache();
+//
+//    /**
+//     * 开始延迟任务
+//     *
+//     * @param key   唯一标识
+//     * @param task  任务
+//     * @param delay 延迟时间
+//     * @return 任务
+//     */
+//    @Deprecated
+//    public static Future<?> startDelay(String key, IRunnable task, int delay) {
+//        Future<?> future = DELAY_TASKS.get(key);
+//        if (future != null && !future.isDone()) {
+//            ExecutorUtil.cancel(future);
+//        }
+//        Task myTask;
+//        if (task instanceof Task task1) {
+//            myTask = TaskBuilder.newBuilder()
+//                    .from(task1)
+//                    .onFinish(() -> {
+//                        DELAY_TASKS.remove(key);
+//                        if (task1.getFinish() != null) {
+//                            task1.getFinish().run();
+//                        }
+//                    })
+//                    .build();
+//        } else {
+//            myTask = TaskBuilder.newBuilder()
+//                    .onStart(task)
+//                    .onFinish(() -> DELAY_TASKS.remove(key))
+//                    .build();
+//        }
+//        future = ExecutorUtil.start(myTask, delay);
+//        DELAY_TASKS.put(key, future);
+//        return future;
+//    }
 
-    /**
-     * 循环任务列表
-     */
-    @Deprecated
-    private static final WeakCache<String, Future<?>> INTERVAL_TASKS = CacheUtil.newWeakCache();
+//    /**
+//     * 取消延迟任务
+//     *
+//     * @param key 唯一标识
+//     */
+//    @Deprecated
+//    public static void cancelDelay(String key) {
+//        Future<?> future = DELAY_TASKS.get(key);
+//        if (future != null) {
+//            if (!future.isDone()) {
+//                ExecutorUtil.cancel(future);
+//            }
+//            DELAY_TASKS.remove(key);
+//        }
+//    }
+//
+//    /**
+//     * 开始定时任务
+//     *
+//     * @param key      唯一标识
+//     * @param task     任务
+//     * @param interval 定时时间
+//     */
+//    @Deprecated
+//    public static void startInterval(String key, Runnable task, int interval) {
+//        startInterval(key, task, interval, 0);
+//    }
 
-    /**
-     * 开始延迟任务
-     *
-     * @param key   唯一标识
-     * @param task  任务
-     * @param delay 延迟时间
-     * @return 任务
-     */
-    @Deprecated
-    public static Future<?> startDelay(String key, IRunnable task, int delay) {
-        Future<?> future = DELAY_TASKS.get(key);
-        if (future != null && !future.isDone()) {
-            ExecutorUtil.cancel(future);
-        }
-        Task myTask;
-        if (task instanceof Task task1) {
-            myTask = TaskBuilder.newBuilder()
-                    .from(task1)
-                    .onFinish(() -> {
-                        DELAY_TASKS.remove(key);
-                        if (task1.getFinish() != null) {
-                            task1.getFinish().run();
-                        }
-                    })
-                    .build();
-        } else {
-            myTask = TaskBuilder.newBuilder()
-                    .onStart(task)
-                    .onFinish(() -> DELAY_TASKS.remove(key))
-                    .build();
-        }
-        future = ExecutorUtil.start(myTask, delay);
-        DELAY_TASKS.put(key, future);
-        return future;
-    }
+//    /**
+//     * 开始定时任务
+//     *
+//     * @param key      唯一标识
+//     * @param task     任务
+//     * @param interval 定时时间
+//     * @param delay    延迟时间
+//     * @return 对象
+//     */
+//    @Deprecated
+//    public static Future<?> startInterval(String key, Runnable task, int interval, int delay) {
+//        Future<?> future = INTERVAL_TASKS.get(key);
+//        if (future != null && !future.isDone()) {
+//            ExecutorUtil.cancel(future);
+//        }
+//        future = ExecutorUtil.start(task, delay, interval);
+//        INTERVAL_TASKS.put(key, future);
+//        return future;
+//    }
 
-    /**
-     * 取消延迟任务
-     *
-     * @param key 唯一标识
-     */
-    @Deprecated
-    public static void cancelDelay(String key) {
-        Future<?> future = DELAY_TASKS.get(key);
-        if (future != null) {
-            if (!future.isDone()) {
-                ExecutorUtil.cancel(future);
-            }
-            DELAY_TASKS.remove(key);
-        }
-    }
-
-    /**
-     * 开始定时任务
-     *
-     * @param key      唯一标识
-     * @param task     任务
-     * @param interval 定时时间
-     */
-    @Deprecated
-    public static void startInterval(String key, Runnable task, int interval) {
-        startInterval(key, task, interval, 0);
-    }
-
-    /**
-     * 开始定时任务
-     *
-     * @param key      唯一标识
-     * @param task     任务
-     * @param interval 定时时间
-     * @param delay    延迟时间
-     * @return 对象
-     */
-    @Deprecated
-    public static Future<?> startInterval(String key, Runnable task, int interval, int delay) {
-        Future<?> future = INTERVAL_TASKS.get(key);
-        if (future != null && !future.isDone()) {
-            ExecutorUtil.cancel(future);
-        }
-        future = ExecutorUtil.start(task, delay, interval);
-        INTERVAL_TASKS.put(key, future);
-        return future;
-    }
-
-    /**
-     * 取消定时任务
-     *
-     * @param key 唯一标识
-     */
-    @Deprecated
-    public static Future<?> cancelInterval(String key) {
-        Future<?> future = INTERVAL_TASKS.get(key);
-        if (future != null) {
-            if (!future.isDone()) {
-                ExecutorUtil.cancel(future);
-            }
-            INTERVAL_TASKS.remove(key);
-        }
-        return future;
-    }
+//    /**
+//     * 取消定时任务
+//     *
+//     * @param key 唯一标识
+//     */
+//    @Deprecated
+//    public static Future<?> cancelInterval(String key) {
+//        Future<?> future = INTERVAL_TASKS.get(key);
+//        if (future != null) {
+//            if (!future.isDone()) {
+//                ExecutorUtil.cancel(future);
+//            }
+//            INTERVAL_TASKS.remove(key);
+//        }
+//        return future;
+//    }
 
     /**
      * 同步执行

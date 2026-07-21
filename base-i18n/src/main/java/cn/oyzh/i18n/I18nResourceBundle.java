@@ -134,7 +134,8 @@ public class I18nResourceBundle extends ResourceBundle {
                     builder.append(" ");
                     if (isFirst) {
                         isFirst = false;
-                        builder.append(val);
+//                        builder.append(val);
+                        builder.append(StringUtil.upperFirst(val));
                     } else {
                         builder.append(StringUtil.lowerFirst(val));
                     }

@@ -132,6 +132,21 @@ public class JSONUtil {
     }
 
     /**
+     * 转换为json对象
+     *
+     * @param obj 对象
+     * @return json对象
+     */
+    public static JSONObject toJsonObject(Object obj) {
+        try {
+            return JSONObject.from(obj);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 判断是否json字符串
      *
      * @param json json字符串

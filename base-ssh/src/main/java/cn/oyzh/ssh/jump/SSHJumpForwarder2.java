@@ -185,7 +185,7 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
     /**
      * 初始化ssh会话
      *
-     * @throws JSchException 异常
+     * @throws Exception 异常
      */
     public ClientSession initSession(SSHConnect connect) throws Exception {
 //        try {
