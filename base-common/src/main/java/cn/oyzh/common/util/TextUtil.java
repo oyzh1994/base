@@ -23,44 +23,44 @@ public class TextUtil {
     private TextUtil() {
     }
 
-//    /**
-//     * 搜索索引
-//     *
-//     * @param text        文字
-//     * @param word        词汇
-//     * @param formIndex   开始位置
-//     * @param compareCase 是否比较大小写
-//     * @param fullMatch   是否全文匹配
-//     * @return 索引位置
-//     */
-//    @Deprecated
-//    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
-//        if (text == null || word == null) {
-//            return -1;
-//        }
-//        if (text.length() < word.length()) {
-//            return -1;
-//        }
-//        if (!compareCase) {
-//            text = text.toLowerCase();
-//            word = word.toLowerCase();
-//        }
-//        // 全文匹配
-//        if (fullMatch) {
-//            if (text.equals(word)) {
-//                return 0;
-//            }
-//            return -1;
-//        }
-//        // 搜索索引
-//        int start;
-//        if (formIndex == null) {
-//            start = text.indexOf(word);
-//        } else {
-//            start = text.indexOf(word, formIndex);
-//        }
-//        return start;
-//    }
+    //    /**
+    //     * 搜索索引
+    //     *
+    //     * @param text        文字
+    //     * @param word        词汇
+    //     * @param formIndex   开始位置
+    //     * @param compareCase 是否比较大小写
+    //     * @param fullMatch   是否全文匹配
+    //     * @return 索引位置
+    //     */
+    //    @Deprecated
+    //    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
+    //        if (text == null || word == null) {
+    //            return -1;
+    //        }
+    //        if (text.length() < word.length()) {
+    //            return -1;
+    //        }
+    //        if (!compareCase) {
+    //            text = text.toLowerCase();
+    //            word = word.toLowerCase();
+    //        }
+    //        // 全文匹配
+    //        if (fullMatch) {
+    //            if (text.equals(word)) {
+    //                return 0;
+    //            }
+    //            return -1;
+    //        }
+    //        // 搜索索引
+    //        int start;
+    //        if (formIndex == null) {
+    //            start = text.indexOf(word);
+    //        } else {
+    //            start = text.indexOf(word, formIndex);
+    //        }
+    //        return start;
+    //    }
 
     /**
      * 搜索索引，正则模式
@@ -486,6 +486,9 @@ public class TextUtil {
         byte[] bytes = new byte[bits.length];
         int i = 0;
         for (String bit : bits) {
+            if (bit == null) {
+                continue;
+            }
             // 将二进制字符串转换为十进制整数
             int decimalValue = Integer.parseInt(bit, 2);
             // 将十进制整数转换为字节
@@ -551,50 +554,50 @@ public class TextUtil {
         return builder.toString();
     }
 
-//    /**
-//     * 将字节数组转换为十六进制字符串
-//     *
-//     * @param bytes 字节数组
-//     * @return 十六进制字符串
-//     */
-//    public static String bytesToHexStr(byte[] bytes) {
-//        return bytesToHexStr(bytes, true);
-//    }
-//
-//    /**
-//     * 将字节数组转换为十六进制字符串
-//     *
-//     * @param bytes       字节数组
-//     * @param toUpperCase 大写形式
-//     * @return 十六进制字符串
-//     */
-//    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
-//        StringBuilder hexString = new StringBuilder();
-//        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
-//        for (byte b : bytes) {
-//            hexString.append(String.format("%02X", b));
-//        }
-//        if (toUpperCase) {
-//            return hexString.toString().toUpperCase();
-//        }
-//        return hexString.toString();
-//    }
+    //    /**
+    //     * 将字节数组转换为十六进制字符串
+    //     *
+    //     * @param bytes 字节数组
+    //     * @return 十六进制字符串
+    //     */
+    //    public static String bytesToHexStr(byte[] bytes) {
+    //        return bytesToHexStr(bytes, true);
+    //    }
+    //
+    //    /**
+    //     * 将字节数组转换为十六进制字符串
+    //     *
+    //     * @param bytes       字节数组
+    //     * @param toUpperCase 大写形式
+    //     * @return 十六进制字符串
+    //     */
+    //    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
+    //        StringBuilder hexString = new StringBuilder();
+    //        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
+    //        for (byte b : bytes) {
+    //            hexString.append(String.format("%02X", b));
+    //        }
+    //        if (toUpperCase) {
+    //            return hexString.toString().toUpperCase();
+    //        }
+    //        return hexString.toString();
+    //    }
 
-//    /**
-//     * 将十六进制转换为字符串字节数组
-//     *
-//     * @param s 十六进制字符串
-//     * @return 字节数组
-//     */
-//    public static byte[] hexStrToBytes(String s) {
-//        int len = s.length();
-//        byte[] data = new byte[len / 2];
-//        for (int i = 0; i < len; i += 2) {
-//            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-//                    + Character.digit(s.charAt(i + 1), 16));
-//        }
-//        return data;
-//    }
+    //    /**
+    //     * 将十六进制转换为字符串字节数组
+    //     *
+    //     * @param s 十六进制字符串
+    //     * @return 字节数组
+    //     */
+    //    public static byte[] hexStrToBytes(String s) {
+    //        int len = s.length();
+    //        byte[] data = new byte[len / 2];
+    //        for (int i = 0; i < len; i += 2) {
+    //            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+    //                    + Character.digit(s.charAt(i + 1), 16));
+    //        }
+    //        return data;
+    //    }
 
     /**
      * 是否xml字符串
