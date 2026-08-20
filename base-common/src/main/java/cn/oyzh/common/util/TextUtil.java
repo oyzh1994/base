@@ -805,4 +805,16 @@ public class TextUtil {
         return corr;
     }
 
+    /**
+     * 转换为单行内容
+     *
+     * @param text 内容
+     * @return 结果
+     */
+    public static String toSingleLine(String text) {
+        if (StringUtil.isEmpty(text)) {
+            return text;
+        }
+        return text.replaceAll("\\s+", " ");
+    }
 }
