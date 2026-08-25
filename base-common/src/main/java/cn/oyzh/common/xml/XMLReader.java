@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
  * @author oyzh
  * @since 2024-11-14
  */
-public class XMLReader implements AutoCloseable{
+public class XMLReader implements AutoCloseable {
 
     /**
      * xml读取器
@@ -55,7 +55,7 @@ public class XMLReader implements AutoCloseable{
             try {
                 this.reader.close();
             } catch (XMLStreamException ex) {
-               ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
     }

@@ -19,12 +19,12 @@ public class FileReadConfig {
     /**
      * 字段分割符号
      */
-    private char fieldSeparator = ' ';
+    private Character fieldSeparator = ' ';
 
     /**
      * 文本识别符号
      */
-    private char txtIdentifier = '"';
+    private Character txtIdentifier = '"';
 
     /**
      * 字符集
@@ -38,6 +38,7 @@ public class FileReadConfig {
 
     /**
      * 数据行开始索引
+     * 注意，起始下标为1
      */
     private Integer dataRowStarts;
 
@@ -63,16 +64,16 @@ public class FileReadConfig {
         return this.recordSeparator;
     }
 
-    public char txtIdentifier() {
+    public Character txtIdentifier() {
         return this.txtIdentifier;
     }
 
-    public FileReadConfig txtIdentifier(char txtIdentifier) {
+    public FileReadConfig txtIdentifier(Character txtIdentifier) {
         this.txtIdentifier = txtIdentifier;
         return this;
     }
 
-    public char fieldSeparator() {
+    public Character fieldSeparator() {
         return this.fieldSeparator;
     }
 
@@ -93,19 +94,19 @@ public class FileReadConfig {
         this.recordSeparator = recordSeparator;
     }
 
-    public char getFieldSeparator() {
+    public Character getFieldSeparator() {
         return fieldSeparator;
     }
 
-    public void setFieldSeparator(char fieldSeparator) {
+    public void setFieldSeparator(Character fieldSeparator) {
         this.fieldSeparator = fieldSeparator;
     }
 
-    public char getTxtIdentifier() {
+    public Character getTxtIdentifier() {
         return txtIdentifier;
     }
 
-    public void setTxtIdentifier(char txtIdentifier) {
+    public void setTxtIdentifier(Character txtIdentifier) {
         this.txtIdentifier = txtIdentifier;
     }
 

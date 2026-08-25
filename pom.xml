@@ -12,9 +12,9 @@
     </licenses>
     <!-- 项目信息 -->
     <scm>
-        <url>https://gitee.com/oyzh1994/base</url>
-        <connection>scm:git:https://gitee.com/oyzh1994/base</connection>
-        <developerConnection>scm:git:https://gitee.com/oyzh1994/base</developerConnection>
+        <url>https://github.com/oyzh1994/base</url>
+        <connection>scm:git:https://github.com/oyzh1994/base</connection>
+        <developerConnection>scm:git:https://github.com/oyzh1994/base</developerConnection>
     </scm>
     <!-- 开发者信息 -->
     <developers>
@@ -25,11 +25,11 @@
         </developer>
     </developers>
     <!-- 项目主页 -->
-    <url>https://gitee.com/oyzh1994/base</url>
+    <url>https://github.com/oyzh1994/base</url>
 
     <modelVersion>4.0.0</modelVersion>
 
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <modules>
         <module>base-common</module>
         <module>base-store</module>
@@ -41,35 +41,44 @@
     <packaging>pom</packaging>
     <name>base</name>
     <artifactId>base</artifactId>
-    <description>各种基础功能的实现</description>
+    <description>
+        base modules
+    </description>
 
     <properties>
         <h2.version>2.4.240</h2.version>
-        <poi.version>5.4.1</poi.version>
-        <base.version>1.0.3</base.version>
-        <sshd.version>2.16.0</sshd.version>
-        <jsch.version>2.27.3</jsch.version>
+        <poi.version>5.5.1</poi.version>
+        <jna.version>5.18.1</jna.version>
+        <base.version>1.0.4</base.version>
+        <sshd.version>2.19.0</sshd.version>
+        <jsch.version>2.28.0</jsch.version>
         <sshj.version>0.40.0</sshj.version>
         <zxing.version>3.5.4</zxing.version>
         <junit.version>4.13.2</junit.version>
         <slf4j.version>2.0.17</slf4j.version>
         <guava.version>33.5.0-jre</guava.version>
         <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
-        <netty.version>4.2.7.Final</netty.version>
-        <fastjson.version>2.0.60</fastjson.version>
-        <bouncycastle.version>1.82</bouncycastle.version>
-        <!-- <bouncycastle-lts.version>2.73.9</bouncycastle-lts.version> -->
-        <jgit.version>7.4.0.202509020913-r</jgit.version>
+        <netty.version>4.2.10.Final</netty.version>
+        <fastjson.version>2.0.62</fastjson.version>
+        <!-- <fastjson.version>1.2.83</fastjson.version> -->
+        <jgit.version>7.7.0.202606012155-r</jgit.version>
+        <bouncycastle.version>1.84</bouncycastle.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot-maven-plugin.version>2.7.18</spring-boot-maven-plugin.version>
+        <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
+        <spring-boot-maven-plugin.version>4.0.5</spring-boot-maven-plugin.version>
     </properties>
 
     <!-- 声明仓库 -->
     <repositories>
+        <repository>
+            <id>center</id>
+            <name>center</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
         <repository>
             <id>aliyun</id>
             <name>aliyun</name>
@@ -79,11 +88,6 @@
             <id>tencent</id>
             <name>tencent</name>
             <url>https://mirrors.tencent.com/nexus/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>center</id>
-            <name>center</name>
-            <url>https://repo1.maven.org/maven2/</url>
         </repository>
         <!-- <repository> -->
         <!--     <id>jetbrains</id> -->
@@ -151,6 +155,8 @@
                     <target>${maven.compiler.release}</target>
                     <release>${maven.compiler.release}</release>
                     <encoding>UTF-8</encoding>
+                    <debug>false</debug>
+                    <debuglevel>none</debuglevel>
                 </configuration>
             </plugin>
         </plugins>

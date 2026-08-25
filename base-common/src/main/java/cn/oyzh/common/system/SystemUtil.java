@@ -5,6 +5,8 @@ import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.common.util.NumberUtil;
 
+import java.io.IOException;
+import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
@@ -46,16 +48,25 @@ public class SystemUtil {
         return memoryMXBean;
     }
 
+    private static ClassLoadingMXBean classLoadingMXBean;
+
+    private static ClassLoadingMXBean getClassLoadingMXBean() {
+        if (classLoadingMXBean == null) {
+            classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+        }
+        return classLoadingMXBean;
+    }
+
     /**
      * 执行gc
      */
     public static void gc() {
         try {
             // 获取 MXBean 实例
-            MemoryMXBean mxBean = getMemoryMXBean();
+            MemoryMXBean memoryMXBean = getMemoryMXBean();
             // OperatingSystemMXBean systemMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-            MemoryUsage heapMemoryUsage = mxBean.getHeapMemoryUsage();
-            MemoryUsage nonHeapMemoryUsage = mxBean.getNonHeapMemoryUsage();
+            MemoryUsage heapMemoryUsage = memoryMXBean.getHeapMemoryUsage();
+            MemoryUsage nonHeapMemoryUsage = memoryMXBean.getNonHeapMemoryUsage();
 
             // double l1 = systemMXBean.getCommittedVirtualMemorySize();
             double l2 = heapMemoryUsage.getCommitted() + nonHeapMemoryUsage.getCommitted();
@@ -65,8 +76,12 @@ public class SystemUtil {
             double usedMemory = l2;
             // double usedMemory = (l1 + l2 + l3) / 2.7;
             double m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
-            JulLog.info("gc之前预估使用内存:{}Mb", m1);
-            mxBean.gc();
+            ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
+            long currentLoaded = classLoadingMXBean.getLoadedClassCount();
+            long totalLoaded = classLoadingMXBean.getTotalLoadedClassCount();
+            long unloaded = classLoadingMXBean.getUnloadedClassCount();
+            JulLog.info("gc之前预估使用内存:{}Mb, 总加载/已加载/已卸载类:{}/{}/{}", m1, totalLoaded, currentLoaded, unloaded);
+            memoryMXBean.gc();
 
             // gc之后
             // l1 = systemMXBean.getCommittedVirtualMemorySize();
@@ -75,7 +90,10 @@ public class SystemUtil {
             usedMemory = l2;
             // usedMemory = (l1 + l2 + l3) / 2.7;
             m1 = NumberUtil.scale(usedMemory / 1024 / 1024, 2);
-            JulLog.info("gc之后预估使用内存:{}Mb", m1);
+            currentLoaded = classLoadingMXBean.getLoadedClassCount();
+            totalLoaded = classLoadingMXBean.getTotalLoadedClassCount();
+            unloaded = classLoadingMXBean.getUnloadedClassCount();
+            JulLog.info("gc之后预估使用内存:{}Mb, 总加载/已加载/已卸载类:{}/{}/{}", m1, totalLoaded, currentLoaded, unloaded);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -144,5 +162,38 @@ public class SystemUtil {
      */
     public static String userHome() {
         return System.getProperty("user.home");
+    }
+
+    /**
+     * 获取用户目录
+     *
+     * @return 用户目录
+     */
+    public static String userDir() {
+        return System.getProperty("user.dir");
+    }
+
+    /**
+     * 打开系统目录
+     *
+     * @param path 文件路径
+     */
+    public static void openFolderViaCommand(String path) {
+        ProcessBuilder builder = new ProcessBuilder();
+        try {
+            if (OSUtil.isWindows()) {
+                // Windows：使用 explorer 打开目录
+                builder.command("explorer", path);
+            } else if (OSUtil.isMacOS()) {
+                // macOS：使用 open 命令
+                builder.command("open", path);
+            } else if (OSUtil.isLinux()) {
+                // Linux/Unix：使用 xdg-open
+                builder.command("xdg-open", path);
+            }
+            builder.start();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

@@ -3,11 +3,8 @@ package cn.oyzh.ssh.tunneling;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.ssh.SSHException;
-import cn.oyzh.ssh.SSHForwarder;
 import cn.oyzh.ssh.SSHForwarder2;
 import cn.oyzh.ssh.domain.SSHTunneling;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.util.net.SshdSocketAddress;
 

@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -22,105 +21,105 @@ import java.util.Objects;
  */
 public class ProcessUtil {
 
-    /**
-     * 重启应用
-     *
-     * @param mainClass  主类
-     * @param timeout    超时时间
-     * @param exitAction 退出操作
-     */
-    @Deprecated
-    public static void restartApplication(Class<?> mainClass, int timeout, Runnable exitAction) {
-        restartApplication(mainClass.getName(), timeout, exitAction);
-    }
-
-    /**
-     * 重启应用
-     *
-     * @param mainClassName 主类
-     * @param timeout       超时时间
-     * @param exitAction    退出操作
-     */
-    @Deprecated
-    public static void restartApplication(String mainClassName, int timeout, Runnable exitAction) {
-        // 获取当前Java程序的路径和classpath
-        String javaPath = System.getProperty("java.home");
-        if (OSUtil.isWindows()) {
-            if (!FileUtil.exist(javaPath + "/bin/javaw.exe")) {
-                javaPath += "/bin/java.exe";
-            } else {
-                javaPath += "/bin/javaw.exe";
-            }
-            String classPath = System.getProperty("java.class.path");
-            String restartCommand = javaPath + " -jar " + classPath;
-            // String restartCommand = javaPath + " -cp \"" + classPath + "\" " + mainClassName;
-            // 打印命令
-            JulLog.info("restartCommand:{}", restartCommand);
-            // 执行重启命令
-            RuntimeUtil.exec(restartCommand);
-            // 退出当前进程
-            TaskManager.startDelay(() -> {
-                if (exitAction == null) {
-                    System.exit(0);
-                } else {
-                    exitAction.run();
-                }
-            }, timeout);
-        } else if (OSUtil.isLinux()) {
-            // 运行目录
-            File dir = new File(javaPath).getParentFile();
-            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
-                javaPath = dir.getPath() + "/jre/bin/java";
-                // javaPath = dir.getPath() + "/./jre/bin/java";
-            } else {
-                javaPath = dir.getPath() + "/jre/bin/javaw";
-                // javaPath = dir.getPath() + "/./jre/bin/javaw";
-            }
-            String classPath = System.getProperty("java.class.path");
-            // 重启命令
-            String restartCommand = javaPath + " -jar " + dir.getPath() + "/" + classPath;
-            // 打印命令
-            JulLog.info("restartCommand:{} dir:{}", restartCommand, dir);
-            // 执行重启命令
-            RuntimeUtil.exec(restartCommand, null, dir);
-            // 退出当前进程
-            TaskManager.startDelay(() -> {
-                if (exitAction == null) {
-                    System.exit(0);
-                } else {
-                    exitAction.run();
-                }
-            }, timeout);
-        } else if (OSUtil.isMacOS()) {
-            // 运行目录
-            File dir = new File(javaPath).getParentFile();
-            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
-                javaPath = dir.getPath() + "/./jre/bin/java";
-            } else {
-                javaPath = dir.getPath() + "/./jre/bin/javaw";
-            }
-            String classPath = System.getProperty("java.class.path");
-            // 重启命令
-            String[] restartCommand = new String[]{javaPath, "-jar", classPath};
-            // 打印命令
-            JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
-            // 执行重启命令
-            Process process = RuntimeUtil.exec(restartCommand);
-            try {
-                JulLog.info("exitCode:{}", process.waitFor());
-                // 退出当前进程
-                TaskManager.startDelay(() -> {
-                    if (exitAction == null) {
-                        System.exit(0);
-                    } else {
-                        exitAction.run();
-                    }
-                }, timeout);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+//    /**
+//     * 重启应用
+//     *
+//     * @param mainClass  主类
+//     * @param timeout    超时时间
+//     * @param exitAction 退出操作
+//     */
+//    @Deprecated
+//    public static void restartApplication(Class<?> mainClass, int timeout, Runnable exitAction) {
+//        restartApplication(mainClass.getName(), timeout, exitAction);
+//    }
+//
+//    /**
+//     * 重启应用
+//     *
+//     * @param mainClassName 主类
+//     * @param timeout       超时时间
+//     * @param exitAction    退出操作
+//     */
+//    @Deprecated
+//    public static void restartApplication(String mainClassName, int timeout, Runnable exitAction) {
+//        // 获取当前Java程序的路径和classpath
+//        String javaPath = System.getProperty("java.home");
+//        if (OSUtil.isWindows()) {
+//            if (!FileUtil.exist(javaPath + "/bin/javaw.exe")) {
+//                javaPath += "/bin/java.exe";
+//            } else {
+//                javaPath += "/bin/javaw.exe";
+//            }
+//            String classPath = System.getProperty("java.class.path");
+//            String restartCommand = javaPath + " -jar " + classPath;
+//            // String restartCommand = javaPath + " -cp \"" + classPath + "\" " + mainClassName;
+//            // 打印命令
+//            JulLog.info("restartCommand:{}", restartCommand);
+//            // 执行重启命令
+//            RuntimeUtil.exec(restartCommand);
+//            // 退出当前进程
+//            TaskManager.startDelay(() -> {
+//                if (exitAction == null) {
+//                    System.exit(0);
+//                } else {
+//                    exitAction.run();
+//                }
+//            }, timeout);
+//        } else if (OSUtil.isLinux()) {
+//            // 运行目录
+//            File dir = new File(javaPath).getParentFile();
+//            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
+//                javaPath = dir.getPath() + "/jre/bin/java";
+//                // javaPath = dir.getPath() + "/./jre/bin/java";
+//            } else {
+//                javaPath = dir.getPath() + "/jre/bin/javaw";
+//                // javaPath = dir.getPath() + "/./jre/bin/javaw";
+//            }
+//            String classPath = System.getProperty("java.class.path");
+//            // 重启命令
+//            String restartCommand = javaPath + " -jar " + dir.getPath() + "/" + classPath;
+//            // 打印命令
+//            JulLog.info("restartCommand:{} dir:{}", restartCommand, dir);
+//            // 执行重启命令
+//            RuntimeUtil.exec(restartCommand, null, dir);
+//            // 退出当前进程
+//            TaskManager.startDelay(() -> {
+//                if (exitAction == null) {
+//                    System.exit(0);
+//                } else {
+//                    exitAction.run();
+//                }
+//            }, timeout);
+//        } else if (OSUtil.isMacOS()) {
+//            // 运行目录
+//            File dir = new File(javaPath).getParentFile();
+//            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
+//                javaPath = dir.getPath() + "/./jre/bin/java";
+//            } else {
+//                javaPath = dir.getPath() + "/./jre/bin/javaw";
+//            }
+//            String classPath = System.getProperty("java.class.path");
+//            // 重启命令
+//            String[] restartCommand = new String[]{javaPath, "-jar", classPath};
+//            // 打印命令
+//            JulLog.info("restartCommand:{} dir:{}", Arrays.toString(restartCommand), dir);
+//            // 执行重启命令
+//            Process process = RuntimeUtil.exec(restartCommand);
+//            try {
+//                JulLog.info("exitCode:{}", process.waitFor());
+//                // 退出当前进程
+//                TaskManager.startDelay(() -> {
+//                    if (exitAction == null) {
+//                        System.exit(0);
+//                    } else {
+//                        exitAction.run();
+//                    }
+//                }, timeout);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
     /**
      * 重启应用
@@ -330,39 +329,37 @@ public class ProcessUtil {
             if (OSUtil.isWindows()) {
                 // 创建 ProcessBuilder 来执行 tasklist 命令
                 ProcessBuilder processBuilder = new ProcessBuilder("tasklist");
+                // 启动进程
                 Process process = processBuilder.start();
-                // 获取命令执行结果的输入流
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    // 检查当前行是否包含指定的进程名
-                    if (StringUtil.containsAny(line, processName)) {
-                        reader.close();
-                        return true;
+                try (// 获取命令执行结果的输入流
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        // 检查当前行是否包含指定的进程名
+                        if (StringUtil.containsAny(line, processName)) {
+                            return true;
+                        }
                     }
                 }
-                // 关闭 BufferedReader
-                reader.close();
             } else if (OSUtil.isMacOS()) {
                 // 创建 ProcessBuilder 实例，执行 ps -ef 命令
                 ProcessBuilder processBuilder = new ProcessBuilder("ps", "-ef");
                 // 启动进程
                 Process process = processBuilder.start();
-                // 获取进程的输入流，用于读取命令输出
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                // 逐行读取命令输出
-                while ((line = reader.readLine()) != null) {
-                    // 检查当前行是否包含指定的进程名
-                    if (StringUtil.containsAny(line, processName)) {
-                        // 排除 ps -ef 命令本身和 grep 命令的输出，避免误判
-                        if (!line.contains("ps -ef") && !line.contains("grep")) {
-                            return true;
+                try (// 获取进程的输入流，用于读取命令输出
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    // 逐行读取命令输出
+                    while ((line = reader.readLine()) != null) {
+                        // 检查当前行是否包含指定的进程名
+                        if (StringUtil.containsAny(line, processName)) {
+                            // 排除 ps -ef 命令本身和 grep 命令的输出，避免误判
+                            if (!line.contains("ps -ef") && !line.contains("grep")) {
+                                return true;
+                            }
                         }
                     }
                 }
-                // 关闭输入流
-                reader.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

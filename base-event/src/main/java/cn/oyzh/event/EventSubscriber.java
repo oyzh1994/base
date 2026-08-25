@@ -58,13 +58,14 @@ public class EventSubscriber {
             Method method = this.method;
             Class<?> eventType = event.getClass();
             Class<?> parameterType = method.getParameterTypes()[0];
-            if (parameterType == eventType) {
-                return true;
-            }
-            if (parameterType.isAssignableFrom(eventType)) {
-                return true;
-            }
-            return eventType.isAssignableFrom(parameterType);
+//            if (parameterType == eventType) {
+//                return true;
+//            }
+//            if (parameterType.isAssignableFrom(eventType)) {
+//                return true;
+//            }
+//            return eventType.isAssignableFrom(parameterType);
+            return parameterType == eventType||parameterType.isAssignableFrom(eventType);
         }
         return false;
     }

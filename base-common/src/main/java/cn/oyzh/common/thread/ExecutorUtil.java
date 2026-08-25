@@ -1,5 +1,7 @@
 package cn.oyzh.common.thread;
 
+import cn.oyzh.common.system.RuntimeUtil;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -18,7 +20,7 @@ public class ExecutorUtil {
     /**
      * 定时业务执行器
      */
-    private static ScheduledExecutorService executor;
+    private volatile static ScheduledExecutorService executor;
 
     /**
      * 获取业务执行器
@@ -27,9 +29,21 @@ public class ExecutorUtil {
      */
     public static ScheduledExecutorService executor() {
         if (executor == null) {
-            executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+            synchronized (ExecutorUtil.class) {
+                if (executor == null) {
+                    executor = Executors.newScheduledThreadPool(Runtime.getRuntime().availableProcessors() * 2);
+                }
+            }
         }
         return executor;
+    }
+
+    static {
+        RuntimeUtil.addShutdownHook(new Thread(() -> {
+            if (executor != null) {
+                executor.shutdown();
+            }
+        }));
     }
 
     /**
@@ -39,7 +53,7 @@ public class ExecutorUtil {
      * @return 任务
      */
     public static Future<?> submit(Runnable task) {
-       return executor().submit(task);
+        return executor().submit(task);
     }
 
     /**

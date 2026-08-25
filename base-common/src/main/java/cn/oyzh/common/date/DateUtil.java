@@ -2,7 +2,9 @@ package cn.oyzh.common.date;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -22,7 +24,20 @@ public class DateUtil {
     }
 
     /**
+     * 从LocalDateTime转为date对象
+     *
+     * @param time 时间
+     * @return 结果
+     */
+    public static Date of(LocalDateTime time) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        Instant instant = time.atZone(zoneId).toInstant();
+        return Date.from(instant);
+    }
+
+    /**
      * 格式化时间
+     *
      * @param format 格式
      * @return 结果
      */
@@ -32,7 +47,8 @@ public class DateUtil {
 
     /**
      * 格式化时间
-     * @param time 时间
+     *
+     * @param time   时间
      * @param format 格式
      * @return 结果
      */
@@ -42,7 +58,8 @@ public class DateUtil {
 
     /**
      * 格式化时间
-     * @param time 时间
+     *
+     * @param time   时间
      * @param format 格式
      * @return 结果
      */

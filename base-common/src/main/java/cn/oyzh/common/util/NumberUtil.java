@@ -268,4 +268,8 @@ public class NumberUtil {
     public static long toLong(String str) {
         return Long.parseLong(str);
     }
+
+    public static double toDouble(String str) {
+        return Double.parseDouble(str);
+    }
 }

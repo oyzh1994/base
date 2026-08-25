@@ -21,6 +21,6 @@ public class SSHException extends RuntimeException {
     }
 
     public SSHException(Exception ex) {
-        super(ex.getMessage(), ex.getCause());
+        super(ex.getMessage(), ex);
     }
 }

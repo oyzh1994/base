@@ -2,6 +2,7 @@ package cn.oyzh.event;
 
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
+import cn.oyzh.common.thread.ThreadUtil;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,7 +18,7 @@ public class EventBus {
     /**
      * 异常处理器
      */
-    protected Consumer<Exception> exceptionHandler;
+    protected volatile Consumer<Exception> exceptionHandler;
 
     /**
      * 事件注册器
@@ -34,7 +35,7 @@ public class EventBus {
      *
      * @param listener 监听器
      */
-    public void register(Object listener) {
+    public void register(EventListener listener) {
         try {
             this.register.register(listener);
         } catch (Exception ex) {
@@ -51,7 +52,7 @@ public class EventBus {
      *
      * @param listener 监听器
      */
-    public void unregister(Object listener) {
+    public void unregister(EventListener listener) {
         try {
             this.register.unregister(listener);
         } catch (Exception ex) {
@@ -82,7 +83,9 @@ public class EventBus {
             if (delay && async) {
                 TaskManager.startDelay(func, delayMillis);
             } else if (delay) {// 延迟
-                TaskManager.startDelay(func, delayMillis);
+//                TaskManager.startDelay(func, delayMillis);
+                ThreadUtil.sleep(delayMillis);
+                func.run();
             } else if (async) {// 异步
                 TaskManager.startSync(func);
             } else {// 正常执行

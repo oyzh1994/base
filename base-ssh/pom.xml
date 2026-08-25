@@ -6,13 +6,13 @@
     <parent>
         <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
 
     <name>base-ssh</name>
     <artifactId>base-ssh</artifactId>
     <description>
-        基础模块，ssh功能的实现
+        base for ssh
     </description>
 
     <dependencies>
@@ -23,38 +23,38 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- ssh库 -->
-        <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
+<!--        &lt;!&ndash; ssh库 &ndash;&gt;-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.mwiede/jsch &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.github.mwiede</groupId>-->
+<!--            <artifactId>jsch</artifactId>-->
+<!--            <version>${jsch.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
+        <!-- ssh密钥库 -->
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
         <dependency>
-            <groupId>com.github.mwiede</groupId>
-            <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- &lt;!&ndash; ssh密钥库 &ndash;&gt; -->
-        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on &ndash;&gt; -->
-        <!-- <dependency> -->
-        <!--     <groupId>org.bouncycastle</groupId> -->
-        <!--     <artifactId>bcprov-jdk18on</artifactId> -->
-        <!--     <version>${bouncycastle.version}</version> -->
-        <!--     <scope>provided</scope> -->
-        <!-- </dependency> -->
-        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.bouncycastle/bcpkix-jdk18on &ndash;&gt; -->
-        <!-- <dependency> -->
-        <!--     <groupId>org.bouncycastle</groupId> -->
-        <!--     <artifactId>bcpkix-jdk18on</artifactId> -->
-        <!--     <version>${bouncycastle.version}</version> -->
-        <!--     <scope>provided</scope> -->
-        <!-- </dependency> -->
-
-        <!-- https://mvnrepository.com/artifact/com.hierynomus/sshj -->
-        <dependency>
-            <groupId>com.hierynomus</groupId>
-            <artifactId>sshj</artifactId>
-            <version>${sshj.version}</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.hierynomus/sshj &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.hierynomus</groupId>-->
+<!--            <artifactId>sshj</artifactId>-->
+<!--            <version>${sshj.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 
         <!-- &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.sshd/sshd-common &ndash;&gt; -->
         <!-- <dependency> -->
@@ -100,7 +100,7 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>${fastjson.version}</version>
-            <scope>provided</scope>
+<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>

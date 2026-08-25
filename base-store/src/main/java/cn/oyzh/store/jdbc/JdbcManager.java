@@ -70,7 +70,7 @@ public class JdbcManager {
             dbFile = System.getProperty("user.dir") + File.separator + "temp_db";
         }
         Connection connection;
-        String url = "";
+        String url;
         if (dialect == JdbcDialect.H2) {
             url = "jdbc:h2:file:" + dbFile;
             String cacheSize = JdbcConst.dbCacheSize();
@@ -90,6 +90,7 @@ public class JdbcManager {
         } else {
             url = "jdbc:sqlite:" + dbFile;
         }
+        //ReflectUtil.setFieldValue("MIN_GROW", (int)32 * 1024, WriteBuffer.class);
         connection = DriverManager.getConnection(url);
         JdbcConn jdbcConn = new JdbcConn(connection);
         CONNECTIONS.add(jdbcConn);
@@ -150,15 +151,17 @@ public class JdbcManager {
      */
     public static void destroy() {
         try {
-            JdbcConn conn = JdbcManager.takeoff();
-            Statement statement = conn.createStatement();
-            statement.execute("SHUTDOWN");
-            IOUtil.close(statement);
+            if (JdbcManager.dialect == JdbcDialect.H2) {
+                JdbcConn conn = JdbcManager.takeoff();
+                Statement statement = conn.createStatement();
+                statement.execute("SHUTDOWN");
+                IOUtil.close(statement);
+            }
             for (JdbcConn jdbcConn : CONNECTIONS) {
                 IOUtil.close(jdbcConn);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 }

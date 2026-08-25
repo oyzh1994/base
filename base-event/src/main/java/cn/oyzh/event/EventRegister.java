@@ -30,31 +30,33 @@ public class EventRegister {
      *
      * @param listener 监听器
      */
-    public void register(Object listener) {
+    public void register(EventListener listener) {
         if (listener == null) {
             return;
         }
-        Optional<EventSubscriber> optional = this.subscribers.parallelStream().filter(f -> f.getListener() == listener).findAny();
-        if (optional.isPresent()) {
-            throw new EventListenerAlreadyExistsException(listener);
-        }
-        Class<?> clazz = listener.getClass();
-        // 寻找方法
-        Method[] methods = ReflectUtil.getMethods(clazz, true, true);
-        for (Method method : methods) {
-            int modifiers = method.getModifiers();
-            EventSubscribe subscribe = method.getAnnotation(EventSubscribe.class);
-            if (subscribe == null) {
-               continue;
+        synchronized (this.subscribers) {
+            Optional<EventSubscriber> optional = this.subscribers.stream().filter(f -> f.getListener() == listener).findAny();
+            if (optional.isPresent()) {
+                throw new EventListenerAlreadyExistsException(listener);
             }
-            if (Modifier.isStatic(modifiers)
-                    || Modifier.isNative(modifiers)
-                    || Modifier.isAbstract(modifiers)
-                    || method.getParameterCount() != 1) {
-                throw new EventSubscribeInvalidException(listener, method);
+            Class<?> clazz = listener.getClass();
+            // 寻找方法
+            Method[] methods = ReflectUtil.getMethods(clazz, true, true);
+            for (Method method : methods) {
+                int modifiers = method.getModifiers();
+                EventSubscribe subscribe = method.getAnnotation(EventSubscribe.class);
+                if (subscribe == null) {
+                    continue;
+                }
+                if (Modifier.isStatic(modifiers)
+                        || Modifier.isNative(modifiers)
+                        || Modifier.isAbstract(modifiers)
+                        || method.getParameterCount() != 1) {
+                    throw new EventSubscribeInvalidException(listener, method);
+                }
+                EventSubscriber subscriber = new EventSubscriber(method, listener);
+                this.subscribers.add(subscriber);
             }
-            EventSubscriber subscriber = new EventSubscriber(method, listener);
-            this.subscribers.add(subscriber);
         }
         this.subscribers.removeIf(EventSubscriber::isInvalid);
         JulLog.info("EventSubscribe register listener:{}", listener.getClass());
@@ -65,13 +67,11 @@ public class EventRegister {
      *
      * @param listener 监听器
      */
-    public void unregister(Object listener) {
+    public void unregister(EventListener listener) {
         if (listener == null) {
             return;
         }
-        // synchronized (this.subscribers) {
         this.subscribers.removeIf(s -> s.isInvalid() || Objects.equals(listener, s.getListener()));
-        // }
         JulLog.info("EventSubscribe unregister listener:{}", listener.getClass());
     }
 

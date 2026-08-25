@@ -98,6 +98,11 @@ public class I18nResourceBundle extends ResourceBundle {
         return resource.containsKey(key);
     }
 
+    public void clear() {
+        this.base_resources.clear();
+        this.i18n_resources.clear();
+    }
+
     /**
      * 获取基础的国际化资源，字符串
      *
@@ -125,11 +130,12 @@ public class I18nResourceBundle extends ResourceBundle {
             boolean isFirst = true;
             for (String key : keys) {
                 String val = INSTANCE.getString(key);
-                if (I18nManager.currentLocale() == Locale.ENGLISH) {
+                if (I18nManager.currentLocale().equals(Locale.ENGLISH)) {
                     builder.append(" ");
                     if (isFirst) {
                         isFirst = false;
-                        builder.append(val);
+//                        builder.append(val);
+                        builder.append(StringUtil.upperFirst(val));
                     } else {
                         builder.append(StringUtil.lowerFirst(val));
                     }
@@ -137,7 +143,7 @@ public class I18nResourceBundle extends ResourceBundle {
                     builder.append(val);
                 }
             }
-            if (I18nManager.currentLocale() == Locale.ENGLISH) {
+            if (I18nManager.currentLocale().equals(Locale.ENGLISH)) {
                 return builder.substring(1, builder.length());
             }
             return builder.toString();
@@ -170,5 +176,13 @@ public class I18nResourceBundle extends ResourceBundle {
      */
     public static boolean containsI18nKey(String key) {
         return INSTANCE.containsKey(key);
+    }
+
+    /**
+     * 清除资源
+     */
+    public static void clearResource() {
+        ResourceBundle.clearCache();
+        INSTANCE.clear();
     }
 }

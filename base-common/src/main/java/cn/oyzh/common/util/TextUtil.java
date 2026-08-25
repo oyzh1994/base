@@ -23,42 +23,86 @@ public class TextUtil {
     private TextUtil() {
     }
 
+    //    /**
+    //     * 搜索索引
+    //     *
+    //     * @param text        文字
+    //     * @param word        词汇
+    //     * @param formIndex   开始位置
+    //     * @param compareCase 是否比较大小写
+    //     * @param fullMatch   是否全文匹配
+    //     * @return 索引位置
+    //     */
+    //    @Deprecated
+    //    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
+    //        if (text == null || word == null) {
+    //            return -1;
+    //        }
+    //        if (text.length() < word.length()) {
+    //            return -1;
+    //        }
+    //        if (!compareCase) {
+    //            text = text.toLowerCase();
+    //            word = word.toLowerCase();
+    //        }
+    //        // 全文匹配
+    //        if (fullMatch) {
+    //            if (text.equals(word)) {
+    //                return 0;
+    //            }
+    //            return -1;
+    //        }
+    //        // 搜索索引
+    //        int start;
+    //        if (formIndex == null) {
+    //            start = text.indexOf(word);
+    //        } else {
+    //            start = text.indexOf(word, formIndex);
+    //        }
+    //        return start;
+    //    }
+
     /**
-     * 搜索索引
+     * 搜索索引，正则模式
      *
      * @param text        文字
      * @param word        词汇
      * @param formIndex   开始位置
      * @param compareCase 是否比较大小写
-     * @param fullMatch   是否全文匹配
+     * @param wholeWord   是否全字匹配
+     * @param regex       是否正则匹配
      * @return 索引位置
      */
-    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
+    public static MatchText findText(String text, String word, Integer formIndex, boolean compareCase, boolean wholeWord, boolean regex) {
         if (text == null || word == null) {
-            return -1;
+            return MatchText.INVALID;
+        }
+        if (text.isEmpty() || word.isEmpty()) {
+            return MatchText.INVALID;
         }
         if (text.length() < word.length()) {
-            return -1;
+            return MatchText.NOT_FOUND;
         }
-        if (!compareCase) {
-            text = text.toLowerCase();
-            word = word.toLowerCase();
+        Pattern pattern = RegexUtil.createSearchPattern(word, compareCase, wholeWord, regex);
+        Matcher matcher = pattern.matcher(text);
+        if (formIndex != null) {
+            matcher.region(formIndex, text.length());
         }
-        // 全文匹配
-        if (fullMatch) {
-            if (text.equals(word)) {
-                return 0;
-            }
-            return -1;
+        if (matcher.find()) {
+            return new MatchText(matcher.start(), matcher.group());
         }
-        // 搜索索引
-        int start;
-        if (formIndex == null) {
-            start = text.indexOf(word);
-        } else {
-            start = text.indexOf(word, formIndex);
-        }
-        return start;
+        return MatchText.NOT_FOUND;
+    }
+
+    /**
+     * 匹配文件
+     *
+     * @param index 索引
+     * @param text  文本
+     */
+    public record MatchText(int index, String text) {
+        public static final MatchText INVALID = new MatchText(-2, null);
+        public static final MatchText NOT_FOUND = new MatchText(-1, null);
     }
 
     /**
@@ -192,10 +236,10 @@ public class TextUtil {
                 int strLen = getDisplayLen(str);
                 int len = maxLen - strLen;
                 // 使用空格填充
-                builder.append(" ".repeat(len));
+                builder.repeat(" ", len);
                 // 使用空格填充间距
                 if (spacing > 0) {
-                    builder.append(" ".repeat(spacing));
+                    builder.repeat(" ", spacing);
                 }
                 // 然后进行tab补全
                 builder.append("\t");
@@ -238,162 +282,162 @@ public class TextUtil {
         return sc == Character.UnicodeScript.HAN;
     }
 
-    /**
-     * 获取json数据
-     *
-     * @return json数据
-     */
-    public static String getJsonData(Object rawData) {
-        if (rawData == null) {
-            return null;
-        }
-        String data = null;
-        try {
-            if (rawData instanceof byte[] bytes) {
-                data = new String(bytes);
-            }
-            // if (rawData instanceof Byte[] bytes) {
-            //     byte[] bytes1 = new byte[bytes.length];
-            //     for (int i = 0; i < bytes1.length; i++) {
-            //         bytes1[i] = bytes[i];
-            //     }
-            //     data = new String(bytes1);
-            // }
-            if (rawData instanceof CharSequence sequence) {
-                data = sequence.toString();
-            }
-            if (data == null) {
-                return null;
-            }
-            if (!data.contains("{") && !data.contains("[")) {
-                return data;
-            }
-            return JSONUtil.toPretty(data);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return data;
-    }
-
-    /**
-     * 获取xml数据
-     *
-     * @return xml数据
-     */
-    public static String getXmlData(Object rawData) {
-        if (rawData instanceof byte[] bytes) {
-            return new String(bytes);
-        }
-        if (rawData instanceof CharSequence sequence) {
-            return sequence.toString();
-        }
-        return "";
-    }
-
-    /**
-     * 获取html数据
-     *
-     * @return html数据
-     */
-    public static String getHtmlData(Object rawData) {
-        if (rawData instanceof byte[] bytes) {
-            return new String(bytes);
-        }
-        if (rawData instanceof CharSequence sequence) {
-            return sequence.toString();
-        }
-        return "";
-    }
-
-    /**
-     * 获取yaml数据
-     *
-     * @return yaml数据
-     */
-    public static String getYamlData(Object rawData) {
-        if (rawData instanceof byte[] bytes) {
-            return new String(bytes);
-        }
-        if (rawData instanceof CharSequence sequence) {
-            return sequence.toString();
-        }
-        return "";
-    }
-
-    /**
-     * 获取css数据
-     *
-     * @return css数据
-     */
-    public static String getCssData(Object rawData) {
-        if (rawData instanceof byte[] bytes) {
-            return new String(bytes);
-        }
-        if (rawData instanceof CharSequence sequence) {
-            return sequence.toString();
-        }
-        return "";
-    }
-
-    /**
-     * 获取properties数据
-     *
-     * @return properties数据
-     */
-    public static String getPropertiesData(Object rawData) {
-        if (rawData instanceof byte[] bytes) {
-            return new String(bytes);
-        }
-        if (rawData instanceof CharSequence sequence) {
-            return sequence.toString();
-        }
-        return "";
-    }
-
-    /**
-     * 获取二进制数据
-     *
-     * @return 二进制数据
-     */
-    public static String getBinaryData(Object rawData) {
-        if (rawData instanceof byte[] bytes) {
-            return StringUtil.toBinary(bytes);
-        }
-        if (rawData instanceof CharSequence sequence) {
-            return StringUtil.toBinary(sequence.toString());
-        }
-        return "";
-    }
-
-    /**
-     * 获取十六进制数据
-     *
-     * @return 十六进制数据
-     */
-    public static String getHexData(Object rawData) {
-        if (rawData instanceof CharSequence sequence) {
-            return HexUtil.bytesToHex(sequence.toString().getBytes(), false);
-        }
-        if (rawData instanceof byte[] bytes) {
-            return HexUtil.bytesToHex(bytes, false);
-        }
-        return "";
-    }
-
-    /**
-     * 获取字符串数据
-     *
-     * @return 十字符串数据
-     */
-    public static String getStringData(Object rawData) {
-        if (rawData instanceof CharSequence sequence) {
-            return sequence.toString();
-        }
-        if (rawData instanceof byte[] bytes) {
-            return new String(bytes);
-        }
-        return "";
-    }
+    //    /**
+    //     * 获取json数据
+    //     *
+    //     * @return json数据
+    //     */
+    //    public static String getJsonData(Object rawData) {
+    //        if (rawData == null) {
+    //            return null;
+    //        }
+    //        String data = null;
+    //        try {
+    //            if (rawData instanceof byte[] bytes) {
+    //                data = new String(bytes);
+    //            }
+    //            // if (rawData instanceof Byte[] bytes) {
+    //            //     byte[] bytes1 = new byte[bytes.length];
+    //            //     for (int i = 0; i < bytes1.length; i++) {
+    //            //         bytes1[i] = bytes[i];
+    //            //     }
+    //            //     data = new String(bytes1);
+    //            // }
+    //            if (rawData instanceof CharSequence sequence) {
+    //                data = sequence.toString();
+    //            }
+    //            if (data == null) {
+    //                return null;
+    //            }
+    //            if (!data.contains("{") && !data.contains("[")) {
+    //                return data;
+    //            }
+    //            return JSONUtil.toPretty(data);
+    //        } catch (Exception ex) {
+    //            ex.printStackTrace();
+    //        }
+    //        return data;
+    //    }
+    //
+    //    /**
+    //     * 获取xml数据
+    //     *
+    //     * @return xml数据
+    //     */
+    //    public static String getXmlData(Object rawData) {
+    //        if (rawData instanceof byte[] bytes) {
+    //            return new String(bytes);
+    //        }
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return sequence.toString();
+    //        }
+    //        return "";
+    //    }
+    //
+    //    /**
+    //     * 获取html数据
+    //     *
+    //     * @return html数据
+    //     */
+    //    public static String getHtmlData(Object rawData) {
+    //        if (rawData instanceof byte[] bytes) {
+    //            return new String(bytes);
+    //        }
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return sequence.toString();
+    //        }
+    //        return "";
+    //    }
+    //
+    //    /**
+    //     * 获取yaml数据
+    //     *
+    //     * @return yaml数据
+    //     */
+    //    public static String getYamlData(Object rawData) {
+    //        if (rawData instanceof byte[] bytes) {
+    //            return new String(bytes);
+    //        }
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return sequence.toString();
+    //        }
+    //        return "";
+    //    }
+    //
+    //    /**
+    //     * 获取css数据
+    //     *
+    //     * @return css数据
+    //     */
+    //    public static String getCssData(Object rawData) {
+    //        if (rawData instanceof byte[] bytes) {
+    //            return new String(bytes);
+    //        }
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return sequence.toString();
+    //        }
+    //        return "";
+    //    }
+    //
+    //    /**
+    //     * 获取properties数据
+    //     *
+    //     * @return properties数据
+    //     */
+    //    public static String getPropertiesData(Object rawData) {
+    //        if (rawData instanceof byte[] bytes) {
+    //            return new String(bytes);
+    //        }
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return sequence.toString();
+    //        }
+    //        return "";
+    //    }
+    //
+    //    /**
+    //     * 获取二进制数据
+    //     *
+    //     * @return 二进制数据
+    //     */
+    //    public static String getBinaryData(Object rawData) {
+    //        if (rawData instanceof byte[] bytes) {
+    //            return StringUtil.toBinary(bytes);
+    //        }
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return StringUtil.toBinary(sequence.toString());
+    //        }
+    //        return "";
+    //    }
+    //
+    //    /**
+    //     * 获取十六进制数据
+    //     *
+    //     * @return 十六进制数据
+    //     */
+    //    public static String getHexData(Object rawData) {
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return HexUtil.bytesToHex(sequence.toString().getBytes(), false);
+    //        }
+    //        if (rawData instanceof byte[] bytes) {
+    //            return HexUtil.bytesToHex(bytes, false);
+    //        }
+    //        return "";
+    //    }
+    //
+    //    /**
+    //     * 获取字符串数据
+    //     *
+    //     * @return 十字符串数据
+    //     */
+    //    public static String getStringData(Object rawData) {
+    //        if (rawData instanceof CharSequence sequence) {
+    //            return sequence.toString();
+    //        }
+    //        if (rawData instanceof byte[] bytes) {
+    //            return new String(bytes);
+    //        }
+    //        return "";
+    //    }
 
     /**
      * byte转bit字符串
@@ -442,6 +486,9 @@ public class TextUtil {
         byte[] bytes = new byte[bits.length];
         int i = 0;
         for (String bit : bits) {
+            if (bit == null) {
+                continue;
+            }
             // 将二进制字符串转换为十进制整数
             int decimalValue = Integer.parseInt(bit, 2);
             // 将十进制整数转换为字节
@@ -507,50 +554,50 @@ public class TextUtil {
         return builder.toString();
     }
 
-    /**
-     * 将字节数组转换为十六进制字符串
-     *
-     * @param bytes 字节数组
-     * @return 十六进制字符串
-     */
-    public static String bytesToHexStr(byte[] bytes) {
-        return bytesToHexStr(bytes, true);
-    }
+    //    /**
+    //     * 将字节数组转换为十六进制字符串
+    //     *
+    //     * @param bytes 字节数组
+    //     * @return 十六进制字符串
+    //     */
+    //    public static String bytesToHexStr(byte[] bytes) {
+    //        return bytesToHexStr(bytes, true);
+    //    }
+    //
+    //    /**
+    //     * 将字节数组转换为十六进制字符串
+    //     *
+    //     * @param bytes       字节数组
+    //     * @param toUpperCase 大写形式
+    //     * @return 十六进制字符串
+    //     */
+    //    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
+    //        StringBuilder hexString = new StringBuilder();
+    //        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
+    //        for (byte b : bytes) {
+    //            hexString.append(String.format("%02X", b));
+    //        }
+    //        if (toUpperCase) {
+    //            return hexString.toString().toUpperCase();
+    //        }
+    //        return hexString.toString();
+    //    }
 
-    /**
-     * 将字节数组转换为十六进制字符串
-     *
-     * @param bytes       字节数组
-     * @param toUpperCase 大写形式
-     * @return 十六进制字符串
-     */
-    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
-        StringBuilder hexString = new StringBuilder();
-        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
-        for (byte b : bytes) {
-            hexString.append(String.format("%02X", b));
-        }
-        if (toUpperCase) {
-            return hexString.toString().toUpperCase();
-        }
-        return hexString.toString();
-    }
-
-    /**
-     * 将十六进制转换为字符串字节数组
-     *
-     * @param s 十六进制字符串
-     * @return 字节数组
-     */
-    public static byte[] hexStrToBytes(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i + 1), 16));
-        }
-        return data;
-    }
+    //    /**
+    //     * 将十六进制转换为字符串字节数组
+    //     *
+    //     * @param s 十六进制字符串
+    //     * @return 字节数组
+    //     */
+    //    public static byte[] hexStrToBytes(String s) {
+    //        int len = s.length();
+    //        byte[] data = new byte[len / 2];
+    //        for (int i = 0; i < len; i += 2) {
+    //            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+    //                    + Character.digit(s.charAt(i + 1), 16));
+    //        }
+    //        return data;
+    //    }
 
     /**
      * 是否xml字符串
@@ -603,6 +650,16 @@ public class TextUtil {
     }
 
     /**
+     * 是否python字符串
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static boolean isPythonStr(String str) {
+        return StringUtil.startWith(str, "#!/usr/bin/python");
+    }
+
+    /**
      * 是否二进制字符串
      *
      * @param str 字符串
@@ -632,7 +689,7 @@ public class TextUtil {
                     && StringUtil.contains(json, ":") && StringUtil.contains(json, "\"");
         }
         if (isJson && StringUtil.startWithAny(json.trim(), "{", "[") && StringUtil.endWithAny(json.trim(), "}", "]")) {
-
+            isJson = JSONUtil.isJson(json);
         } else {
             isJson = false;
         }
@@ -686,6 +743,9 @@ public class TextUtil {
             if (isHtmlStr(str)) {
                 return 4;
             }
+            if (isPythonStr(str)) {
+                return 10;
+            }
             if (isCssStr(str)) {
                 return 7;
             }
@@ -698,5 +758,63 @@ public class TextUtil {
             return 5;
         }
         return 6;
+    }
+
+    /**
+     * 获取最后一行
+     *
+     * @param content 内容
+     * @return 结果
+     */
+    public static String getLastLine(String content) {
+        return getLastLine(content, System.lineSeparator());
+    }
+
+    /**
+     * 获取最后一行
+     *
+     * @param content       内容
+     * @param lineSeparator 行分隔符
+     * @return 结果
+     */
+    public static String getLastLine(String content, String lineSeparator) {
+        int lastNewline = content.lastIndexOf(lineSeparator);
+        return lastNewline >= 0 ? content.substring(lastNewline + lineSeparator.length()) : content;
+    }
+
+    /**
+     * 计算相近度
+     *
+     * @param str  内容
+     * @param text 文本
+     * @return 结果
+     */
+    public static double clacCorr(String str, String text) {
+        double corr = 0.0;
+        if (StringUtil.containsIgnoreCase(str, text) || StringUtil.containsIgnoreCase(text, str)) {
+            corr = StringUtil.similarity(str.toUpperCase(), text.toUpperCase());
+            if (StringUtil.startWithIgnoreCase(str, text)) {
+                corr += 0.35;
+            } else if (StringUtil.containsIgnoreCase(str, text)) {
+                corr += 0.25;
+            }
+            if (StringUtil.endWithIgnoreCase(str, text)) {
+                corr += 0.15;
+            }
+        }
+        return corr;
+    }
+
+    /**
+     * 转换为单行内容
+     *
+     * @param text 内容
+     * @return 结果
+     */
+    public static String toSingleLine(String text) {
+        if (StringUtil.isEmpty(text)) {
+            return text;
+        }
+        return text.replaceAll("\\s+", " ");
     }
 }

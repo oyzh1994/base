@@ -6,13 +6,13 @@
     <parent>
         <groupId>io.github.oyzh1994</groupId>
         <artifactId>base</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
     </parent>
 
     <name>base-store</name>
     <artifactId>base-store</artifactId>
     <description>
-        基础模块，存储功能的实现
+        base for store
     </description>
 
     <dependencies>
@@ -34,7 +34,7 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
-            <scope>provided</scope>
+            <!-- <scope>provided</scope> -->
         </dependency>
 
         <!-- Apache POI -->

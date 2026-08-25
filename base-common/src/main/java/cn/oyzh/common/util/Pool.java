@@ -37,8 +37,17 @@ public abstract class Pool<T> {
     private boolean waitingBorrow;
 
     public Pool(int minSize, int maxSize) {
-        this.setMaxSize(maxSize);
-        this.setMinSize(minSize);
+        if (minSize < 0) {
+            throw new InvalidParamException("minSize");
+        }
+        if (maxSize < 0) {
+            throw new InvalidParamException("maxSize");
+        }
+        if (minSize > maxSize) {
+            throw new InvalidParamException("minSize");
+        }
+        this.minSize = minSize;
+        this.maxSize = maxSize;
     }
 
     public boolean isWaitingBorrow() {
@@ -57,6 +66,9 @@ public abstract class Pool<T> {
         if (minSize > this.maxSize) {
             throw new InvalidParamException("minSize");
         }
+        if (minSize < 0) {
+            throw new InvalidParamException("minSize");
+        }
         this.minSize = minSize;
     }
 
@@ -66,6 +78,9 @@ public abstract class Pool<T> {
 
     public void setMaxSize(int maxSize) {
         if (maxSize < this.minSize) {
+            throw new InvalidParamException("maxSize");
+        }
+        if (maxSize < 0) {
             throw new InvalidParamException("maxSize");
         }
         this.maxSize = maxSize;
@@ -161,7 +176,7 @@ public abstract class Pool<T> {
         synchronized (this.listLock) {
             this.list.add(t);
         }
-        System.out.println("object:" + t + " is returned, size:" + this.size());
+        JulLog.debug("object:{} is returned, size:{}" ,t, this.size());
     }
 
     /**
@@ -201,7 +216,7 @@ public abstract class Pool<T> {
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {
-            System.out.println("object:" + obj + " is borrowed, size:" + this.size());
+           JulLog.debug("object:{} is borrowed, size:{}",obj,  this.size());
         }
         return obj;
     }

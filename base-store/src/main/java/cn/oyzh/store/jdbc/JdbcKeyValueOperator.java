@@ -1,6 +1,7 @@
 package cn.oyzh.store.jdbc;
 
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.util.CostUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -35,15 +36,25 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
             Statement clearStatement = connection.createStatement();
             clearStatement.executeUpdate("DELETE FROM " + JdbcUtil.wrap(tableName));
             clearStatement.close();
+            StringBuilder sql = new StringBuilder("INSERT INTO ");
+            sql.append(JdbcUtil.wrap(tableName)).append("(`KEY`, `VALUE`) VALUES( ?, ?)");
+            PreparedStatement statement = connection.prepareStatement(sql.toString());
             for (Map.Entry<String, Object> entry : record.entrySet()) {
-                StringBuilder sql = new StringBuilder("INSERT INTO ");
-                sql.append(JdbcUtil.wrap(tableName)).append("(`KEY`, `VALUE`) VALUES( ?, ?)");
-                PreparedStatement statement = connection.prepareStatement(sql.toString());
                 JulLog.debug("{}={}", entry.getKey(), entry.getValue());
                 JdbcHelper.setParams(statement, entry.getKey(), entry.getValue());
-                statement.executeUpdate();
-                statement.close();
+                statement.addBatch();
             }
+            statement.executeBatch();
+            statement.close();
+//            for (Map.Entry<String, Object> entry : record.entrySet()) {
+//                StringBuilder sql = new StringBuilder("INSERT INTO ");
+//                sql.append(JdbcUtil.wrap(tableName)).append("(`KEY`, `VALUE`) VALUES( ?, ?)");
+//                PreparedStatement statement = connection.prepareStatement(sql.toString());
+//                JulLog.debug("{}={}", entry.getKey(), entry.getValue());
+//                JdbcHelper.setParams(statement, entry.getKey(), entry.getValue());
+//                statement.executeUpdate();
+//                statement.close();
+//            }
             connection.commit();
             return true;
         } catch (Exception ex) {

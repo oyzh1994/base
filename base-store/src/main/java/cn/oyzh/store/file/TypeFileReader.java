@@ -34,7 +34,7 @@ public abstract class TypeFileReader implements Closeable {
         return records;
     }
 
-    protected List<String> parseLine(String line, char txtIdentifier, char fieldSeparator) throws IOException {
+    protected List<String> parseLine(String line, Character txtIdentifier, Character fieldSeparator) throws IOException {
         List<String> list = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         boolean txtStart = false;
@@ -46,25 +46,38 @@ public abstract class TypeFileReader implements Closeable {
                     break;
                 }
                 char c = (char) i;
-                // if (txtStart && c == fieldSeparator) {
-                //     txtStart = false;
-                //     continue;
-                // }
-                if (c == txtIdentifier) {
-                    if (lastChar != null && lastChar == '\\') {
-                        sb.append(c);
-                        continue;
+                if (txtIdentifier != null) {
+                    if (c == txtIdentifier) {
+                        if (lastChar != null && lastChar == '\\') {
+                            sb.append(c);
+                            continue;
+                        }
+                        if (txtStart) {
+                            list.add(sb.toString());
+                            sb.delete(0, sb.length());
+                            txtStart = false;
+                        } else {
+                            txtStart = true;
+                            continue;
+                        }
                     }
-                    if (txtStart) {
+                } else {
+                    txtStart = true;
+                }
+
+                if (fieldSeparator != null) {
+                    if (txtStart && c == fieldSeparator) {
+                        txtStart = false;
                         list.add(sb.toString());
                         sb.delete(0, sb.length());
-                        txtStart = false;
-                    } else {
-                        txtStart = true;
+                        continue;
                     }
-                } else if (txtStart) {
+                }
+
+                if (txtStart) {
                     sb.append(c);
                 }
+
                 lastChar = c;
             }
         }

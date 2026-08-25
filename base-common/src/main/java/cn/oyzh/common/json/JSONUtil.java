@@ -3,6 +3,7 @@ package cn.oyzh.common.json;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONValidator;
 import com.alibaba.fastjson2.JSONWriter;
 
 import java.util.Collections;
@@ -48,7 +49,7 @@ public class JSONUtil {
                 ex.printStackTrace();
             }
         }
-        return null;
+        return str;
     }
 
     /**
@@ -131,6 +132,21 @@ public class JSONUtil {
     }
 
     /**
+     * 转换为json对象
+     *
+     * @param obj 对象
+     * @return json对象
+     */
+    public static JSONObject toJsonObject(Object obj) {
+        try {
+            return JSONObject.from(obj);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
      * 判断是否json字符串
      *
      * @param json json字符串
@@ -139,7 +155,7 @@ public class JSONUtil {
     public static boolean isJson(String json) {
         if (json != null && !json.isBlank() && (json.contains("{") || json.contains("["))) {
             try {
-                return JSON.isValid(json);
+                return JSONValidator.from(json).validate();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -154,11 +170,21 @@ public class JSONUtil {
      * @return json对象
      */
     public static JSONObject parseObject(String json) {
-        com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
+        JSONObject object = JSONObject.parseObject(json);
         if (object != null) {
             return new JSONObject(object);
         }
         return new JSONObject();
+    }
+
+    /**
+     * 解析为json对象
+     *
+     * @param obj 对象
+     * @return json对象
+     */
+    public static JSONObject parseObject(Object obj) {
+        return parseObject(toJson(obj));
     }
 
     /**
@@ -168,13 +194,12 @@ public class JSONUtil {
      * @return json树组
      */
     public static JSONArray parseArray(String json) {
-        com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
+        JSONArray array = JSONArray.parseArray(json);
         if (array != null) {
             return new JSONArray(array);
         }
         return new JSONArray();
     }
-
 
     /**
      * 解析为bean
@@ -184,7 +209,23 @@ public class JSONUtil {
      */
     public static <T> T toBean(String json, Class<T> beanClass) {
         try {
-            com.alibaba.fastjson2.JSONObject object = com.alibaba.fastjson2.JSONObject.parseObject(json);
+            JSONObject object = JSONObject.parseObject(json);
+            return object.toJavaObject(beanClass);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 解析为bean
+     *
+     * @param obj 对象
+     * @return java对象
+     */
+    public static <T> T toBean(Object obj, Class<T> beanClass) {
+        try {
+            JSONObject object = JSONObject.parseObject(toJson(obj));
             return object.toJavaObject(beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -199,10 +240,10 @@ public class JSONUtil {
      * @param <T>  对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(String json, Class<T> beanClass) {
+    public static <T> List<T> toList(String json, Class<T> beanClass) {
         try {
-            com.alibaba.fastjson2.JSONArray array = com.alibaba.fastjson2.JSONArray.parseArray(json);
-            return array.toJavaList(beanClass);
+            JSONArray array = JSONArray.parseArray(json);
+            return toList(array, beanClass);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -216,12 +257,26 @@ public class JSONUtil {
      * @param <T>   对象泛型
      * @return java对象列表
      */
-    public static <T> List<T> toBeanList(JSONArray array, Class<T> beanClass) {
-        try {
-            return array.toList(beanClass);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+    public static <T> List<T> toList(JSONArray array, Class<T> beanClass) {
+        if (array != null) {
+            try {
+                return array.toJavaList(beanClass);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
         return Collections.emptyList();
+    }
+
+    /**
+     * 转换为java对象列表
+     *
+     * @param object json对象
+     * @param <T>    对象泛型
+     * @return java对象列表
+     */
+    public static <T> List<T> toList(JSONObject object, String key, Class<T> beanClass) {
+        JSONArray array = object.getJSONArray(key);
+        return toList(array, beanClass);
     }
 }

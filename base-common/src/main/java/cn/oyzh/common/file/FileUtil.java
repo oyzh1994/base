@@ -2,6 +2,8 @@ package cn.oyzh.common.file;
 
 import cn.oyzh.common.exception.InvalidParamException;
 import cn.oyzh.common.function.ExceptionConsumer;
+import cn.oyzh.common.system.OSUtil;
+import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.BufferedReader;
@@ -23,9 +25,15 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.LongAdder;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * 文件工具类
@@ -151,10 +159,7 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean del(String file) {
-        if (file != null) {
-            return del(new File(file));
-        }
-        return false;
+        return del(new File(file), false);
     }
 
     /**
@@ -164,10 +169,51 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean del(File file) {
-        if (file != null) {
-            return file.delete();
+        return del(file, false);
+    }
+
+    /**
+     * 删除
+     *
+     * @param file  文件
+     * @param force 是否强制删除
+     * @return 结果
+     */
+    public static boolean del(String file, boolean force) {
+        return del(new File(file), force);
+    }
+
+    /**
+     * 删除
+     *
+     * @param file  文件
+     * @param force 强制
+     * @return 结果
+     */
+    public static boolean del(File file, boolean force) {
+        if (file == null) {
+            return false;
         }
-        return false;
+        boolean success = false;
+        try {
+            success = file.delete();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        if (!success && force) {
+            try {
+                if (OSUtil.isWindows()) {
+                    String[] cmdArr = {"rmdir", "/s", "/q", file.getPath()};
+                    RuntimeUtil.execForStr(cmdArr);
+                } else {
+                    RuntimeUtil.exec("rm -rf \"" + file + "\"", null, file.getParentFile());
+                }
+                success = true;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return success;
     }
 
     public static byte[] readBytes(String file) {
@@ -222,9 +268,9 @@ public class FileUtil {
     }
 
     public static List<String> readLines(InputStream stream, Charset charset) {
-        try {
-            InputStreamReader reader = new InputStreamReader(stream, charset);
-            BufferedReader bufferedReader = new BufferedReader(reader);
+        try (InputStreamReader reader = new InputStreamReader(stream, charset);
+             BufferedReader bufferedReader = new BufferedReader(reader);
+        ) {
             try (reader; bufferedReader) {
                 List<String> list = new ArrayList<>();
                 String line;
@@ -351,6 +397,22 @@ public class FileUtil {
      * @return 结果
      * @throws IOException 异常
      */
+    public static boolean moveDir(String source, String target, boolean override) throws IOException {
+        return moveDir(new File(source), new File(target), override);
+    }
+
+    /**
+     * 移动文件夹
+     * 1. source为文件，target为文件，直接覆盖
+     * 2. source为目录，target为目录，直接覆盖
+     * 3. source为文件，target为目录，移动到target
+     *
+     * @param source   源文件
+     * @param target   目标文件
+     * @param override 是否覆盖
+     * @return 结果
+     * @throws IOException 异常
+     */
     public static boolean moveDir(File source, File target, boolean override) throws IOException {
         if (!source.exists() || !source.isDirectory()) {
             throw new InvalidParamException(source.getPath());
@@ -369,6 +431,19 @@ public class FileUtil {
         Files.move(sPath, tPath);
         del(source);
         return true;
+    }
+
+    /**
+     * 重命名文件
+     *
+     * @param source   源文件
+     * @param target   目标文件
+     * @param override 是否覆盖
+     * @return 结果
+     * @throws IOException 异常
+     */
+    public static boolean renameFile(String source, String target, boolean override) throws IOException {
+        return renameFile(new File(source), new File(target), override);
     }
 
     /**
@@ -405,7 +480,7 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean cleanFile(File source) {
-        if (source != null && source.exists() && !source.isDirectory() && !source.isAbsolute()) {
+        if (source != null && source.exists() && !source.isDirectory() && source.isFile()) {
             try (FileOutputStream fos = new FileOutputStream(source)) {
                 fos.write(new byte[]{});
                 return true;
@@ -706,4 +781,115 @@ public class FileUtil {
         return Files.isRegularFile(new File(file).toPath());
     }
 
+    /**
+     * 获取unix模式
+     *
+     * @param path 路径
+     * @return 结果
+     */
+    public static int getUnixMode(Path path) {
+        try {
+            Set<PosixFilePermission> perms = Files.getPosixFilePermissions(path);
+            return posixPermissionsToInt(perms);
+        } catch (IOException | UnsupportedOperationException e) {
+            // 非 POSIX 系统（如 Windows）的回退逻辑
+            int mode = Files.isDirectory(path) ? 0755 : 0644;
+            if (Files.isExecutable(path)) {
+                mode |= 0111;
+            }
+            return mode;
+        }
+    }
+
+    /**
+     * 将 POSIX 权限集合转换为八进制模式值（如 "rwxr-xr-x" -> 0755）。
+     */
+    public static int posixPermissionsToInt(Set<PosixFilePermission> perms) {
+        String permStr = PosixFilePermissions.toString(perms); // 如 "rwxr-xr-x"
+        int mode = 0;
+        if (permStr.charAt(0) == 'r')
+            mode |= 0400;
+        if (permStr.charAt(1) == 'w')
+            mode |= 0200;
+        if (permStr.charAt(2) == 'x')
+            mode |= 0100;
+        if (permStr.charAt(3) == 'r')
+            mode |= 0040;
+        if (permStr.charAt(4) == 'w')
+            mode |= 0020;
+        if (permStr.charAt(5) == 'x')
+            mode |= 0010;
+        if (permStr.charAt(6) == 'r')
+            mode |= 0004;
+        if (permStr.charAt(7) == 'w')
+            mode |= 0002;
+        if (permStr.charAt(8) == 'x')
+            mode |= 0001;
+        return mode;
+    }
+
+    /**
+     * 计算目录
+     *
+     * @param file      文件
+     * @param fileCount 文件总数
+     * @param fileSize  文件大小
+     * @param filter    过滤器
+     */
+    public static void calcDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback, Function<File, Boolean> filter) {
+        if (file.isFile()) {
+            if (filter != null && !filter.apply(file)) {
+                return;
+            }
+            if (fileCount != null) {
+                fileCount.add(1);
+            }
+            if (fileSize != null) {
+                fileSize.add(file.length());
+            }
+            if (callback != null) {
+                callback.accept(fileCount, fileSize);
+            }
+        } else {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    calcDir(file1, fileCount, fileSize, callback, filter);
+                }
+            }
+        }
+    }
+
+    /**
+     * 清理目录
+     *
+     * @param file      文件
+     * @param fileCount 文件总数
+     * @param fileSize  文件大小
+     * @param callback  回调函数
+     * @param filter    过滤器
+     */
+    public static void clearDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback, Function<File, Boolean> filter) {
+        if (file.isFile()) {
+            if (filter != null && !filter.apply(file)) {
+                return;
+            }
+            if (fileCount != null) {
+                fileCount.add(1);
+            }
+            if (fileSize != null) {
+                fileSize.add(file.length());
+            }
+            if (file.delete() && callback != null) {
+                callback.accept(fileCount, fileSize);
+            }
+        } else {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File file1 : files) {
+                    clearDir(file1, fileCount, fileSize, callback, filter);
+                }
+            }
+        }
+    }
 }

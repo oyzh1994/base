@@ -47,15 +47,18 @@ public class XMLElement {
         if (this.elements == null) {
             this.elements = new ArrayList<>();
         }
-        return elements;
+        return  this.elements;
     }
 
     public Iterator<XMLElement> elementIterator(String tagName) {
+        return this.elements(tagName).iterator();
+    }
+
+    public List<XMLElement> elements(String tagName) {
         if (tagName != null && this.elements != null) {
-            List<XMLElement> elementList = this.elements.parallelStream().filter(e -> StringUtil.equals(e.tagName, tagName)).toList();
-            return elementList.iterator();
+            return this.elements.parallelStream().filter(e -> StringUtil.equals(e.tagName, tagName)).toList();
         }
-        return null;
+        return this.elements;
     }
 
     public XMLElement element(String tagName) {

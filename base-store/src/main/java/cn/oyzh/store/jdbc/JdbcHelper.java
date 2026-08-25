@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.Collection;
 
 /**
@@ -61,7 +62,7 @@ public class JdbcHelper {
             int index = 1;
             for (Object param : params) {
                 if (param == null) {
-                    statement.setNull(index++, JDBCType.NULL.ordinal());
+                    statement.setNull(index++, Types.NULL);
                 } else {
                     statement.setObject(index++, param);
                 }

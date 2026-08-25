@@ -60,12 +60,10 @@ public class XMLDocument {
     static XMLElement parse(XMLEventReader reader) throws XMLStreamException {
         // 当前等级
         int level = 0;
-        // 根节点
-        XMLElement root = null;
         // 当前节点
         XMLElement element = null;
         // 节点集合
-        Map<XMLElement, Integer> nodes = new HashMap<>();
+        Map<Integer, XMLElement> nodes = new HashMap<>();
         // 读取节点
         while (reader.hasNext()) {
             // 事件
@@ -102,12 +100,15 @@ public class XMLDocument {
                     Attribute attribute = iterator.next();
                     element.attributes().put(attribute.getName().getLocalPart(), attribute.getValue());
                 }
-                // 根节点
-                if (++level == 1) {
-                    root = element;
-                } else {// 子节点
-                    nodes.put(element, level);
+                level++;
+                // 寻找当前父节点
+                XMLElement pElement = nodes.get(level - 1);
+                // 添加到父节点
+                if (pElement != null) {
+                    pElement.elements().add(element);
                 }
+                // 记录节点level到集合
+                nodes.put(level, element);
             }
             // 文本内容
             if (event.isCharacters() && element != null) {
@@ -124,24 +125,24 @@ public class XMLDocument {
             }
         }
 
-        // 遍历数据列表，为节点添加子节点
-        for (XMLElement subEle : nodes.keySet()) {
-            int subLevel = nodes.get(subEle);
-            // 一级节点
-            if (subLevel == 2 && root != null) {
-                root.elements().add(subEle);
-            } else {// 二级或其他
-                for (XMLElement parentEle : nodes.keySet()) {
-                    int parentLevel = nodes.get(parentEle);
-                    if (parentLevel == subLevel - 1) {
-                        parentEle.elements().add(subEle);
-                        break;
-                    }
-                }
-            }
-        }
+        // // 遍历数据列表，为节点添加子节点
+        // for (XMLElement subEle : nodes.keySet()) {
+        //     int subLevel = nodes.get(subEle);
+        //     // 一级节点
+        //     if (subLevel == 2 && root != null) {
+        //         root.elements().add(subEle);
+        //     } else {// 二级或其他
+        //         for (XMLElement parentEle : nodes.keySet()) {
+        //             int parentLevel = nodes.get(parentEle);
+        //             if (parentLevel == subLevel - 1) {
+        //                 parentEle.elements().add(subEle);
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
 
         // 返回根节点
-        return root;
+        return nodes.get(1);
     }
 }

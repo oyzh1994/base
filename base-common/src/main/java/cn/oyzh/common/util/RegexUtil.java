@@ -87,4 +87,48 @@ public class RegexUtil {
         }
         return IPV4_PATTERN.matcher(str).matches();
     }
+
+    /**
+     * 根据 IDE 风格的选项构建搜索用的 Pattern 对象
+     *
+     * @param searchText   用户输入的搜索文本
+     * @param caseSensitive 是否区分大小写（true = 区分，false = 不区分）
+     * @param wholeWord     是否全词匹配（true = 是）
+     * @param useRegex      是否启用正则表达式（true = 是）
+     * @return 编译好的 Pattern
+     */
+    public static Pattern createSearchPattern(
+            String searchText,
+            boolean caseSensitive,
+            boolean wholeWord,
+            boolean useRegex) {
+        if (searchText == null || searchText.isEmpty()) {
+            // 空搜索文本时，可以返回一个永远不会匹配的 Pattern 或直接抛出异常
+            throw new IllegalArgumentException("搜索文本不能为空");
+        }
+
+        int flags = 0;
+        if (!caseSensitive) {
+            flags |= Pattern.CASE_INSENSITIVE;
+            flags |= Pattern.UNICODE_CASE; // 推荐：更好地支持 Unicode 的大小写不敏感
+        }
+
+        String finalRegex;
+        if (useRegex) {
+            // 直接使用用户输入作为正则
+            finalRegex = searchText;
+            if (wholeWord) {
+                // 全词匹配时，用 \b 和非捕获组包裹，避免影响原有的分组
+                finalRegex = "\\b(?:" + finalRegex + ")\\b";
+            }
+        } else {
+            // 非正则模式：先将用户文本中的所有特殊字符转义
+            finalRegex = Pattern.quote(searchText);
+            if (wholeWord) {
+                finalRegex = "\\b" + finalRegex + "\\b";
+            }
+        }
+
+        return Pattern.compile(finalRegex, flags);
+    }
 }

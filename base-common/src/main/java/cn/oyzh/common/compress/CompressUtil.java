@@ -117,8 +117,8 @@ public class CompressUtil {
     // 简化方法：压缩单个文件
     public static void compress(String sourcePath, String targetPath, CompressType compressType)
             throws IOException, ArchiveException {
-        List<String> sources = new ArrayList<>();
-        sources.add(sourcePath);
+//        List<String> sources = new ArrayList<>();
+//        sources.add(sourcePath);
         compress(List.of(new File(sourcePath)), targetPath, compressType);
     }
 }

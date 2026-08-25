@@ -1,5 +1,7 @@
 package cn.oyzh.common.util;
 
+import cn.oyzh.common.thread.ThreadUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,6 +31,16 @@ public class IOUtil {
                 closeable.close();
             } catch (Exception ignored) {
             }
+        }
+    }
+
+    /**
+     * 异步关闭
+     * @param closeable 对象
+     */
+    public static void closeAsync(AutoCloseable closeable) {
+        if (closeable != null) {
+            ThreadUtil.startVirtual(() -> IOUtil.closeQuietly(closeable));
         }
     }
 
