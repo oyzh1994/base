@@ -496,7 +496,7 @@ public class StringUtil {
     /**
      * 是否以目标内容结尾
      *
-     * @param source     内容
+     * @param source 内容
      * @param target 目标内容
      * @return 结果
      */
@@ -510,7 +510,7 @@ public class StringUtil {
     /**
      * 是否以目标内容结尾，忽略大小写
      *
-     * @param source     内容
+     * @param source 内容
      * @param target 目标内容
      * @return 结果
      */
@@ -658,6 +658,7 @@ public class StringUtil {
 
     /**
      * 获取两个字符串的最长公共前缀。
+     *
      * @param a 第一个字符串
      * @param b 第二个字符串
      * @return 最长公共前缀，如果没有则返回空字符串 ""
@@ -676,6 +677,7 @@ public class StringUtil {
 
     /**
      * 获取多个字符串的最长公共前缀。
+     *
      * @param strs 可变参数字符串数组
      * @return 最长公共前缀，如果没有则返回 ""
      */
@@ -693,4 +695,14 @@ public class StringUtil {
         return prefix;
     }
 
+    /**
+     * 清除内容
+     *
+     * @param builder StringBuilder
+     */
+    public static void clear(StringBuilder builder) {
+        if (builder != null) {
+            builder.delete(0, builder.length());
+        }
+    }
 }
