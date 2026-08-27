@@ -791,15 +791,23 @@ public class TextUtil {
      */
     public static double clacCorr(String str, String text) {
         double corr = 0.0;
-        if (StringUtil.containsIgnoreCase(str, text) || StringUtil.containsIgnoreCase(text, str)) {
+        if (StringUtil.equals(str, text)) {
+            corr = 2.0;
+        } else if (StringUtil.containsIgnoreCase(str, text) || StringUtil.containsIgnoreCase(text, str)) {
             corr = StringUtil.similarity(str.toUpperCase(), text.toUpperCase());
-            if (StringUtil.startWithIgnoreCase(str, text)) {
+            if (StringUtil.startWith(str, text)) {
+                corr += 0.40;
+            } else if (StringUtil.startWithIgnoreCase(str, text)) {
                 corr += 0.35;
-            } else if (StringUtil.containsIgnoreCase(str, text)) {
+            } else if (StringUtil.contains(str, text)) {
                 corr += 0.25;
+            } else if (StringUtil.containsIgnoreCase(str, text)) {
+                corr += 0.20;
             }
-            if (StringUtil.endWithIgnoreCase(str, text)) {
+            if (StringUtil.endsWith(str, text)) {
                 corr += 0.15;
+            } else if (StringUtil.endWithIgnoreCase(str, text)) {
+                corr += 0.10;
             }
         }
         return corr;
