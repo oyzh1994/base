@@ -59,7 +59,7 @@
         <guava.version>33.5.0-jre</guava.version>
         <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
         <netty.version>4.2.10.Final</netty.version>
-        <fastjson.version>2.0.62</fastjson.version>
+        <fastjson2.version>2.0.64</fastjson2.version>
         <!-- <fastjson.version>1.2.83</fastjson.version> -->
         <jgit.version>7.7.0.202606012155-r</jgit.version>
         <bouncycastle.version>1.84</bouncycastle.version>
