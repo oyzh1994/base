@@ -2996,6 +2996,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RELOAD, DATABASE);
     }
 
+    public static String reloadSchema() {
+        return I18nResourceBundle.i18nString(RELOAD, SCHEMA);
+    }
+
     public static String addTable() {
         return I18nResourceBundle.i18nString(ADD, TABLE);
     }
@@ -3442,6 +3446,10 @@ public class I18nHelper {
 
     public static String addDatabase() {
         return I18nResourceBundle.i18nString(ADD, DATABASE);
+    }
+
+    public static String addSchema() {
+        return I18nResourceBundle.i18nString(ADD, SCHEMA);
     }
 
     public static String design() {
