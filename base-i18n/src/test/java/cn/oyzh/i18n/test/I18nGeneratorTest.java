@@ -17,8 +17,8 @@ import java.util.Locale;
  */
 public class I18nGeneratorTest {
 
-    // private final String skFile = "/Users/oyzh/Desktop/baidu_trans.sk";
-    private final String skFile = "C:\\Users\\Administrator\\Desktop\\baidu_trans.sk";
+     private final String skFile = "/Users/oyzh/Desktop/baidu_trans.sk";
+//    private final String skFile = "C:\\Users\\Administrator\\Desktop\\baidu_trans.sk";
        //private final String skFile = "C:\\Users\\oyzh\\OneDrive\\桌面\\baidu_trans.sk";
 
     // private final String baseDir1 = "/Users/oyzh/IdeaProjects/oyzh/base/base-i18n/src/main/resources";
@@ -33,9 +33,9 @@ public class I18nGeneratorTest {
     //    private final String baseDir3 = "C:\\Users\\Administrator\\IdeaProjects\\easyzk\\src\\main\\resources";
     //private final String baseDir3 = "C:\\Users\\oyzh\\Projects\\easyzk\\src\\main\\resources";
 
-    // private final String baseDir4 = "/Users/oyzh/IdeaProjects/oyzh/easyshell/src/main/resources";
+     private final String baseDir4 = "/Users/oyzh/IdeaProjects/oyzh/easyshell/src/main/resources";
     // private final String baseDir4 = "C:\\Users\\Administrator\\IdeaProjects\\easyshell\\src\\main\\resources";
-       private final String baseDir4 = "C:\\Users\\oyzh\\Projects\\easyshell\\src\\main\\resources";
+//       private final String baseDir4 = "C:\\Users\\oyzh\\Projects\\easyshell\\src\\main\\resources";
 
     @Test
     public void test_base() {
