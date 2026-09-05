@@ -933,6 +933,8 @@ public class I18nHelper {
 
     public static final String RESTART = "base.restart";
 
+    public static final String RESTART1 = "base.restart1";
+
     public static final String METADATA = "base.metadata";
 
     public static final String SUBMIT = "base.submit";
@@ -4991,6 +4993,10 @@ public class I18nHelper {
 
     public static String restart() {
         return I18nResourceBundle.i18nString(RESTART);
+    }
+
+    public static String restart1() {
+        return I18nResourceBundle.i18nString(RESTART1);
     }
 
     public static String metadata() {
