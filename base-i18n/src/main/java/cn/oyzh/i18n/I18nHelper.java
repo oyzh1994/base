@@ -87,6 +87,12 @@ public class I18nHelper {
 
     public static final String PUBLIC_KEY = "base.publicKey";
 
+    public static final String HELP = "base.help";
+
+    public static final String EXTRA = "base.extra";
+
+    public static final String MINIMIZE = "base.minimize";
+
     public static final String TABLE = "base.table";
 
     public static final String TRUNCATE = "base.truncate";
@@ -430,6 +436,8 @@ public class I18nHelper {
     public static final String DATABASE = "base.database";
 
     public static final String FEATURES = "base.features";
+
+    public static final String FEATURES1 = "base.features1";
 
     public static final String OPTIMIZE = "base.optimize";
 
@@ -820,6 +828,8 @@ public class I18nHelper {
     public static final String TAB = "base.tab";
 
     public static final String SWITCH = "base.switch";
+
+    public static final String TOGGLE = "base.toggle";
 
     public static final String OTHER = "base.other";
 
@@ -1921,6 +1931,10 @@ public class I18nHelper {
 
     public static String showLeftSide() {
         return I18nResourceBundle.i18nString(SHOW, LEFT_SIDE);
+    }
+
+    public static String hideLeftSide() {
+        return I18nResourceBundle.i18nString(HIDE, LEFT_SIDE);
     }
 
     public static String connectionConnected() {
@@ -4298,6 +4312,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FEATURES);
     }
 
+    public static String features1() {
+        return I18nResourceBundle.i18nString(FEATURES1);
+    }
+
     public static String optimize() {
         return I18nResourceBundle.i18nString(OPTIMIZE);
     }
@@ -4775,6 +4793,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(MONTHS);
     }
 
+    public static String switch1() {
+        return I18nResourceBundle.i18nString(SWITCH);
+    }
+
+    public static String toggleTheme() {
+        return I18nResourceBundle.i18nString(TOGGLE, THEME);
+    }
+
     public static String switchTab() {
         return I18nResourceBundle.i18nString(SWITCH, TAB);
     }
@@ -4997,6 +5023,18 @@ public class I18nHelper {
 
     public static String publicKey() {
         return I18nResourceBundle.i18nString(PUBLIC_KEY);
+    }
+
+    public static String help() {
+        return I18nResourceBundle.i18nString(HELP);
+    }
+
+    public static String extra() {
+        return I18nResourceBundle.i18nString(EXTRA);
+    }
+
+    public static String minimize() {
+        return I18nResourceBundle.i18nString(MINIMIZE);
     }
 
     public String fileUploadFailed() {
