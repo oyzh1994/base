@@ -50,33 +50,35 @@ public class Project {
      */
     public static Project load() {
         if (instance == null) {
-            try {
-                PropertiesFile propFile = new PropertiesFile("/project.properties");
-                Project project = new Project();
-                String name = propFile.getProperty("project.name");
-                if (StringUtil.isNotBlank(name)) {
-                    project.setName(name);
+            synchronized (Project.class) {
+                try {
+                    PropertiesFile propFile = new PropertiesFile("/project.properties");
+                    Project project = new Project();
+                    String name = propFile.getProperty("project.name");
+                    if (StringUtil.isNotBlank(name)) {
+                        project.setName(name);
+                    }
+                    String type = propFile.getProperty("project.type");
+                    if (StringUtil.isNotBlank(type)) {
+                        project.setType(type);
+                    }
+                    String version = propFile.getProperty("project.version");
+                    if (StringUtil.isNotBlank(version)) {
+                        project.setVersion(version);
+                    }
+                    String updateDate = propFile.getProperty("project.updateDate");
+                    if (StringUtil.isNotBlank(updateDate)) {
+                        project.setUpdateDate(updateDate);
+                    }
+                    String copyright = propFile.getProperty("project.copyright");
+                    if (StringUtil.isNotBlank(copyright)) {
+                        project.setCopyright(copyright);
+                    }
+                    propFile.clear();
+                    instance = project;
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-                String type = propFile.getProperty("project.type");
-                if (StringUtil.isNotBlank(type)) {
-                    project.setType(type);
-                }
-                String version = propFile.getProperty("project.version");
-                if (StringUtil.isNotBlank(version)) {
-                    project.setVersion(version);
-                }
-                String updateDate = propFile.getProperty("project.updateDate");
-                if (StringUtil.isNotBlank(updateDate)) {
-                    project.setUpdateDate(updateDate);
-                }
-                String copyright = propFile.getProperty("project.copyright");
-                if (StringUtil.isNotBlank(copyright)) {
-                    project.setCopyright(copyright);
-                }
-                propFile.clear();
-                instance = project;
-            } catch (IOException ex) {
-                ex.printStackTrace();
             }
         }
         return instance;

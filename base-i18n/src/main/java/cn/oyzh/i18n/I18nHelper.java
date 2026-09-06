@@ -5043,6 +5043,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(MINIMIZE);
     }
 
+    public static String folder1() {
+        return I18nResourceBundle.i18nString(FOLDER1);
+    }
+
     public String fileUploadFailed() {
         return I18nResourceBundle.i18nString(FILE, UPLOAD, FAILED);
     }
