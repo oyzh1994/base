@@ -1991,6 +1991,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(UPDATE, DOCUMENT);
     }
 
+    public static String updateSchema() {
+        return I18nResourceBundle.i18nString(UPDATE, SCHEMA);
+    }
+
     public static String updateDocumentFail() {
         return I18nResourceBundle.i18nString(UPDATE, DOCUMENT, FAIL);
     }
