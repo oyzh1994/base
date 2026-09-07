@@ -526,55 +526,36 @@ public class TextUtil {
         Character lastChar = null;
         for (int i = 0; i < len; i++) {
             c = str.charAt(i);
-            String c1 = null;
-            if (c == '"') {
+            String c1 = func == null ? null : func.apply(c);
+            if (c1 != null) {
+
+            } else if (c == '"') {
                 if (lastChar == null || lastChar != '\\') {
-                    c1 = func == null ? null : func.apply(c);
-                    if (c1 == null) {
-                        c1 = "\\\"";
-                    }
+                    c1 = "\\\"";
                 }
             } else if (c == '\n') {
                 if (lastChar == null || lastChar != '\\') {
-                    c1 = func == null ? null : func.apply(c);
-                    if (c1 == null) {
-                        c1 = "\\n";
-                    }
+                    c1 = "\\n";
                 }
             } else if (c == '\b') {
                 if (lastChar == null || lastChar != '\\') {
-                    c1 = func == null ? null : func.apply(c);
-                    if (c1 == null) {
-                        c1 = "\\b";
-                    }
+                    c1 = "\\b";
                 }
             } else if (c == '\t') {
                 if (lastChar == null || lastChar != '\\') {
-                    c1 = func == null ? null : func.apply(c);
-                    if (c1 == null) {
-                        c1 = "\\t";
-                    }
+                    c1 = "\\t";
                 }
             } else if (c == '\f') {
                 if (lastChar == null || lastChar != '\\') {
-                    c1 = func == null ? null : func.apply(c);
-                    if (c1 == null) {
-                        c1 = "\\f";
-                    }
+                    c1 = "\\f";
                 }
             } else if (c == '\r') {
                 if (lastChar == null || lastChar != '\\') {
-                    c1 = func == null ? null : func.apply(c);
-                    if (c1 == null) {
-                        c1 = "\\r";
-                    }
+                    c1 = "\\r";
                 }
             } else if (c == 'u') {
                 if (lastChar != null && lastChar == '\\') {
-                    c1 = func == null ? null : func.apply(c);
-                    if (c1 == null) {
-                        c1 = "\\u";
-                    }
+                    c1 = "\\u";
                 }
             }
             if (c1 == null) {
