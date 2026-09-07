@@ -10,10 +10,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -330,6 +332,10 @@ public class FileUtil {
     }
 
     public static File[] ls(String dir) {
+        return ls(dir, null);
+    }
+
+    public static File[] ls(String dir, FileFilter filter) {
         if (dir == null) {
             return null;
         }
@@ -337,7 +343,10 @@ public class FileUtil {
         if (!dirFile.exists() || !dirFile.isDirectory()) {
             return null;
         }
-        return dirFile.listFiles();
+        if (filter == null) {
+            return dirFile.listFiles();
+        }
+        return dirFile.listFiles(filter);
     }
 
     public static InputStream getInputStream(String file) {
