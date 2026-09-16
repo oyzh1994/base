@@ -33,22 +33,28 @@ public class JarUtil {
      * 获取 JAR 文件路径
      */
     public static String getJarPath() {
+        String path = null;
         try {
-            URL url = JarUtil.class.getProtectionDomain()
-                    .getCodeSource()
-                    .getLocation();
-            String jarPath = URLDecoder.decode(
-                    url.getFile(),
-                    StandardCharsets.UTF_8
-            );
-            String path = new File(jarPath).getAbsolutePath();
-            path = path.substring(path.indexOf("file:/"), path.indexOf("!/"));
-            path = path.substring(5);
-            return path;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            CodeSource source = JarUtil.class.getProtectionDomain().getCodeSource();
+            if (source != null) {
+                URL url = source.getLocation();
+                String jarPath = URLDecoder.decode(
+                        url.getPath(),
+                        StandardCharsets.UTF_8
+                );
+                path = new File(jarPath).getAbsolutePath();
+                if (path.contains("file:/") && path.contains("/!")) {
+                    path = path.substring(path.indexOf("file:/") + 5, path.indexOf("/!"));
+                } else if (path.contains("nested:/") && path.contains("/!")) {
+                    path = path.substring(path.indexOf("nested:/") + 7, path.indexOf("/!"));
+                } else {
+                    path = null;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+        return path;
     }
 
     private static Boolean isInJar;
@@ -66,11 +72,13 @@ public class JarUtil {
                     ProtectionDomain protectionDomain = JarUtil.class.getProtectionDomain();
                     // 获取保护域的CodeSource
                     CodeSource codeSource = protectionDomain.getCodeSource();
-                    // 获取CodeSource的Location
-                    URL location = codeSource.getLocation();
-                    // 检查URL的协议是否为"jar"
-                    isInJar = location.getProtocol().equals("jar");
-                } catch (Exception e) {
+                    if (codeSource != null) {
+                        // 获取CodeSource的Location
+                        URL location = codeSource.getLocation();
+                        // 检查URL的协议是否为"jar"
+                        isInJar = location.getProtocol().equals("jar");
+                    }
+                } catch (Exception ex) {
                     String className = JarUtil.class.getName().replace('.', '/') + ".class";
                     String classPath = JarUtil.class.getResource("/" + className).toString();
                     isInJar = classPath.startsWith("jar:");

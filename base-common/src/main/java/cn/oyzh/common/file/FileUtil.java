@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -250,6 +249,10 @@ public class FileUtil {
 
     public static boolean exist(File file) {
         return file != null && file.exists();
+    }
+
+    public static boolean exist(Path file) {
+        return file != null && Files.exists(file);
     }
 
     public static List<String> readLines(URL url, Charset charset) {
@@ -513,8 +516,15 @@ public class FileUtil {
         return mkdir(new File(dir));
     }
 
-    public static boolean exists(String file) {
-        return exist(new File(file));
+    //    public static boolean exists(String file) {
+    //        return exist(Path.of(file));
+    //    }
+
+    public static boolean exists(String file, String... more) {
+        if (file == null) {
+            return false;
+        }
+        return exist(Path.of(file, more));
     }
 
     public static List<File> getAllFiles(String folder) {

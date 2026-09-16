@@ -165,6 +165,15 @@ public class SystemUtil {
     }
 
     /**
+     * 获取java目录
+     *
+     * @return 结果
+     */
+    public static String javaHome() {
+        return System.getProperty("java.home");
+    }
+
+    /**
      * 获取用户目录
      *
      * @return 用户目录
