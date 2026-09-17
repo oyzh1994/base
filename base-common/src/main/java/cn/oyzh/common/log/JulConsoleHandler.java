@@ -1,5 +1,6 @@
 package cn.oyzh.common.log;
 
+import java.io.UnsupportedEncodingException;
 import java.util.logging.LogRecord;
 import java.util.logging.StreamHandler;
 
@@ -11,8 +12,9 @@ import java.util.logging.StreamHandler;
  */
 public class JulConsoleHandler extends StreamHandler {
 
-    public JulConsoleHandler() {
+    public JulConsoleHandler() throws UnsupportedEncodingException {
         super(System.out, new JulConsoleFormatter());
+        this.setEncoding(System.console().charset().name());
     }
 
     @Override
