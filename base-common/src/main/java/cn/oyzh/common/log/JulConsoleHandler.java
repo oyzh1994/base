@@ -14,7 +14,11 @@ public class JulConsoleHandler extends StreamHandler {
 
     public JulConsoleHandler() throws UnsupportedEncodingException {
         super(System.out, new JulConsoleFormatter());
-        this.setEncoding(System.console().charset().name());
+        if (System.console() != null) {
+            this.setEncoding(System.console().charset().name());
+        } else {
+            this.setEncoding(System.getProperty("stdout.encoding"));
+        }
     }
 
     @Override
