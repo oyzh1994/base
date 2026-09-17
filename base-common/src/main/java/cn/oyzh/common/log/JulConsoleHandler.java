@@ -1,5 +1,7 @@
 package cn.oyzh.common.log;
 
+import cn.oyzh.common.system.SystemUtil;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.logging.LogRecord;
@@ -36,8 +38,7 @@ public class JulConsoleHandler extends StreamHandler {
         }
 
         // 2) 明确在 CI 场景：强制 UTF-8
-        if ("true".equalsIgnoreCase(System.getenv("CI"))
-                || System.getenv("GITHUB_ACTIONS") != null) {
+        if (SystemUtil.isCIEnv()) {
             return "UTF-8";
         }
 

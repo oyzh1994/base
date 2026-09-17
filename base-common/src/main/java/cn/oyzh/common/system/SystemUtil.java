@@ -205,4 +205,14 @@ public class SystemUtil {
             ex.printStackTrace();
         }
     }
+
+    /**
+     * 判断是否在发布环境
+     *
+     * @return 结果
+     */
+    public static boolean isCIEnv() {
+        return "true".equalsIgnoreCase(System.getenv("CI"))
+                || System.getenv("GITHUB_ACTIONS") != null;
+    }
 }
