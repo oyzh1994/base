@@ -557,10 +557,31 @@ public class PkgUtil {
     }
 
     /**
-     * 获取mvn exec路径
+     * 获取jar命令
+     *
+     * @param jarPath  jar路径
+     * @param files 文件列表
      * @return 结果
      */
-    public static String mvnExec(){
+    public static String[] getJarCMD(String jarPath, List<String> files) {
+        List<String> cmdList = new ArrayList<>();
+        cmdList.add("jar");
+        cmdList.add("cf");
+        cmdList.add(jarPath);
+        for (String s : cmdList) {
+            cmdList.add("-C");
+            cmdList.add(s);
+            cmdList.add(".");
+        }
+        return ArrayUtil.toArray(cmdList, String.class);
+    }
+
+    /**
+     * 获取mvn exec路径
+     *
+     * @return 结果
+     */
+    public static String mvnExec() {
         String mvnHome = SystemUtil.mvnHomeEnv();
         if (StringUtil.isBlank(mvnHome)) {
             throw new RuntimeException("maven主目录未找到!");

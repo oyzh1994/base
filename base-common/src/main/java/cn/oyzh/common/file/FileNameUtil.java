@@ -1723,17 +1723,17 @@ public class FileNameUtil {
      * @return 新路径
      */
     public static String concat(String... paths) {
-        if(paths==null||paths.length==0){
+        if (paths == null || paths.length == 0) {
             return "";
         }
         StringBuilder builder = new StringBuilder();
         for (String path : paths) {
-            if (!path.startsWith(File.separator)&&!builder.toString().endsWith(File.separator)) {
+            if (!path.startsWith(File.separator) && !builder.toString().endsWith(File.separator)) {
                 builder.append(File.separator);
             }
             builder.append(path);
         }
-        if(OSUtil.isWindows()){
+        if (OSUtil.isWindows()) {
             return builder.substring(1);
         }
         return builder.toString();
