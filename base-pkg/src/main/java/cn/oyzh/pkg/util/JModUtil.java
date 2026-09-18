@@ -10,10 +10,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * jar工具类
+ *
+ * @author oyzh
+ * @since 2026/09/18
+ */
 public class JModUtil {
 
-
-    public static String extract(String modeName,String jdkPath) throws Exception {
+    /**
+     * 解压
+     *
+     * @param modeName 模块名
+     * @param jdkPath  jdk路径
+     * @return 文件名
+     * @throws Exception 异常
+     */
+    public static String extract(String modeName, String jdkPath) throws Exception {
         String javaHome = SystemUtil.javaHome();
         Path path = Paths.get(javaHome, "jmods", modeName);
         // 检查jmods文件是否存在

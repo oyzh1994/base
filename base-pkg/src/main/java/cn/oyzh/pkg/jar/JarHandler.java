@@ -13,6 +13,7 @@ import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.filter.RegFilter;
+import cn.oyzh.pkg.util.JModUtil;
 import cn.oyzh.pkg.util.JarUtil;
 import cn.oyzh.pkg.util.PkgUtil;
 
@@ -129,27 +130,13 @@ public class JarHandler implements PreHandler {
             }
             // jmods处理
             if (subName != null) {
-                String javaHome = SystemUtil.javaHome();
-                Path path = Paths.get(javaHome, "jmods", subName);
                 String jdkPath = this.config.getJdkPath();
+                String modDir = JModUtil.extract(subName, jdkPath);
                 // 检查jmods文件是否存在
-                if (Files.exists(path)) {
-                    String modDir = path.toFile().getName();
-                    modDir = modDir.substring(0, modDir.lastIndexOf("."));
-                    Path path1 = Paths.get(javaHome, "jmods", modDir);
-                    String[] cmd = PkgUtil.getJModCMD(path1.toString(), path.toString());
-                    cmd = PkgUtil.getJDKExecCMD(jdkPath, cmd);
-                    String cmdStr = StringUtil.join(" ", cmd);
-                    JulLog.info("JMod cmd:{}", "\n" + cmdStr);
-                    ProcessExecResult result = RuntimeUtil.execForResult(cmd);
-                    JulLog.info("JMod result:{}", result);
-                    if (!result.isSuccess()) {
-                        JulLog.error("JMod error:{}", result.getError());
-                        throw new Exception("JMod error:" + result.getError());
-                    }
+                if (modDir != null) {
                     String finalJavafxPath = javafxPath;
                     List<String> mslibs = JFXUtil.msLibNames();
-                    cn.oyzh.common.file.FileUtil.getAllFiles(path1.toFile(), (ExceptionConsumer<File>) file -> {
+                    cn.oyzh.common.file.FileUtil.getAllFiles(modDir, (ExceptionConsumer<File>) file -> {
                         // 非库文件，跳过
                         if (!StringUtil.endsWithAny(file.getName(), ".dylib", ".dll", ".so")) {
                             return;
