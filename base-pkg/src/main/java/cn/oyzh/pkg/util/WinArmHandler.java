@@ -81,8 +81,8 @@ public class WinArmHandler {
             JulLog.warn("mod:{} modDir is null, ignore....", mod);
             return;
         }
-        jarCf(modDir, mod);
-        mvnInstall(modDir, mod);
+        this.jarCf(modDir, mod);
+        this.mvnInstall(modDir, mod);
         this.updateJfxPomFile(mod);
     }
 
@@ -138,7 +138,7 @@ public class WinArmHandler {
      * @param mod    模块
      * @throws Exception 异常
      */
-    private static void jarCf(String modDir, String mod) throws Exception {
+    private void jarCf(String modDir, String mod) throws Exception {
         Path path1 = Paths.get(modDir, "classes");
         Path path2 = Paths.get(modDir, "lib");
         Path jarPath = Paths.get(Paths.get(modDir).getParent().toString(), mod + ".jar");
@@ -166,8 +166,8 @@ public class WinArmHandler {
      * @param mod    模块
      * @throws Exception 异常
      */
-    private static void mvnInstall(String modDir, String mod) throws Exception {
-        String[] mvnCmd = mvnCmd(Path.of(modDir).getParent().toString(), mod);
+    private void mvnInstall(String modDir, String mod) throws Exception {
+        String[] mvnCmd = this.mvnCmd(Path.of(modDir).getParent().toString(), mod);
         ProcessExecResult result = RuntimeUtil.execForResult(mvnCmd);
         JulLog.info("mvn install result:{}", result);
         if (!result.isSuccess()) {
@@ -183,7 +183,7 @@ public class WinArmHandler {
      * @param mod    模块
      * @return 结果
      */
-    private static String[] mvnCmd(String modDir, String mod) {
+    private String[] mvnCmd(String modDir, String mod) {
         /*
          *
          * mvn install:install-file ^
