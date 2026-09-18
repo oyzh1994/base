@@ -4,6 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.OSUtil;
+import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
@@ -553,5 +554,25 @@ public class PkgUtil {
         cmdList.add(modDir);
         cmdList.add(modPath);
         return ArrayUtil.toArray(cmdList, String.class);
+    }
+
+    /**
+     * 获取mvn exec路径
+     * @return 结果
+     */
+    public static String mvnExec(){
+        String mvnHome = SystemUtil.mvnHomeEnv();
+        if (StringUtil.isBlank(mvnHome)) {
+            throw new RuntimeException("maven主目录未找到!");
+        }
+        String mvnExe;
+        if (OSUtil.isLinux()) {
+            mvnExe = mvnHome + "/bin/mvn.sh";
+        } else if (OSUtil.isWindows()) {
+            mvnExe = mvnHome + "/bin/mvn.cmd";
+        } else {
+            mvnExe = mvnHome + "/bin/mvn";
+        }
+        return mvnExe;
     }
 }

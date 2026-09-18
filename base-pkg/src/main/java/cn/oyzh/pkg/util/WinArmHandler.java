@@ -1,10 +1,14 @@
 package cn.oyzh.pkg.util;
 
+import cn.oyzh.common.file.FileNameUtil;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
+import cn.oyzh.common.util.StringUtil;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +39,7 @@ public class WinArmHandler {
     };
 
     public void jfxJModToMavenJar() throws Exception {
-        String jdkPath = SystemUtil.javaHome() + "/bin";
+        String jdkPath = SystemUtil.javaHome() ;
         for (String mod : mods) {
             this.jfxJModToMvnJar(jdkPath, mod);
         }
@@ -43,8 +47,10 @@ public class WinArmHandler {
 
     private void jfxJModToMvnJar(String jdkPath, String mod) throws Exception {
         String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
-        String[] mvnCmd = mvnCmd(modDir, mod);
-        mvnInstall(mvnCmd);
+        if(modDir!=null){
+            String[] mvnCmd = mvnCmd(Path.of(modDir).getParent().toString(), mod);
+            mvnInstall(mvnCmd);
+        }
     }
 
     private static void mvnInstall(String[] cmd) throws Exception {
@@ -67,10 +73,14 @@ public class WinArmHandler {
          *   -Dpackaging=jar ^
          *   -Dclassifier=win-aarch64
          */
+        String mvnExe= PkgUtil.mvnExec();
+        if (StringUtil.isBlank(mvnExe)) {
+            throw new RuntimeException("maven程序未找到!");
+        }
         List<String> list = new ArrayList<>();
-        list.add("mvn");
+        list.add(mvnExe);
         list.add("install:install-file");
-        list.add("-Dfile=" + modDir + mod + ".jar");
+        list.add("-Dfile=" + FileNameUtil.concat(modDir , mod) + ".jar");
         list.add("-DgroupId=org.openjfx");
         list.add("-DartifactId=" + mod.replace(".", "-"));
         list.add("-Dpackaging=jar");

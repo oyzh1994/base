@@ -3,11 +3,13 @@ package cn.oyzh.pkg.mvn;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
+import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.SingleHandler;
 import cn.oyzh.pkg.config.PackConfig;
+import cn.oyzh.pkg.util.PkgUtil;
 
 import java.io.File;
 import java.util.List;
@@ -68,20 +70,9 @@ public class MvnHandler implements PreHandler, SingleHandler {
         if (this.executed) {
             return;
         }
-        String mvnHome = System.getenv("MAVEN_HOME");
-        if (StringUtil.isBlank(mvnHome)) {
-            mvnHome = System.getenv("M2_HOME");
-        }
-        if (StringUtil.isBlank(mvnHome)) {
-            throw new RuntimeException("maven主目录未找到!");
-        }
-        String mvnExe;
-        if (OSUtil.isLinux()) {
-            mvnExe = mvnHome + "/bin/mvn.sh";
-        } else if (OSUtil.isWindows()) {
-            mvnExe = mvnHome + "/bin/mvn.cmd";
-        } else {
-            mvnExe = mvnHome + "/bin/mvn";
+        String mvnExe= PkgUtil.mvnExec();
+        if (StringUtil.isBlank(mvnExe)) {
+            throw new RuntimeException("maven程序未找到!");
         }
         // 安装依赖工程
         if (CollectionUtil.isNotEmpty(this.dependencies)) {

@@ -2,6 +2,7 @@ package cn.oyzh.common.log;
 
 import cn.oyzh.common.SysConst;
 import cn.oyzh.common.date.DateHelper;
+import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.StringUtil;
@@ -29,8 +30,7 @@ public class JulUtil {
         if (StringUtil.isNotBlank(projectName)) {
             filePath += projectName + "-";
         }
-        filePath += fileName;
-        File file = new File(filePath);
+        File file = new File(FileNameUtil.concat(filePath,fileName));
         if (!file.exists()) {
             FileUtil.touch(file);
         }
