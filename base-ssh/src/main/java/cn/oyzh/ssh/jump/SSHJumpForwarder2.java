@@ -216,7 +216,7 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         } else if (connect.isCertificateAuth()) {// 证书
             String priKeyFile = connect.getCertificatePath();
             // 检查私钥是否存在
-            if (!FileUtil.exist(priKeyFile)) {
+            if (!FileUtil.exists(priKeyFile)) {
                 throw new IOException("certificate file:" + priKeyFile + " not exist");
             }
             // 加载证书

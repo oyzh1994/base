@@ -243,15 +243,15 @@ public class FileUtil {
         return bytes;
     }
 
-    public static boolean exist(String file) {
-        return file != null && exist(new File(file));
+    public static boolean exists(String file) {
+        return file != null && exists(new File(file));
     }
 
-    public static boolean exist(File file) {
+    public static boolean exists(File file) {
         return file != null && file.exists();
     }
 
-    public static boolean exist(Path file) {
+    public static boolean exists(Path file) {
         return file != null && Files.exists(file);
     }
 
@@ -524,7 +524,7 @@ public class FileUtil {
         if (file == null) {
             return false;
         }
-        return exist(Path.of(file, more));
+        return exists(Path.of(file, more));
     }
 
     public static List<File> getAllFiles(String folder) {

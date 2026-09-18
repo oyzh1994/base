@@ -40,7 +40,7 @@ public class GitHubActionsHandler implements PostHandler {
         String githubDist = (String) packConfig.getProperty(PackCost.GITHUB_DIST);
         if (githubDist != null) {
             JulLog.info("githubDist {}", githubDist);
-            if (!FileUtil.exist(githubDist)) {
+            if (!FileUtil.exists(githubDist)) {
                 JulLog.warn("githubDist 目录不存在，创建目录");
                 FileUtil.mkdir(githubDist);
             }

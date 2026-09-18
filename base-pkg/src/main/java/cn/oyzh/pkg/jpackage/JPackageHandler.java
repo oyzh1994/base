@@ -90,7 +90,7 @@ public class JPackageHandler implements PackHandler {
         if (StringUtil.isNotBlank(dest)) {
             packConfig.setDest(dest);
         }
-        if (FileUtil.exist(packConfig.getDest())) {
+        if (FileUtil.exists(packConfig.getDest())) {
             FileUtil.cleanDir(packConfig.getDest());
             FileUtil.del(packConfig.getDest(), true);
         }
@@ -116,7 +116,7 @@ public class JPackageHandler implements PackHandler {
             jPackageConfig.setRuntimeImage(packConfig.jrePath());
         }
         // 删除输出目录
-        if (FileUtil.exist(packConfig.getDest())) {
+        if (FileUtil.exists(packConfig.getDest())) {
             FileUtil.del(packConfig.getDest());
         }
         // String cmdStr = PkgUtil.getJPackageCMD(jPackageConfig);

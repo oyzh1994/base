@@ -100,7 +100,7 @@ public class I18nGeneratorTest {
             if (!locale.getCountry().isEmpty()) {
                 name = locale.getLanguage();
                 targetI18nFile = path + "/" + prefix + "i18n_" + name + ".properties";
-                if (FileUtil.exist(targetI18nFile)) {
+                if (FileUtil.exists(targetI18nFile)) {
                     I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
                     I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
                 }

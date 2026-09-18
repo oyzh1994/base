@@ -1,15 +1,13 @@
 package cn.oyzh.pkg.mvn;
 
 import cn.hutool.core.collection.CollectionUtil;
-import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
-import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.SingleHandler;
 import cn.oyzh.pkg.config.PackConfig;
-import cn.oyzh.pkg.util.PkgUtil;
+import cn.oyzh.pkg.util.MvnUtil;
 
 import java.io.File;
 import java.util.List;
@@ -70,7 +68,7 @@ public class MvnHandler implements PreHandler, SingleHandler {
         if (this.executed) {
             return;
         }
-        String mvnExe= PkgUtil.mvnExec();
+        String mvnExe = MvnUtil.mvnExec();
         if (StringUtil.isBlank(mvnExe)) {
             throw new RuntimeException("maven程序未找到!");
         }

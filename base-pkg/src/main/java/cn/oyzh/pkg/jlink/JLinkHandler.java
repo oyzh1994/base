@@ -65,7 +65,7 @@ public class JLinkHandler implements PreHandler, SingleHandler {
         if (StringUtil.isBlank(jdkPath)) {
             throw new Exception("jdkPath为空！");
         }
-        if (FileUtil.exist(jLinkConfig.getOutput())) {
+        if (FileUtil.exists(jLinkConfig.getOutput())) {
             FileUtil.del(jLinkConfig.getOutput());
         }
         String[] cmd = PkgUtil.getJLinkCMD(jLinkConfig);

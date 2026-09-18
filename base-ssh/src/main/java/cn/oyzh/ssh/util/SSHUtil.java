@@ -214,7 +214,7 @@ public class SSHUtil {
         String sockFile = null;
         String file = System.getenv("SSH_AUTH_SOCK");
         boolean findMore = false;
-        if (FileUtil.exist(file)) {
+        if (FileUtil.exists(file)) {
             // 注意，这个SSH_AUTH_SOCK值未必准确，可能需要深入查找
             String res = RuntimeUtil.execForStr("ssh-add -l");
             if (StringUtil.contains(res, "The agent has no identities")) {
