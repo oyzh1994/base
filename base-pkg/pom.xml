@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.oyzh1994</groupId>
+        <artifactId>base</artifactId>
+        <version>1.0.4</version>
+    </parent>
+
+    <artifactId>base-pkg</artifactId>
+
+    <properties>
+        <hutool.version>5.8.41</hutool.version>
+        <snakeyaml.version>2.5</snakeyaml.version>
+    </properties>
+
+    <dependencies>
+        <!-- 自定义类库，通用模块 -->
+        <dependency>
+            <groupId>io.github.oyzh1994</groupId>
+            <artifactId>base-common</artifactId>
+        </dependency>
+
+        <!-- 压缩工具包 -->
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.26.2</version>
+        </dependency>
+
+        <!-- yaml库 -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+
+        <!-- toml库 -->
+        <!-- https://mvnrepository.com/artifact/io.hotmoka/toml4j -->
+        <dependency>
+            <groupId>io.hotmoka</groupId>
+            <artifactId>toml4j</artifactId>
+            <version>0.7.3</version>
+        </dependency>
+
+        <!-- 扩展工具类库 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-extra</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
+        <!-- 测试类库 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+</project>

@@ -36,6 +36,7 @@
         <module>base-ssh</module>
         <module>base-i18n</module>
         <module>base-event</module>
+        <module>base-pkg</module>
     </modules>
     <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
@@ -131,6 +132,12 @@
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
                 <artifactId>base-event</artifactId>
+                <version>${base.version}</version>
+            </dependency>
+            <!-- 自定义类库，打包模块 -->
+            <dependency>
+                <groupId>io.github.oyzh1994</groupId>
+                <artifactId>base-pkg</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 测试类库 -->
