@@ -12,13 +12,14 @@ A Java integration library providing i18n, SSH, event bus, storage, and various 
 
 ## Module Structure
 
-| Module | Description |
-|---|---|
-| `base-common` | Core module — various utility implementations |
-| `base-event` | Event module — event bus implementation |
-| `base-i18n` | i18n module — internationalization resources and implementation |
-| `base-ssh` | SSH module — SSH client implementation |
-| `base-store` | Store module — data storage implementation |
+| Module        | Description                                                     |
+|---------------|-----------------------------------------------------------------|
+| `base-common` | Core module — various utility implementations                   |
+| `base-event`  | Event module — event bus implementation                         |
+| `base-i18n`   | i18n module — internationalization resources and implementation |
+| `base-pkg`    | packaging implementation, cross-platform packaging features     |
+| `base-ssh`    | SSH module — SSH client implementation                          |
+| `base-store`  | Store module — data storage implementation                      |
 
 ---
 

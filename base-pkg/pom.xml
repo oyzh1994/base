@@ -9,7 +9,12 @@
         <version>1.0.4</version>
     </parent>
 
+    <name>base-pkg</name>
     <artifactId>base-pkg</artifactId>
+
+    <description>
+        base for package
+    </description>
 
     <properties>
         <hutool.version>5.8.41</hutool.version>
