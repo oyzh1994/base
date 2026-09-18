@@ -48,10 +48,10 @@ public class WinArmHandler {
             "javafx.graphics",
             "javafx.fxml",
             "javafx.media",
-            "jfx.incubator.input",
-            "jfx.incubator.richtext",
             "javafx.swing",
             "javafx.web",
+            "jfx.incubator.input",
+            "jfx.incubator.richtext",
     };
 
     /**
@@ -61,10 +61,10 @@ public class WinArmHandler {
      */
     public void jfxJModToMavenJar() throws Exception {
         String jdkPath = SystemUtil.javaHome();
+        this.updateJfxPomFile("javafx");
         for (String mod : mods) {
             this.jfxJModToMvnJar(jdkPath, mod);
         }
-        this.updateJfxPomFile();
         this.clean(jdkPath);
     }
 
@@ -83,72 +83,31 @@ public class WinArmHandler {
         }
         jarCf(modDir, mod);
         mvnInstall(modDir, mod);
+        this.updateJfxPomFile(mod);
     }
 
     /**
      * 更新jfx的pom文件
      *
+     * @param mod 模块
      * @throws Exception 异常
      */
-    private void updateJfxPomFile() throws Exception {
+    private void updateJfxPomFile(String mod) throws Exception {
         String repo = MvnUtil.getLocalRepository();
         if (!FileUtil.exists(repo)) {
             JulLog.warn("mvn repository not exists!");
             return;
         }
         String jdkVer = getJdkVersion();
-        List<String> list = new ArrayList<>(List.of(mods));
-        list.add("javafx");
-        for (String mod : list) {
-            String name = mod.replace(".", "-");
-            // 获取模块路径
-            Path path = Paths.get(repo, "/org/openjfx/javafx/" + jdkVer + "/" + name + "-" + jdkVer + ".pom");
-            // 读取预设模版
-            InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
-            String content = FileUtil.readString(stream, Charset.defaultCharset());
-            content = content.replace("${javafx_version}", jdkVer);
-            // 覆盖文件
-            FileUtil.writeString(content, path.toFile());
-        }
-
-
-        //        if (!FileUtil.exists(path)) {
-        //            JulLog.warn("mvn repository not exists!");
-        //            return;
-        //        }
-        //        SAXReader reader = new SAXReader();
-        //        Document doc = reader.read(path.toFile());
-        //        Element profiles = doc.getRootElement().element("profiles");
-        //        List<Element> elements = profiles.elements();
-        //        for (Element element : elements) {
-        //            String idText = element.attribute("id").getText();
-        //            if (idText.equals("javafx.platform.windows.aarch64")) {
-        //                JulLog.warn("windows aarch64 already exists!");
-        //                return;
-        //            }
-        //        }
-        //
-        //        // win aarch64 profile
-        //        Element profile = profiles.addElement("profile");
-        //        // <id>
-        //        profile.addElement("id").setText("javafx.platform.windows.aarch64");
-        //
-        //        // <activation>
-        //        Element activation = profile.addElement("activation");
-        //
-        //        // <activation><os>
-        //        Element os = activation.addElement("os");
-        //        os.addElement("family").setText("windows");
-        //        os.addElement("arch").setText("aarch64");
-        //
-        //        // <properties>
-        //        Element properties = profile.addElement("properties");
-        //        properties.addElement("javafx.platform").setText("aarch64");
-        //
-        //        try (FileWriter fw = new FileWriter("profile.xml")) {
-        //            XMLWriter writer = new XMLWriter(fw, OutputFormat.createPrettyPrint());
-        //            writer.write(doc);
-        //        }
+        String name = mod.replace(".", "-");
+        // 获取模块路径
+        Path path = Paths.get(repo, "/org/openjfx/javafx/" + jdkVer + "/" + name + "-" + jdkVer + ".pom");
+        // 读取预设模版
+        InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
+        String content = FileUtil.readString(stream, Charset.defaultCharset());
+        content = content.replace("${javafx_version}", jdkVer);
+        // 覆盖文件
+        FileUtil.writeString(content, path.toFile());
     }
 
     /**
