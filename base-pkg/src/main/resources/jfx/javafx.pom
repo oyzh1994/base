@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.openjfx</groupId>
     <artifactId>javafx</artifactId>
-    <version>${javafx_version}</version>
+    <version>27</version>
     <packaging>pom</packaging>
     <name>openjfx</name>
     <description>OpenJFX JavaFX</description>
     <url>https://openjdk.java.net/projects/openjfx/</url>
     <properties>
-        <javafx.version>${javafx_version}</javafx.version>
+        <javafx.version>27</javafx.version>
     </properties>
     <dependencyManagement>
     </dependencyManagement>

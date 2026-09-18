@@ -97,13 +97,20 @@ public class WinArmHandler {
             return;
         }
         String jdkVer = getJdkVersion();
-        Path path = Paths.get(repo, "/org/openjfx/javafx/" + jdkVer + "/javafx-" + jdkVer + ".pom");
-        // 读取预设模版
-        InputStream stream = ResourceUtil.getResourceAsStream("/javafx.pom");
-        String content = FileUtil.readString(stream, Charset.defaultCharset());
-        content = content.replace("${javafx_version}", jdkVer);
-        // 覆盖文件
-        FileUtil.writeString(content, path.toFile());
+        List<String> list = new ArrayList<>(List.of(mods));
+        list.add("javafx");
+        for (String mod : list) {
+            String name = mod.replace(".", "-");
+            // 获取模块路径
+            Path path = Paths.get(repo, "/org/openjfx/javafx/" + jdkVer + "/" + name + "-" + jdkVer + ".pom");
+            // 读取预设模版
+            InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
+            String content = FileUtil.readString(stream, Charset.defaultCharset());
+            content = content.replace("${javafx_version}", jdkVer);
+            // 覆盖文件
+            FileUtil.writeString(content, path.toFile());
+        }
+
 
         //        if (!FileUtil.exists(path)) {
         //            JulLog.warn("mvn repository not exists!");
