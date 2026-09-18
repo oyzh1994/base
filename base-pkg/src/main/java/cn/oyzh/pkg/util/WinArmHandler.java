@@ -6,15 +6,12 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
+import cn.oyzh.common.util.ResourceUtil;
 import cn.oyzh.common.util.StringUtil;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -101,43 +98,50 @@ public class WinArmHandler {
         }
         String jdkVer = getJdkVersion();
         Path path = Paths.get(repo, "/org/openjfx/javafx/" + jdkVer + "/javafx-" + jdkVer + ".pom");
-        if (!FileUtil.exists(path)) {
-            JulLog.warn("mvn repository not exists!");
-            return;
-        }
-        SAXReader reader = new SAXReader();
-        Document doc = reader.read(path.toFile());
-        Element profiles = doc.getRootElement().element("profiles");
-        List<Element> elements = profiles.elements();
-        for (Element element : elements) {
-            String idText = element.attribute("id").getText();
-            if (idText.equals("javafx.platform.windows.aarch64")) {
-                JulLog.warn("windows aarch64 already exists!");
-                return;
-            }
-        }
+        // 读取预设模版
+        InputStream stream = ResourceUtil.getResourceAsStream("/javafx.pom");
+        String content = FileUtil.readString(stream, Charset.defaultCharset());
+        content = content.replace("${javafx_version}", jdkVer);
+        // 覆盖文件
+        FileUtil.writeString(content, path.toFile());
 
-        // win aarch64 profile
-        Element profile = profiles.addElement("profile");
-        // <id>
-        profile.addElement("id").setText("javafx.platform.windows.aarch64");
-
-        // <activation>
-        Element activation = profile.addElement("activation");
-
-        // <activation><os>
-        Element os = activation.addElement("os");
-        os.addElement("family").setText("windows");
-        os.addElement("arch").setText("aarch64");
-
-        // <properties>
-        Element properties = profile.addElement("properties");
-        properties.addElement("javafx.platform").setText("aarch64");
-
-        try (FileWriter fw = new FileWriter("profile.xml")) {
-            XMLWriter writer = new XMLWriter(fw, OutputFormat.createPrettyPrint());
-            writer.write(doc);
-        }
+        //        if (!FileUtil.exists(path)) {
+        //            JulLog.warn("mvn repository not exists!");
+        //            return;
+        //        }
+        //        SAXReader reader = new SAXReader();
+        //        Document doc = reader.read(path.toFile());
+        //        Element profiles = doc.getRootElement().element("profiles");
+        //        List<Element> elements = profiles.elements();
+        //        for (Element element : elements) {
+        //            String idText = element.attribute("id").getText();
+        //            if (idText.equals("javafx.platform.windows.aarch64")) {
+        //                JulLog.warn("windows aarch64 already exists!");
+        //                return;
+        //            }
+        //        }
+        //
+        //        // win aarch64 profile
+        //        Element profile = profiles.addElement("profile");
+        //        // <id>
+        //        profile.addElement("id").setText("javafx.platform.windows.aarch64");
+        //
+        //        // <activation>
+        //        Element activation = profile.addElement("activation");
+        //
+        //        // <activation><os>
+        //        Element os = activation.addElement("os");
+        //        os.addElement("family").setText("windows");
+        //        os.addElement("arch").setText("aarch64");
+        //
+        //        // <properties>
+        //        Element properties = profile.addElement("properties");
+        //        properties.addElement("javafx.platform").setText("aarch64");
+        //
+        //        try (FileWriter fw = new FileWriter("profile.xml")) {
+        //            XMLWriter writer = new XMLWriter(fw, OutputFormat.createPrettyPrint());
+        //            writer.write(doc);
+        //        }
     }
 
     /**
