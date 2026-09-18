@@ -1,12 +1,20 @@
 package cn.oyzh.pkg.util;
 
 import cn.oyzh.common.file.FileNameUtil;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
 import cn.oyzh.common.util.StringUtil;
+import org.dom4j.Document;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,19 +63,22 @@ public class WinArmHandler {
      * @throws Exception 异常
      */
     public void jfxJModToMavenJar() throws Exception {
+        String jdkPath = SystemUtil.javaHome();
         for (String mod : mods) {
-            this.jfxJModToMvnJar(mod);
+            this.jfxJModToMvnJar(jdkPath, mod);
         }
+        this.updateJfxPomFile();
+        this.clean(jdkPath);
     }
 
     /**
      * jfx模块转mvn模块
      *
-     * @param mod 模块
+     * @param jdkPath jdk路径
+     * @param mod     模块
      * @throws Exception 异常
      */
-    private void jfxJModToMvnJar(String mod) throws Exception {
-        String jdkPath = SystemUtil.javaHome();
+    private void jfxJModToMvnJar(String jdkPath, String mod) throws Exception {
         String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
         if (modDir == null) {
             JulLog.warn("mod:{} modDir is null, ignore....", mod);
@@ -75,6 +86,79 @@ public class WinArmHandler {
         }
         jarCf(modDir, mod);
         mvnInstall(modDir, mod);
+    }
+
+    /**
+     * 更新jfx的pom文件
+     *
+     * @throws Exception 异常
+     */
+    private void updateJfxPomFile() throws Exception {
+        String repo = MvnUtil.getLocalRepository();
+        if (!FileUtil.exists(repo)) {
+            JulLog.warn("mvn repository not exists!");
+            return;
+        }
+        String jdkVer = getJdkVersion();
+        Path path = Paths.get(repo, "/org/openjfx/javafx/" + jdkVer + "/javafx-" + jdkVer + ".pom");
+        if (!FileUtil.exists(path)) {
+            JulLog.warn("mvn repository not exists!");
+            return;
+        }
+        SAXReader reader = new SAXReader();
+        Document doc = reader.read(path.toFile());
+        Element profiles = doc.getRootElement().element("profiles");
+        List<Element> elements = profiles.elements();
+        for (Element element : elements) {
+            String idText = element.attribute("id").getText();
+            if (idText.equals("javafx.platform.windows.aarch64")) {
+                JulLog.warn("windows aarch64 already exists!");
+                return;
+            }
+        }
+
+        // win aarch64 profile
+        Element profile = profiles.addElement("profile");
+        // <id>
+        profile.addElement("id").setText("javafx.platform.windows.aarch64");
+
+        // <activation>
+        Element activation = profile.addElement("activation");
+
+        // <activation><os>
+        Element os = activation.addElement("os");
+        os.addElement("family").setText("windows");
+        os.addElement("arch").setText("aarch64");
+
+        // <properties>
+        Element properties = profile.addElement("properties");
+        properties.addElement("javafx.platform").setText("aarch64");
+
+        try (FileWriter fw = new FileWriter("profile.xml")) {
+            XMLWriter writer = new XMLWriter(fw, OutputFormat.createPrettyPrint());
+            writer.write(doc);
+        }
+    }
+
+    /**
+     * 清理
+     *
+     * @param jdkPath jdk路径
+     */
+    private void clean(String jdkPath) {
+        Path p = Path.of(jdkPath, "jmods");
+        if (!Files.exists(p)) {
+            return;
+        }
+        File[] files = FileUtil.ls(p.toFile());
+        for (File file : files) {
+            if (file.isFile() && FileNameUtil.isJarType(file.getName())) {
+                FileUtil.del(file);
+            } else if (file.isDirectory() && file.getName().contains(".")) {
+                FileUtil.cleanDir(file);
+                FileUtil.del(file);
+            }
+        }
     }
 
     /**
@@ -140,7 +224,7 @@ public class WinArmHandler {
          *   -Dpackaging=jar ^
          *   -Dclassifier=win-aarch64
          */
-        String mvnExe = PkgUtil.mvnExec();
+        String mvnExe = MvnUtil.mvnExec();
         if (StringUtil.isBlank(mvnExe)) {
             throw new RuntimeException("maven程序未找到!");
         }

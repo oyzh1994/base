@@ -23,6 +23,14 @@
 
     <dependencies>
 
+        <!-- Source: https://mvnrepository.com/artifact/org.dom4j/dom4j -->
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>2.2.0</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- mvn sdk -->
         <dependency>
             <groupId>org.apache.maven</groupId>

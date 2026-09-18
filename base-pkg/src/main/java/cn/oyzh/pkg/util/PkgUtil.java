@@ -568,32 +568,11 @@ public class PkgUtil {
         cmdList.add("jar");
         cmdList.add("cf");
         cmdList.add(jarPath);
-        for (String s : cmdList) {
+        for (String s : files) {
             cmdList.add("-C");
             cmdList.add(s);
             cmdList.add(".");
         }
         return ArrayUtil.toArray(cmdList, String.class);
-    }
-
-    /**
-     * 获取mvn exec路径
-     *
-     * @return 结果
-     */
-    public static String mvnExec() {
-        String mvnHome = SystemUtil.mvnHomeEnv();
-        if (StringUtil.isBlank(mvnHome)) {
-            throw new RuntimeException("maven主目录未找到!");
-        }
-        String mvnExe;
-        if (OSUtil.isLinux()) {
-            mvnExe = mvnHome + "/bin/mvn.sh";
-        } else if (OSUtil.isWindows()) {
-            mvnExe = mvnHome + "/bin/mvn.cmd";
-        } else {
-            mvnExe = mvnHome + "/bin/mvn";
-        }
-        return mvnExe;
     }
 }

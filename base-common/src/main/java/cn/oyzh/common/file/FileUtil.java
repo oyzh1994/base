@@ -334,6 +334,13 @@ public class FileUtil {
         return readString(file, StandardCharsets.UTF_8);
     }
 
+    public static File[] ls(File dir) {
+        if (dir == null) {
+            return null;
+        }
+        return ls(dir.getPath(), null);
+    }
+
     public static File[] ls(String dir) {
         return ls(dir, null);
     }
