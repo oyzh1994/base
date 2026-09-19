@@ -155,7 +155,7 @@ public class WinArmHandler {
         }
         File[] files = FileUtil.ls(p.toFile());
         for (File file : files) {
-            if (file.isFile() && FileNameUtil.isJarType(file.getName())) {
+            if (file.isFile() && FileNameUtil.isJarType(FileNameUtil.extName(file))) {
                 FileUtil.del(file);
             } else if (file.isDirectory() && file.getName().contains(".")) {
                 FileUtil.cleanDir(file);
