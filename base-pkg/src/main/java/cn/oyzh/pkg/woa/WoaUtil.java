@@ -38,12 +38,12 @@ public class WoaUtil {
         if (lib == null || !Files.exists(lib)) {
             if (isWoa()) {
                 JulLog.warn("mod:{} lib is null, find resources lib....", mod);
-                lib = Path.of(SystemUtil.tmpdir(), "_jfx_win_arm_libs");
                 String libDir = "/jfx/libs/" + name;
                 List<String> list = ResourceUtil.listFiles(libDir);
                 if (CollectionUtil.isEmpty(list)) {
                     return null;
                 }
+                lib = Path.of(SystemUtil.tmpdir(), "_jfx_win_arm_libs");
                 // 复制文件
                 for (String s : list) {
                     InputStream stream = ResourceUtil.getResourceAsStream(libDir + "/" + s);

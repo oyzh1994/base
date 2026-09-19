@@ -132,7 +132,7 @@ public class JarHandler implements PreHandler {
             if (modName != null) {
                 String jdkPath = this.config.getJdkPath();
                 // 获取lib目录
-                Path libPath = WoaUtil.getJfxLibPath(modName, jdkPath);
+                Path libPath = WoaUtil.getJfxLibPath(modName.substring(0,modName.lastIndexOf(".")), jdkPath);
                 // 检查lib文件是否存在
                 if (libPath != null) {
                     String finalJavafxPath = javafxPath;
