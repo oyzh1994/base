@@ -26,6 +26,23 @@ import java.util.List;
  */
 public class WinArmHandler {
 
+    private String jfxVersion;
+
+    public String getJfxVersion() {
+        return jfxVersion;
+    }
+
+    public void setJfxVersion(String jfxVersion) {
+        this.jfxVersion = jfxVersion;
+    }
+
+    private String jfxVersion() {
+        if (this.jfxVersion == null) {
+            return getJdkVersion();
+        }
+        return this.jfxVersion;
+    }
+
     /**
      * 获取jdk版本
      *
@@ -98,14 +115,14 @@ public class WinArmHandler {
             JulLog.warn("mvn repository not exists!");
             return;
         }
-        String jdkVer = getJdkVersion();
+        String jfxVer = this.jfxVersion();
         String name = mod.replace(".", "-");
         // 获取模块路径
-        Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jdkVer + "/" + name + "-" + jdkVer + ".pom");
+        Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jdkVer + ".pom");
         // 读取预设模版
         InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
         String content = FileUtil.readString(stream, Charset.defaultCharset());
-        content = content.replace("${javafx_version}", jdkVer);
+        content = content.replace("${javafx_version}", jfxVer);
         // 覆盖文件
         FileUtil.writeString(content, path.toFile());
     }
@@ -205,7 +222,7 @@ public class WinArmHandler {
         list.add("-DgroupId=org.openjfx");
         list.add("-DartifactId=" + mod.replace(".", "-"));
         list.add("-Dpackaging=jar");
-        list.add("-Dversion=" + getJdkVersion());
+        list.add("-Dversion=" + this.jfxVersion());
         list.add("-Dclassifier=win-aarch64");
         return list.toArray(new String[]{});
     }
