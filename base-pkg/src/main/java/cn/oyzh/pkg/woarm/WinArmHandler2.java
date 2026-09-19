@@ -227,9 +227,8 @@ public class WinArmHandler2 {
         Path fPath = Path.of(pPath, p.toFile().getName().substring(0, p.toFile().getName().lastIndexOf(".")));
         if (FileUtil.exists(fPath)) {
             FileUtil.cleanDir(fPath);
-        } else {
-            FileUtil.mkdir(fPath);
         }
+        FileUtil.mkdir(fPath);
         String[] jarCmd = PkgUtil.getJarXfCMD(jarPath);
         jarCmd = PkgUtil.getJDKExecCMD(SystemUtil.javaHome(), jarCmd);
         ProcessExecResult result = RuntimeUtil.execForResult(jarCmd, null, fPath.toFile());
