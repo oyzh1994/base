@@ -157,9 +157,11 @@ public class WinArmHandler {
         for (File file : files) {
             if (file.isFile() && FileNameUtil.isJarType(FileNameUtil.extName(file))) {
                 FileUtil.del(file);
+                JulLog.info("file:{} is deleted.", file);
             } else if (file.isDirectory() && file.getName().contains(".")) {
                 FileUtil.cleanDir(file);
                 FileUtil.del(file);
+                JulLog.info("file:{} is deleted.", file);
             }
         }
     }
