@@ -52,7 +52,7 @@ public class DestHandler implements PostHandler {
                     continue;
                 }
                 String extName = FileNameUtil.extName(file.getName());
-                if (!StringUtil.equalsAnyIgnoreCase(extName, "msi", "exe", "cn/oyzh/pkg", "dmg", "rpm", "deb")) {
+                if (!StringUtil.equalsAnyIgnoreCase(extName, "msi", "exe", "pkg", "dmg", "rpm", "deb")) {
                     continue;
                 }
                 this.handler(packConfig, file);
