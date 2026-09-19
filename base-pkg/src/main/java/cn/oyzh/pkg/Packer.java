@@ -21,6 +21,7 @@ import cn.oyzh.pkg.mvn.MvnHandler;
 import cn.oyzh.pkg.pack.DestHandler;
 import cn.oyzh.pkg.pack.EndHandler;
 import cn.oyzh.pkg.pack.StartHandler;
+import cn.oyzh.pkg.woa.WoaHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +112,10 @@ public class Packer {
 
     public void registerAppImageHandler() {
         this.registerHandler(new AppImageHandler());
+    }
+
+    public void registerWoaHandler() {
+        this.registerHandler(new WoaHandler());
     }
 
     public void registerJLinkHandler() {

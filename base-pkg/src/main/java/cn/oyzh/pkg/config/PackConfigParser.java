@@ -58,6 +58,9 @@ public class PackConfigParser implements ConfigParser<PackConfig> {
         if (object.containsKey("appVersion")) {
             config.setAppVersion(object.getString("appVersion"));
         }
+        if (object.containsKey("jfxVersion")) {
+            config.setJfxVersion(object.getString("jfxVersion"));
+        }
         if (object.containsKey("appImageRuntime")) {
             config.setAppImageRuntime(object.getString("appImageRuntime"));
         }

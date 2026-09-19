@@ -1,8 +1,8 @@
 package cn.oyzh.pkg.test;
 
 import cn.oyzh.common.system.SystemUtil;
-import cn.oyzh.pkg.woarm.WinArmHandler;
-import cn.oyzh.pkg.woarm.WinArmHandler2;
+import cn.oyzh.pkg.woa.WinArmHandler;
+import cn.oyzh.pkg.woa.WoaHandler;
 import org.junit.Test;
 
 /**
@@ -25,7 +25,7 @@ public class WinArmPreHandler {
 
     @Test
     public void run2() throws Exception {
-        WinArmHandler2 handler = new WinArmHandler2();
+        WoaHandler handler = new WoaHandler();
         handler.setJfxVersion(this.jfxVersion);
         handler.run();
     }

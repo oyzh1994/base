@@ -37,6 +37,7 @@ public class IOUtil {
 
     /**
      * 异步关闭
+     *
      * @param closeable 对象
      */
     public static void closeAsync(AutoCloseable closeable) {
@@ -96,7 +97,7 @@ public class IOUtil {
             try {
                 byte[] bytes = new byte[4096];
                 int len;
-                if(!FileUtil.exists(filePath)){
+                if (!FileUtil.exists(filePath)) {
                     FileUtil.touch(filePath);
                 }
                 FileOutputStream fos = new FileOutputStream(filePath);
