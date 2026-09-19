@@ -1,4 +1,4 @@
-package cn.oyzh.pkg.woarm;
+package cn.oyzh.pkg.woa;
 
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
@@ -10,6 +10,10 @@ import cn.oyzh.common.thread.ProcessExecResult;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.ResourceUtil;
+import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.pkg.PackOrder;
+import cn.oyzh.pkg.PreHandler;
+import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.util.JModUtil;
 import cn.oyzh.pkg.util.MvnUtil;
 import cn.oyzh.pkg.util.PkgUtil;
@@ -28,7 +32,30 @@ import java.util.List;
  * @author oyzh
  * @since 2026/09/18
  */
-public class WinArmHandler2 {
+public class WoaHandler implements PreHandler {
+
+    private int order = PackOrder.ORDER_P10;
+
+    @Override
+    public int order() {
+        return order;
+    }
+
+    @Override
+    public void order(int order) {
+        this.order = order;
+    }
+
+    @Override
+    public String name() {
+        return "WOA处理";
+    }
+
+    @Override
+    public void handle(PackConfig packConfig) throws Exception {
+        this.jfxVersion = packConfig.getJfxVersion();
+        this.run();
+    }
 
     private String jfxVersion;
 
@@ -41,7 +68,7 @@ public class WinArmHandler2 {
     }
 
     private String jfxVersion() {
-        if (this.jfxVersion == null) {
+        if (StringUtil.isBlank(this.jfxVersion)) {
             return SystemUtil.getJdkVersion();
         }
         return this.jfxVersion;
@@ -144,12 +171,12 @@ public class WinArmHandler2 {
         // 解压jmod
         String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
         String name = mod.replace(".", "-");
-        Path lib =modDir==null?null: Path.of(modDir, "lib");
+        Path lib = modDir == null ? null : Path.of(modDir, "lib");
         // 不存在模块路径，则从资源目录获取
-        if (lib==null||!Files.exists(lib)) {
-            JulLog.warn("mod:{} lib is null, find local lib....", mod);
+        if (lib == null || !Files.exists(lib)) {
+            JulLog.warn("mod:{} lib is null, find resources lib....", mod);
             lib = Path.of(SystemUtil.tmpdir(), "_jfx_win_arm_libs");
-            String libDir="/jfx/libs/" + name;
+            String libDir = "/jfx/libs/" + name;
             List<String> list = ResourceUtil.listFiles(libDir);
             if (CollectionUtil.isEmpty(list)) {
                 JulLog.warn("mod:{} lib is null, ignore....", mod);
@@ -157,7 +184,7 @@ public class WinArmHandler2 {
             }
             // 复制文件
             for (String s : list) {
-                InputStream stream = ResourceUtil.getResourceAsStream(libDir+"/"+s);
+                InputStream stream = ResourceUtil.getResourceAsStream(libDir + "/" + s);
                 IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s));
                 IOUtil.close(stream);
             }

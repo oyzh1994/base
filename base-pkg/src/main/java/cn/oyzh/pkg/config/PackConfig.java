@@ -114,6 +114,11 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
     private String platform;
 
     /**
+     * jfx版本
+     */
+    private String jfxVersion;
+
+    /**
      * jar配置
      */
     private JarConfig jarConfig;
@@ -231,6 +236,14 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
 
     public boolean isPlatformLinux() {
         return StringUtil.containsAnyIgnoreCase(this.platform, "linux");
+    }
+
+    public String getJfxVersion() {
+        return jfxVersion;
+    }
+
+    public void setJfxVersion(String jfxVersion) {
+        this.jfxVersion = jfxVersion;
     }
 
     public String getDest() {
@@ -457,6 +470,9 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         }
         if (config.buildType != null) {
             this.buildType = config.buildType;
+        }
+        if (config.jfxVersion != null) {
+            this.jfxVersion = config.jfxVersion;
         }
         if (config.appImageRuntime != null) {
             this.appImageRuntime = config.appImageRuntime;

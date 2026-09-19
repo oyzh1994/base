@@ -1,4 +1,4 @@
-package cn.oyzh.pkg.woarm;
+package cn.oyzh.pkg.woa;
 
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
@@ -134,7 +134,7 @@ public class WinArmHandler {
         // 获取模块路径
         Path path = Paths.get(SystemUtil.tmpdir(), name + "-" + jfxVer + ".pom");
         // 读取预设模版
-        InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
+        InputStream stream = ResourceUtil.getResourceAsStream("/jfx/poms/" + name + ".pom");
         String content = FileUtil.readString(stream, Charset.defaultCharset());
         content = content.replace("${javafx_version}", jfxVer);
         // 固定为win-aarch64
