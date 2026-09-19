@@ -7,12 +7,16 @@ import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
+import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.IOUtil;
+import cn.oyzh.common.util.ResourceUtil;
 import cn.oyzh.pkg.util.JModUtil;
 import cn.oyzh.pkg.util.MvnUtil;
 import cn.oyzh.pkg.util.PkgUtil;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -143,24 +147,31 @@ public class WinArmHandler2 {
             JulLog.warn("mod:{} modDir is null, ignore....", mod);
             return;
         }
-        Path lib = Path.of(modDir, "lib");
-        if (!Files.exists(lib)) {
-            JulLog.warn("mod:{} lib is null, ignore....", mod);
-            return;
-        }
         String name = mod.replace(".", "-");
+        Path lib = Path.of(modDir, "lib");
+        // 不存在模块路径，则从资源目录获取
+        if (!Files.exists(lib)) {
+            JulLog.warn("mod:{} lib is null, find local lib....", mod);
+            lib = Path.of(SystemUtil.tmpdir(), "_jfx_win_arm_libs");
+            List<String> list = ResourceUtil.listFiles("/jfx/lib/" + name);
+            if (CollectionUtil.isEmpty(list)) {
+                JulLog.warn("mod:{} lib is null, ignore....", mod);
+                return;
+            }
+            // 复制文件
+            for (String s : list) {
+                InputStream stream = ResourceUtil.getResourceAsStream(s);
+                IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s.substring(s.lastIndexOf("/"))));
+                IOUtil.close(stream);
+            }
+        }
         String jfxVer = this.jfxVersion();
         // 获取模块路径
         Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + "-win.jar");
         // 解压jar
         String jarDir = this.jarXf(path.toString());
-
-        FileFilter filter = new FileFilter() {
-            @Override
-            public boolean accept(File f) {
-                return FileNameUtil.isDllType(FileNameUtil.extName(f));
-            }
-        };
+        // 过滤器
+        FileFilter filter = f -> FileNameUtil.isDllType(FileNameUtil.extName(f));
         // 删除旧lib
         File[] libs1 = FileUtil.ls(jarDir, filter);
         for (File file : libs1) {

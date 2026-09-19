@@ -3,11 +3,20 @@ package cn.oyzh.common.util;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.OSUtil;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.jar.JarFile;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
 
 /**
  * 资源工具类
@@ -167,5 +176,46 @@ public class ResourceUtil {
             ex.printStackTrace();
         }
         return null;
+    }
+
+
+    /**
+     * 遍历资源目录下所有文件（含子目录）
+     *
+     * @param resourceDir 资源目录，例如 "static/images"
+     * @return 相对于 resourceDir 的路径列表，例如 "logo/a.png"
+     */
+    public static List<String> listFiles(String resourceDir) throws IOException, URISyntaxException {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        URL url = cl.getResource(resourceDir);
+        if (url == null) {
+            throw new IllegalArgumentException("资源目录不存在: " + resourceDir);
+        }
+
+        List<String> result = new ArrayList<>();
+        String protocol = url.getProtocol();
+        if ("file".equals(protocol)) {
+            // 开发环境：文件系统
+            Path root = Paths.get(url.toURI());
+            try (Stream<Path> stream = Files.walk(root)) {
+                stream.filter(Files::isRegularFile)
+                        .forEach(p -> result.add(root.relativize(p).toString().replace('\\', '/')));
+            }
+        } else if ("jar".equals(protocol)) {
+            // 打包后：jar 内部
+            String jarPath = url.getPath().substring(5, url.getPath().indexOf("!"));
+            try (JarFile jar = new JarFile(jarPath)) {
+                String prefix = resourceDir.endsWith("/") ? resourceDir : resourceDir + "/";
+                jar.stream()
+                        .filter(e -> !e.isDirectory())
+                        .map(ZipEntry::getName)
+                        .filter(name -> name.startsWith(prefix))
+                        .forEach(name -> result.add(name.substring(prefix.length())));
+            }
+        } else {
+            throw new IllegalStateException("不支持的协议: " + protocol);
+        }
+        Collections.sort(result);
+        return result;
     }
 }
