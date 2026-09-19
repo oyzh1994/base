@@ -36,6 +36,6 @@ public class WinArmPreHandler {
             pack.jfxVersion = args[0];
         }
         pack.githubAction = SystemUtil.isCIEnv();
-        pack.run();
+        pack.run2();
     }
 }

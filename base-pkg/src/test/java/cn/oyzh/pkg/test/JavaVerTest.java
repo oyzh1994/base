@@ -1,5 +1,6 @@
 package cn.oyzh.pkg.test;
 
+import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.pkg.woarm.WinArmHandler;
 import org.junit.Test;
 
@@ -46,6 +47,6 @@ public class JavaVerTest {
 
     @Test
     public void test2(){
-        System.out.println("Java 版本: " + WinArmHandler.getJdkVersion());
+        System.out.println("Java 版本: " + SystemUtil.getJdkVersion());
     }
 }

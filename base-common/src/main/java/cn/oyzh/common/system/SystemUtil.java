@@ -228,4 +228,17 @@ public class SystemUtil {
         }
         return mvnHome;
     }
+
+    /**
+     * 获取jdk版本
+     *
+     * @return 结果
+     */
+    public static String getJdkVersion() {
+        Runtime.Version version = Runtime.version();
+        if (version.update() == 0) {
+            return version.feature() + "";
+        }
+        return version.feature() + "." + version.interim() + "." + version.update();
+    }
 }

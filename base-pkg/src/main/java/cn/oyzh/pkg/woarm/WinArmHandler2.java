@@ -7,19 +7,14 @@ import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
-import cn.oyzh.common.util.ResourceUtil;
-import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.pkg.util.JModUtil;
 import cn.oyzh.pkg.util.MvnUtil;
 import cn.oyzh.pkg.util.PkgUtil;
 
 import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,7 +37,7 @@ public class WinArmHandler2 {
 
     private String jfxVersion() {
         if (this.jfxVersion == null) {
-            return getJdkVersion();
+            return SystemUtil.getJdkVersion();
         }
         return this.jfxVersion;
     }
@@ -57,7 +52,7 @@ public class WinArmHandler2 {
     };
 
     /**
-     * jfx模块转mvn模块
+     * 业务入口
      *
      * @throws Exception 异常
      */
@@ -72,28 +67,10 @@ public class WinArmHandler2 {
             this.updateJfxPomFile();
         }
         for (String mod : mods) {
-//            this.jfxJModToMvnJar(jdkPath, mod);
-            this.updateJfxJarFile(jdkPath,mod);
+            this.updateJfxJarFile(jdkPath, mod);
         }
         this.clean(jdkPath);
     }
-
-//    /**
-//     * jfx模块转mvn模块
-//     *
-//     * @param jdkPath jdk路径
-//     * @param mod     模块
-//     * @throws Exception 异常
-//     */
-//    private void jfxJModToMvnJar(String jdkPath, String mod) throws Exception {
-//        String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
-//        if (modDir == null) {
-//            JulLog.warn("mod:{} modDir is null, ignore....", mod);
-//            return;
-//        }
-//        this.jarCf(modDir, mod);
-//        this.mvnInstall(modDir, mod);
-//    }
 
     /**
      * 更新jfx的pom文件
@@ -109,20 +86,59 @@ public class WinArmHandler2 {
         String jfxVer = this.jfxVersion();
         // 获取模块路径
         Path path = Paths.get(repo, "/org/openjfx/javafx/" + jfxVer + "/javafx-" + jfxVer + ".pom");
-        // 读取预设模版
-        InputStream stream = ResourceUtil.getResourceAsStream("/jfx/javafx.pom");
-        String content = FileUtil.readString(stream, Charset.defaultCharset());
+        String content = """
+                <?xml version="1.0" encoding="UTF-8"?>
+                <project xmlns="http://maven.apache.org/POM/4.0.0"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                    <modelVersion>4.0.0</modelVersion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx</artifactId>
+                    <version>${javafx_version}</version>
+                    <packaging>pom</packaging>
+                    <name>openjfx</name>
+                    <properties>
+                        <javafx.version>${javafx_version}</javafx.version>
+                    </properties>
+                    <dependencyManagement>
+                    </dependencyManagement>
+                    <profiles>
+                        <profile>
+                            <id>javafx.platform.windows.aarch64</id>
+                            <activation>
+                                <os>
+                                    <family>windows</family>
+                                    <arch>aarch64</arch>
+                                </os>
+                            </activation>
+                            <properties>
+                                <javafx.platform>win</javafx.platform>
+                            </properties>
+                        </profile>
+                    </profiles>
+                </project>
+                """;
+        // 更新模版
         content = content.replace("${javafx_version}", jfxVer);
         // 覆盖文件
         FileUtil.writeString(content, path.toFile());
     }
 
+    /**
+     * 更新jfx的jar文件
+     *
+     * @param jdkPath jdk路径
+     * @param mod     模块
+     * @throws Exception 异常
+     */
     private void updateJfxJarFile(String jdkPath, String mod) throws Exception {
+        // 检查mvn仓库
         String repo = MvnUtil.getLocalRepository();
         if (!FileUtil.exists(repo)) {
             JulLog.warn("mvn repository not exists!");
             return;
         }
+        // 解压jmod
         String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
         if (modDir == null) {
             JulLog.warn("mod:{} modDir is null, ignore....", mod);
@@ -137,7 +153,9 @@ public class WinArmHandler2 {
         String jfxVer = this.jfxVersion();
         // 获取模块路径
         Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + "-win.jar");
+        // 解压jar
         String jarDir = this.jarXf(path.toString());
+        // 覆盖lib
         File[] libs = FileUtil.ls(lib);
         for (File file : libs) {
             if (!FileNameUtil.isDllType(FileNameUtil.extName(file))) {
@@ -145,31 +163,10 @@ public class WinArmHandler2 {
             }
             FileUtil.copy(file, new File(jarDir, file.getName()));
         }
+        // 压缩jar
         this.jarCf(path.toString(), jarDir);
-    }
-
-    /**
-     * 复制jfx的pom文件
-     *
-     * @param mod 模块
-     * @return 文件
-     */
-    private String copyJfxPomFile(String mod) {
-        String jfxVer = this.jfxVersion();
-        String name = mod.replace(".", "-");
-        // 获取模块路径
-        Path path = Paths.get(SystemUtil.tmpdir(), name + "-" + jfxVer + ".pom");
-        // 读取预设模版
-        InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
-        String content = FileUtil.readString(stream, Charset.defaultCharset());
-        content = content.replace("${javafx_version}", jfxVer);
-        // 固定为win-aarch64
-        if (SystemUtil.isCIEnv()) {
-            content = content.replace("${javafx.platform}", "win-aarch64");
-        }
-        // 覆盖文件
-        FileUtil.writeString(content, path.toFile());
-        return path.toString();
+        // 删除目录
+        FileUtil.cleanDir(jarDir);
     }
 
     /**
@@ -184,10 +181,7 @@ public class WinArmHandler2 {
         }
         File[] files = FileUtil.ls(p.toFile());
         for (File file : files) {
-            if (file.isFile() && FileNameUtil.isJarType(FileNameUtil.extName(file))) {
-                FileUtil.del(file);
-                JulLog.info("file:{} is deleted.", file);
-            } else if (file.isDirectory() && file.getName().contains(".")) {
+            if (file.isDirectory() && file.getName().contains(".")) {
                 FileUtil.cleanDir(file);
                 FileUtil.del(file);
                 JulLog.info("file:{} is deleted.", file);
@@ -202,7 +196,7 @@ public class WinArmHandler2 {
      * @param jarFile jar文件路径
      * @throws Exception 异常
      */
-    private String jarCf(String jarPath, String jarFile) throws Exception {
+    private void jarCf(String jarPath, String jarFile) throws Exception {
         String[] jarCmd = PkgUtil.getJarCfCMD(jarPath, List.of(jarFile));
         jarCmd = PkgUtil.getJDKExecCMD(SystemUtil.javaHome(), jarCmd);
         ProcessExecResult result = RuntimeUtil.execForResult(jarCmd);
@@ -211,7 +205,6 @@ public class WinArmHandler2 {
             JulLog.error("jar cf error:{}", result.getError());
             throw new Exception("jar cf error:" + result.getError());
         }
-        return jarFile;
     }
 
     /**
@@ -221,99 +214,22 @@ public class WinArmHandler2 {
      * @throws Exception 异常
      */
     private String jarXf(String jarPath) throws Exception {
-        Path p=Path.of(jarPath);
-       String pPath=p.getParent().toString();
-
-       Path fPath=Path.of(pPath,p.toFile().getName().substring(0,p.toFile().getName().lastIndexOf(".")));
-
-       if(FileUtil.exists(fPath)){
-           FileUtil.cleanDir(fPath);
-       }else{
-           FileUtil.mkdir(fPath);
-       }
+        Path p = Path.of(jarPath);
+        String pPath = p.getParent().toString();
+        Path fPath = Path.of(pPath, p.toFile().getName().substring(0, p.toFile().getName().lastIndexOf(".")));
+        if (FileUtil.exists(fPath)) {
+            FileUtil.cleanDir(fPath);
+        } else {
+            FileUtil.mkdir(fPath);
+        }
         String[] jarCmd = PkgUtil.getJarXfCMD(jarPath);
-
-
         jarCmd = PkgUtil.getJDKExecCMD(SystemUtil.javaHome(), jarCmd);
-       // List<String> list=new ArrayList<>(List.of(jarCmd));
-        //list.add(0,"cd");
-        //list.add(1,fPath.toString());
-        //jarCmd=list.toArray(new String[]{});
-        ProcessExecResult result = RuntimeUtil.execForResult(jarCmd,null,fPath.toFile());
+        ProcessExecResult result = RuntimeUtil.execForResult(jarCmd, null, fPath.toFile());
         JulLog.info("jar xf:{}", result);
         if (!result.isSuccess()) {
             JulLog.error("jar xf error:{}", result.getError());
             throw new Exception("jar xf error:" + result.getError());
         }
         return fPath.toString();
-    }
-
-    /**
-     * mvn安装jar
-     *
-     * @param modDir 模块路径
-     * @param mod    模块
-     * @throws Exception 异常
-     */
-    private void mvnInstall(String modDir, String mod) throws Exception {
-        // 处理pom文件
-        String pomFile = this.copyJfxPomFile(mod);
-        String[] mvnCmd = this.mvnCmd(Path.of(modDir).getParent().toString(), mod, pomFile);
-        ProcessExecResult result = RuntimeUtil.execForResult(mvnCmd);
-        JulLog.info("mvn install result:{}", result);
-        if (!result.isSuccess()) {
-            JulLog.error("mvn install error:{}", result.getError());
-            throw new Exception("mvn install error:" + result.getError());
-        }
-    }
-
-    /**
-     * 获取mvn命令
-     *
-     * @param modDir  模块路径
-     * @param mod     模块
-     * @param pomFile pom文件
-     * @return 结果
-     */
-    private String[] mvnCmd(String modDir, String mod, String pomFile) {
-        /*
-         *
-         * mvn install:install-file ^
-         *   -Dfile=C:\jfx-jmods\javafx.base\javafx.base.jar ^
-         *   -DpomFile=C:\jfx-jmods\javafx.base\javafx.base.pom ^
-         *   -DgroupId=org.openjfx ^
-         *   -DartifactId=javafx-base ^
-         *   -Dversion=27-ea+24 ^
-         *   -Dpackaging=jar ^
-         *   -Dclassifier=win-aarch64
-         */
-        String mvnExe = MvnUtil.mvnExec();
-        if (StringUtil.isBlank(mvnExe)) {
-            throw new RuntimeException("maven程序未找到!");
-        }
-        List<String> list = new ArrayList<>();
-        list.add(mvnExe);
-        list.add("install:install-file");
-        list.add("-Dfile=" + FileNameUtil.concat(modDir, mod) + ".jar");
-        list.add("-DpomFile=" + pomFile);
-        list.add("-DgroupId=org.openjfx");
-        list.add("-DartifactId=" + mod.replace(".", "-"));
-        list.add("-Dpackaging=jar");
-        list.add("-Dversion=" + this.jfxVersion());
-        list.add("-Dclassifier=win-aarch64");
-        return list.toArray(new String[]{});
-    }
-
-    /**
-     * 获取jdk版本
-     *
-     * @return 结果
-     */
-    public static String getJdkVersion() {
-        Runtime.Version version = Runtime.version();
-        if (version.update() == 0) {
-            return version.feature() + "";
-        }
-        return version.feature() + "." + version.interim() + "." + version.update();
     }
 }

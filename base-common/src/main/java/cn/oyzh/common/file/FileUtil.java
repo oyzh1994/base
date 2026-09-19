@@ -517,9 +517,9 @@ public class FileUtil {
     }
 
     public static boolean mkdir(Path dir) {
-     if(dir==null){
-         return false;
-     }
+        if (dir == null) {
+            return false;
+        }
         return mkdir(dir.toFile());
     }
 
@@ -643,7 +643,7 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean cleanDir(Path directory) {
-        if(directory==null){
+        if (directory == null) {
             return false;
         }
         return cleanDir(directory.toFile());

@@ -42,7 +42,7 @@ public class WinArmHandler {
 
     private String jfxVersion() {
         if (this.jfxVersion == null) {
-            return getJdkVersion();
+            return SystemUtil.getJdkVersion();
         }
         return this.jfxVersion;
     }
@@ -63,7 +63,7 @@ public class WinArmHandler {
     };
 
     /**
-     * jfx模块转mvn模块
+     * 业务入口
      *
      * @throws Exception 异常
      */
@@ -251,18 +251,5 @@ public class WinArmHandler {
         list.add("-Dversion=" + this.jfxVersion());
         list.add("-Dclassifier=win-aarch64");
         return list.toArray(new String[]{});
-    }
-
-    /**
-     * 获取jdk版本
-     *
-     * @return 结果
-     */
-    public static String getJdkVersion() {
-        Runtime.Version version = Runtime.version();
-        if (version.update() == 0) {
-            return version.feature() + "";
-        }
-        return version.feature() + "." + version.interim() + "." + version.update();
     }
 }
