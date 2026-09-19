@@ -3,6 +3,7 @@ package cn.oyzh.pkg.util;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
@@ -44,19 +45,6 @@ public class WinArmHandler {
     }
 
     /**
-     * 获取jdk版本
-     *
-     * @return 结果
-     */
-    public static String getJdkVersion() {
-        Runtime.Version version = Runtime.version();
-        if (version.update() == 0) {
-            return version.feature() + "";
-        }
-        return version.feature() + "." + version.interim() + "." + version.update();
-    }
-
-    /**
      * 模块列表
      */
     private static final String[] mods = new String[]{
@@ -77,8 +65,15 @@ public class WinArmHandler {
      * @throws Exception 异常
      */
     public void jfxJModToMavenJar() throws Exception {
+        if (!(OSUtil.isWindows() && OSUtil.isAarch64())) {
+            JulLog.warn("only run in windows on arm!");
+            return;
+        }
         String jdkPath = SystemUtil.javaHome();
-        this.updateJfxPomFile();
+        // 仅在开发环境更新jfx的pom
+        if (!SystemUtil.isCIEnv()) {
+            this.updateJfxPomFile();
+        }
         for (String mod : mods) {
             this.jfxJModToMvnJar(jdkPath, mod);
         }
@@ -129,9 +124,8 @@ public class WinArmHandler {
      *
      * @param mod 模块
      * @return 文件
-     * @throws Exception 异常
      */
-    private String copyJfxPomFile(String mod) throws Exception {
+    private String copyJfxPomFile(String mod) {
         String jfxVer = this.jfxVersion();
         String name = mod.replace(".", "-");
         // 获取模块路径
@@ -140,6 +134,10 @@ public class WinArmHandler {
         InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
         String content = FileUtil.readString(stream, Charset.defaultCharset());
         content = content.replace("${javafx_version}", jfxVer);
+        // 固定为win-aarch64
+        if (SystemUtil.isCIEnv()) {
+            content = content.replace("${javafx.platform}", "win-aarch64");
+        }
         // 覆盖文件
         FileUtil.writeString(content, path.toFile());
         return path.toString();
@@ -202,6 +200,7 @@ public class WinArmHandler {
      * @throws Exception 异常
      */
     private void mvnInstall(String modDir, String mod) throws Exception {
+        // 处理pom文件
         String pomFile = this.copyJfxPomFile(mod);
         String[] mvnCmd = this.mvnCmd(Path.of(modDir).getParent().toString(), mod, pomFile);
         ProcessExecResult result = RuntimeUtil.execForResult(mvnCmd);
@@ -225,6 +224,7 @@ public class WinArmHandler {
          *
          * mvn install:install-file ^
          *   -Dfile=C:\jfx-jmods\javafx.base\javafx.base.jar ^
+         *   -DpomFile=C:\jfx-jmods\javafx.base\javafx.base.pom ^
          *   -DgroupId=org.openjfx ^
          *   -DartifactId=javafx-base ^
          *   -Dversion=27-ea+24 ^
@@ -246,5 +246,18 @@ public class WinArmHandler {
         list.add("-Dversion=" + this.jfxVersion());
         list.add("-Dclassifier=win-aarch64");
         return list.toArray(new String[]{});
+    }
+
+    /**
+     * 获取jdk版本
+     *
+     * @return 结果
+     */
+    public static String getJdkVersion() {
+        Runtime.Version version = Runtime.version();
+        if (version.update() == 0) {
+            return version.feature() + "";
+        }
+        return version.feature() + "." + version.interim() + "." + version.update();
     }
 }
