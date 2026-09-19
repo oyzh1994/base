@@ -118,7 +118,7 @@ public class WinArmHandler {
         String jfxVer = this.jfxVersion();
         String name = mod.replace(".", "-");
         // 获取模块路径
-        Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jdkVer + ".pom");
+        Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + ".pom");
         // 读取预设模版
         InputStream stream = ResourceUtil.getResourceAsStream("/jfx/" + name + ".pom");
         String content = FileUtil.readString(stream, Charset.defaultCharset());
