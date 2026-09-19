@@ -115,7 +115,7 @@ public class WinArmHandler {
         // 获取模块路径
         Path path = Paths.get(repo, "/org/openjfx/javafx/" + jfxVer + "/javafx-" + jfxVer + ".pom");
         // 读取预设模版
-        InputStream stream = ResourceUtil.getResourceAsStream("/jfx/javafx.pom");
+        InputStream stream = ResourceUtil.getResourceAsStream("/jfx/poms/javafx.pom");
         String content = FileUtil.readString(stream, Charset.defaultCharset());
         content = content.replace("${javafx_version}", jfxVer);
         // 覆盖文件
