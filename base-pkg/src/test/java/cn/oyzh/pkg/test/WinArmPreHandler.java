@@ -24,7 +24,7 @@ public class WinArmPreHandler {
 
     public static void main(String[] args) throws Exception {
         WinArmPreHandler pack = new WinArmPreHandler();
-        if (args != null && args[0] != null) {
+        if (args != null && args.length > 0 && args[0] != null) {
             pack.jfxVersion = args[0];
         }
         pack.githubAction = SystemUtil.isCIEnv();
