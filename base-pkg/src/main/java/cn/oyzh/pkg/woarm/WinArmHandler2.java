@@ -141,9 +141,16 @@ public class WinArmHandler2 {
             JulLog.warn("mvn repository not exists!");
             return;
         }
+        String name = mod.replace(".", "-");
+        String jfxVer = this.jfxVersion();
+        // 获取模块路径
+        Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + "-win.jar");
+        if(!Files.exists(path)){
+            JulLog.warn("mod:{} jar not exists!",mod);
+            return;
+        }
         // 解压jmod
         String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
-        String name = mod.replace(".", "-");
         Path lib =modDir==null?null: Path.of(modDir, "lib");
         // 不存在模块路径，则从资源目录获取
         if (lib==null||!Files.exists(lib)) {
@@ -162,11 +169,10 @@ public class WinArmHandler2 {
                 IOUtil.close(stream);
             }
         }
-        String jfxVer = this.jfxVersion();
-        // 获取模块路径
-        Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + "-win.jar");
+
         // 解压jar
         String jarDir = this.jarXf(path.toString());
+
         // 过滤器
         FileFilter filter = f -> FileNameUtil.isDllType(FileNameUtil.extName(f));
         // 删除旧lib
