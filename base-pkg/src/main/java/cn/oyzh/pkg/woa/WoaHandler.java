@@ -3,24 +3,15 @@ package cn.oyzh.pkg.woa;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
-import cn.oyzh.common.util.CollectionUtil;
-import cn.oyzh.common.util.IOUtil;
-import cn.oyzh.common.util.ResourceUtil;
 import cn.oyzh.common.util.StringUtil;
-import cn.oyzh.pkg.PackOrder;
-import cn.oyzh.pkg.PreHandler;
-import cn.oyzh.pkg.config.PackConfig;
-import cn.oyzh.pkg.util.JModUtil;
 import cn.oyzh.pkg.util.MvnUtil;
 import cn.oyzh.pkg.util.PkgUtil;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,7 +23,7 @@ import java.util.List;
  * @author oyzh
  * @since 2026/09/18
  */
-public class WoaHandler   {
+public class WoaHandler {
 
     private String jfxVersion;
 
@@ -149,29 +140,15 @@ public class WoaHandler   {
         String jfxVer = this.jfxVersion();
         // 获取模块路径
         Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + "-win.jar");
-        if(!Files.exists(path)){
-            JulLog.warn("mod:{} jar not exists!",mod);
+        if (!Files.exists(path)) {
+            JulLog.warn("mod:{} jar not exists!", mod);
             return;
         }
         // 解压jmod
-        String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
-        Path lib = modDir == null ? null : Path.of(modDir, "lib");
-        // 不存在模块路径，则从资源目录获取
-        if (lib == null || !Files.exists(lib)) {
-            JulLog.warn("mod:{} lib is null, find resources lib....", mod);
-            lib = Path.of(SystemUtil.tmpdir(), "_jfx_win_arm_libs");
-            String libDir = "/jfx/libs/" + name;
-            List<String> list = ResourceUtil.listFiles(libDir);
-            if (CollectionUtil.isEmpty(list)) {
-                JulLog.warn("mod:{} lib is null, ignore....", mod);
-                return;
-            }
-            // 复制文件
-            for (String s : list) {
-                InputStream stream = ResourceUtil.getResourceAsStream(libDir + "/" + s);
-                IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s));
-                IOUtil.close(stream);
-            }
+        Path lib = WoaUtil.getJfxLibPath(mod, jdkPath);
+        if (lib == null) {
+            JulLog.warn("mod:{} lib is null, ignore....", mod);
+            return;
         }
         // 解压jar
         String jarDir = this.jarXf(path.toString());

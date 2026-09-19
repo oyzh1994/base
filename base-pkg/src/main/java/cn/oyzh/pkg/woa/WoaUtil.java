@@ -42,7 +42,6 @@ public class WoaUtil {
                 String libDir = "/jfx/libs/" + name;
                 List<String> list = ResourceUtil.listFiles(libDir);
                 if (CollectionUtil.isEmpty(list)) {
-                    JulLog.warn("mod:{} lib is null, ignore....", mod);
                     return null;
                 }
                 // 复制文件
@@ -51,8 +50,6 @@ public class WoaUtil {
                     IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s));
                     IOUtil.close(stream);
                 }
-            } else {
-                JulLog.warn("mod:{} lib is null, ignore....", mod);
             }
         }
         return lib;
