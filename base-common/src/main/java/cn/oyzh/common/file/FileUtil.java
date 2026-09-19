@@ -516,6 +516,13 @@ public class FileUtil {
         return false;
     }
 
+    public static boolean mkdir(Path dir) {
+     if(dir==null){
+         return false;
+     }
+        return mkdir(dir.toFile());
+    }
+
     public static boolean mkdir(File dir) {
         if (dir != null && !dir.exists()) {
             return dir.mkdirs();
@@ -627,6 +634,19 @@ public class FileUtil {
      */
     public static boolean cleanDir(String directory) {
         return cleanDir(new File(directory));
+    }
+
+    /**
+     * 清空目录
+     *
+     * @param directory 目录
+     * @return 结果
+     */
+    public static boolean cleanDir(Path directory) {
+        if(directory==null){
+            return false;
+        }
+        return cleanDir(directory.toFile());
     }
 
     /**

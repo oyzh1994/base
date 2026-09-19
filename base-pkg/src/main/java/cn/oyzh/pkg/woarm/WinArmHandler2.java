@@ -221,16 +221,31 @@ public class WinArmHandler2 {
      * @throws Exception 异常
      */
     private String jarXf(String jarPath) throws Exception {
+        Path p=Path.of(jarPath);
+       String pPath=p.getParent().toString();
+
+       Path fPath=Path.of(pPath,p.toFile().getName().substring(0,p.toFile().getName().lastIndexOf(".")));
+
+       if(FileUtil.exists(fPath)){
+           FileUtil.cleanDir(fPath);
+       }else{
+           FileUtil.mkdir(fPath);
+       }
         String[] jarCmd = PkgUtil.getJarXfCMD(jarPath);
+
+
         jarCmd = PkgUtil.getJDKExecCMD(SystemUtil.javaHome(), jarCmd);
-        ProcessExecResult result = RuntimeUtil.execForResult(jarCmd);
+       // List<String> list=new ArrayList<>(List.of(jarCmd));
+        //list.add(0,"cd");
+        //list.add(1,fPath.toString());
+        //jarCmd=list.toArray(new String[]{});
+        ProcessExecResult result = RuntimeUtil.execForResult(jarCmd,null,fPath.toFile());
         JulLog.info("jar xf:{}", result);
         if (!result.isSuccess()) {
             JulLog.error("jar xf error:{}", result.getError());
             throw new Exception("jar xf error:" + result.getError());
         }
-        File p = Path.of(jarPath).toFile();
-        return Path.of(jarPath, p.getName().substring(0, p.getName().lastIndexOf("."))).toString();
+        return fPath.toString();
     }
 
     /**
