@@ -1,5 +1,6 @@
 package cn.oyzh.common.util;
 
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.thread.ThreadUtil;
 
 import java.io.ByteArrayInputStream;
@@ -95,6 +96,9 @@ public class IOUtil {
             try {
                 byte[] bytes = new byte[4096];
                 int len;
+                if(!FileUtil.exists(filePath)){
+                    FileUtil.touch(filePath);
+                }
                 FileOutputStream fos = new FileOutputStream(filePath);
                 while ((len = stream.read(bytes)) != -1) {
                     fos.write(bytes, 0, len);

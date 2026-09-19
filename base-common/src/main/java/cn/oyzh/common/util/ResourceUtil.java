@@ -186,10 +186,9 @@ public class ResourceUtil {
      * @return 相对于 resourceDir 的路径列表，例如 "logo/a.png"
      */
     public static List<String> listFiles(String resourceDir) throws IOException, URISyntaxException {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        URL url = cl.getResource(resourceDir);
+        URL url = getResource(resourceDir);
         if (url == null) {
-            throw new IllegalArgumentException("资源目录不存在: " + resourceDir);
+            return Collections.emptyList();
         }
 
         List<String> result = new ArrayList<>();

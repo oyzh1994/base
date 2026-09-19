@@ -143,25 +143,22 @@ public class WinArmHandler2 {
         }
         // 解压jmod
         String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
-        if (modDir == null) {
-            JulLog.warn("mod:{} modDir is null, ignore....", mod);
-            return;
-        }
         String name = mod.replace(".", "-");
-        Path lib = Path.of(modDir, "lib");
+        Path lib =modDir==null?null: Path.of(modDir, "lib");
         // 不存在模块路径，则从资源目录获取
-        if (!Files.exists(lib)) {
+        if (lib==null||!Files.exists(lib)) {
             JulLog.warn("mod:{} lib is null, find local lib....", mod);
             lib = Path.of(SystemUtil.tmpdir(), "_jfx_win_arm_libs");
-            List<String> list = ResourceUtil.listFiles("/jfx/lib/" + name);
+            String libDir="/jfx/libs/" + name;
+            List<String> list = ResourceUtil.listFiles(libDir);
             if (CollectionUtil.isEmpty(list)) {
                 JulLog.warn("mod:{} lib is null, ignore....", mod);
                 return;
             }
             // 复制文件
             for (String s : list) {
-                InputStream stream = ResourceUtil.getResourceAsStream(s);
-                IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s.substring(s.lastIndexOf("/"))));
+                InputStream stream = ResourceUtil.getResourceAsStream(libDir+"/"+s);
+                IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s));
                 IOUtil.close(stream);
             }
         }
