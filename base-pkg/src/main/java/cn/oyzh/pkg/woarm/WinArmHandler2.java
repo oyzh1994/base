@@ -12,6 +12,7 @@ import cn.oyzh.pkg.util.MvnUtil;
 import cn.oyzh.pkg.util.PkgUtil;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -100,8 +101,6 @@ public class WinArmHandler2 {
                     <properties>
                         <javafx.version>${javafx_version}</javafx.version>
                     </properties>
-                    <dependencyManagement>
-                    </dependencyManagement>
                     <profiles>
                         <profile>
                             <id>javafx.platform.windows.aarch64</id>
@@ -155,12 +154,21 @@ public class WinArmHandler2 {
         Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + "-win.jar");
         // 解压jar
         String jarDir = this.jarXf(path.toString());
-        // 覆盖lib
-        File[] libs = FileUtil.ls(lib);
-        for (File file : libs) {
-            if (!FileNameUtil.isDllType(FileNameUtil.extName(file))) {
-                continue;
+
+        FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return FileNameUtil.isDllType(FileNameUtil.extName(f));
             }
+        };
+        // 删除旧lib
+        File[] libs1 = FileUtil.ls(jarDir, filter);
+        for (File file : libs1) {
+            FileUtil.del(file);
+        }
+        // 复制新lib
+        File[] libs2 = FileUtil.ls(lib.toString(), filter);
+        for (File file : libs2) {
             FileUtil.copy(file, new File(jarDir, file.getName()));
         }
         // 压缩jar
