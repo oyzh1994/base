@@ -66,7 +66,7 @@ public class WoaHandler   {
      * @throws Exception 异常
      */
     public void run() throws Exception {
-        if (!(OSUtil.isWindows() && OSUtil.isAarch64())) {
+        if (!WoaUtil.isWoa()) {
             JulLog.warn("only run in windows on arm!");
             return;
         }
@@ -173,10 +173,8 @@ public class WoaHandler   {
                 IOUtil.close(stream);
             }
         }
-
         // 解压jar
         String jarDir = this.jarXf(path.toString());
-
         // 过滤器
         FileFilter filter = f -> FileNameUtil.isDllType(FileNameUtil.extName(f));
         // 删除旧lib

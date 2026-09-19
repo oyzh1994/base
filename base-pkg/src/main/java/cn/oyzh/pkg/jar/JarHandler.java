@@ -13,9 +13,9 @@ import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.filter.RegFilter;
-import cn.oyzh.pkg.util.JModUtil;
 import cn.oyzh.pkg.util.JarUtil;
 import cn.oyzh.pkg.util.PkgUtil;
+import cn.oyzh.pkg.woa.WoaUtil;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -120,24 +120,26 @@ public class JarHandler implements PreHandler {
                 javafxPath = path.toString();
                 this.config.getJarConfig().setJavafxPath(javafxPath);
             }
-            String subName = null;
+            String modName = null;
             if (src.contains("javafx-graphics-")) {
-                subName = "javafx.graphics.jmod";
+                modName = "javafx.graphics.jmod";
             } else if (src.contains("javafx-media-")) {
-                subName = "javafx.media.jmod";
+                modName = "javafx.media.jmod";
             } else if (src.contains("javafx-web-")) {
-                subName = "javafx.web.jmod";
+                modName = "javafx.web.jmod";
             }
             // jmods处理
-            if (subName != null) {
+            if (modName != null) {
                 String jdkPath = this.config.getJdkPath();
-                String modDir = JModUtil.extract(subName, jdkPath);
-                // 检查jmods文件是否存在
-                if (modDir != null) {
+                // 获取lib目录
+                Path libPath = WoaUtil.getJfxLibPath(modName, jdkPath);
+                // 检查lib文件是否存在
+                if (libPath != null) {
                     String finalJavafxPath = javafxPath;
+                    // ms库文件
                     List<String> mslibs = JFXUtil.msLibNames();
                     // 遍历文件
-                    cn.oyzh.common.file.FileUtil.getAllFiles(modDir, (ExceptionConsumer<File>) file -> {
+                    cn.oyzh.common.file.FileUtil.getAllFiles(libPath.toFile(), (ExceptionConsumer<File>) file -> {
                         // 非库文件，跳过
                         if (!StringUtil.endsWithAny(file.getName(), ".dylib", ".dll", ".so")) {
                             return;
@@ -152,10 +154,14 @@ public class JarHandler implements PreHandler {
                         }
                         Files.copy(file.toPath(), path2);
                     });
-                    cn.oyzh.common.file.FileUtil.cleanDir(modDir);
-                    cn.oyzh.common.file.FileUtil.del(modDir);
+                    cn.oyzh.common.file.FileUtil.cleanDir(libPath);
                     return;
                 }
+            }
+
+            // ci环境下，windows on arm默认不会复制lib
+            if (SystemUtil.isCIEnv() && WoaUtil.isWoa()) {
+                return;
             }
 
             // 普通jar处理

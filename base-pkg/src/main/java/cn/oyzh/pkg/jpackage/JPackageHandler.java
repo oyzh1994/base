@@ -92,7 +92,6 @@ public class JPackageHandler implements PackHandler {
         }
         if (FileUtil.exists(packConfig.getDest())) {
             FileUtil.cleanDir(packConfig.getDest());
-            FileUtil.del(packConfig.getDest(), true);
         }
         if (jPackageConfig.getDest() == null) {
             jPackageConfig.setDest(packConfig.getDest());

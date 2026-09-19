@@ -178,14 +178,13 @@ public class ResourceUtil {
         return null;
     }
 
-
     /**
      * 遍历资源目录下所有文件（含子目录）
      *
      * @param resourceDir 资源目录，例如 "static/images"
      * @return 相对于 resourceDir 的路径列表，例如 "logo/a.png"
      */
-    public static List<String> listFiles(String resourceDir) throws IOException, URISyntaxException {
+    public static List<String> listFiles(String resourceDir) throws Exception {
         URL url = getResource(resourceDir);
         if (url == null) {
             return Collections.emptyList();

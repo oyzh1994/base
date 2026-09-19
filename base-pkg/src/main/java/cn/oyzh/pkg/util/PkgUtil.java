@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.OSUtil;
-import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
@@ -559,8 +558,8 @@ public class PkgUtil {
     /**
      * 获取jar cf命令
      *
-     * @param jarPath  jar路径
-     * @param files 文件列表
+     * @param jarPath jar路径
+     * @param files   文件列表
      * @return 结果
      */
     public static String[] getJarCfCMD(String jarPath, List<String> files) {
@@ -579,7 +578,7 @@ public class PkgUtil {
     /**
      * 获取jar xf命令
      *
-     * @param jarPath  jar路径
+     * @param jarPath jar路径
      * @return 结果
      */
     public static String[] getJarXfCMD(String jarPath) {
