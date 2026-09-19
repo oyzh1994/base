@@ -1,7 +1,8 @@
 package cn.oyzh.pkg.test;
 
 import cn.oyzh.common.system.SystemUtil;
-import cn.oyzh.pkg.util.WinArmHandler;
+import cn.oyzh.pkg.woarm.WinArmHandler;
+import cn.oyzh.pkg.woarm.WinArmHandler2;
 import org.junit.Test;
 
 /**
@@ -19,7 +20,14 @@ public class WinArmPreHandler {
     public void run() throws Exception {
         WinArmHandler handler = new WinArmHandler();
         handler.setJfxVersion(this.jfxVersion);
-        handler.jfxJModToMavenJar();
+        handler.run();
+    }
+
+    @Test
+    public void run2() throws Exception {
+        WinArmHandler2 handler = new WinArmHandler2();
+        handler.setJfxVersion(this.jfxVersion);
+        handler.run();
     }
 
     public static void main(String[] args) throws Exception {

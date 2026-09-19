@@ -1,4 +1,4 @@
-package cn.oyzh.pkg.util;
+package cn.oyzh.pkg.woarm;
 
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
@@ -9,6 +9,9 @@ import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
 import cn.oyzh.common.util.ResourceUtil;
 import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.pkg.util.JModUtil;
+import cn.oyzh.pkg.util.MvnUtil;
+import cn.oyzh.pkg.util.PkgUtil;
 
 import java.io.File;
 import java.io.InputStream;
@@ -25,7 +28,7 @@ import java.util.List;
  * @author oyzh
  * @since 2026/09/18
  */
-public class WinArmHandler {
+public class WinArmHandler2 {
 
     private String jfxVersion;
 
@@ -48,15 +51,9 @@ public class WinArmHandler {
      * 模块列表
      */
     private static final String[] mods = new String[]{
-            "javafx.base",
-            "javafx.controls",
             "javafx.graphics",
-            "javafx.fxml",
             "javafx.media",
-            "javafx.swing",
-            "javafx.web",
-            "jfx.incubator.input",
-            "jfx.incubator.richtext",
+            "javafx.web"
     };
 
     /**
@@ -64,7 +61,7 @@ public class WinArmHandler {
      *
      * @throws Exception 异常
      */
-    public void jfxJModToMavenJar() throws Exception {
+    public void run() throws Exception {
         if (!(OSUtil.isWindows() && OSUtil.isAarch64())) {
             JulLog.warn("only run in windows on arm!");
             return;
@@ -75,27 +72,28 @@ public class WinArmHandler {
             this.updateJfxPomFile();
         }
         for (String mod : mods) {
-            this.jfxJModToMvnJar(jdkPath, mod);
+//            this.jfxJModToMvnJar(jdkPath, mod);
+            this.updateJfxJarFile(jdkPath,mod);
         }
         this.clean(jdkPath);
     }
 
-    /**
-     * jfx模块转mvn模块
-     *
-     * @param jdkPath jdk路径
-     * @param mod     模块
-     * @throws Exception 异常
-     */
-    private void jfxJModToMvnJar(String jdkPath, String mod) throws Exception {
-        String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
-        if (modDir == null) {
-            JulLog.warn("mod:{} modDir is null, ignore....", mod);
-            return;
-        }
-        this.jarCf(modDir, mod);
-        this.mvnInstall(modDir, mod);
-    }
+//    /**
+//     * jfx模块转mvn模块
+//     *
+//     * @param jdkPath jdk路径
+//     * @param mod     模块
+//     * @throws Exception 异常
+//     */
+//    private void jfxJModToMvnJar(String jdkPath, String mod) throws Exception {
+//        String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
+//        if (modDir == null) {
+//            JulLog.warn("mod:{} modDir is null, ignore....", mod);
+//            return;
+//        }
+//        this.jarCf(modDir, mod);
+//        this.mvnInstall(modDir, mod);
+//    }
 
     /**
      * 更新jfx的pom文件
@@ -117,6 +115,37 @@ public class WinArmHandler {
         content = content.replace("${javafx_version}", jfxVer);
         // 覆盖文件
         FileUtil.writeString(content, path.toFile());
+    }
+
+    private void updateJfxJarFile(String jdkPath, String mod) throws Exception {
+        String repo = MvnUtil.getLocalRepository();
+        if (!FileUtil.exists(repo)) {
+            JulLog.warn("mvn repository not exists!");
+            return;
+        }
+        String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
+        if (modDir == null) {
+            JulLog.warn("mod:{} modDir is null, ignore....", mod);
+            return;
+        }
+        Path lib = Path.of(modDir, "lib");
+        if (!Files.exists(lib)) {
+            JulLog.warn("mod:{} lib is null, ignore....", mod);
+            return;
+        }
+        String name = mod.replace(".", "-");
+        String jfxVer = this.jfxVersion();
+        // 获取模块路径
+        Path path = Paths.get(repo, "/org/openjfx/" + name + "/" + jfxVer + "/" + name + "-" + jfxVer + "-win.jar");
+        String jarDir = this.jarXf(path.toString());
+        File[] libs = FileUtil.ls(lib);
+        for (File file : libs) {
+            if (!FileNameUtil.isDllType(FileNameUtil.extName(file))) {
+                continue;
+            }
+            FileUtil.copy(file, new File(jarDir, file.getName()));
+        }
+        this.jarCf(path.toString(), jarDir);
     }
 
     /**
@@ -169,22 +198,12 @@ public class WinArmHandler {
     /**
      * jar打包
      *
-     * @param modDir 模块路径
-     * @param mod    模块
+     * @param jarPath jar路径
+     * @param jarFile jar文件路径
      * @throws Exception 异常
      */
-    private void jarCf(String modDir, String mod) throws Exception {
-        Path path1 = Paths.get(modDir, "classes");
-        Path path2 = Paths.get(modDir, "lib");
-        Path jarPath = Paths.get(Paths.get(modDir).getParent().toString(), mod + ".jar");
-        List<String> files = new ArrayList<>();
-        if (Files.exists(path1)) {
-            files.add(path1.toString());
-        }
-        if (Files.exists(path2)) {
-            files.add(path2.toString());
-        }
-        String[] jarCmd = PkgUtil.getJarCMD(jarPath.toString(), files);
+    private String jarCf(String jarPath, String jarFile) throws Exception {
+        String[] jarCmd = PkgUtil.getJarCfCMD(jarPath, List.of(jarFile));
         jarCmd = PkgUtil.getJDKExecCMD(SystemUtil.javaHome(), jarCmd);
         ProcessExecResult result = RuntimeUtil.execForResult(jarCmd);
         JulLog.info("jar cf:{}", result);
@@ -192,6 +211,26 @@ public class WinArmHandler {
             JulLog.error("jar cf error:{}", result.getError());
             throw new Exception("jar cf error:" + result.getError());
         }
+        return jarFile;
+    }
+
+    /**
+     * jar解压
+     *
+     * @param jarPath jar文件
+     * @throws Exception 异常
+     */
+    private String jarXf(String jarPath) throws Exception {
+        String[] jarCmd = PkgUtil.getJarXfCMD(jarPath);
+        jarCmd = PkgUtil.getJDKExecCMD(SystemUtil.javaHome(), jarCmd);
+        ProcessExecResult result = RuntimeUtil.execForResult(jarCmd);
+        JulLog.info("jar xf:{}", result);
+        if (!result.isSuccess()) {
+            JulLog.error("jar xf error:{}", result.getError());
+            throw new Exception("jar xf error:" + result.getError());
+        }
+        File p = Path.of(jarPath).toFile();
+        return Path.of(jarPath, p.getName().substring(0, p.getName().lastIndexOf("."))).toString();
     }
 
     /**

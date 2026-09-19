@@ -1,6 +1,6 @@
 package cn.oyzh.pkg.test;
 
-import cn.oyzh.pkg.util.WinArmHandler;
+import cn.oyzh.pkg.woarm.WinArmHandler;
 import org.junit.Test;
 
 /**

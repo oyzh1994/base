@@ -557,13 +557,13 @@ public class PkgUtil {
     }
 
     /**
-     * 获取jar命令
+     * 获取jar cf命令
      *
      * @param jarPath  jar路径
      * @param files 文件列表
      * @return 结果
      */
-    public static String[] getJarCMD(String jarPath, List<String> files) {
+    public static String[] getJarCfCMD(String jarPath, List<String> files) {
         List<String> cmdList = new ArrayList<>();
         cmdList.add("jar");
         cmdList.add("cf");
@@ -573,6 +573,20 @@ public class PkgUtil {
             cmdList.add(s);
             cmdList.add(".");
         }
+        return ArrayUtil.toArray(cmdList, String.class);
+    }
+
+    /**
+     * 获取jar xf命令
+     *
+     * @param jarPath  jar路径
+     * @return 结果
+     */
+    public static String[] getJarXfCMD(String jarPath) {
+        List<String> cmdList = new ArrayList<>();
+        cmdList.add("jar");
+        cmdList.add("xf");
+        cmdList.add(jarPath);
         return ArrayUtil.toArray(cmdList, String.class);
     }
 }
