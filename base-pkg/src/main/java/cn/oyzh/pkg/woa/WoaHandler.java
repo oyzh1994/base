@@ -32,30 +32,7 @@ import java.util.List;
  * @author oyzh
  * @since 2026/09/18
  */
-public class WoaHandler implements PreHandler {
-
-    private int order = PackOrder.ORDER_P10;
-
-    @Override
-    public int order() {
-        return order;
-    }
-
-    @Override
-    public void order(int order) {
-        this.order = order;
-    }
-
-    @Override
-    public String name() {
-        return "WOA处理";
-    }
-
-    @Override
-    public void handle(PackConfig packConfig) throws Exception {
-        this.jfxVersion = packConfig.getJfxVersion();
-        this.run();
-    }
+public class WoaHandler   {
 
     private String jfxVersion;
 

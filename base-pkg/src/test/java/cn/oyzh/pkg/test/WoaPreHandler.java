@@ -10,7 +10,7 @@ import org.junit.Test;
  * @author oyzh
  * @since 2026-09-18
  */
-public class WinArmPreHandler {
+public class WoaPreHandler {
 
     private String jfxVersion;
 
@@ -31,7 +31,7 @@ public class WinArmPreHandler {
     }
 
     public static void main(String[] args) throws Exception {
-        WinArmPreHandler pack = new WinArmPreHandler();
+        WoaPreHandler pack = new WoaPreHandler();
         if (args != null && args.length > 0 && args[0] != null) {
             pack.jfxVersion = args[0];
         }

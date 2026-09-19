@@ -114,9 +114,9 @@ public class Packer {
         this.registerHandler(new AppImageHandler());
     }
 
-    public void registerWoaHandler() {
-        this.registerHandler(new WoaHandler());
-    }
+//    public void registerWoaHandler() {
+//        this.registerHandler(new WoaHandler());
+//    }
 
     public void registerJLinkHandler() {
         this.registerHandler(new JLinkHandler());
