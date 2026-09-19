@@ -136,6 +136,7 @@ public class JarHandler implements PreHandler {
                 if (modDir != null) {
                     String finalJavafxPath = javafxPath;
                     List<String> mslibs = JFXUtil.msLibNames();
+                    // 遍历文件
                     cn.oyzh.common.file.FileUtil.getAllFiles(modDir, (ExceptionConsumer<File>) file -> {
                         // 非库文件，跳过
                         if (!StringUtil.endsWithAny(file.getName(), ".dylib", ".dll", ".so")) {
@@ -151,6 +152,8 @@ public class JarHandler implements PreHandler {
                         }
                         Files.copy(file.toPath(), path2);
                     });
+                    cn.oyzh.common.file.FileUtil.cleanDir(modDir);
+                    cn.oyzh.common.file.FileUtil.del(modDir);
                     return;
                 }
             }
