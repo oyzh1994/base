@@ -345,6 +345,10 @@ public class I18nHelper {
 
     public static final String FOLDER1 = "base.folder1";
 
+    public static final String BUILT_IN = "base.builtIn";
+
+    public static final String BIT = "base.bit";
+
     public static final String TOUCH_FILE = "base.touchFile";
 
     public static final String MKDIR = "base.mkdir";
@@ -5049,6 +5053,14 @@ public class I18nHelper {
 
     public static String folder1() {
         return I18nResourceBundle.i18nString(FOLDER1);
+    }
+
+    public static String builtIn() {
+        return I18nResourceBundle.i18nString(BUILT_IN);
+    }
+
+    public static String bit() {
+        return I18nResourceBundle.i18nString(BIT);
     }
 
     public String fileUploadFailed() {

@@ -51,6 +51,55 @@ public class OSUtil {
         return isWindows;
     }
 
+    private static Boolean isWindowsNT;
+
+    /**
+     * 是否Windows NT
+     *
+     * @return 结果
+     */
+    public static boolean isWindowsNT() {
+        if (isWindowsNT == null) {
+            synchronized (OSUtil.class) {
+                isWindowsNT = getOSType().contains("WINDOWS NT");
+            }
+        }
+        return isWindowsNT;
+    }
+
+    private static Boolean isWindows95;
+
+    /**
+     * 是否Windows 95/98
+     *
+     * @return 结果
+     */
+    public static boolean isWindows95() {
+        if (isWindows95 == null) {
+            synchronized (OSUtil.class) {
+                String osName = getOSType();
+                isWindows95 = osName.contains("WINDOWS 95") || osName.contains("WINDOWS 98");
+            }
+        }
+        return isWindows95;
+    }
+
+    private static Boolean isOS2;
+
+    /**
+     * 是否OS/2
+     *
+     * @return 结果
+     */
+    public static boolean isOS2() {
+        if (isOS2 == null) {
+            synchronized (OSUtil.class) {
+                isOS2 = getOSType().contains("OS/2");
+            }
+        }
+        return isOS2;
+    }
+
     private static Boolean isMacos;
 
     /**
@@ -65,6 +114,39 @@ public class OSUtil {
             }
         }
         return isMacos;
+    }
+
+    private static Boolean isMacosX;
+
+    /**
+     * 是否macOS X
+     *
+     * @return 结果
+     */
+    public static boolean isMacOSX() {
+        if (isMacosX == null) {
+            synchronized (OSUtil.class) {
+                isMacosX = getOSType().contains("MAC OS X");
+            }
+        }
+        return isMacosX;
+    }
+
+    private static Boolean isUnix;
+
+    /**
+     * 是否unix系（Linux、macOS、FreeBSD、AIX、SunOS等）
+     *
+     * @return 结果
+     */
+    public static boolean isUnix() {
+        if (isUnix == null) {
+            synchronized (OSUtil.class) {
+                String osName = getOSType();
+                isUnix = !osName.contains("WINDOWS") && !osName.contains("OS/2");
+            }
+        }
+        return isUnix;
     }
 
     private static Boolean isArm32;
