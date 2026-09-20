@@ -64,6 +64,8 @@
         <!-- <fastjson.version>1.2.83</fastjson.version> -->
         <jgit.version>7.7.0.202606012155-r</jgit.version>
         <bouncycastle.version>1.84</bouncycastle.version>
+        <commons-cli.version>1.11.0</commons-cli.version>
+        <commons-net.version>3.13.0</commons-net.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
