@@ -110,54 +110,57 @@ public class SSHUtil {
      */
     public static boolean isPortAvailable(int port, int timeout) {
         try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress("127.0.0.1", port), timeout);
-            // 端口被占用
-            return false;
+            InetSocketAddress address = new InetSocketAddress("127.0.0.1", port);
+            socket.setReuseAddress(true);
+            socket.bind(address);
+            //            socket.connect(address, timeout);
+            // 端口未被占用
+            return true;
         } catch (IOException ignored) {
         }
-        // 端口未被占用
-        return true;
+        // 端口被占用
+        return false;
     }
 
-//    /**
-//     * 转换为pem格式
-//     *
-//     * @param keyType    密钥类型
-//     * @param privateKey 密钥
-//     * @return 结果
-//     */
-//    public static String formatPem(String keyType, String privateKey) {
-//        StringBuilder pem = new StringBuilder();
-//        pem.append("-----BEGIN ").append(keyType).append("-----\n");
-//        int lineLength = 64;
-//        for (int i = 0; i < privateKey.length(); i += lineLength) {
-//            pem.append(privateKey, i, Math.min(i + lineLength, privateKey.length())).append("\n");
-//        }
-//        pem.append("-----END ").append(keyType).append("-----");
-//        return pem.toString();
-//    }
-//
-//    /**
-//     * 转换为pem格式
-//     *
-//     * @param keyType    密钥类型
-//     * @param privateKey 密钥
-//     * @return 结果
-//     */
-//    public static String formatPem1(String keyType, String privateKey) {
-//        StringBuilder pem = new StringBuilder();
-//        pem.append("-----BEGIN ").append(keyType).append("-----\n");
-//        pem.append(privateKey).append("\n");
-//        pem.append("-----END ").append(keyType).append("-----");
-//        return pem.toString();
-//    }
+    //    /**
+    //     * 转换为pem格式
+    //     *
+    //     * @param keyType    密钥类型
+    //     * @param privateKey 密钥
+    //     * @return 结果
+    //     */
+    //    public static String formatPem(String keyType, String privateKey) {
+    //        StringBuilder pem = new StringBuilder();
+    //        pem.append("-----BEGIN ").append(keyType).append("-----\n");
+    //        int lineLength = 64;
+    //        for (int i = 0; i < privateKey.length(); i += lineLength) {
+    //            pem.append(privateKey, i, Math.min(i + lineLength, privateKey.length())).append("\n");
+    //        }
+    //        pem.append("-----END ").append(keyType).append("-----");
+    //        return pem.toString();
+    //    }
+    //
+    //    /**
+    //     * 转换为pem格式
+    //     *
+    //     * @param keyType    密钥类型
+    //     * @param privateKey 密钥
+    //     * @return 结果
+    //     */
+    //    public static String formatPem1(String keyType, String privateKey) {
+    //        StringBuilder pem = new StringBuilder();
+    //        pem.append("-----BEGIN ").append(keyType).append("-----\n");
+    //        pem.append(privateKey).append("\n");
+    //        pem.append("-----END ").append(keyType).append("-----");
+    //        return pem.toString();
+    //    }
 
     /**
      * ansi正则
      */
     private static Pattern ANSI_PATTERN;
 
-    private static Pattern ansiPattern(){
+    private static Pattern ansiPattern() {
         if (ANSI_PATTERN == null) {
             ANSI_PATTERN = Pattern.compile("\u001B\\[[;\\d]*[ -/]*[@-~]");
         }
@@ -250,26 +253,26 @@ public class SSHUtil {
         return sockFile;
     }
 
-//    /**
-//     * 设置跳板机标识
-//     *
-//     * @param entry 配置
-//     */
-//    public static void setMiddle(HostConfigEntry entry) {
-//        entry.setProperty("middle", "true");
-//    }
-//
-//    /**
-//     * 是否跳板机
-//     *
-//     * @param session 会话
-//     */
-//    public static boolean isMiddle(ClientSession session) {
-//        if (session instanceof JGitClientSession session1) {
-//            String obj = session1.getHostConfigEntry().getProperty("middle");
-//            return "true".equalsIgnoreCase(obj);
-//        }
-//        return false;
-//    }
+    //    /**
+    //     * 设置跳板机标识
+    //     *
+    //     * @param entry 配置
+    //     */
+    //    public static void setMiddle(HostConfigEntry entry) {
+    //        entry.setProperty("middle", "true");
+    //    }
+    //
+    //    /**
+    //     * 是否跳板机
+    //     *
+    //     * @param session 会话
+    //     */
+    //    public static boolean isMiddle(ClientSession session) {
+    //        if (session instanceof JGitClientSession session1) {
+    //            String obj = session1.getHostConfigEntry().getProperty("middle");
+    //            return "true".equalsIgnoreCase(obj);
+    //        }
+    //        return false;
+    //    }
 
 }
