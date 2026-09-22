@@ -1,5 +1,6 @@
 package cn.oyzh.pkg.test;
 
+import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.SystemUtil;
 import org.junit.Test;
 
@@ -11,18 +12,17 @@ import org.junit.Test;
 public class JavaVerTest {
 
     @Test
-    public void test(){
+    public void test() {
         Runtime.Version version = Runtime.version();
         System.out.println("完整版本: " + version);           // 如 17.0.8+9
         System.out.println("主版本号: " + version.feature());  // 17
         System.out.println("次版本号: " + version.interim());  // 0
         System.out.println("更新版本: " + version.update());   // 8
         System.out.println("补丁版本: " + version.patch());    // 0
-
     }
 
     @Test
-    public void test1(){
+    public void test1() {
         // 获取完整的版本号，如 "17.0.8" 或 "1.8.0_381"
         String version = System.getProperty("java.version");
         System.out.println("Java 版本: " + version);
@@ -45,7 +45,8 @@ public class JavaVerTest {
     }
 
     @Test
-    public void test2(){
+    public void test2() {
         System.out.println("Java 版本: " + SystemUtil.getJdkVersion());
+        JulLog.info("Java 版本: " + SystemUtil.getJdkVersion());
     }
 }

@@ -30,7 +30,7 @@ public class JulUtil {
         if (StringUtil.isNotBlank(projectName)) {
             filePath += projectName + "-";
         }
-        File file = new File(FileNameUtil.concat(filePath,fileName));
+        File file = new File(FileNameUtil.concat(filePath, fileName));
         if (!file.exists()) {
             FileUtil.touch(file);
         }
@@ -47,10 +47,10 @@ public class JulUtil {
         String baseDir = SysConst.storeDir() == null ? SystemUtil.userDir() : SysConst.storeDir();
         //        // 正式环境
         //        if (JarUtil.isInJar()) {
-        filePath = baseDir + "logs" + File.separator;
+        filePath = FileNameUtil.concat(baseDir, "logs");
         //            filePath = SysConst.storeDir() + "logs" + File.separator;
         //        } else {// 开发环境
-//                    filePath = SystemUtil.userDir() + File.separator + "logs" + File.separator;
+        //                    filePath = SystemUtil.userDir() + File.separator + "logs" + File.separator;
         //        }
         return filePath;
     }
