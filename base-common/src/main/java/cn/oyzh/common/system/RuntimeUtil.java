@@ -400,7 +400,7 @@ public class RuntimeUtil {
         result.setExitCode(exitCode);
         result.setInput(input.toString());
         result.setError(error.toString());
-        process.close();
+//        process.close();
         return result;
     }
 
