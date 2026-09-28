@@ -8,6 +8,7 @@ import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PostHandler;
 import cn.oyzh.pkg.config.PackConfig;
@@ -49,11 +50,20 @@ public class AppImageHandler implements PostHandler {
         String pDir = new File(packConfig.getDest()).getParent();
         String file = pDir + "/" + packConfig.getAppName() + ".AppImage";
         List<String> cmdList = new ArrayList<>();
-        cmdList.add("appimagetool");
+        String installResult = null;
+        if (StringUtil.isNotBlank(packConfig.getAppImageRuntime())) {
+            installResult = this.installAppImageTool(packConfig);
+        }
+        if (null == installResult || installResult.equals("1")) {
+            cmdList.add("appimagetool");
+        } else if (installResult.equals("2")) {
+            throw new RuntimeException("can not found appimagetool");
+        } else {
+            cmdList.add(installResult);
+        }
         cmdList.add(packConfig.getDest());
         cmdList.add(file);
         if (StringUtil.isNotBlank(packConfig.getAppImageRuntime())) {
-            this.installAppImageTool(packConfig);
             cmdList.add("--runtime-file");
             if (OSUtil.isAarch64()) {
                 cmdList.add(FileNameUtil.concat(packConfig.getAppImageRuntime(), "runtime-aarch64"));
@@ -78,23 +88,35 @@ public class AppImageHandler implements PostHandler {
      * 安装AppImage工具
      *
      * @param packConfig 配置
+     * @return 结果或者安装路径
      * @throws Exception 异常
      */
-    private void installAppImageTool(PackConfig packConfig) throws Exception {
+    private String installAppImageTool(PackConfig packConfig) throws Exception {
+        File source = null;
+        File target = FileUtil.newTmpFile(UUIDUtil.uuidSimple() + "_appimagetool");
+        if (OSUtil.isAarch64()) {
+            source = new File(packConfig.getAppImageRuntime(), "appimagetool-aarch64.AppImage");
+        } else if (OSUtil.isX64()) {
+            source = new File(packConfig.getAppImageRuntime(), "appimagetool-x86_64.AppImage");
+        }
+        if (source != null) {
+            FileUtil.copy(source, target);
+            ProcessExecResult result = RuntimeUtil.execForResult("chmod +x " + target.getName(), null, target.getParentFile());
+            if (result.isSuccess()) {
+                return target.getPath();
+            }
+//            target = FileUtil.newTmpFile(UUIDUtil.uuidSimple() + "_appimagetool");
+//            FileUtil.copy(source, target);
+//            result = RuntimeUtil.execForResult("chmod +x " + target.getName(), null, target.getParentFile());
+//            if (result.isSuccess()) {
+//                return target.getPath();
+//            }
+        }
         String output = RuntimeUtil.execForStr("which appimagetool");
         if (StringUtil.isBlank(output) || StringUtil.contains(output, "no appimagetool in")) {
-            File source = null;
-            File target = new File("/usr/local/bin/appimagetool");
-            if (OSUtil.isAarch64()) {
-                source = new File(packConfig.getAppImageRuntime(), "appimagetool-aarch64.AppImage");
-            } else if (OSUtil.isX64()) {
-                source = new File(packConfig.getAppImageRuntime(), "appimagetool-x86_64.AppImage");
-            }
-            if (source != null) {
-                FileUtil.copy(source, target);
-                RuntimeUtil.exec("chmod +x appimagetool", null, new File("/usr/local/bin/"));
-            }
+            return "2";
         }
+        return "1";
     }
 
     /**

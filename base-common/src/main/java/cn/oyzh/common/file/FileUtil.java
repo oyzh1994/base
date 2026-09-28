@@ -737,7 +737,7 @@ public class FileUtil {
             throw new InvalidPathException(target.getPath(), "not dir");
         }
         if (!source.exists()) {
-            throw new FileNotFoundException("源文件/目录不存在: " + source.getAbsolutePath());
+            throw new FileNotFoundException(source.getAbsolutePath());
         }
         if (source.isFile()) {
             // 目标为目录，则把源文件复制到目标目录
