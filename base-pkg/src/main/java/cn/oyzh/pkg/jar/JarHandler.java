@@ -3,9 +3,13 @@ package cn.oyzh.pkg.jar;
 import cn.hutool.core.io.FileUtil;
 import cn.oyzh.common.function.ExceptionConsumer;
 import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.native1.NativeArchDetector;
+import cn.oyzh.common.native1.NativeLibUtil;
+import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.JFXUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.common.util.UUIDUtil;
@@ -111,14 +115,15 @@ public class JarHandler implements PreHandler {
      * @param name 名称
      */
     private void handleJfxLib(String src, String name) {
-        String javafxPath = this.config.getJarConfig().getJavafxPath();
+        JarConfig jarConfig = this.config.getJarConfig();
+        String javafxPath = jarConfig.getJavafxPath();
         try {
             // 初始化jfx路径
-            if (this.config.getJarConfig().getJavafxPath() == null) {
+            if (javafxPath == null) {
                 Path path = Paths.get(SystemUtil.tmpdir(), "_temp_javafx_" + UUIDUtil.uuidSimple());
                 Files.createDirectory(path);
                 javafxPath = path.toString();
-                this.config.getJarConfig().setJavafxPath(javafxPath);
+                jarConfig.setJavafxPath(javafxPath);
             }
             String modName = null;
             if (src.contains("javafx-graphics-")) {
@@ -184,6 +189,48 @@ public class JarHandler implements PreHandler {
     }
 
     /**
+     * 处理二进制库
+     *
+     * @param src  路径
+     * @param name 名称
+     * @return 结果
+     */
+    private boolean handleBinLib(String src, String name) {
+        if (OSUtil.isMacOS() && !NativeLibUtil.isMacosLib(name)) {
+            return false;
+        }
+        if (OSUtil.isLinux() && !NativeLibUtil.isLinuxLib(name)) {
+            return false;
+        }
+        if (OSUtil.isWindows() && !NativeLibUtil.isWindowsLib(name)) {
+            return false;
+        }
+        boolean result = false;
+        try {
+            // 普通jar处理
+            try (JarInputStream jarIn = new JarInputStream(new BufferedInputStream(new FileInputStream(src)))) {
+                ZipEntry entry;
+                while ((entry = jarIn.getNextJarEntry()) != null) {
+                    if (entry.isDirectory()) {
+                        continue;
+                    }
+                    // 匹配目标条目
+                    if (!entry.getName().equals(name)) {
+                        continue;
+                    }
+                    // 只读头部
+                    byte[] head = IOUtil.readAtMost(jarIn, 4096);
+                    // 判断库是否符合当前平台
+                    result = NativeArchDetector.isCompatibleWithCurrentJvm(head);
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return result;
+    }
+
+    /**
      * jar过滤
      *
      * @param src  源文件
@@ -195,13 +242,22 @@ public class JarHandler implements PreHandler {
         if (name.endsWith(".jar")) {
             return true;
         }
-        // jfx优化
-        if (this.config.getJarConfig().isJavafxOptimize()) {
-            if (src.endsWith(".jar")
+        JarConfig jarConfig = this.config.getJarConfig();
+        if (jarConfig != null && jarConfig.isEnable()) {
+            // jfx优化
+            if (jarConfig.isJavafxOptimize()
+                    && src.endsWith(".jar")
                     && StringUtil.containsAny(src, "javafx-media-", "javafx-graphics-", "javafx-web-")
-                    && StringUtil.endsWithAny(name, ".dylib", ".dll", ".so")) {
+                    && NativeLibUtil.isNativeLibName(name)) {
                 this.handleJfxLib(src, name);
                 JulLog.info("javafx模块，文件:{}被过滤.", name);
+                return false;
+            }
+            // 二进制库优化
+            if (jarConfig.isBinlibOptimize()
+                    && NativeLibUtil.isNativeLibName(name)
+                    && !this.handleBinLib(src, name)) {
+                JulLog.info("二进制库:{}非当前平台，被过滤.", name);
                 return false;
             }
         }
@@ -239,7 +295,8 @@ public class JarHandler implements PreHandler {
                     continue;
                 }
                 // 内容为空
-                if (this.config.getJarConfig().isRemoveEmpty() && !JarUtil.hasClass(file.getPath())) {
+                JarConfig jarConfig = this.config.getJarConfig();
+                if (jarConfig != null && jarConfig.isEnable() && jarConfig.isRemoveEmpty() && !JarUtil.hasClass(file.getPath())) {
                     cn.oyzh.common.file.FileUtil.del(file);
                     JulLog.warn("类库:{}内容为空, 已删除.", file.getName());
                     continue;

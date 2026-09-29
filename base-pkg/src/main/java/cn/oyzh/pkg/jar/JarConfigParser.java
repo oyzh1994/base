@@ -38,6 +38,10 @@ public class JarConfigParser implements ConfigParser<JarConfig> {
         if (javafxOptimize != null) {
             config.setJavafxOptimize(javafxOptimize);
         }
+        Boolean binlibOptimize = object.getBoolean("binlibOptimize");
+        if (binlibOptimize != null) {
+            config.setBinlibOptimize(binlibOptimize);
+        }
         return config;
     }
 

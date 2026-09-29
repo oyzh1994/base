@@ -4,8 +4,10 @@ import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.thread.ThreadUtil;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
@@ -129,5 +131,19 @@ public class IOUtil {
 
             }
         }
+    }
+
+    /** 从流中读取最多 max 字节（可能少于 max，如果流提前结束） */
+    public static byte[] readAtMost(InputStream in, int max) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(Math.min(max, 8192));
+        byte[] buf = new byte[Math.min(max, 8192)];
+        int remaining = max;
+        while (remaining > 0) {
+            int n = in.read(buf, 0, Math.min(buf.length, remaining));
+            if (n < 0) break;
+            baos.write(buf, 0, n);
+            remaining -= n;
+        }
+        return baos.toByteArray();
     }
 }
