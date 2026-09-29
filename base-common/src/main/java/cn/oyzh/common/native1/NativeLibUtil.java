@@ -1,5 +1,7 @@
 package cn.oyzh.common.native1;
 
+import cn.oyzh.common.util.StringUtil;
+
 import java.util.Locale;
 
 /**
@@ -17,7 +19,7 @@ public class NativeLibUtil {
      * @return 结果
      */
     public static boolean isNativeLibName(String name) {
-        return isWindowsLib(name) || isMacosLib(name) || isLinuxLib(name);
+        return isWindowsLib(name) || isMacosLib(name) || isLinuxLib(name) || isAixLib(name);
     }
 
     /**
@@ -34,13 +36,24 @@ public class NativeLibUtil {
     }
 
     /**
+     * 判断是否是aix库，即 libjnidispatth.a
+     *
+     * @param name 名称（可以是文件名，也可以是 jar 内的完整条目路径）
+     * @return 结果
+     */
+    public static boolean isAixLib(String name) {
+        String fileName = fileName(name);
+        return fileName.endsWith(".a");
+    }
+
+    /**
      * 判断是否是windows库
      *
      * @param name 名称（可以是文件名，也可以是 jar 内的完整条目路径）
      * @return 结果
      */
     public static boolean isWindowsLib(String name) {
-        return fileName(name).endsWith(".dll");
+        return StringUtil.endsWithAny(fileName(name), ".dll");
     }
 
     /**

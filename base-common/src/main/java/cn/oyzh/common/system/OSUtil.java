@@ -143,10 +143,29 @@ public class OSUtil {
         if (isUnix == null) {
             synchronized (OSUtil.class) {
                 String osName = getOSType();
-                isUnix = !osName.contains("WINDOWS") && !osName.contains("OS/2");
+                isUnix = !osName.contains("WINDOWS")
+                        && !osName.contains("OS/2")
+                        && !osName.contains("AIX");
             }
         }
         return isUnix;
+    }
+
+    private static Boolean isAix;
+
+    /**
+     * 是否aix系
+     *
+     * @return 结果
+     */
+    public static boolean isAix() {
+        if (isAix == null) {
+            synchronized (OSUtil.class) {
+                String osName = getOSType();
+                isAix = osName.contains("AIX");
+            }
+        }
+        return isAix;
     }
 
     private static Boolean isArm32;

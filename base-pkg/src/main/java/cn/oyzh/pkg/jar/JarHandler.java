@@ -205,6 +205,9 @@ public class JarHandler implements PreHandler {
         if (OSUtil.isWindows() && !NativeLibUtil.isWindowsLib(name)) {
             return false;
         }
+        if (OSUtil.isAix() && !NativeLibUtil.isAixLib(name)) {
+            return false;
+        }
         boolean result = false;
         try {
             // 普通jar处理
@@ -258,6 +261,11 @@ public class JarHandler implements PreHandler {
                     && NativeLibUtil.isNativeLibName(name)
                     && !this.handleBinLib(src, name)) {
                 JulLog.info("二进制库:{}非当前平台，被过滤.", name);
+                return false;
+            }
+            // 可执行程序优化
+            if (jarConfig.isExecutableOptimize() && !OSUtil.isWindows() && StringUtil.endsWithAny(name, ".exe")) {
+                JulLog.info("可执行程序:{}非当前平台，被过滤.", name);
                 return false;
             }
         }

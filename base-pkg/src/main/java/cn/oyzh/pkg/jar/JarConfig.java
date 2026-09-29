@@ -34,6 +34,11 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
     private Boolean binlibOptimize;
 
     /**
+     * 可执行程序优化
+     */
+    private Boolean executableOptimize;
+
+    /**
      * 跳过的jar
      */
     private Set<String> skipsJar;
@@ -93,6 +98,14 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
         this.binlibOptimize = binlibOptimize;
     }
 
+    public boolean isExecutableOptimize(){
+        return executableOptimize != null && this.executableOptimize;
+    }
+
+    public void setExecutableOptimize(Boolean executableOptimize) {
+        this.executableOptimize = executableOptimize;
+    }
+
     public String getJavafxPath() {
         return javafxPath;
     }
@@ -127,6 +140,9 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
         }
         if (config.binlibOptimize != null) {
             this.binlibOptimize = config.binlibOptimize;
+        }
+        if (config.executableOptimize != null) {
+            this.executableOptimize = config.executableOptimize;
         }
         if (config.javafxPath != null) {
             this.javafxPath = config.javafxPath;
