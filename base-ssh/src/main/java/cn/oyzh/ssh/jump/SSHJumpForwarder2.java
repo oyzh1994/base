@@ -154,12 +154,12 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
         // 设置密码工厂
         sshClient.setKeyPasswordProviderFactory(() -> (KeyPasswordProvider) CredentialsProvider.getDefault());
         // 心跳
-        sshClient.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, Duration.ofSeconds(60));
+        sshClient.setSessionHeartbeat(SessionHeartbeatController.HeartbeatType.IGNORE, Duration.ofSeconds(15));
         // 其他参数
         int timeout = connect.getTimeout();
         CoreModuleProperties.SOCKET_KEEPALIVE.set(sshClient, true);
         CoreModuleProperties.ALLOW_DHG1_KEX_FALLBACK.set(sshClient, true);
-        CoreModuleProperties.HEARTBEAT_INTERVAL.set(sshClient, Duration.ofSeconds(60));
+//        CoreModuleProperties.HEARTBEAT_INTERVAL.set(sshClient, Duration.ofSeconds(60));
         CoreModuleProperties.IO_CONNECT_TIMEOUT.set(sshClient, Duration.ofMillis(timeout));
         CoreModuleProperties.FORWARD_REQUEST_TIMEOUT.set(sshClient, Duration.ofMillis(timeout));
         // 添加到列表
