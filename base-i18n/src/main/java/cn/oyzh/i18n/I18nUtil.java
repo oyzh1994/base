@@ -21,5 +21,6 @@ public class I18nUtil {
         } else if (l == Locale.CANADA_FRENCH) {
             l = Locale.FRENCH;
         }
+        return l;
     }
 }
