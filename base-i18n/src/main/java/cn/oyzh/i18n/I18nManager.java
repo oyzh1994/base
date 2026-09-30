@@ -1,6 +1,8 @@
 package cn.oyzh.i18n;
 
 
+import cn.oyzh.common.util.StringUtil;
+
 import java.util.Locale;
 
 /**
@@ -14,7 +16,7 @@ public class I18nManager {
     /**
      * 默认区域
      */
-    public  final static Locale defaultLocale = Locale.PRC;
+    public final static Locale defaultLocale = Locale.getDefault();
 
     /**
      * 当前区域
@@ -48,7 +50,11 @@ public class I18nManager {
      * @param localeName 区域名称
      */
     public static void apply(String localeName) {
-        apply(I18nLocales.getLocale(localeName));
+        if (StringUtil.isBlank(localeName)) {
+            apply(Locale.getDefault());
+        } else {
+            apply(I18nLocales.getLocale(localeName));
+        }
     }
 
     /**
@@ -56,7 +62,7 @@ public class I18nManager {
      *
      * @param locale 区域
      */
-    public static void apply(Locale locale) {
+    public synchronized static void apply(Locale locale) {
         if (locale == null) {
             locale = defaultLocale;
         }
@@ -66,7 +72,9 @@ public class I18nManager {
             // 清除缓存
             I18nResourceBundle.clearResource();
             // 设置系统区域
-            Locale.setDefault(currentLocale);
+            if (locale != Locale.getDefault()) {
+                Locale.setDefault(currentLocale);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
