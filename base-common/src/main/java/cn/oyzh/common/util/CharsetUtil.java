@@ -11,6 +11,8 @@ import java.nio.charset.StandardCharsets;
  */
 public class CharsetUtil {
 
+    public static final Charset CHARSET_GBK = charset("gbk");
+
     private CharsetUtil() {
     }
 
@@ -36,5 +38,16 @@ public class CharsetUtil {
             return Charset.forName("GB2312");
         }
         return Charset.forName(charsetName);
+    }
+
+    public static String convert(String str, Charset from, Charset target) {
+        return TextUtil.changeCharset(str, from, target);
+    }
+
+    public static Charset charset(String charset) {
+        if (StringUtil.isNotBlank(charset)) {
+            return Charset.forName(charset);
+        }
+        return null;
     }
 }

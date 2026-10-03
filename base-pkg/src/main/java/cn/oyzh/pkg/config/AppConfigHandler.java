@@ -1,6 +1,6 @@
 // package cn.oyzh.fx.pkg.config;
 //
-// import cn.hutool.core.io.FileUtil;
+// import cn.oyzh.common.file.FileUtil;
 // import cn.oyzh.common.util.StringUtil;
 // import cn.oyzh.fx.pkg.PackOrder;
 // import cn.oyzh.fx.pkg.PostHandler;

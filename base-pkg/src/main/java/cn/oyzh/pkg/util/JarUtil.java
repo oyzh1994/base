@@ -1,7 +1,7 @@
 package cn.oyzh.pkg.util;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ZipUtil;
+import cn.oyzh.common.compress.CompressUtil;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.IOUtil;
@@ -36,7 +36,7 @@ public class JarUtil {
      * @return 结果
      */
     public static boolean hasClass(String jarFile) throws IOException {
-        if (!FileUtil.exist(jarFile)) {
+        if (!FileUtil.exists(jarFile)) {
             throw new RuntimeException("jarFile " + jarFile + " is not exist.");
         }
         if (!FileUtil.isFile(jarFile)) {
@@ -66,16 +66,16 @@ public class JarUtil {
      * @param destDir 目标目录
      */
     public static File unJar(String src, String destDir) {
-        if (!FileUtil.exist(src)) {
+        if (!FileUtil.exists(src)) {
             throw new RuntimeException("src " + src + " is not exist.");
         }
         if (!FileUtil.isFile(src)) {
             throw new RuntimeException("src " + src + " is not file.");
         }
-        if (FileUtil.exist(destDir) && !FileUtil.isDirectory(destDir)) {
+        if (FileUtil.exists(destDir) && !FileUtil.isDirectory(destDir)) {
             throw new RuntimeException("destDir " + destDir + " is not dir.");
         }
-        return ZipUtil.unzip(src, destDir);
+        return CompressUtil.unzip(src, destDir);
     }
 
     /**

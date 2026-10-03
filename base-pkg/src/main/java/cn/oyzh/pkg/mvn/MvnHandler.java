@@ -1,6 +1,6 @@
 package cn.oyzh.pkg.mvn;
 
-import cn.hutool.core.collection.CollectionUtil;
+import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.pkg.PackOrder;

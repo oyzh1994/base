@@ -1,9 +1,9 @@
 package cn.oyzh.pkg.jre;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.UUID;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.SingleHandler;
@@ -67,9 +67,9 @@ public class JreHandler implements PreHandler, SingleHandler {
         // 裁剪
         if (jreConfig.isEnable()) {
             RegFilter filter = new RegFilter(jreConfig.getExcludes());
-            File dest = new File(FileUtil.getTmpDirPath(), "_minimize_jre_" + UUID.randomUUID().toString(true));
+            File dest = new File(FileUtil.tmpPath(), "_minimize_jre_" + UUIDUtil.uuidSimple());
             FileUtil.copyContent(new File(src), dest, false);
-            List<File> fileList = FileUtil.loopFiles(dest);
+            List<File> fileList = FileUtil.getAllFiles(dest);
             // List<Runnable> tasks = new ArrayList<>();
             for (File file : fileList) {
                 // 异步执行

@@ -17,7 +17,6 @@
     </description>
 
     <properties>
-        <hutool.version>5.8.41</hutool.version>
         <snakeyaml.version>2.5</snakeyaml.version>
     </properties>
 
@@ -65,13 +64,6 @@
             <groupId>io.hotmoka</groupId>
             <artifactId>toml4j</artifactId>
             <version>0.7.3</version>
-        </dependency>
-
-        <!-- 扩展工具类库 -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-extra</artifactId>
-            <version>${hutool.version}</version>
         </dependency>
 
         <!-- 测试类库 -->

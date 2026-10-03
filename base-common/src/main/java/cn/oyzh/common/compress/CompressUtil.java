@@ -16,8 +16,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * 压缩工具类（压缩类型通过参数指定）
@@ -120,5 +124,60 @@ public class CompressUtil {
 //        List<String> sources = new ArrayList<>();
 //        sources.add(sourcePath);
         compress(List.of(new File(sourcePath)), targetPath, compressType);
+    }
+
+    /**
+     * 解压ZIP文件
+     *
+     * @param zipFilePath ZIP文件路径
+     * @param outFileDir  解压目录
+     * @return 解压目录
+     */
+    public static File unzip(String zipFilePath, String outFileDir) {
+        return unzip(new File(zipFilePath), new File(outFileDir));
+    }
+
+    /**
+     * 解压ZIP文件
+     *
+     * @param zipFile ZIP文件
+     * @param outFile 解压目录
+     * @return 解压目录
+     */
+    public static File unzip(File zipFile, File outFile) {
+        if (zipFile == null || !zipFile.isFile()) {
+            throw new IllegalArgumentException("zip file is not file");
+        }
+        if (outFile == null) {
+            throw new IllegalArgumentException("output directory is null");
+        }
+        if (outFile.exists() && !outFile.isDirectory()) {
+            throw new IllegalArgumentException("output path is not directory");
+        }
+        if (!outFile.exists() && !outFile.mkdirs()) {
+            throw new IllegalStateException("cannot create output directory: " + outFile);
+        }
+        Path outputRoot = outFile.toPath().toAbsolutePath().normalize();
+        try (ZipFile zip = new ZipFile(zipFile)) {
+            Enumeration<? extends ZipEntry> entries = zip.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                Path entryPath = outputRoot.resolve(entry.getName()).normalize();
+                if (!entryPath.startsWith(outputRoot)) {
+                    throw new IOException("invalid zip entry: " + entry.getName());
+                }
+                if (entry.isDirectory()) {
+                    Files.createDirectories(entryPath);
+                    continue;
+                }
+                Files.createDirectories(entryPath.getParent());
+                try (InputStream input = zip.getInputStream(entry)) {
+                    Files.copy(input, entryPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        } catch (IOException ex) {
+            throw new IllegalStateException("unzip failed: " + zipFile, ex);
+        }
+        return outFile;
     }
 }

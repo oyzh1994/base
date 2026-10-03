@@ -1,6 +1,6 @@
 package cn.oyzh.pkg.util;
 
-import cn.hutool.core.io.FileUtil;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.OSUtil;
@@ -47,12 +47,12 @@ public class PkgUtil {
     public static File getJpackageInputDir(String destPath, String platform) {
         String inputPath = FileNameUtil.concat(destPath, platform + "_jpackage_input_dir");
         File inputDir;
-        if (FileUtil.exist(inputPath)) {
+        if (FileUtil.exists(inputPath)) {
             FileUtil.clean(inputPath);
-            inputDir = new File(inputPath);
         } else {
-            inputDir = FileUtil.mkdir(inputPath);
+            FileUtil.mkdir(inputPath);
         }
+        inputDir = new File(inputPath);
         return inputDir;
     }
 
@@ -69,7 +69,7 @@ public class PkgUtil {
     //        File dest = new File(appDest);
     //        File compressFile = new File(dest.getParentFile(), compressName);
     //        // 进行zip压缩，如果是macos则保留目录名称，否则不保留
-    //        ZipUtil.zip(dest.getPath(), compressFile.getPath(), false);
+    //        ArchiveUtil.createZip(dest, compressFile);
     //        JulLog.info("zipDest finish appDest:{}", compressFile.getPath());
     //        return compressFile;
     //    }
@@ -139,7 +139,7 @@ public class PkgUtil {
     //        File dest = new File(appDest);
     //        File compressFile = new File(dest.getParentFile(), compressName);
     //        // 进行zip压缩，如果是macos则保留目录名称，否则不保留
-    //        ZipUtil.zip(dest.getPath(), compressFile.getPath(), true);
+    //        ArchiveUtil.createZip(dest, compressFile);
     //        JulLog.info("zipDestByMacos finish appDest:{}", compressFile.getPath());
     //        return compressFile;
     //    }

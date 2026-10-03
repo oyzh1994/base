@@ -158,6 +158,18 @@ public class TextUtil {
      * @param targetCharset 目标字符集
      * @return 处理字符集后的内容
      */
+    public static String changeCharset(String str, Charset fromCharset, Charset targetCharset) {
+        return changeCharset(str, fromCharset.displayName(), targetCharset.displayName());
+    }
+
+    /**
+     * 更换内容字符集
+     *
+     * @param str           内容
+     * @param fromCharset   原始字符集
+     * @param targetCharset 目标字符集
+     * @return 处理字符集后的内容
+     */
     public static String changeCharset(String str, String fromCharset, String targetCharset) {
         if (str == null || str.isEmpty() || Objects.equals(fromCharset, targetCharset)) {
             return str;

@@ -1,6 +1,6 @@
 package cn.oyzh.pkg.jar;
 
-import cn.hutool.core.io.FileUtil;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.function.ExceptionConsumer;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.arch.NativeArchDetector;
@@ -333,11 +333,11 @@ public class JarHandler implements PreHandler {
         // 新jar文件
         File mainJarNewFile = new File(jarUnDir, "temp.jar");
         // 复制解压目录
-        FileUtil.copy(mainJar, mainJarNewFile.getPath(), false);
+        FileUtil.copy(new File(mainJar), mainJarNewFile, false);
         // 解压目录
         File dir = new File(jarUnDir);
         // lib目录合并
-        if (FileUtil.exist(jarUnDir + "/BOOT-INF/lib")) {
+        if (FileUtil.exists(jarUnDir + "/BOOT-INF/lib")) {
             // 合并lib目录到主jar文件
             String[] cmdArr = new String[]{"jar", "-uvf0", mainJarNewFile.getName(), "./BOOT-INF/lib"};
             cmdArr = PkgUtil.getJDKExecCMD(jdkPath, cmdArr);
@@ -349,7 +349,7 @@ public class JarHandler implements PreHandler {
                 throw new RuntimeException("Jar error:" + result.getError() + " exitCode:" + result.getExitCode());
             }
         } else {// 单个jar逐个合并
-            List<File> files = FileUtil.loopFiles(dir);
+            List<File> files = FileUtil.getAllFiles(dir);
             files = files.parallelStream().filter(f -> f.isFile() && f.getName().endsWith(".jar")).toList();
             for (File file : files) {
                 String fName = file.getPath().replace(dir.getPath(), "");

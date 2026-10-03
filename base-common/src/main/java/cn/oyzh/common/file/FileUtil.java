@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -160,7 +161,7 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean del(String file) {
-        return del(new File(file), false);
+        return file != null && del(new File(file), false);
     }
 
     /**
@@ -192,15 +193,10 @@ public class FileUtil {
      * @return 结果
      */
     public static boolean del(File file, boolean force) {
-        if (file == null) {
-            return false;
+        if (file == null || !file.exists()) {
+            return true;
         }
-        boolean success = false;
-        try {
-            success = file.delete();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        boolean success = deleteRecursively(file);
         if (!success && force) {
             try {
                 if (OSUtil.isWindows()) {
@@ -215,6 +211,29 @@ public class FileUtil {
             }
         }
         return success;
+    }
+
+    /**
+     * 递归删除
+     *
+     * @param file 文件
+     * @return 结果
+     */
+    private static boolean deleteRecursively(File file) {
+        if (file == null || !file.exists()) {
+            return true;
+        }
+        if (file.isDirectory() && !Files.isSymbolicLink(file.toPath())) {
+            File[] children = file.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    if (!deleteRecursively(child)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return file.delete();
     }
 
     public static byte[] readBytes(String file) {
@@ -627,6 +646,37 @@ public class FileUtil {
     }
 
     /**
+     * 清空目录内容
+     *
+     * @param directory 目录
+     * @return 结果
+     */
+    public static boolean clean(String directory) {
+        return directory != null && clean(new File(directory));
+    }
+
+    /**
+     * 清空目录内容
+     *
+     * @param directory 目录
+     * @return 结果
+     */
+    public static boolean clean(File directory) {
+        if (directory == null || !directory.exists() || !directory.isDirectory()) {
+            return true;
+        }
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File child : files) {
+                if (!deleteRecursively(child)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * 清空目录
      *
      * @param directory 目录
@@ -659,23 +709,7 @@ public class FileUtil {
         if (directory == null || !directory.exists() || !directory.isDirectory()) {
             return true;
         }
-        final File[] files = directory.listFiles();
-        if (null != files) {
-            for (File childFile : files) {
-                boolean result = false;
-                // 删除目录
-                if (childFile.isDirectory()) {
-                    result = cleanDir(childFile);
-                } else if (childFile.isFile()) {// 删除文件
-                    result = del(childFile);
-                }
-                if (!result) {
-                    return false;
-                }
-            }
-        }
-        // 删除目录自身
-        return del(directory);
+        return deleteRecursively(directory);
     }
 
     /**
@@ -708,6 +742,124 @@ public class FileUtil {
      */
     public static File newTmpFile(String tempFile) {
         return new File(tmpPath(), tempFile);
+    }
+
+    /**
+     * 创建临时文件
+     *
+     * @param suffix     文件后缀
+     * @param isReCreate 是否重新创建文件
+     * @return 临时文件
+     */
+    public static File createTempFile(String suffix, boolean isReCreate) {
+        try {
+            Path tempFile = Files.createTempFile("base", suffix);
+            if (isReCreate) {
+                Files.delete(tempFile);
+                Files.createFile(tempFile);
+            }
+            return tempFile.toFile();
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    /**
+     * 复制文件或目录
+     *
+     * @param source   来源
+     * @param target   目标
+     * @param override 是否覆盖
+     * @return 目标文件或目录
+     */
+    public static File copy(File source, File target, boolean override) {
+        if (source == null || !source.exists()) {
+            throw new IllegalArgumentException("source not exists");
+        }
+        if (target == null) {
+            throw new IllegalArgumentException("target is null");
+        }
+        File actualTarget = target;
+        if (source.isFile() && target.isDirectory()) {
+            actualTarget = new File(target, source.getName());
+        } else if (source.isDirectory() && !target.exists()) {
+            actualTarget = new File(target, source.getName());
+        }
+        if (!override && actualTarget.exists()) {
+            return actualTarget;
+        }
+        try {
+            if (source.isDirectory()) {
+                copyDirectory(source, actualTarget);
+            } else {
+                copyFile(source, actualTarget);
+            }
+            return actualTarget;
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    public static File copy(String source, String target, boolean override) {
+        return copy(new File(source), new File(target), override);
+    }
+
+    /**
+     * 复制目录内容
+     *
+     * @param source   来源目录
+     * @param target   目标目录
+     * @param override 是否覆盖
+     * @return 目标目录
+     */
+    public static File copyContent(File source, File target, boolean override) {
+        if (source == null || !source.isDirectory()) {
+            throw new IllegalArgumentException("source is not directory");
+        }
+        if (target == null) {
+            throw new IllegalArgumentException("target is null");
+        }
+        if (!override && target.exists()) {
+            return target;
+        }
+        try {
+            copyDirectory(source, target);
+            return target;
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
+    }
+
+    /**
+     * 移动文件或目录
+     *
+     * @param source   来源
+     * @param target   目标
+     * @param override 是否覆盖
+     * @return 目标文件或目录
+     */
+    public static File move(File source, File target, boolean override) {
+        if (source == null || !source.exists()) {
+            throw new IllegalArgumentException("source not exists");
+        }
+        if (target == null) {
+            throw new IllegalArgumentException("target is null");
+        }
+        File actualTarget = target.isDirectory() ? new File(target, source.getName()) : target;
+        File parent = actualTarget.getParentFile();
+        if (parent != null) {
+            mkdir(parent);
+        }
+        try {
+            if (override) {
+                Files.move(source.toPath(), actualTarget.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                Files.move(source.toPath(), actualTarget.toPath());
+            }
+            return actualTarget;
+        } catch (IOException ex) {
+            throw new UncheckedIOException(ex);
+        }
     }
 
     /**
@@ -832,6 +984,16 @@ public class FileUtil {
             return false;
         }
         return Files.isRegularFile(new File(file).toPath());
+    }
+
+    /**
+     * 是否文件
+     *
+     * @param file 文件
+     * @return 结果
+     */
+    public static boolean isFile(File file) {
+        return file != null && Files.isRegularFile(file.toPath());
     }
 
     /**

@@ -1,7 +1,7 @@
 package cn.oyzh.pkg.jlink;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.UUID;
+import cn.oyzh.common.file.FileUtil;
+import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.common.json.JSONUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.pkg.ConfigParser;
@@ -35,7 +35,7 @@ public class JLinkConfigParser implements ConfigParser<JLinkConfig> {
             config.setVm(vm);
         }
         // 临时jre目录
-        String tmpJreDir = new File(FileUtil.getTmpDir(), "_temp_jre_" + UUID.fastUUID().toString(true)).getPath();
+        String tmpJreDir = new File(FileUtil.tmpdir(), "_temp_jre_" + UUIDUtil.uuidSimple()).getPath();
         if (object.containsKey("output")) {
             config.setOutput(StringUtil.emptyToDefault(object.getString("output"), tmpJreDir));
         } else {

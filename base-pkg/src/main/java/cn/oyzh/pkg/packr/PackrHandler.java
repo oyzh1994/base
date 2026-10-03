@@ -1,6 +1,6 @@
 // package cn.oyzh.fx.pkg.packr;
 //
-// import cn.hutool.core.io.FileUtil;
+// import cn.oyzh.common.file.FileUtil;
 // import cn.oyzh.fx.pkg.PackHandler;
 // import cn.oyzh.fx.pkg.PackOrder;
 // import cn.oyzh.fx.pkg.config.PackConfig;
@@ -68,7 +68,7 @@
 //             packrConfig.classpath.add(packConfig.mainJar());
 //         }
 //         // 删除输出目录
-//         if (FileUtil.exist(packConfig.getDest())) {
+//         if (FileUtil.exists(packConfig.getDest())) {
 //             FileUtil.del(packConfig.getDest());
 //         }
 //         // 执行打包

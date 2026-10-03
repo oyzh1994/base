@@ -1,6 +1,6 @@
 package cn.oyzh.pkg.jdeps;
 
-import cn.hutool.core.io.FileUtil;
+import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
@@ -95,7 +95,7 @@ public class JDepsHandler implements PreHandler {
             });
         }
         // 文件列表
-        List<File> files = FileUtil.loopFiles(jarUnDir);
+        List<File> files = FileUtil.getAllFiles(jarUnDir);
         // 文件路径
         List<String> filePaths = new ArrayList<>();
         for (File file : files) {
