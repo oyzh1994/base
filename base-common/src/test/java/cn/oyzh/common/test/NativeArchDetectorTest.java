@@ -1,9 +1,9 @@
 package cn.oyzh.common.test;
 
-import cn.oyzh.common.native1.NativeArch;
-import cn.oyzh.common.native1.NativeArchDetector;
-import cn.oyzh.common.native1.NativeFormat;
-import cn.oyzh.common.native1.NativeLibUtil;
+import cn.oyzh.common.arch.NativeArch;
+import cn.oyzh.common.arch.NativeArchDetector;
+import cn.oyzh.common.arch.NativeFormat;
+import cn.oyzh.common.arch.NativeLibUtil;
 import cn.oyzh.common.system.OSUtil;
 import org.junit.Assert;
 import org.junit.Assume;

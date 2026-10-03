@@ -42,10 +42,10 @@ public class JarConfigParser implements ConfigParser<JarConfig> {
         if (binlibOptimize != null) {
             config.setBinlibOptimize(binlibOptimize);
         }
-        Boolean executableOptimize = object.getBoolean("executableOptimize");
-        if (executableOptimize != null) {
-            config.setExecutableOptimize(executableOptimize);
-        }
+//        Boolean executableOptimize = object.getBoolean("executableOptimize");
+//        if (executableOptimize != null) {
+//            config.setExecutableOptimize(executableOptimize);
+//        }
         return config;
     }
 

@@ -3,8 +3,8 @@ package cn.oyzh.pkg.jar;
 import cn.hutool.core.io.FileUtil;
 import cn.oyzh.common.function.ExceptionConsumer;
 import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.native1.NativeArchDetector;
-import cn.oyzh.common.native1.NativeLibUtil;
+import cn.oyzh.common.arch.NativeArchDetector;
+import cn.oyzh.common.arch.NativeLibUtil;
 import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
@@ -263,11 +263,11 @@ public class JarHandler implements PreHandler {
                 JulLog.info("二进制库:{}非当前平台，被过滤.", name);
                 return false;
             }
-            // 可执行程序优化
-            if (jarConfig.isExecutableOptimize() && !OSUtil.isWindows() && StringUtil.endsWithAny(name, ".exe")) {
-                JulLog.info("可执行程序:{}非当前平台，被过滤.", name);
-                return false;
-            }
+//            // 可执行程序优化
+//            if (jarConfig.isExecutableOptimize() && !OSUtil.isWindows() && StringUtil.endsWithAny(name, ".exe")) {
+//                JulLog.info("可执行程序:{}非当前平台，被过滤.", name);
+//                return false;
+//            }
         }
         // 其他文件
         boolean accept = this.filter.apply(name);

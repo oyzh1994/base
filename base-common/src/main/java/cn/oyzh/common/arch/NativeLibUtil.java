@@ -1,4 +1,4 @@
-package cn.oyzh.common.native1;
+package cn.oyzh.common.arch;
 
 import cn.oyzh.common.util.StringUtil;
 
@@ -42,8 +42,7 @@ public class NativeLibUtil {
      * @return 结果
      */
     public static boolean isAixLib(String name) {
-        String fileName = fileName(name);
-        return fileName.endsWith(".a");
+        return StringUtil.endsWithAny(fileName(name), ".a");
     }
 
     /**
@@ -53,7 +52,7 @@ public class NativeLibUtil {
      * @return 结果
      */
     public static boolean isWindowsLib(String name) {
-        return StringUtil.endsWithAny(fileName(name), ".dll");
+        return StringUtil.endsWithAny(fileName(name), ".dll", ".exe", ".sys", ".ocx", ".cpl", ".scr", ".efi");
     }
 
     /**
@@ -63,8 +62,7 @@ public class NativeLibUtil {
      * @return 结果
      */
     public static boolean isMacosLib(String name) {
-        String fileName = fileName(name);
-        return fileName.endsWith(".dylib") || fileName.endsWith(".jnilib");
+        return StringUtil.endsWithAny(fileName(name), ".dylib", ".jnilib");
     }
 
     /**

@@ -1,4 +1,4 @@
-package cn.oyzh.common.native1;
+package cn.oyzh.common.arch;
 
 import cn.oyzh.common.system.OSUtil;
 
@@ -127,7 +127,7 @@ public final class NativeArchDetector {
         if (!isFormatCompatibleWithCurrentOs(detectFormat(data))) {
             return false;
         }
-        NativeArch current = getCurrentJvmArch();
+        NativeArch current = NativeArch.getCurrent();
         return current != NativeArch.UNKNOWN && detectArches(data).contains(current);
     }
 

@@ -1,4 +1,4 @@
-package cn.oyzh.common.native1;
+package cn.oyzh.common.arch;
 
 import java.nio.ByteOrder;
 import java.util.Collections;

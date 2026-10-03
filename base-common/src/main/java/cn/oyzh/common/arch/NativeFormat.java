@@ -1,4 +1,4 @@
-package cn.oyzh.common.native1;
+package cn.oyzh.common.arch;
 
 /**
  * 原生库的二进制容器格式。
