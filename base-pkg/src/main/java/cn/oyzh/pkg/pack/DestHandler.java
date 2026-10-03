@@ -44,6 +44,8 @@ public class DestHandler implements PostHandler {
             if (compressFile != null && compressFile.exists()) {
                 File targetFile = this.handler(packConfig, compressFile);
                 packConfig.setCompressFile(targetFile);
+                // 设置为临时文件路径
+                packConfig.addTempFile(packConfig.getDest());
             }
         } else {// msi、exe、dmg、pkg、rpm、deb
             List<File> files = FileUtil.getAllFiles(packConfig.getDest());

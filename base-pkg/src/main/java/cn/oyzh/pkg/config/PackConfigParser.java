@@ -49,9 +49,9 @@ public class PackConfigParser implements ConfigParser<PackConfig> {
         if (object.containsKey("platform")) {
             config.setPlatform(object.getString("platform"));
         }
-        if (object.containsKey("packMode")) {
-            config.setPackMode(object.getString("packMode"));
-        }
+//        if (object.containsKey("packMode")) {
+//            config.setPackMode(object.getString("packMode"));
+//        }
         if (object.containsKey("buildType")) {
             config.setBuildType(object.getString("buildType"));
         }

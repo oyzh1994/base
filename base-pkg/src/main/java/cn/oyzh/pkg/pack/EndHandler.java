@@ -31,29 +31,38 @@ public class EndHandler implements PostHandler {
 
     @Override
     public void handle(PackConfig packConfig) throws Exception {
-        // 删除打包目录
-        if (packConfig.getCompressFile() != null) {
-            FileUtil.del(packConfig.getDest());
-        }
-        // 删除jlink的jre目录
-        if (packConfig.getJlinkJre() != null) {
-            FileUtil.del(packConfig.getJlinkJre());
-        }
-        // 删除裁剪的jre目录
-        if (packConfig.getMinimizeJre() != null) {
-            FileUtil.del(packConfig.getMinimizeJre());
-        }
-        // 删除裁剪的主程序
-        if (packConfig.getMinimizeManJar() != null) {
-            FileUtil.del(packConfig.getMinimizeManJar());
-        }
-        // 删除解压的jar目录
-        if (packConfig.getJarUnDir() != null) {
-            FileUtil.del(packConfig.getJarUnDir());
-        }
-        // 删除临时的jPackage目录
-        if (packConfig.getJPackageInput() != null) {
-            FileUtil.del(packConfig.getJPackageInput());
+        //        // 删除打包目录
+        //        if (packConfig.getCompressFile() != null) {
+        //            FileUtil.del(packConfig.getDest());
+        //        }
+        //        // 删除jlink的jre目录
+        //        if (packConfig.getJlinkJre() != null) {
+        //            FileUtil.del(packConfig.getJlinkJre());
+        //        }
+        //        // 删除裁剪的jre目录
+        //        if (packConfig.getMinimizeJre() != null) {
+        //            FileUtil.del(packConfig.getMinimizeJre());
+        //        }
+        //        // 删除裁剪的主程序
+        //        if (packConfig.getMinimizeManJar() != null) {
+        //            FileUtil.del(packConfig.getMinimizeManJar());
+        //        }
+        //        // 删除解压的jar目录
+        //        if (packConfig.getJarUnDir() != null) {
+        //            FileUtil.del(packConfig.getJarUnDir());
+        //        }
+        //        // 删除临时的jPackage目录
+        //        if (packConfig.getJPackageInput() != null) {
+        //            FileUtil.del(packConfig.getJPackageInput());
+        //        }
+        // 删除临时文件
+        for (String tempFile : packConfig.tempFiles()) {
+            try {
+                FileUtil.del(tempFile);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JulLog.error("delete temp file:{} error", tempFile, ex);
+            }
         }
         long startTime = (Long) packConfig.getProperty("startTime");
         long endTime = System.currentTimeMillis();

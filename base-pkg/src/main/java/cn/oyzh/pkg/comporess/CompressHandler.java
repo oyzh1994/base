@@ -1,11 +1,10 @@
 package cn.oyzh.pkg.comporess;
 
-import cn.oyzh.common.system.OSUtil;
+import cn.oyzh.common.compress.CompressUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PostHandler;
 import cn.oyzh.pkg.config.PackConfig;
-import cn.oyzh.pkg.util.PkgUtil;
 
 import java.io.File;
 
@@ -42,28 +41,15 @@ public class CompressHandler implements PostHandler {
             }
             String dest = packConfig.getDest();
             File compressFile = switch (compressConfig.getType().toLowerCase()) {
-                //                case "zip" -> {
-                //                    if (packConfig.isPlatformMacos()) {
-                //                        yield PkgUtil.zipDestByMacos(compressName, dest);
-                //                    } else {
-                //                        yield PkgUtil.zipDest(compressName, dest);
-                //                    }
-                //                }
-                case "zip" -> {
-                    if (OSUtil.isMacOS() || OSUtil.isLinux()) {
-                        yield PkgUtil.zipDest(compressName, dest);
-                        //                    } else if (packConfig.isPlatformMacos()) {
-                        //                        yield PkgUtil.zipDestByMacos(compressName, dest);
-                    } else {
-                        yield PkgUtil.zipDest(compressName, dest);
-                    }
-                }
-                case "tar" -> PkgUtil.tarDest(compressName, dest);
-                case "tar.gz", "tgz" -> PkgUtil.tgzDest(compressName, dest);
+                case "zip" -> CompressUtil.zipDest(compressName, dest);
+                case "tar" -> CompressUtil.tarDest(compressName, dest);
+                case "tar.gz", "tgz" -> CompressUtil.tgzDest(compressName, dest);
                 default ->
                         throw new IllegalStateException("Unexpected value: " + compressConfig.getType().toLowerCase());
             };
             packConfig.setCompressFile(compressFile);
+            // 设置为临时文件路径
+            packConfig.addTempFile(packConfig.getDest());
         }
     }
 

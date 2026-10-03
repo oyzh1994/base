@@ -87,6 +87,8 @@ public class JLinkHandler implements PreHandler, SingleHandler {
         }
         // 更新jre路径
         packConfig.setJlinkJre(jLinkConfig.getOutput());
+        // 设置为临时文件路径
+        packConfig.addTempFile(jLinkConfig.getOutput());
         this.executed = true;
     }
 

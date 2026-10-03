@@ -84,6 +84,8 @@ public class JreHandler implements PreHandler, SingleHandler {
             // ThreadUtil.submit(tasks);
             // 设置最小化后的jre
             packConfig.setMinimizeJre(dest.getPath());
+            // 设置为临时文件路径
+            packConfig.addTempFile(dest.getPath());
         } else {// 不裁剪
             JulLog.warn("jar裁剪未启用，已跳过");
         }

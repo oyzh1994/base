@@ -1,11 +1,19 @@
 package cn.oyzh.common.util;
 
+import cn.oyzh.common.compress.CompressUtil;
+import cn.oyzh.common.file.FileNameUtil;
+import cn.oyzh.common.file.FileUtil;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.jar.JarInputStream;
+import java.util.zip.ZipEntry;
 
 /**
  * jar工具类
@@ -86,5 +94,96 @@ public class JarUtil {
             }
         }
         return isInJar;
+    }
+
+    /**
+     * 是否有class
+     *
+     * @param jarFile jar文件
+     * @return 结果
+     */
+    public static boolean hasClass(String jarFile) throws IOException {
+        if (!FileUtil.exists(jarFile)) {
+            throw new RuntimeException("jarFile " + jarFile + " is not exist.");
+        }
+        if (!FileUtil.isFile(jarFile)) {
+            throw new RuntimeException("jarFile " + jarFile + " is not file.");
+        }
+        try (
+                FileInputStream fis = new FileInputStream(jarFile);
+                JarInputStream jarIn = new JarInputStream(fis)
+        ) {
+            while (true) {
+                ZipEntry entry = jarIn.getNextJarEntry();
+                if (entry == null) {
+                    break;
+                }
+                if (isClass(entry.getName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 解压jar
+     *
+     * @param src     源文件
+     * @param destDir 目标目录
+     */
+    public static File unJar(String src, String destDir) {
+        if (!FileUtil.exists(src)) {
+            throw new RuntimeException("src " + src + " is not exist.");
+        }
+        if (!FileUtil.isFile(src)) {
+            throw new RuntimeException("src " + src + " is not file.");
+        }
+        if (FileUtil.exists(destDir) && !FileUtil.isDirectory(destDir)) {
+            throw new RuntimeException("destDir " + destDir + " is not dir.");
+        }
+        return CompressUtil.unzip(src, destDir);
+    }
+
+
+    /**
+     * 是否jar
+     *
+     * @param file 文件
+     */
+    public static boolean isJar(File file) {
+        if (file == null || !file.isFile() || !file.exists()) {
+            return false;
+        }
+        return isJar(file.getName());
+    }
+
+    /**
+     * 是否jar
+     *
+     * @param name 名称
+     */
+    public static boolean isJar(String name) {
+        return FileNameUtil.isJarType(FileNameUtil.extName(name));
+    }
+
+    /**
+     * 是否class
+     * @param file 文件
+     */
+    public static boolean isClass(File file) {
+        if (file == null || !file.isFile() || !file.exists()) {
+            return false;
+        }
+        return isClass(file.getName());
+    }
+
+    /**
+     * 是否class
+     *
+     * @param name 名称
+     */
+    public static boolean isClass(String name) {
+        return FileNameUtil.isClassType(FileNameUtil.extName(name));
     }
 }

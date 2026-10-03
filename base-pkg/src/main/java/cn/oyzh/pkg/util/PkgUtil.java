@@ -1,60 +1,70 @@
 package cn.oyzh.pkg.util;
 
+import cn.oyzh.common.compress.ArchiveUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.util.ArrayUtil;
 import cn.oyzh.common.util.CollectionUtil;
+import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.pkg.jdeps.JDepsConfig;
 import cn.oyzh.pkg.jlink.JLinkConfig;
 import cn.oyzh.pkg.jpackage.JPackageConfig;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.jar.JarInputStream;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
 
 /**
  * @author oyzh
  * @since 2023/11/17
  */
-
 public class PkgUtil {
 
-    /**
-     * 复制jar到jpackage输出目录
-     *
-     * @param destPath 目标路径
-     * @param platform 平台
-     * @param jarFile  jar文件
-     * @return 新jar文件
-     */
-    public static File copyJarToJpackageInputDir(String destPath, String platform, File jarFile) {
-        File inputDir = getJpackageInputDir(destPath, platform);
-        // jpackage主jar
-        return FileUtil.copy(jarFile, inputDir, true);
-    }
+//    /**
+//     * 复制jar到jpackage输出目录
+//     *
+//     * @param destPath 目标路径
+//     * @param platform 平台
+//     * @param jarFile  jar文件
+//     * @return 新jar文件
+//     */
+//    public static File copyJarToJpackageInputDir(String destPath, String platform, File jarFile) {
+//        File inputDir = getJpackageInputDir(destPath, platform);
+//        // jpackage主jar
+//        return FileUtil.copy(jarFile, inputDir, true);
+//    }
 
-    /**
-     * 获取jpackage输出目录
-     *
-     * @param destPath 目标路径
-     * @param platform 平台
-     * @return jpackage输出目录
-     */
-    public static File getJpackageInputDir(String destPath, String platform) {
-        String inputPath = FileNameUtil.concat(destPath, platform + "_jpackage_input_dir");
-        File inputDir;
-        if (FileUtil.exists(inputPath)) {
-            FileUtil.clean(inputPath);
-        } else {
-            FileUtil.mkdir(inputPath);
-        }
-        inputDir = new File(inputPath);
-        return inputDir;
-    }
+//    /**
+//     * 获取jpackage输出目录
+//     *
+//     * @param destPath 目标路径
+//     * @param platform 平台
+//     * @return jpackage输出目录
+//     */
+//    public static File getJpackageInputDir(String destPath, String platform) {
+//        String inputPath = FileNameUtil.concat(destPath, platform + "_jpackage_input_dir");
+//        File inputDir;
+//        if (FileUtil.exists(inputPath)) {
+//            FileUtil.clean(inputPath);
+//        } else {
+//            FileUtil.mkdir(inputPath);
+//        }
+//        inputDir = new File(inputPath);
+//        return inputDir;
+//    }
 
     //    /**
     //     * 压缩打包目录，zip格式
@@ -74,57 +84,57 @@ public class PkgUtil {
     //        return compressFile;
     //    }
 
-    /**
-     * 压缩打包目录，zip格式
-     *
-     * @param name    文件名称
-     * @param appDest app目录
-     * @return 压缩后的文件
-     */
-    public static File zipDest(String name, String appDest) throws IOException {
-        String compressName = name + ".zip";
-        JulLog.info("zipDest start, config.compressType is:{} compressName:{}.", "zip", compressName);
-        File dest = new File(appDest);
-        File compressFile = new File(dest.getParentFile(), compressName);
-        // 进行zip压缩
-        ArchiveUtil.createZip(dest, compressFile);
-        JulLog.info("zipDest finish appDest:{}", compressFile.getPath());
-        return compressFile;
-    }
-
-    /**
-     * 压缩打包目录，tar格式
-     *
-     * @param name    文件名称
-     * @param appDest app目录
-     * @return 压缩后的文件
-     */
-    public static File tarDest(String name, String appDest) throws IOException {
-        String compressName = name + ".tar";
-        JulLog.info("tarDest start, config.compressType is:{} compressName:{}.", "tar", compressName);
-        File dest = new File(appDest);
-        File compressFile = new File(dest.getParentFile(), compressName);
-        // 进行tar压缩
-        ArchiveUtil.createTar(dest, compressFile);
-        JulLog.info("tarDest finish appDest:{}", compressFile.getPath());
-        return compressFile;
-    }
-
-    /**
-     * 压缩打包文件，tar.gz格式
-     *
-     * @return 压缩后的文件
-     */
-    public static File tgzDest(String name, String appDest) throws IOException {
-        String compressName = name + ".tar.gz";
-        JulLog.info("tgzDest start, config.compressType is:{} compressName:{}.", "tar.gz", compressName);
-        File dest = new File(appDest);
-        File compressFile = new File(dest.getParentFile(), compressName);
-        // 进行tar.gz压缩
-        ArchiveUtil.createTarGz(dest, compressFile);
-        JulLog.info("tgzDest finish appDest:{}", compressFile.getPath());
-        return compressFile;
-    }
+//    /**
+//     * 压缩打包目录，zip格式
+//     *
+//     * @param name    文件名称
+//     * @param appDest app目录
+//     * @return 压缩后的文件
+//     */
+//    public static File zipDest(String name, String appDest) throws IOException {
+//        String compressName = name + ".zip";
+//        JulLog.info("zipDest start, config.compressType is:{} compressName:{}.", "zip", compressName);
+//        File dest = new File(appDest);
+//        File compressFile = new File(dest.getParentFile(), compressName);
+//        // 进行zip压缩
+//        ArchiveUtil.createZip(dest, compressFile);
+//        JulLog.info("zipDest finish appDest:{}", compressFile.getPath());
+//        return compressFile;
+//    }
+//
+//    /**
+//     * 压缩打包目录，tar格式
+//     *
+//     * @param name    文件名称
+//     * @param appDest app目录
+//     * @return 压缩后的文件
+//     */
+//    public static File tarDest(String name, String appDest) throws IOException {
+//        String compressName = name + ".tar";
+//        JulLog.info("tarDest start, config.compressType is:{} compressName:{}.", "tar", compressName);
+//        File dest = new File(appDest);
+//        File compressFile = new File(dest.getParentFile(), compressName);
+//        // 进行tar压缩
+//        ArchiveUtil.createTar(dest, compressFile);
+//        JulLog.info("tarDest finish appDest:{}", compressFile.getPath());
+//        return compressFile;
+//    }
+//
+//    /**
+//     * 压缩打包文件，tar.gz格式
+//     *
+//     * @return 压缩后的文件
+//     */
+//    public static File tgzDest(String name, String appDest) throws IOException {
+//        String compressName = name + ".tar.gz";
+//        JulLog.info("tgzDest start, config.compressType is:{} compressName:{}.", "tar.gz", compressName);
+//        File dest = new File(appDest);
+//        File compressFile = new File(dest.getParentFile(), compressName);
+//        // 进行tar.gz压缩
+//        ArchiveUtil.createTarGz(dest, compressFile);
+//        JulLog.info("tgzDest finish appDest:{}", compressFile.getPath());
+//        return compressFile;
+//    }
 
     //    /**
     //     * 压缩打包目录，zip格式，macos专用
@@ -587,5 +597,55 @@ public class PkgUtil {
         cmdList.add("xf");
         cmdList.add(jarPath);
         return ArrayUtil.toArray(cmdList, String.class);
+    }
+
+    /**
+     * 最小化处理
+     *
+     * @param src      来源
+     * @param dest     目标
+     * @param function 过滤函数
+     * @throws IOException 异常
+     */
+    public static void minimize(String src, String dest, BiFunction<String, String, Boolean> function) throws IOException {
+        JulLog.info("minimize jar start, src:{}", src);
+        File destFile = new File(dest);
+        File tempFile = FileUtil.createTempFile(destFile.getName(), true);
+        JarInputStream jarIn = new JarInputStream(new BufferedInputStream(new FileInputStream(src)));
+        Manifest manifest = jarIn.getManifest();
+        JarOutputStream jarOut;
+        if (manifest == null) {
+            jarOut = new JarOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)));
+        } else {
+            jarOut = new JarOutputStream(new BufferedOutputStream(new FileOutputStream(tempFile)), manifest);
+        }
+        try {
+            byte[] bytes = new byte[1024];
+            while (true) {
+                // 重点
+                ZipEntry entry = jarIn.getNextJarEntry();
+                if (entry == null) {
+                    break;
+                }
+                String name = entry.getName();
+                // 执行过滤
+                if (function.apply(src, name)) {
+                    // 添加到新jar文件
+                    jarOut.putNextEntry(new ZipEntry(entry));
+                    int len = jarIn.read(bytes, 0, bytes.length);
+                    while (len != -1) {
+                        jarOut.write(bytes, 0, len);
+                        len = jarIn.read(bytes, 0, bytes.length);
+                    }
+                    jarOut.closeEntry();
+                }
+            }
+        } finally {
+            IOUtil.close(jarIn);
+            jarOut.finish();
+            IOUtil.close(jarOut);
+        }
+        JulLog.info("minimize jar finish dest:{}", dest);
+        FileUtil.move(tempFile, destFile, true);
     }
 }

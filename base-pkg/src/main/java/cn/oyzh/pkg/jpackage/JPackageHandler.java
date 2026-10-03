@@ -81,6 +81,8 @@ public class JPackageHandler implements PackHandler {
             FileUtil.copyFile(packConfig.mainJar(), target.getPath());
             jPackageConfig.setInput(dir.getPath());
             packConfig.setJPackageInput(jPackageConfig.getInput());
+            // 设置为临时文件路径
+            packConfig.addTempFile(jPackageConfig.getInput());
         }
         if (jPackageConfig.getMainJar() == null) {
             jPackageConfig.setMainJar(packConfig.mainJarName());

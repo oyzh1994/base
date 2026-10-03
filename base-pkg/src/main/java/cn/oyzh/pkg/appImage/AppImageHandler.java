@@ -82,6 +82,8 @@ public class AppImageHandler implements PostHandler {
         }
         // 设置为压缩包
         packConfig.setCompressFile(new File(file));
+        // 设置为临时文件路径
+        packConfig.addTempFile(packConfig.getDest());
     }
 
     /**

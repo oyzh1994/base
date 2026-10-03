@@ -107,18 +107,6 @@ public class ThreadUtil {
     }
 
     /**
-     * 执行任务
-     * TODO: 虚拟线程，轻量级别，适合io密集型任务
-     *
-     * @param task 任务
-     */
-    public static void submitVirtual(Runnable task) {
-        if (task != null) {
-            submitVirtual(Collections.singletonList(task));
-        }
-    }
-
-    /**
      * 执行任务列表，并活得结果
      * TODO: 虚拟线程，轻量级别，适合io密集型任务
      *
@@ -241,6 +229,28 @@ public class ThreadUtil {
         if (CollectionUtil.isNotEmpty(tasks)) {
             for (Runnable task : tasks) {
                 executor().submit(task);
+            }
+        }
+    }
+
+    /**
+     * 执行任务，智能分发
+     *
+     * @param tasks 任务
+     */
+    public static void submitSmart(List<Runnable> tasks) {
+        if (CollectionUtil.isEmpty(tasks)) {
+            return;
+        }
+        int pCount = RuntimeUtil.processorCount();
+        // 异步，平台线程
+        if (pCount >= 8) {
+            submit(tasks);
+        } else if (pCount >= 4) {// 异步，虚拟线程
+            submitVirtual(tasks);
+        } else {// 同步执行
+            for (Runnable task : tasks) {
+                task.run();
             }
         }
     }

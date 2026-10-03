@@ -48,6 +48,9 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
      */
     private Set<String> excludes;
 
+    /**
+     * javafx路径
+     */
     private String javafxPath;
 
     public boolean isRemoveEmpty() {

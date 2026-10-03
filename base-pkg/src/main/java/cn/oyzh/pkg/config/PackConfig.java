@@ -10,7 +10,9 @@ import cn.oyzh.pkg.jpackage.JPackageConfig;
 import cn.oyzh.pkg.jre.JreConfig;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,13 +48,13 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      */
     private String jarUnDir;
 
-    /**
-     * 打包方式
-     * jpackage win打包的exe不能重启，mac打包的不能启动，不建议使用
-     * packr
-     */
-    @Deprecated
-    private String packMode = "jpackage";
+//    /**
+//     * 打包方式
+//     * jpackage win打包的exe不能重启，mac打包的不能启动，不建议使用
+//     * packr
+//     */
+//    @Deprecated
+//    private String packMode = "jpackage";
 
     /**
      * 最小化后的主程序
@@ -167,6 +169,19 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         return this.properties.get(key);
     }
 
+    /**
+     * 临时文件
+     */
+    private final List<String> tempFiles = new ArrayList<>();
+
+    public void addTempFile(String tempFile){
+        this.tempFiles.add(tempFile);
+    }
+
+    public List<String> tempFiles() {
+        return tempFiles;
+    }
+
     public String mainJar() {
         if (this.minimizeManJar != null) {
             return this.minimizeManJar;
@@ -212,9 +227,9 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         return appVersion;
     }
 
-    public boolean isParkByPackr() {
-        return this.packMode.equalsIgnoreCase("packr");
-    }
+//    public boolean isParkByPackr() {
+//        return this.packMode.equalsIgnoreCase("packr");
+//    }
 
     public String jrePath() {
         if (this.minimizeJre != null) {
@@ -285,14 +300,14 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
     public void setJarUnDir(String jarUnDir) {
         this.jarUnDir = jarUnDir;
     }
-
-    public String getPackMode() {
-        return packMode;
-    }
-
-    public void setPackMode(String packMode) {
-        this.packMode = packMode;
-    }
+//
+//    public String getPackMode() {
+//        return packMode;
+//    }
+//
+//    public void setPackMode(String packMode) {
+//        this.packMode = packMode;
+//    }
 
     public String getMinimizeManJar() {
         return minimizeManJar;

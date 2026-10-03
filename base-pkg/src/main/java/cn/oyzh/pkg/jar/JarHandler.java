@@ -1,23 +1,24 @@
 package cn.oyzh.pkg.jar;
 
+import cn.oyzh.common.arch.NativeArchDetector;
+import cn.oyzh.common.arch.NativeLibUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.function.ExceptionConsumer;
 import cn.oyzh.common.log.JulLog;
-import cn.oyzh.common.arch.NativeArchDetector;
-import cn.oyzh.common.arch.NativeLibUtil;
 import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ProcessExecResult;
+import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.JFXUtil;
+import cn.oyzh.common.util.JarUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.filter.RegFilter;
-import cn.oyzh.pkg.util.JarUtil;
 import cn.oyzh.pkg.util.PkgUtil;
 import cn.oyzh.pkg.woa.WoaUtil;
 
@@ -27,7 +28,9 @@ import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarInputStream;
 import java.util.zip.ZipEntry;
 
@@ -93,7 +96,7 @@ public class JarHandler implements PreHandler {
         // 裁剪文件
         if (jarConfig.isEnable()) {
             // 裁剪主jar
-            JarUtil.minimize(src, dest, this::jarFilter);
+            PkgUtil.minimize(src, dest, this::jarFilter);
             // 裁剪类库jar
             this.handleLibs(jarUnDir);
             // 合并类库jar
@@ -106,6 +109,9 @@ public class JarHandler implements PreHandler {
         packConfig.setMinimizeManJar(dest);
         // 设置jar解压目录
         packConfig.setJarUnDir(jarUnDir);
+        // 设置为临时文件路径
+        packConfig.addTempFile(dest);
+        packConfig.addTempFile(jarUnDir);
     }
 
     /**
@@ -124,6 +130,8 @@ public class JarHandler implements PreHandler {
                 Files.createDirectory(path);
                 javafxPath = path.toString();
                 jarConfig.setJavafxPath(javafxPath);
+                // 设置为临时文件路径
+                this.config.addTempFile(javafxPath);
             }
             String modName = null;
             if (src.contains("javafx-graphics-")) {
@@ -263,11 +271,11 @@ public class JarHandler implements PreHandler {
                 JulLog.info("二进制库:{}非当前平台，被过滤.", name);
                 return false;
             }
-//            // 可执行程序优化
-//            if (jarConfig.isExecutableOptimize() && !OSUtil.isWindows() && StringUtil.endsWithAny(name, ".exe")) {
-//                JulLog.info("可执行程序:{}非当前平台，被过滤.", name);
-//                return false;
-//            }
+            //            // 可执行程序优化
+            //            if (jarConfig.isExecutableOptimize() && !OSUtil.isWindows() && StringUtil.endsWithAny(name, ".exe")) {
+            //                JulLog.info("可执行程序:{}非当前平台，被过滤.", name);
+            //                return false;
+            //            }
         }
         // 其他文件
         boolean accept = this.filter.apply(name);
@@ -284,7 +292,9 @@ public class JarHandler implements PreHandler {
      */
     private void handleLibs(String jarUnDir) {
         JulLog.info("handleLibs start, jarUnDir: {}.", jarUnDir);
-        List<File> files = cn.oyzh.common.file.FileUtil.getAllFiles(jarUnDir);
+        List<Runnable> tasks = new ArrayList<>();
+        List<File> files = FileUtil.getAllFiles(jarUnDir);
+        AtomicReference<Exception> errRef = new AtomicReference<>();
         for (File file : files) {
             try {
                 // 非jar，跳过
@@ -298,25 +308,39 @@ public class JarHandler implements PreHandler {
                 }
                 // 符合排除jar，删除文件
                 if (!this.filter.apply(file.getName())) {
-                    cn.oyzh.common.file.FileUtil.del(file);
+                    FileUtil.del(file);
                     JulLog.warn("类库:{}被排除, 已删除.", file.getName());
                     continue;
                 }
                 // 内容为空
                 JarConfig jarConfig = this.config.getJarConfig();
                 if (jarConfig != null && jarConfig.isEnable() && jarConfig.isRemoveEmpty() && !JarUtil.hasClass(file.getPath())) {
-                    cn.oyzh.common.file.FileUtil.del(file);
+                    FileUtil.del(file);
                     JulLog.warn("类库:{}内容为空, 已删除.", file.getName());
                     continue;
                 }
-                // 替换路径
-                JulLog.info("minimize jar: {}.", file.getName());
-                // 裁剪类库
-                JarUtil.minimize(file.getPath(), file.getPath(), this::jarFilter);
+                // 添加到任务
+                tasks.add(() -> {
+                    try {
+                        // 替换路径
+                        JulLog.info("minimize jar: {}.", file.getName());
+                        // 裁剪类库
+                        PkgUtil.minimize(file.getPath(), file.getPath(), this::jarFilter);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        errRef.set(ex);
+                    }
+                });
             } catch (Exception ex) {
                 ex.printStackTrace();
                 throw new RuntimeException(ex);
             }
+        }
+        // 执行任务
+        ThreadUtil.submitSmart(tasks);
+        // 抛出异常
+        if (errRef.get() != null) {
+            throw new RuntimeException(errRef.get());
         }
         JulLog.info("handleLibs finish.");
     }
