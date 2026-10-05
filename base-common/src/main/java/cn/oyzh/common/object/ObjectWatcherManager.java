@@ -81,7 +81,7 @@ public class ObjectWatcherManager {
      */
     public static void push(ObjectWatcher watcher) {
         if (watcher != null) {
-            System.out.println("add watcher=" + watcher.getObject());
+            JulLog.info("add watcher={}", watcher.getObject());
             WATCHERS.add(watcher);
         }
     }
