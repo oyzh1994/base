@@ -17,7 +17,7 @@ public class JulConsoleHandler extends StreamHandler {
 
     public JulConsoleHandler() throws UnsupportedEncodingException {
         super(System.out, new JulConsoleFormatter());
-        String enc = this.resolveEncoding();
+        String enc = resolveEncoding();
         if (enc != null) {
             this.setEncoding(enc);
         }
