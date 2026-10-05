@@ -1,5 +1,7 @@
 package cn.oyzh.common.log;
 
+import cn.oyzh.common.util.StringUtil;
+
 import java.util.logging.Level;
 
 /**
@@ -86,6 +88,26 @@ public enum JulLevel {
             return "ERROR";
         }
         return "UNKNOWN";
+    }
+
+
+    public static JulLevel ofLevel(String name) {
+        if (StringUtil.equalsIgnoreCase(name, "TRACE")) {
+            return TRACE;
+        }
+        if (StringUtil.equalsIgnoreCase(name, "DEBUG")) {
+            return DEBUG;
+        }
+        if (StringUtil.equalsIgnoreCase(name, "INFO")) {
+            return INFO;
+        }
+        if (StringUtil.equalsAnyIgnoreCase(name, "WARN", "WARNING")) {
+            return WARN;
+        }
+        if (StringUtil.endsWithAny(name, "ERROR")) {
+            return ERROR;
+        }
+        return null;
     }
 
 }

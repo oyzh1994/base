@@ -1,0 +1,99 @@
+package cn.oyzh.pkg.jre;
+
+import cn.oyzh.common.file.FileUtil;
+import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.common.util.UUIDUtil;
+import cn.oyzh.pkg.PackOrder;
+import cn.oyzh.pkg.PreHandler;
+import cn.oyzh.pkg.SingleHandler;
+import cn.oyzh.pkg.config.PackConfig;
+import cn.oyzh.pkg.filter.RegFilter;
+
+import java.io.File;
+import java.util.List;
+
+/**
+ * jre处理
+ *
+ * @author oyzh
+ * @since 2024/06/17
+ */
+public class JreHandler implements PreHandler, SingleHandler {
+
+    private int order = PackOrder.ORDER_P4;
+
+    @Override
+    public int order() {
+        return order;
+    }
+
+    @Override
+    public void order(int order) {
+        this.order = order;
+    }
+
+    private boolean executed;
+
+    @Override
+    public boolean isExecuted() {
+        return executed;
+    }
+
+    @Override
+    public void setExecuted(boolean executed) {
+        this.executed = executed;
+    }
+
+    @Override
+    public void handle(PackConfig packConfig) throws Exception {
+        if (this.executed) {
+            return;
+        }
+        JreConfig jreConfig = packConfig.getJreConfig();
+        if (jreConfig == null) {
+            return;
+        }
+        String src;
+        if (packConfig.getJlinkJre() != null) {
+            src = packConfig.getJlinkJre();
+        } else {
+            src = packConfig.jrePath();
+        }
+        if (StringUtil.isBlank(src)) {
+            throw new Exception("jre为空！");
+        }
+
+        // 裁剪
+        if (jreConfig.isEnable()) {
+            RegFilter filter = new RegFilter(jreConfig.getExcludes());
+            File dest = new File(FileUtil.tmpPath(), "_minimize_jre_" + UUIDUtil.uuidSimple());
+            FileUtil.copyContent(new File(src), dest, false);
+            List<File> fileList = FileUtil.getAllFiles(dest);
+            // List<Runnable> tasks = new ArrayList<>();
+            for (File file : fileList) {
+                // 异步执行
+                // tasks.add(() -> {
+                if (!filter.apply(file.getName())) {
+                    FileUtil.del(file);
+                    JulLog.info("文件:{}被过滤.", file.getName());
+                }
+                // });
+            }
+            // // 执行业务
+            // ThreadUtil.submit(tasks);
+            // 设置最小化后的jre
+            packConfig.setMinimizeJre(dest.getPath());
+            // 设置为临时文件路径
+            packConfig.addTempFile(dest.getPath());
+        } else {// 不裁剪
+            JulLog.warn("jar裁剪未启用，已跳过");
+        }
+        this.executed = true;
+    }
+
+    @Override
+    public String name() {
+        return "jre处理";
+    }
+}

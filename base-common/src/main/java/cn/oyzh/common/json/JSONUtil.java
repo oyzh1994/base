@@ -178,6 +178,16 @@ public class JSONUtil {
     }
 
     /**
+     * 解析为json对象
+     *
+     * @param obj 对象
+     * @return json对象
+     */
+    public static JSONObject parseObject(Object obj) {
+        return parseObject(toJson(obj));
+    }
+
+    /**
      * 解析为json树组
      *
      * @param json json串

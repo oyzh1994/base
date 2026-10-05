@@ -51,8 +51,8 @@ public class ProcessExecResult {
     @Override
     public String toString() {
         return "ProcessExecResult{" +
-                "input='" + input + '\'' +
-                ", error='" + error + '\'' +
+                "input=\n" + input + "\n" +
+                ", error=\n" + error + "\n" +
                 ", exitCode=" + exitCode +
                 ", timedOut=" + timedOut +
                 '}';

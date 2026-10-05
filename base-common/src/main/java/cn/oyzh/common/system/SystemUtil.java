@@ -4,6 +4,7 @@ import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.common.util.NumberUtil;
+import cn.oyzh.common.util.StringUtil;
 
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
@@ -165,6 +166,15 @@ public class SystemUtil {
     }
 
     /**
+     * 获取java目录
+     *
+     * @return 结果
+     */
+    public static String javaHome() {
+        return System.getProperty("java.home");
+    }
+
+    /**
      * 获取用户目录
      *
      * @return 用户目录
@@ -195,5 +205,40 @@ public class SystemUtil {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * 判断是否在发布环境
+     *
+     * @return 结果
+     */
+    public static boolean isCIEnv() {
+        return "true".equalsIgnoreCase(System.getenv("CI"))
+                || System.getenv("GITHUB_ACTIONS") != null;
+    }
+
+    /**
+     * 获取mvn home目录
+     * @return 结果
+     */
+    public static String mvnHomeEnv(){
+        String mvnHome = System.getenv("MAVEN_HOME");
+        if (StringUtil.isBlank(mvnHome)) {
+            mvnHome = System.getenv("M2_HOME");
+        }
+        return mvnHome;
+    }
+
+    /**
+     * 获取jdk版本
+     *
+     * @return 结果
+     */
+    public static String getJdkVersion() {
+        Runtime.Version version = Runtime.version();
+        if (version.update() == 0) {
+            return version.feature() + "";
+        }
+        return version.feature() + "." + version.interim() + "." + version.update();
     }
 }

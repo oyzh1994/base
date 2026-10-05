@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.oyzh1994</groupId>
+        <artifactId>base</artifactId>
+        <version>1.0.4</version>
+    </parent>
+
+    <name>base-pkg</name>
+    <artifactId>base-pkg</artifactId>
+
+    <description>
+        base for package
+    </description>
+
+    <properties>
+        <dom4j.version>2.2.0</dom4j.version>
+        <snakeyaml.version>2.5</snakeyaml.version>
+        <maven-core.version>3.10.0</maven-core.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- Source: https://mvnrepository.com/artifact/org.dom4j/dom4j -->
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>${dom4j.version}</version>
+        </dependency>
+
+        <!-- mvn sdk -->
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>${maven-core.version}</version>
+        </dependency>
+
+        <!-- 自定义类库，通用模块 -->
+        <dependency>
+            <groupId>io.github.oyzh1994</groupId>
+            <artifactId>base-common</artifactId>
+        </dependency>
+
+        <!-- 压缩工具包 -->
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons-compress.version}</version>
+        </dependency>
+
+        <!-- yaml库 -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>${snakeyaml.version}</version>
+        </dependency>
+
+        <!-- toml库 -->
+        <!-- https://mvnrepository.com/artifact/io.hotmoka/toml4j -->
+        <dependency>
+            <groupId>io.hotmoka</groupId>
+            <artifactId>toml4j</artifactId>
+            <version>0.7.3</version>
+        </dependency>
+
+        <!-- 测试类库 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 执行插件 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <configuration>
+                    <classpathScope>test</classpathScope>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

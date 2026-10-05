@@ -25,14 +25,14 @@ public class JulLog {
         try {
             System.setProperty("jansi.passthrough", "true");
             LOGGER.setUseParentHandlers(false);
-            JulLog.setLevel(JulLevel.DEBUG);
+            // 日志等级
+            JulLog.setLevel(JulUtil.getLogLevel());
             // 控制台日志
             if (!JarUtil.isInJar()) {
                 LOGGER.addHandler(new JulConsoleHandler());
             }
             // 文件日志
-            File logFile = JulUtil.getLogFile();
-            LOGGER.addHandler(new JulFileHandler(logFile));
+            LOGGER.addHandler(new JulFileHandler(JulUtil.getLogFile()));
         } catch (Exception ex) {
             ex.printStackTrace();
         }

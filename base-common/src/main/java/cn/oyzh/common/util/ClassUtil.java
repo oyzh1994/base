@@ -107,21 +107,33 @@ public class ClassUtil {
         return classes;
     }
 
-    private static void findClassesInDirectory(File directory, String packageName, List<Class<?>> classes, Predicate<Class<?>> predicate) throws ClassNotFoundException {
+    public static void findClassesInDirectory(File directory, String packageName, List<Class<?>> classes, Predicate<Class<?>> predicate) throws ClassNotFoundException {
         if (!directory.exists() || !directory.isDirectory()) {
             return;
         }
         File[] files = directory.listFiles(file -> (file.isFile() && file.getName().endsWith(".class") || file.isDirectory()));
         if (files != null) {
             for (File file : files) {
+                String fName = file.getName();
                 if (file.isFile()) {
-                    String className = packageName + '.' + file.getName().substring(0, file.getName().length() - 6);
-                    Class<?> clazz = Class.forName(className);
+                    String nName;
+                    if (StringUtil.isBlank(packageName)) {
+                        nName = fName.substring(0, fName.length() - 6);
+                    } else {
+                        nName = packageName + "." + fName.substring(0, fName.length() - 6);
+                    }
+                    Class<?> clazz = Class.forName(nName);
                     if (predicate == null || predicate.test(clazz)) {
                         classes.add(clazz);
                     }
                 } else {
-                    findClassesInDirectory(file, packageName + "." + file.getName(), classes, predicate);
+                    String nName;
+                    if (StringUtil.isBlank(packageName)) {
+                        nName = fName;
+                    } else {
+                        nName = packageName + "." + fName;
+                    }
+                    findClassesInDirectory(file, nName, classes, predicate);
                 }
             }
         }

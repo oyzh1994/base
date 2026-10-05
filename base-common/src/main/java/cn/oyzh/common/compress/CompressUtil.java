@@ -1,5 +1,6 @@
 package cn.oyzh.common.compress;
 
+import cn.oyzh.common.log.JulLog;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
@@ -16,8 +17,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * 压缩工具类（压缩类型通过参数指定）
@@ -115,10 +120,136 @@ public class CompressUtil {
     }
 
     // 简化方法：压缩单个文件
-    public static void compress(String sourcePath, String targetPath, CompressType compressType)
-            throws IOException, ArchiveException {
-//        List<String> sources = new ArrayList<>();
-//        sources.add(sourcePath);
+    public static void compress(String sourcePath, String targetPath, CompressType compressType) throws IOException {
+        //        List<String> sources = new ArrayList<>();
+        //        sources.add(sourcePath);
         compress(List.of(new File(sourcePath)), targetPath, compressType);
+    }
+
+    /**
+     * 解压ZIP文件
+     *
+     * @param zipFilePath ZIP文件路径
+     * @param outFileDir  解压目录
+     * @return 解压目录
+     */
+    public static File unzip(String zipFilePath, String outFileDir) {
+        return unzip(new File(zipFilePath), new File(outFileDir));
+    }
+
+    /**
+     * 解压ZIP文件
+     *
+     * @param zipFile ZIP文件
+     * @param outFile 解压目录
+     * @return 解压目录
+     */
+    public static File unzip(File zipFile, File outFile) {
+        if (zipFile == null || !zipFile.isFile()) {
+            throw new IllegalArgumentException("zip file is not file");
+        }
+        if (outFile == null) {
+            throw new IllegalArgumentException("output directory is null");
+        }
+        if (outFile.exists() && !outFile.isDirectory()) {
+            throw new IllegalArgumentException("output path is not directory");
+        }
+        if (!outFile.exists() && !outFile.mkdirs()) {
+            throw new IllegalStateException("cannot create output directory: " + outFile);
+        }
+        Path outputRoot = outFile.toPath().toAbsolutePath().normalize();
+        try (ZipFile zip = new ZipFile(zipFile)) {
+            Enumeration<? extends ZipEntry> entries = zip.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry entry = entries.nextElement();
+                Path entryPath = outputRoot.resolve(entry.getName()).normalize();
+                if (!entryPath.startsWith(outputRoot)) {
+                    throw new IOException("invalid zip entry: " + entry.getName());
+                }
+                if (entry.isDirectory()) {
+                    Files.createDirectories(entryPath);
+                    continue;
+                }
+                Files.createDirectories(entryPath.getParent());
+                try (InputStream input = zip.getInputStream(entry)) {
+                    Files.copy(input, entryPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+        } catch (IOException ex) {
+            throw new IllegalStateException("unzip failed: " + zipFile, ex);
+        }
+        return outFile;
+    }
+
+    /**
+     * 压缩打包目录，zip格式
+     *
+     * @param name    文件名称
+     * @param appDest app目录
+     * @return 压缩后的文件
+     */
+    public static File zipDest(String name, String appDest) throws IOException {
+        String compressName = name + ".zip";
+        JulLog.info("zipDest start, config.compressType is:{} compressName:{}.", "zip", compressName);
+        File dest = new File(appDest);
+        File compressFile = new File(dest.getParentFile(), compressName);
+        // 进行zip压缩
+        ArchiveUtil.createZip(dest, compressFile);
+        JulLog.info("zipDest finish appDest:{}", compressFile.getPath());
+        return compressFile;
+    }
+
+    /**
+     * 压缩打包目录，zip格式，macos专用
+     *
+     * @param name    文件名称
+     * @param appDest app目录
+     * @return 压缩后的文件
+     */
+    public static File zipDestByMacos(String name, String appDest) throws IOException {
+        String compressName = name + ".zip";
+        JulLog.info("zipDestByMacos start, config.compressType is:{} compressName:{}.", "zip", compressName);
+        File dest = new File(appDest);
+        File compressFile = new File(dest.getParentFile(), compressName);
+        // 进行zip压缩，如果是macos则保留目录名称，否则不保留
+        ArchiveUtil.createZip(dest, compressFile);
+        JulLog.info("zipDestByMacos finish appDest:{}", compressFile.getPath());
+        return compressFile;
+    }
+
+    /**
+     * 压缩打包目录，tar格式
+     *
+     * @param name    文件名称
+     * @param appDest app目录
+     * @return 压缩后的文件
+     */
+    public static File tarDest(String name, String appDest) throws IOException {
+        String compressName = name + ".tar";
+        JulLog.info("tarDest start, config.compressType is:{} compressName:{}.", "tar", compressName);
+        File dest = new File(appDest);
+        File compressFile = new File(dest.getParentFile(), compressName);
+        // 进行tar压缩
+        ArchiveUtil.createTar(dest, compressFile);
+        JulLog.info("tarDest finish appDest:{}", compressFile.getPath());
+        return compressFile;
+    }
+
+    /**
+     * 压缩打包文件，tar.gz格式
+     *
+     * @param name    文件名称
+     * @param appDest app目录
+     * @return 压缩后的文件
+     */
+    public static File tgzDest(String name, String appDest) throws IOException {
+        String compressName = name + ".tar.gz";
+        JulLog.info("tgzDest start, config.compressType is:{} compressName:{}.", "tar.gz", compressName);
+        File dest = new File(appDest);
+        File compressFile = new File(dest.getParentFile(), compressName);
+        // 进行tar.gz压缩
+        ArchiveUtil.createTarGz(dest, compressFile);
+        JulLog.info("tgzDest finish appDest:{}", compressFile.getPath());
+        return compressFile;
     }
 }

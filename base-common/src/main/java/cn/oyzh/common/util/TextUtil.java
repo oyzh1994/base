@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,44 +24,44 @@ public class TextUtil {
     private TextUtil() {
     }
 
-//    /**
-//     * 搜索索引
-//     *
-//     * @param text        文字
-//     * @param word        词汇
-//     * @param formIndex   开始位置
-//     * @param compareCase 是否比较大小写
-//     * @param fullMatch   是否全文匹配
-//     * @return 索引位置
-//     */
-//    @Deprecated
-//    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
-//        if (text == null || word == null) {
-//            return -1;
-//        }
-//        if (text.length() < word.length()) {
-//            return -1;
-//        }
-//        if (!compareCase) {
-//            text = text.toLowerCase();
-//            word = word.toLowerCase();
-//        }
-//        // 全文匹配
-//        if (fullMatch) {
-//            if (text.equals(word)) {
-//                return 0;
-//            }
-//            return -1;
-//        }
-//        // 搜索索引
-//        int start;
-//        if (formIndex == null) {
-//            start = text.indexOf(word);
-//        } else {
-//            start = text.indexOf(word, formIndex);
-//        }
-//        return start;
-//    }
+    //    /**
+    //     * 搜索索引
+    //     *
+    //     * @param text        文字
+    //     * @param word        词汇
+    //     * @param formIndex   开始位置
+    //     * @param compareCase 是否比较大小写
+    //     * @param fullMatch   是否全文匹配
+    //     * @return 索引位置
+    //     */
+    //    @Deprecated
+    //    public static int findIndex(String text, String word, Integer formIndex, boolean compareCase, boolean fullMatch) {
+    //        if (text == null || word == null) {
+    //            return -1;
+    //        }
+    //        if (text.length() < word.length()) {
+    //            return -1;
+    //        }
+    //        if (!compareCase) {
+    //            text = text.toLowerCase();
+    //            word = word.toLowerCase();
+    //        }
+    //        // 全文匹配
+    //        if (fullMatch) {
+    //            if (text.equals(word)) {
+    //                return 0;
+    //            }
+    //            return -1;
+    //        }
+    //        // 搜索索引
+    //        int start;
+    //        if (formIndex == null) {
+    //            start = text.indexOf(word);
+    //        } else {
+    //            start = text.indexOf(word, formIndex);
+    //        }
+    //        return start;
+    //    }
 
     /**
      * 搜索索引，正则模式
@@ -147,6 +148,18 @@ public class TextUtil {
         }
         // 转换字符集
         return new String(bytes, fromCharset).getBytes(targetCharset);
+    }
+
+    /**
+     * 更换内容字符集
+     *
+     * @param str           内容
+     * @param fromCharset   原始字符集
+     * @param targetCharset 目标字符集
+     * @return 处理字符集后的内容
+     */
+    public static String changeCharset(String str, Charset fromCharset, Charset targetCharset) {
+        return changeCharset(str, fromCharset.displayName(), targetCharset.displayName());
     }
 
     /**
@@ -486,6 +499,9 @@ public class TextUtil {
         byte[] bytes = new byte[bits.length];
         int i = 0;
         for (String bit : bits) {
+            if (bit == null) {
+                continue;
+            }
             // 将二进制字符串转换为十进制整数
             int decimalValue = Integer.parseInt(bit, 2);
             // 将十进制整数转换为字节
@@ -502,6 +518,17 @@ public class TextUtil {
      * @return 转义后的字符串
      */
     public static String escape(String str) {
+        return escape(str, null);
+    }
+
+    /**
+     * 转义显示不可见字符
+     *
+     * @param str  字符串
+     * @param func 处理函数
+     * @return 转义后的字符串
+     */
+    public static String escape(String str, Function<Character, String> func) {
         if (StringUtil.isEmpty(str)) {
             return str;
         }
@@ -511,8 +538,10 @@ public class TextUtil {
         Character lastChar = null;
         for (int i = 0; i < len; i++) {
             c = str.charAt(i);
-            String c1 = null;
-            if (c == '"') {
+            String c1 = func == null ? null : func.apply(c);
+            if (c1 != null) {
+
+            } else if (c == '"') {
                 if (lastChar == null || lastChar != '\\') {
                     c1 = "\\\"";
                 }
@@ -551,50 +580,50 @@ public class TextUtil {
         return builder.toString();
     }
 
-//    /**
-//     * 将字节数组转换为十六进制字符串
-//     *
-//     * @param bytes 字节数组
-//     * @return 十六进制字符串
-//     */
-//    public static String bytesToHexStr(byte[] bytes) {
-//        return bytesToHexStr(bytes, true);
-//    }
-//
-//    /**
-//     * 将字节数组转换为十六进制字符串
-//     *
-//     * @param bytes       字节数组
-//     * @param toUpperCase 大写形式
-//     * @return 十六进制字符串
-//     */
-//    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
-//        StringBuilder hexString = new StringBuilder();
-//        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
-//        for (byte b : bytes) {
-//            hexString.append(String.format("%02X", b));
-//        }
-//        if (toUpperCase) {
-//            return hexString.toString().toUpperCase();
-//        }
-//        return hexString.toString();
-//    }
+    //    /**
+    //     * 将字节数组转换为十六进制字符串
+    //     *
+    //     * @param bytes 字节数组
+    //     * @return 十六进制字符串
+    //     */
+    //    public static String bytesToHexStr(byte[] bytes) {
+    //        return bytesToHexStr(bytes, true);
+    //    }
+    //
+    //    /**
+    //     * 将字节数组转换为十六进制字符串
+    //     *
+    //     * @param bytes       字节数组
+    //     * @param toUpperCase 大写形式
+    //     * @return 十六进制字符串
+    //     */
+    //    public static String bytesToHexStr(byte[] bytes, boolean toUpperCase) {
+    //        StringBuilder hexString = new StringBuilder();
+    //        // 将每个字节转换为两位的十六进制字符串，并拼接到结果中
+    //        for (byte b : bytes) {
+    //            hexString.append(String.format("%02X", b));
+    //        }
+    //        if (toUpperCase) {
+    //            return hexString.toString().toUpperCase();
+    //        }
+    //        return hexString.toString();
+    //    }
 
-//    /**
-//     * 将十六进制转换为字符串字节数组
-//     *
-//     * @param s 十六进制字符串
-//     * @return 字节数组
-//     */
-//    public static byte[] hexStrToBytes(String s) {
-//        int len = s.length();
-//        byte[] data = new byte[len / 2];
-//        for (int i = 0; i < len; i += 2) {
-//            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-//                    + Character.digit(s.charAt(i + 1), 16));
-//        }
-//        return data;
-//    }
+    //    /**
+    //     * 将十六进制转换为字符串字节数组
+    //     *
+    //     * @param s 十六进制字符串
+    //     * @return 字节数组
+    //     */
+    //    public static byte[] hexStrToBytes(String s) {
+    //        int len = s.length();
+    //        byte[] data = new byte[len / 2];
+    //        for (int i = 0; i < len; i += 2) {
+    //            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+    //                    + Character.digit(s.charAt(i + 1), 16));
+    //        }
+    //        return data;
+    //    }
 
     /**
      * 是否xml字符串
@@ -788,18 +817,38 @@ public class TextUtil {
      */
     public static double clacCorr(String str, String text) {
         double corr = 0.0;
-        if (StringUtil.containsIgnoreCase(str, text) || StringUtil.containsIgnoreCase(text, str)) {
+        if (StringUtil.equals(str, text)) {
+            corr = 2.0;
+        } else if (StringUtil.containsIgnoreCase(str, text) || StringUtil.containsIgnoreCase(text, str)) {
             corr = StringUtil.similarity(str.toUpperCase(), text.toUpperCase());
-            if (StringUtil.startWithIgnoreCase(str, text)) {
+            if (StringUtil.startWith(str, text)) {
+                corr += 0.40;
+            } else if (StringUtil.startWithIgnoreCase(str, text)) {
                 corr += 0.35;
-            } else if (StringUtil.containsIgnoreCase(str, text)) {
+            } else if (StringUtil.contains(str, text)) {
                 corr += 0.25;
+            } else if (StringUtil.containsIgnoreCase(str, text)) {
+                corr += 0.20;
             }
-            if (StringUtil.endWithIgnoreCase(str, text)) {
+            if (StringUtil.endsWith(str, text)) {
                 corr += 0.15;
+            } else if (StringUtil.endWithIgnoreCase(str, text)) {
+                corr += 0.10;
             }
         }
         return corr;
     }
 
+    /**
+     * 转换为单行内容
+     *
+     * @param text 内容
+     * @return 结果
+     */
+    public static String toSingleLine(String text) {
+        if (StringUtil.isEmpty(text)) {
+            return text;
+        }
+        return text.replaceAll("\\s+", " ");
+    }
 }

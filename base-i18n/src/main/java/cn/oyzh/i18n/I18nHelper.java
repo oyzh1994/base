@@ -87,6 +87,12 @@ public class I18nHelper {
 
     public static final String PUBLIC_KEY = "base.publicKey";
 
+    public static final String HELP = "base.help";
+
+    public static final String EXTRA = "base.extra";
+
+    public static final String MINIMIZE = "base.minimize";
+
     public static final String TABLE = "base.table";
 
     public static final String TRUNCATE = "base.truncate";
@@ -339,6 +345,10 @@ public class I18nHelper {
 
     public static final String FOLDER1 = "base.folder1";
 
+    public static final String BUILT_IN = "base.builtIn";
+
+    public static final String BIT = "base.bit";
+
     public static final String TOUCH_FILE = "base.touchFile";
 
     public static final String MKDIR = "base.mkdir";
@@ -430,6 +440,8 @@ public class I18nHelper {
     public static final String DATABASE = "base.database";
 
     public static final String FEATURES = "base.features";
+
+    public static final String FEATURES1 = "base.features1";
 
     public static final String OPTIMIZE = "base.optimize";
 
@@ -821,6 +833,8 @@ public class I18nHelper {
 
     public static final String SWITCH = "base.switch";
 
+    public static final String TOGGLE = "base.toggle";
+
     public static final String OTHER = "base.other";
 
     public static final String TERMINAL_TIP1 = "base.terminalTip1";
@@ -922,6 +936,8 @@ public class I18nHelper {
     public static final String STOP1 = "base.stop1";
 
     public static final String RESTART = "base.restart";
+
+    public static final String RESTART1 = "base.restart1";
 
     public static final String METADATA = "base.metadata";
 
@@ -1923,6 +1939,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(SHOW, LEFT_SIDE);
     }
 
+    public static String hideLeftSide() {
+        return I18nResourceBundle.i18nString(HIDE, LEFT_SIDE);
+    }
+
     public static String connectionConnected() {
         return I18nResourceBundle.i18nString(CONNECTION, CONNECTED);
     }
@@ -1973,6 +1993,10 @@ public class I18nHelper {
 
     public static String updateDocument() {
         return I18nResourceBundle.i18nString(UPDATE, DOCUMENT);
+    }
+
+    public static String updateSchema() {
+        return I18nResourceBundle.i18nString(UPDATE, SCHEMA);
     }
 
     public static String updateDocumentFail() {
@@ -2996,6 +3020,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RELOAD, DATABASE);
     }
 
+    public static String reloadSchema() {
+        return I18nResourceBundle.i18nString(RELOAD, SCHEMA);
+    }
+
     public static String addTable() {
         return I18nResourceBundle.i18nString(ADD, TABLE);
     }
@@ -3442,6 +3470,10 @@ public class I18nHelper {
 
     public static String addDatabase() {
         return I18nResourceBundle.i18nString(ADD, DATABASE);
+    }
+
+    public static String addSchema() {
+        return I18nResourceBundle.i18nString(ADD, SCHEMA);
     }
 
     public static String design() {
@@ -4290,6 +4322,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(FEATURES);
     }
 
+    public static String features1() {
+        return I18nResourceBundle.i18nString(FEATURES1);
+    }
+
     public static String optimize() {
         return I18nResourceBundle.i18nString(OPTIMIZE);
     }
@@ -4767,6 +4803,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(MONTHS);
     }
 
+    public static String switch1() {
+        return I18nResourceBundle.i18nString(SWITCH);
+    }
+
+    public static String toggleTheme() {
+        return I18nResourceBundle.i18nString(TOGGLE, THEME);
+    }
+
     public static String switchTab() {
         return I18nResourceBundle.i18nString(SWITCH, TAB);
     }
@@ -4959,6 +5003,10 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RESTART);
     }
 
+    public static String restart1() {
+        return I18nResourceBundle.i18nString(RESTART1);
+    }
+
     public static String metadata() {
         return I18nResourceBundle.i18nString(METADATA);
     }
@@ -4989,6 +5037,30 @@ public class I18nHelper {
 
     public static String publicKey() {
         return I18nResourceBundle.i18nString(PUBLIC_KEY);
+    }
+
+    public static String help() {
+        return I18nResourceBundle.i18nString(HELP);
+    }
+
+    public static String extra() {
+        return I18nResourceBundle.i18nString(EXTRA);
+    }
+
+    public static String minimize() {
+        return I18nResourceBundle.i18nString(MINIMIZE);
+    }
+
+    public static String folder1() {
+        return I18nResourceBundle.i18nString(FOLDER1);
+    }
+
+    public static String builtIn() {
+        return I18nResourceBundle.i18nString(BUILT_IN);
+    }
+
+    public static String bit() {
+        return I18nResourceBundle.i18nString(BIT);
     }
 
     public String fileUploadFailed() {

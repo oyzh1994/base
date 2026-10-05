@@ -135,7 +135,7 @@ public class ProcessUtil {
         File dir = new File(javaPath).getParentFile();
         // windows平台
         if (OSUtil.isWindows()) {
-            if (!FileUtil.exist(javaPath + "/bin/javaw.exe")) {
+            if (!FileUtil.exists(javaPath + "/bin/javaw.exe")) {
                 javaPath += "/bin/java.exe";
             } else {
                 javaPath += "/bin/javaw.exe";
@@ -151,7 +151,7 @@ public class ProcessUtil {
             // 执行重启命令
             builder.start();
         } else if (OSUtil.isLinux()) {
-            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
+            if (!FileUtil.exists(javaPath + "/bin/javaw")) {
                 javaPath += "/bin/java";
             } else {
                 javaPath += "/bin/javaw";
@@ -275,7 +275,7 @@ public class ProcessUtil {
                 // 工作目录重新处理
                 dir = new File(javaPath).getParentFile();
             }
-            if (!FileUtil.exist(javaPath + "/bin/javaw")) {
+            if (!FileUtil.exists(javaPath + "/bin/javaw")) {
                 javaPath += "/bin/java";
             } else {
                 javaPath += "/bin/javaw";

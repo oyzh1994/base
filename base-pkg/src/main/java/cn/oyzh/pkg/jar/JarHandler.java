@@ -1,0 +1,396 @@
+package cn.oyzh.pkg.jar;
+
+import cn.oyzh.common.arch.NativeArchDetector;
+import cn.oyzh.common.arch.NativeLibUtil;
+import cn.oyzh.common.file.FileUtil;
+import cn.oyzh.common.function.ExceptionConsumer;
+import cn.oyzh.common.log.JulLog;
+import cn.oyzh.common.system.OSUtil;
+import cn.oyzh.common.system.RuntimeUtil;
+import cn.oyzh.common.system.SystemUtil;
+import cn.oyzh.common.thread.ProcessExecResult;
+import cn.oyzh.common.thread.ThreadUtil;
+import cn.oyzh.common.util.IOUtil;
+import cn.oyzh.common.util.JFXUtil;
+import cn.oyzh.common.util.JarUtil;
+import cn.oyzh.common.util.StringUtil;
+import cn.oyzh.common.util.UUIDUtil;
+import cn.oyzh.pkg.PackOrder;
+import cn.oyzh.pkg.PreHandler;
+import cn.oyzh.pkg.config.PackConfig;
+import cn.oyzh.pkg.filter.RegFilter;
+import cn.oyzh.pkg.util.PkgUtil;
+import cn.oyzh.pkg.woa.WoaUtil;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.jar.JarInputStream;
+import java.util.zip.ZipEntry;
+
+/**
+ * jar处理器
+ *
+ * @author oyzh
+ * @since 2024/06/17
+ */
+public class JarHandler implements PreHandler {
+
+    private int order = PackOrder.ORDER_P7;
+
+    @Override
+    public int order() {
+        return order;
+    }
+
+    @Override
+    public void order(int order) {
+        this.order = order;
+    }
+
+    private RegFilter filter;
+
+    private RegFilter skipFilter;
+
+    @Override
+    public String name() {
+        return "jar处理器";
+    }
+
+    /**
+     * jar配置
+     */
+    private PackConfig config;
+
+    @Override
+    public void handle(PackConfig packConfig) throws Exception {
+        JarConfig jarConfig = packConfig.getJarConfig();
+        if (jarConfig == null) {
+            return;
+        }
+        this.config = packConfig;
+        String jdkPath = packConfig.getJdkPath();
+        if (StringUtil.isBlank(jdkPath)) {
+            throw new Exception("jdkPath为空！");
+        }
+        this.filter = new RegFilter(jarConfig.getExcludes());
+        this.skipFilter = new RegFilter(jarConfig.getSkipsJar());
+        // 来源文件
+        String src = packConfig.getMainJar();
+        // 目标文件
+        String dest = src.replace(".jar", "_clip.jar");
+        // jar解压目录
+        String jarUnDir = src.replace(".jar", "");
+        // 删除解压目录，如果存在
+        FileUtil.del(jarUnDir);
+        // 删除目标文件，如果存在
+        FileUtil.del(dest);
+        // 解压主jar
+        JarUtil.unJar(src, jarUnDir);
+        // 裁剪文件
+        if (jarConfig.isEnable()) {
+            // 裁剪主jar
+            PkgUtil.minimize(src, dest, this::jarFilter);
+            // 裁剪类库jar
+            this.handleLibs(jarUnDir);
+            // 合并类库jar
+            this.mergeLibs(jarUnDir, dest, jdkPath);
+        } else {// 不裁剪
+            JulLog.warn("jar裁剪未启用，已跳过");
+            FileUtil.copy(src, dest, true);
+        }
+        // 设置最小化后的主程序
+        packConfig.setMinimizeManJar(dest);
+        // 设置jar解压目录
+        packConfig.setJarUnDir(jarUnDir);
+        // 设置为临时文件路径
+        packConfig.addTempFile(dest);
+        packConfig.addTempFile(jarUnDir);
+    }
+
+    /**
+     * 处理jfx库
+     *
+     * @param src  路径
+     * @param name 名称
+     */
+    private void handleJfxLib(String src, String name) {
+        JarConfig jarConfig = this.config.getJarConfig();
+        String javafxPath = jarConfig.getJavafxPath();
+        try {
+            // 初始化jfx路径
+            if (javafxPath == null) {
+                Path path = Paths.get(SystemUtil.tmpdir(), "_temp_javafx_" + UUIDUtil.uuidSimple());
+                Files.createDirectory(path);
+                javafxPath = path.toString();
+                jarConfig.setJavafxPath(javafxPath);
+                // 设置为临时文件路径
+                this.config.addTempFile(javafxPath);
+            }
+            String modName = null;
+            if (src.contains("javafx-graphics-")) {
+                modName = "javafx.graphics.jmod";
+            } else if (src.contains("javafx-media-")) {
+                modName = "javafx.media.jmod";
+            } else if (src.contains("javafx-web-")) {
+                modName = "javafx.web.jmod";
+            }
+            // jmods处理
+            if (modName != null) {
+                String jdkPath = this.config.getJdkPath();
+                // 获取lib目录
+                Path libPath = WoaUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")), jdkPath);
+                // 检查lib文件是否存在
+                if (libPath != null) {
+                    String finalJavafxPath = javafxPath;
+                    // ms库文件
+                    List<String> mslibs = JFXUtil.msLibNames();
+                    // 遍历文件
+                    cn.oyzh.common.file.FileUtil.getAllFiles(libPath.toFile(), (ExceptionConsumer<File>) file -> {
+                        // 非库文件，跳过
+                        if (!StringUtil.endsWithAny(file.getName(), ".dylib", ".dll", ".so")) {
+                            return;
+                        }
+                        // 微软库依赖，跳过
+                        if (mslibs.contains(file.getName())) {
+                            return;
+                        }
+                        Path path2 = Paths.get(finalJavafxPath, file.getName());
+                        if (Files.exists(path2)) {
+                            return;
+                        }
+                        Files.copy(file.toPath(), path2);
+                    });
+                    cn.oyzh.common.file.FileUtil.cleanDir(libPath);
+                    return;
+                }
+            }
+
+            // ci环境下，windows on arm默认不会复制lib
+            if (SystemUtil.isCIEnv() && WoaUtil.isWoa()) {
+                return;
+            }
+
+            // 普通jar处理
+            try (JarInputStream jarIn = new JarInputStream(new BufferedInputStream(new FileInputStream(src)))) {
+                ZipEntry entry;
+                while ((entry = jarIn.getNextJarEntry()) != null) {
+                    if (entry.isDirectory()) {
+                        continue;
+                    }
+                    // 匹配目标条目
+                    if (entry.getName().equals(name)) {
+                        Files.copy(jarIn, Paths.get(javafxPath, name));
+                        break;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * 处理二进制库
+     *
+     * @param src  路径
+     * @param name 名称
+     * @return 结果
+     */
+    private boolean handleBinLib(String src, String name) {
+        if (OSUtil.isMacOS() && !NativeLibUtil.isMacosLib(name)) {
+            return false;
+        }
+        if (OSUtil.isLinux() && !NativeLibUtil.isLinuxLib(name)) {
+            return false;
+        }
+        if (OSUtil.isWindows() && !NativeLibUtil.isWindowsLib(name)) {
+            return false;
+        }
+        if (OSUtil.isAix() && !NativeLibUtil.isAixLib(name)) {
+            return false;
+        }
+        boolean result = false;
+        try {
+            // 普通jar处理
+            try (JarInputStream jarIn = new JarInputStream(new BufferedInputStream(new FileInputStream(src)))) {
+                ZipEntry entry;
+                while ((entry = jarIn.getNextJarEntry()) != null) {
+                    if (entry.isDirectory()) {
+                        continue;
+                    }
+                    // 匹配目标条目
+                    if (!entry.getName().equals(name)) {
+                        continue;
+                    }
+                    // 只读头部
+                    byte[] head = IOUtil.readAtMost(jarIn, 4096);
+                    // 判断库是否符合当前平台
+                    result = NativeArchDetector.isCompatibleWithCurrentJvm(head);
+                }
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return result;
+    }
+
+    /**
+     * jar过滤
+     *
+     * @param src  源文件
+     * @param name 名称
+     * @return 结果
+     */
+    private boolean jarFilter(String src, String name) {
+        // jar包不处理
+        if (name.endsWith(".jar")) {
+            return true;
+        }
+        JarConfig jarConfig = this.config.getJarConfig();
+        if (jarConfig != null && jarConfig.isEnable()) {
+            // jfx优化
+            if (jarConfig.isJavafxOptimize()
+                    && src.endsWith(".jar")
+                    && StringUtil.containsAny(src, "javafx-media-", "javafx-graphics-", "javafx-web-")
+                    && NativeLibUtil.isNativeLibName(name)) {
+                this.handleJfxLib(src, name);
+                JulLog.info("javafx模块，文件:{}被过滤.", name);
+                return false;
+            }
+            // 二进制库优化
+            if (jarConfig.isBinlibOptimize()
+                    && NativeLibUtil.isNativeLibName(name)
+                    && !this.handleBinLib(src, name)) {
+                JulLog.info("二进制库:{}非当前平台，被过滤.", name);
+                return false;
+            }
+            //            // 可执行程序优化
+            //            if (jarConfig.isExecutableOptimize() && !OSUtil.isWindows() && StringUtil.endsWithAny(name, ".exe")) {
+            //                JulLog.info("可执行程序:{}非当前平台，被过滤.", name);
+            //                return false;
+            //            }
+        }
+        // 其他文件
+        boolean accept = this.filter.apply(name);
+        if (!accept) {
+            JulLog.info("文件:{}被过滤.", name);
+        }
+        return accept;
+    }
+
+    /**
+     * 处理类库
+     *
+     * @param jarUnDir 主jar解压目录
+     */
+    private void handleLibs(String jarUnDir) {
+        JulLog.info("handleLibs start, jarUnDir: {}.", jarUnDir);
+        List<Runnable> tasks = new ArrayList<>();
+        List<File> files = FileUtil.getAllFiles(jarUnDir);
+        AtomicReference<Exception> errRef = new AtomicReference<>();
+        for (File file : files) {
+            try {
+                // 非jar，跳过
+                if (!JarUtil.isJar(file)) {
+                    continue;
+                }
+                // 符合跳过jar，忽略文件
+                if (!this.skipFilter.apply(file.getName())) {
+                    JulLog.warn("类库:{}被跳过, 已忽略.", file.getName());
+                    continue;
+                }
+                // 符合排除jar，删除文件
+                if (!this.filter.apply(file.getName())) {
+                    FileUtil.del(file);
+                    JulLog.warn("类库:{}被排除, 已删除.", file.getName());
+                    continue;
+                }
+                // 内容为空
+                JarConfig jarConfig = this.config.getJarConfig();
+                if (jarConfig != null && jarConfig.isEnable() && jarConfig.isRemoveEmpty() && !JarUtil.hasClass(file.getPath())) {
+                    FileUtil.del(file);
+                    JulLog.warn("类库:{}内容为空, 已删除.", file.getName());
+                    continue;
+                }
+                // 添加到任务
+                tasks.add(() -> {
+                    try {
+                        // 替换路径
+                        JulLog.info("minimize jar: {}.", file.getName());
+                        // 裁剪类库
+                        PkgUtil.minimize(file.getPath(), file.getPath(), this::jarFilter);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        errRef.set(ex);
+                    }
+                });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new RuntimeException(ex);
+            }
+        }
+        // 执行任务
+        ThreadUtil.submitSmart(tasks);
+        // 抛出异常
+        if (errRef.get() != null) {
+            throw new RuntimeException(errRef.get());
+        }
+        JulLog.info("handleLibs finish.");
+    }
+
+    /**
+     * 合并类库
+     *
+     * @param jarUnDir 主jar解压目录
+     * @param mainJar  主jar
+     * @param jdkPath  jdk路径
+     */
+    private void mergeLibs(String jarUnDir, String mainJar, String jdkPath) throws Exception {
+        JulLog.info("mergeLibs start, jarUnDir: {} mainJar: {}.", jarUnDir, mainJar);
+        // 新jar文件
+        File mainJarNewFile = new File(jarUnDir, "temp.jar");
+        // 复制解压目录
+        FileUtil.copy(new File(mainJar), mainJarNewFile, false);
+        // 解压目录
+        File dir = new File(jarUnDir);
+        // lib目录合并
+        if (FileUtil.exists(jarUnDir + "/BOOT-INF/lib")) {
+            // 合并lib目录到主jar文件
+            String[] cmdArr = new String[]{"jar", "-uvf0", mainJarNewFile.getName(), "./BOOT-INF/lib"};
+            cmdArr = PkgUtil.getJDKExecCMD(jdkPath, cmdArr);
+            String cmdStr = StringUtil.join(" ", cmdArr);
+            JulLog.info(cmdStr);
+            ProcessExecResult result = RuntimeUtil.execForResult(cmdArr, null, dir);
+            if (!result.isSuccess()) {
+                JulLog.error("Jar error:{} exitCode:{}", result.getError(), result.getExitCode());
+                throw new RuntimeException("Jar error:" + result.getError() + " exitCode:" + result.getExitCode());
+            }
+        } else {// 单个jar逐个合并
+            List<File> files = FileUtil.getAllFiles(dir);
+            files = files.parallelStream().filter(f -> f.isFile() && f.getName().endsWith(".jar")).toList();
+            for (File file : files) {
+                String fName = file.getPath().replace(dir.getPath(), "");
+                String[] cmdArr = new String[]{"jar", "-uvf0", mainJarNewFile.getName(), "." + fName};
+                cmdArr = PkgUtil.getJDKExecCMD(jdkPath, cmdArr);
+                String cmdStr = StringUtil.join(" ", cmdArr);
+                JulLog.info(cmdStr);
+                ProcessExecResult result = RuntimeUtil.execForResult(cmdArr, null, dir);
+                if (!result.isSuccess()) {
+                    JulLog.error("Jar error:{} exitCode:{}", result.getError(), result.getExitCode());
+                    throw new RuntimeException("Jar error:" + result.getError() + " exitCode:" + result.getExitCode());
+                }
+            }
+        }
+        // 移动主jar文件到原始目录
+        FileUtil.move(mainJarNewFile, new File(mainJar), true);
+        JulLog.info("mergeLibs finish.");
+    }
+
+}

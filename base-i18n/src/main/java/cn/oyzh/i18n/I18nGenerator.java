@@ -43,10 +43,10 @@ public class I18nGenerator {
         if (list.size() < 2) {
             throw new RuntimeException("invalid baidu app!");
         }
-        if (!FileUtil.exist(cnI18nFile)) {
+        if (!FileUtil.exists(cnI18nFile)) {
             throw new RuntimeException("invalid file : " + cnI18nFile);
         }
-        if (!FileUtil.exist(targetI18nFile)) {
+        if (!FileUtil.exists(targetI18nFile)) {
             throw new RuntimeException("invalid file : " + targetI18nFile);
         }
         // 初始化百度信息
@@ -64,7 +64,7 @@ public class I18nGenerator {
         // 目标属性
         Properties targetProp = new Properties();
         // 目标文件不存在就创建
-        if (!FileUtil.exist(targetI18nFile)) {
+        if (!FileUtil.exists(targetI18nFile)) {
             FileUtil.touch(targetI18nFile);
         }
         try (FileInputStream fis = new FileInputStream(targetI18nFile)) {
@@ -128,10 +128,10 @@ public class I18nGenerator {
      * @throws IOException 异常
      */
     public static void i18nCorrection(String cnI18nFile, String targetI18nFile, Locale targetLocale) throws IOException {
-        if (!FileUtil.exist(cnI18nFile)) {
+        if (!FileUtil.exists(cnI18nFile)) {
             throw new RuntimeException("invalid file : " + cnI18nFile);
         }
-        if (!FileUtil.exist(targetI18nFile)) {
+        if (!FileUtil.exists(targetI18nFile)) {
             throw new RuntimeException("invalid file : " + targetI18nFile);
         }
         // 中文属性

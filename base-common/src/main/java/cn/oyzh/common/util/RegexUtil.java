@@ -16,32 +16,44 @@ public class RegexUtil {
     /**
      * IPv4的正则表达式
      */
-    public static String IPV4_REGEX = "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
+    public final static String IPV4_REGEX = "(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
 
     /**
      * IPv4的Pattern对象
      */
-    public static Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
+    public final static Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
 
     /**
      * 匹配整数的正则表达式
      */
-    public static String NUMBER_REGEX = "-?\\d+";
+    public final static String NUMBER_REGEX = "-?\\d+";
 
     /**
      * 匹配整数的Pattern对象
      */
-    public static Pattern NUMBER_PATTERN = Pattern.compile(NUMBER_REGEX);
+    public final static Pattern NUMBER_PATTERN = Pattern.compile(NUMBER_REGEX);
 
     /**
      * 匹配小数的正则表达式
      */
-    public static String DECIMAL_REGEX = "-?\\d+(\\.\\d*)?";
+    public final static String DECIMAL_REGEX = "-?\\d+(\\.\\d*)?";
 
     /**
      * 匹配小数的Pattern对象
      */
-    public static Pattern DECIMAL_PATTERN = Pattern.compile(DECIMAL_REGEX);
+    public final static Pattern DECIMAL_PATTERN = Pattern.compile(DECIMAL_REGEX);
+
+    /**
+     * 移动电话
+     * eg: 中国大陆： +86  180 4953 1399，2位区域码标示+11位数字
+     * 中国大陆 +86 Mainland China
+     */
+    public final static  String MOBILE_REGEX = "(?:0|86|\\+86)?1[3-9]\\d{9}";
+
+    /**
+     * 移动电话
+     */
+    public final static Pattern MOBILE_PATTERN = Pattern.compile(MOBILE_REGEX);
 
     /**
      * 是否数字

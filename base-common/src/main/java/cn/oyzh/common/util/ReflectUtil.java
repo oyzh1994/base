@@ -200,11 +200,11 @@ public class ReflectUtil {
      * @return 结果
      */
     public static Object invoke(Object obj, Method method, Object... params) {
-        if (method != null) {
-            method.setAccessible(true);
-            return invokeOnly(obj, method, params);
+        if (method == null) {
+            throw new NullPointerException("method");
         }
-        return null;
+        method.setAccessible(true);
+        return invokeOnly(obj, method, params);
     }
 
     /**
