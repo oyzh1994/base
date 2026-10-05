@@ -2,7 +2,6 @@ package cn.oyzh.common.log;
 
 import cn.oyzh.common.SysConst;
 import cn.oyzh.common.date.DateHelper;
-import cn.oyzh.common.exception.InvalidParamException;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.system.SystemUtil;
@@ -39,7 +38,7 @@ public class JulUtil {
         // 日志目录
         String filePath = getLogsDir();
         if (StringUtil.isNotBlank(projectName)) {
-            filePath += projectName + "-";
+            fileName = projectName + "-" + fileName;
         }
         File file = new File(FileNameUtil.concat(filePath, fileName));
         if (!file.exists()) {
@@ -71,7 +70,14 @@ public class JulUtil {
      */
     public static String getLogsDir() {
         String filePath;
-        String baseDir = SysConst.storeDir() == null ? SystemUtil.userDir() : SysConst.storeDir();
+        String baseDir;
+        if (StringUtil.isNotBlank(SysConst.tempDir())) {
+            baseDir = SysConst.tempDir();
+        } else if (StringUtil.isNotBlank(SysConst.storeDir())) {
+            baseDir = SysConst.storeDir();
+        } else {
+            baseDir = SystemUtil.userDir();
+        }
         //        // 正式环境
         //        if (JarUtil.isInJar()) {
         filePath = FileNameUtil.concat(baseDir, "logs");
