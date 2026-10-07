@@ -805,6 +805,8 @@ public class I18nHelper {
 
     public static final String NETWORK = "base.network";
 
+    public static final String VOLUME = "base.volume";
+
     public static final String INPUT = "base.input";
 
     public static final String OUTPUT = "base.output";
@@ -4961,6 +4963,42 @@ public class I18nHelper {
      */
     public static String clearData() {
         return I18nResourceBundle.i18nString(CLEAR, DATA);
+    }
+
+    /**
+     * 获取国际化文本：清除容器数据
+     *
+     * @return 清除容器数据
+     */
+    public static String clearContainerData() {
+        return I18nResourceBundle.i18nString(CLEAR, CONTAINER, DATA);
+    }
+
+    /**
+     * 获取国际化文本：清除镜像数据
+     *
+     * @return 清除镜像数据
+     */
+    public static String clearImageData() {
+        return I18nResourceBundle.i18nString(CLEAR, IMAGE, DATA);
+    }
+
+    /**
+     * 获取国际化文本：清除网络数据
+     *
+     * @return 清除网络数据
+     */
+    public static String clearNetworkData() {
+        return I18nResourceBundle.i18nString(CLEAR, NETWORK, DATA);
+    }
+
+    /**
+     * 获取国际化文本：清除卷宗数据
+     *
+     * @return 清除卷宗数据
+     */
+    public static String clearVolumeData() {
+        return I18nResourceBundle.i18nString(CLEAR, VOLUME, DATA);
     }
 
     /**
