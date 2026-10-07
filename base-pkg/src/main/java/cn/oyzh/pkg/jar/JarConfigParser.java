@@ -49,10 +49,22 @@ public class JarConfigParser implements ConfigParser<JarConfig> {
         return config;
     }
 
+    /**
+     * 解析配置
+     *
+     * @param object 配置内容
+     * @return 配置类
+     */
     public static JarConfig parseConfig(JSONObject object) {
         return new JarConfigParser().parse(object);
     }
 
+    /**
+     * 解析配置
+     *
+     * @param configFile 配置文件
+     * @return 配置类
+     */
     public static JarConfig parseConfig(String configFile) {
         return new JarConfigParser().parse(configFile);
     }

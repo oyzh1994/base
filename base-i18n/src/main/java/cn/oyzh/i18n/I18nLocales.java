@@ -7,51 +7,108 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * i18n方言
+ * i18n区域列表，维护系统支持的语言区域及其显示名称
  *
  * @author oyzh
  * @since 2024/4/7
  */
 public class I18nLocales {
 
+    /**
+     * 粤语
+     */
     public static Locale ZH_YUE = Locale.of("zh", "yue");
 
 //    public static Locale ZH_WYW = Locale.of("zh", "wyw");
 
+    /**
+     * 俄语
+     */
     public static Locale RU = Locale.of("ru");
 
+    /**
+     * 丹麦语
+     */
     public static Locale DA = Locale.of("da");
 
+    /**
+     * 葡萄牙语
+     */
     public static Locale PT = Locale.of("pt");
 
+    /**
+     * 泰语
+     */
     public static Locale TH = Locale.of("th");
 
+    /**
+     * 希腊语
+     */
     public static Locale EL = Locale.of("el");
 
+    /**
+     * 芬兰语
+     */
     public static Locale FI = Locale.of("fi");
 
+    /**
+     * 斯洛文尼亚语
+     */
     public static Locale SL = Locale.of("sl");
 
+    /**
+     * 阿拉伯语
+     */
     public static Locale AR = Locale.of("ar");
 
+    /**
+     * 荷兰语
+     */
     public static Locale NL = Locale.of("nl");
 
+    /**
+     * 西班牙语
+     */
     public static Locale ES = Locale.of("es");
 
+    /**
+     * 爱沙尼亚语
+     */
     public static Locale ET = Locale.of("et");
 
+    /**
+     * 捷克语
+     */
     public static Locale CS = Locale.of("cs");
 
+    /**
+     * 瑞典语
+     */
     public static Locale SV = Locale.of("sv");
 
+    /**
+     * 越南语
+     */
     public static Locale VI = Locale.of("vi");
 
+    /**
+     * 波兰语
+     */
     public static Locale PL = Locale.of("pl");
 
+    /**
+     * 罗马尼亚语
+     */
     public static Locale RO = Locale.of("ro");
 
+    /**
+     * 匈牙利语
+     */
     public static Locale HU = Locale.of("hu");
 
+    /**
+     * 区域信息列表
+     */
     private static final List<I18nLocale> locales = new ArrayList<>();
 
     static {

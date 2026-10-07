@@ -53,7 +53,7 @@ public class EventUtil {
     }
 
     /**
-     * 发送同步步事件
+     * 发送同步事件
      *
      * @param event 事件
      */

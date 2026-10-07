@@ -85,6 +85,7 @@ public enum NativeArch {
     /** 无法识别 */
     UNKNOWN("unknown", 0, ByteOrder.nativeOrder());
 
+    /** os.arch 取值到架构的查找表（含枚举名与全部别名） */
     private static final Map<String, NativeArch> OS_ARCH_LOOKUP;
 
     static {
@@ -98,11 +99,26 @@ public enum NativeArch {
         OS_ARCH_LOOKUP = Collections.unmodifiableMap(lookup);
     }
 
+    /** 架构标识 */
     private final String id;
+
+    /** 字长（32/64） */
     private final int bits;
+
+    /** 字节序 */
     private final ByteOrder byteOrder;
+
+    /** 架构别名列表 */
     private final List<String> aliases;
 
+    /**
+     * 构造架构枚举
+     *
+     * @param id        架构标识
+     * @param bits      字长
+     * @param byteOrder 字节序
+     * @param aliases   架构别名
+     */
     NativeArch(String id, int bits, ByteOrder byteOrder, String... aliases) {
         this.id = id;
         this.bits = bits;

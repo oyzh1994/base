@@ -1,7 +1,7 @@
 package cn.oyzh.pkg;
 
 /**
- * 后置处理器
+ * 打包处理器，在打包主流程中执行
  *
  * @author oyzh
  * @since 2024/6/14

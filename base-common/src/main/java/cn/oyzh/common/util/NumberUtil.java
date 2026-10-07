@@ -12,6 +12,9 @@ import java.text.DecimalFormat;
  */
 public class NumberUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private NumberUtil() {
     }
 
@@ -103,6 +106,13 @@ public class NumberUtil {
         return Double.parseDouble(result);
     }
 
+    /**
+     * 判断n1是否小于n2
+     *
+     * @param n1 数值1
+     * @param n2 数值2
+     * @return n1小于n2返回true，任一为null时返回false
+     */
     public static boolean isLT(Number n1, Number n2) {
         if (n1 == null || n2 == null) {
             return false;
@@ -110,6 +120,13 @@ public class NumberUtil {
         return n1.doubleValue() < n2.doubleValue();
     }
 
+    /**
+     * 判断n1是否小于等于n2
+     *
+     * @param n1 数值1
+     * @param n2 数值2
+     * @return n1小于等于n2返回true，任一为null时返回false
+     */
     public static boolean isLTEq(Number n1, Number n2) {
         if (n1 == null || n2 == null) {
             return false;
@@ -117,6 +134,13 @@ public class NumberUtil {
         return n1.doubleValue() <= n2.doubleValue();
     }
 
+    /**
+     * 判断n1是否等于n2（按double值比较）
+     *
+     * @param n1 数值1
+     * @param n2 数值2
+     * @return n1等于n2返回true，任一为null时返回false
+     */
     public static boolean isEq(Number n1, Number n2) {
         if (n1 == null || n2 == null) {
             return false;
@@ -124,6 +148,13 @@ public class NumberUtil {
         return n1.doubleValue() == n2.doubleValue();
     }
 
+    /**
+     * 判断n1是否大于n2
+     *
+     * @param n1 数值1
+     * @param n2 数值2
+     * @return n1大于n2返回true，任一为null时返回false
+     */
     public static boolean isGT(Number n1, Number n2) {
         if (n1 == null || n2 == null) {
             return false;
@@ -131,6 +162,13 @@ public class NumberUtil {
         return n1.doubleValue() > n2.doubleValue();
     }
 
+    /**
+     * 判断n1是否大于等于n2
+     *
+     * @param n1 数值1
+     * @param n2 数值2
+     * @return n1大于等于n2返回true，任一为null时返回false
+     */
     public static boolean isGTEq(Number n1, Number n2) {
         if (n1 == null || n2 == null) {
             return false;
@@ -244,12 +282,26 @@ public class NumberUtil {
         return null;
     }
 
+    /**
+     * 四舍五入保留指定小数位
+     *
+     * @param d        数值
+     * @param scaleLen 保留的小数位数
+     * @return 四舍五入后的数值
+     */
     public static double round(double d, int scaleLen) {
         BigDecimal decimal = new BigDecimal(d);
         decimal = decimal.setScale(scaleLen, RoundingMode.HALF_UP);
         return decimal.doubleValue();
     }
 
+    /**
+     * 判断b1是否小于b2
+     *
+     * @param b1 数值1
+     * @param b2 数值2
+     * @return b1小于b2返回true，任一为null时返回false
+     */
     public static boolean isLess(BigDecimal b1, BigDecimal b2) {
         if (b1 == null || b2 == null) {
             return false;
@@ -257,18 +309,42 @@ public class NumberUtil {
         return b1.compareTo(b2) < 0;
     }
 
+    /**
+     * 获取整数的二进制字符串
+     *
+     * @param i 整数
+     * @return 二进制字符串
+     */
     public static String getBinaryStr(int i) {
         return Integer.toBinaryString(i);
     }
 
+    /**
+     * 字符串转int
+     *
+     * @param str 字符串
+     * @return int值
+     */
     public static int toInt(String str) {
         return Integer.parseInt(str);
     }
 
+    /**
+     * 字符串转long
+     *
+     * @param str 字符串
+     * @return long值
+     */
     public static long toLong(String str) {
         return Long.parseLong(str);
     }
 
+    /**
+     * 字符串转double
+     *
+     * @param str 字符串
+     * @return double值
+     */
     public static double toDouble(String str) {
         return Double.parseDouble(str);
     }

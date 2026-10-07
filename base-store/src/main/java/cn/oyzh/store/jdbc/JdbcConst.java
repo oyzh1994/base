@@ -25,48 +25,88 @@ public class JdbcConst {
      */
     public static String DB_CACHE_SIZE = "db.cache.size";
 
-    /*
+    /**
      * db缓存类型
      */
     public static String DB_CACHE_TYPE = "db.cache.type";
 
-    /*
+    /**
      * db页大小
      */
     public static String DB_PAGE_SIZE = "db.page.size";
 
+    /**
+     * 设置db文件
+     *
+     * @param dbFile db文件
+     */
     public static void dbFile(String dbFile) {
         JulLog.info("dbFile: {}", dbFile);
         System.setProperty(DB_FILE, dbFile);
     }
 
+    /**
+     * 获取db文件
+     *
+     * @return db文件
+     */
     public static String dbFile() {
         return System.getProperty(DB_FILE);
     }
 
+    /**
+     * 设置db方言
+     *
+     * @param dialect db方言
+     */
     public static void dbDialect(JdbcDialect dialect) {
         JulLog.info("dialect: {}", dialect);
         System.setProperty(DB_DIALECT, dialect.toString());
     }
 
+    /**
+     * 获取db方言
+     *
+     * @return db方言
+     */
     public static String dbDialect() {
         return System.getProperty(DB_DIALECT);
     }
 
+    /**
+     * 设置db缓存大小
+     *
+     * @param dbCacheSize db缓存大小
+     */
     public static void dbCacheSize(int dbCacheSize) {
         JulLog.info("dbCacheSize: {}", dbCacheSize);
         System.setProperty(DB_CACHE_SIZE, dbCacheSize + "");
     }
 
+    /**
+     * 获取db缓存大小
+     *
+     * @return db缓存大小
+     */
     public static String dbCacheSize() {
         return System.getProperty(DB_CACHE_SIZE);
     }
 
+    /**
+     * 设置db页大小
+     *
+     * @param dbPageSize db页大小
+     */
     public static void dbPageSize(int dbPageSize) {
         JulLog.info("dbPageSize: {}", dbPageSize);
         System.setProperty(DB_PAGE_SIZE, dbPageSize + "");
     }
 
+    /**
+     * 获取db页大小
+     *
+     * @return db页大小
+     */
     public static String dbPageSize() {
         return System.getProperty(DB_PAGE_SIZE);
     }

@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * JavaFX工具类
  *
  * @author oyzh
  * @since 2026-09-18
  */
 public class JFXUtil {
 
+    /**
+     * Windows平台所需的微软运行时动态库名称（不含扩展名）
+     */
     private static final String[] msLibNames = {
             "api-ms-win-core-console-l1-1-0",
             "api-ms-win-core-console-l1-2-0",

@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class H2SqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造H2 SQL方言实例
+     */
     public H2SqlDialect() {
         super(SqlDatabase.H2, SqlLexicalProfile.ANSI);
     }

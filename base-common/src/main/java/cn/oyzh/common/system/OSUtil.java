@@ -19,6 +19,7 @@ public class OSUtil {
         return System.getProperty("os.name").toUpperCase();
     }
 
+    /** linux 判断结果缓存 */
     private static Boolean isLinux;
 
     /**
@@ -35,6 +36,7 @@ public class OSUtil {
         return isLinux;
     }
 
+    /** windows 判断结果缓存 */
     private static Boolean isWindows;
 
     /**
@@ -51,6 +53,7 @@ public class OSUtil {
         return isWindows;
     }
 
+    /** Windows NT 判断结果缓存 */
     private static Boolean isWindowsNT;
 
     /**
@@ -67,6 +70,7 @@ public class OSUtil {
         return isWindowsNT;
     }
 
+    /** Windows 95/98 判断结果缓存 */
     private static Boolean isWindows95;
 
     /**
@@ -84,6 +88,7 @@ public class OSUtil {
         return isWindows95;
     }
 
+    /** OS/2 判断结果缓存 */
     private static Boolean isOS2;
 
     /**
@@ -100,6 +105,7 @@ public class OSUtil {
         return isOS2;
     }
 
+    /** macos 判断结果缓存 */
     private static Boolean isMacos;
 
     /**
@@ -116,6 +122,7 @@ public class OSUtil {
         return isMacos;
     }
 
+    /** macOS X 判断结果缓存 */
     private static Boolean isMacosX;
 
     /**
@@ -132,6 +139,7 @@ public class OSUtil {
         return isMacosX;
     }
 
+    /** unix 判断结果缓存 */
     private static Boolean isUnix;
 
     /**
@@ -151,6 +159,7 @@ public class OSUtil {
         return isUnix;
     }
 
+    /** aix 判断结果缓存 */
     private static Boolean isAix;
 
     /**
@@ -168,6 +177,7 @@ public class OSUtil {
         return isAix;
     }
 
+    /** arm32 判断结果缓存 */
     private static Boolean isArm32;
 
     /**
@@ -186,6 +196,7 @@ public class OSUtil {
         return isArm32;
     }
 
+    /** arm64 判断结果缓存 */
     private static Boolean isAarch64;
 
     /**
@@ -204,6 +215,7 @@ public class OSUtil {
         return isAarch64;
     }
 
+    /** x64 判断结果缓存 */
     private static Boolean isX64;
 
     /**
@@ -222,6 +234,7 @@ public class OSUtil {
         return isX64;
     }
 
+    /** x86 判断结果缓存 */
     private static Boolean isX86;
 
     /**

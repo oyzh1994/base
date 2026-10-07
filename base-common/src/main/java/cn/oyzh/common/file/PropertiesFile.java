@@ -14,10 +14,19 @@ import java.util.Properties;
  */
 public class PropertiesFile extends Properties {
 
+    /**
+     * 创建空的属性文件对象
+     */
     public PropertiesFile() {
         super();
     }
 
+    /**
+     * 从类路径资源加载属性文件
+     *
+     * @param fileName 资源文件名
+     * @throws IOException 加载失败时抛出
+     */
     public PropertiesFile(String fileName) throws IOException {
         super();
         InputStream stream = ResourceUtil.getResourceAsStream(fileName);

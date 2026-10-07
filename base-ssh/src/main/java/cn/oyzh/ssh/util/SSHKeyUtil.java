@@ -22,11 +22,12 @@ import java.security.KeyPair;
  */
 public class SSHKeyUtil {
 
-    /***
-     * 生成ed25519的密钥
-     * @param keySize 长度
+    /**
+     * 生成ed25519密钥
+     *
+     * @param keySize  长度
      * @param password 密码
-     * @return 密钥
+     * @return 公钥与私钥组成的数组
      * @throws Exception 异常
      */
     public static String[] generateEd25519(int keySize, String password) throws Exception {
@@ -53,11 +54,12 @@ public class SSHKeyUtil {
         }
     }
 
-    /***
-     * 生成rsa的密钥
-     * @param keySize 长度
+    /**
+     * 生成rsa密钥
+     *
+     * @param keySize  长度
      * @param password 密码
-     * @return 密钥
+     * @return 公钥与私钥组成的数组
      * @throws Exception 异常
      */
     public static String[] generateRsa(int keySize, String password) throws Exception {
@@ -84,11 +86,12 @@ public class SSHKeyUtil {
         }
     }
 
-    /***
-     * 生成dsa的密钥
-     * @param keySize 长度
+    /**
+     * 生成dsa密钥
+     *
+     * @param keySize  长度
      * @param password 密码
-     * @return 密钥
+     * @return 公钥与私钥组成的数组
      * @throws Exception 异常
      */
     public static String[] generateDsa(int keySize, String password) throws Exception {
@@ -115,11 +118,12 @@ public class SSHKeyUtil {
         }
     }
 
-    /***
-     * 生成ecdsa的密钥
-     * @param keySize 长度
+    /**
+     * 生成ecdsa密钥
+     *
+     * @param keySize  长度
      * @param password 密码
-     * @return 密钥
+     * @return 公钥与私钥组成的数组
      * @throws Exception 异常
      */
     public static String[] generateEcdsa(int keySize, String password) throws Exception {
@@ -221,7 +225,7 @@ public class SSHKeyUtil {
     }
 
     /**
-     * 从文本加载证书
+     * 从字节数组加载证书
      *
      * @param key      密钥
      * @param password 秘密

@@ -28,6 +28,8 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 
 /**
+ * 打包工具类
+ *
  * @author oyzh
  * @since 2023/11/17
  */
@@ -440,7 +442,7 @@ public class PkgUtil {
      * 获取jpackage命令
      *
      * @param config jpackage配置
-     * @return jlink命令
+     * @return jpackage命令
      */
     public static String[] getJPackageCMD(JPackageConfig config) {
         List<String> cmdList = new ArrayList<>();

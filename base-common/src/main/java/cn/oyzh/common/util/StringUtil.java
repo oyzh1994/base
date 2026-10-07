@@ -16,6 +16,9 @@ public class StringUtil {
 
     public static final String SPACE = " ";
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private StringUtil() {
     }
 
@@ -100,6 +103,12 @@ public class StringUtil {
         }
     }
 
+    /**
+     * 是否为空
+     *
+     * @param string 字符串
+     * @return 结果
+     */
     public static boolean isBlank(String string) {
         return string == null || string.isBlank();
     }
@@ -119,6 +128,12 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否不为空
+     *
+     * @param string 字符串
+     * @return 结果
+     */
     public static boolean isNotBlank(String string) {
         return !isBlank(string);
     }
@@ -138,22 +153,55 @@ public class StringUtil {
         return true;
     }
 
+    /**
+     * 是否为空
+     *
+     * @param string 字符串
+     * @return 结果
+     */
     public static boolean isEmpty(String string) {
         return string == null || string.isEmpty();
     }
 
+    /**
+     * 是否不为空
+     *
+     * @param string 字符串
+     * @return 结果
+     */
     public static boolean isNotEmpty(String string) {
         return !isEmpty(string);
     }
 
+    /**
+     * 是否相等
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean equals(String source, String target) {
         return Objects.equals(source, target);
     }
 
+    /**
+     * 是否不相等
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean notEquals(String source, String target) {
         return !equals(source, target);
     }
 
+    /**
+     * 是否相等，忽略大小写
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean equalsIgnoreCase(String source, String target) {
         if (source != null && target != null) {
             return source.equalsIgnoreCase(target);
@@ -161,6 +209,13 @@ public class StringUtil {
         return Objects.equals(source, target);
     }
 
+    /**
+     * 是否等于任意一个目标字符串
+     *
+     * @param source  源字符串
+     * @param strings 目标字符串列表
+     * @return 结果
+     */
     public static boolean equalsAny(String source, String... strings) {
         if (source != null && strings != null) {
             for (String string : strings) {
@@ -172,6 +227,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否等于任意一个目标字符串，忽略大小写
+     *
+     * @param source  源字符串
+     * @param strings 目标字符串列表
+     * @return 结果
+     */
     public static boolean equalsAnyIgnoreCase(String source, String... strings) {
         if (source != null && strings != null) {
             for (String string : strings) {
@@ -183,10 +245,24 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否不包含目标字符串
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean notContains(String source, String target) {
         return !contains(source, target);
     }
 
+    /**
+     * 是否包含任意一个目标字符串
+     *
+     * @param source  源字符串
+     * @param strings 目标字符串列表
+     * @return 结果
+     */
     public static boolean containsAny(String source, String... strings) {
         if (source != null && strings != null) {
             for (String string : strings) {
@@ -198,6 +274,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否包含任意一个目标字符串，忽略大小写
+     *
+     * @param source  源字符串
+     * @param strings 目标字符串列表
+     * @return 结果
+     */
     public static boolean containsAnyIgnoreCase(String source, String... strings) {
         if (source != null && strings != null) {
             source = source.toLowerCase();
@@ -210,6 +293,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否以目标字符串开头
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean startWith(String source, String target) {
         if (source != null && target != null) {
             return source.startsWith(target.toLowerCase());
@@ -217,6 +307,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否以目标字符串开头，忽略大小写
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean startWithIgnoreCase(String source, String target) {
         if (source != null && target != null) {
             return source.toLowerCase().startsWith(target.toLowerCase());
@@ -224,6 +321,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否以任意一个目标字符串开头
+     *
+     * @param source 源字符串
+     * @param target 目标字符串列表
+     * @return 结果
+     */
     public static boolean startWithAny(String source, String... target) {
         if (source != null && target != null) {
             for (String s : target) {
@@ -235,6 +339,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否以任意一个目标字符串开头，忽略大小写
+     *
+     * @param source 源字符串
+     * @param target 目标字符串列表
+     * @return 结果
+     */
     public static boolean startWithAnyIgnoreCase(String source, String... target) {
         if (source != null && target != null) {
             for (String s : target) {
@@ -246,6 +357,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 按固定长度切分字符串
+     *
+     * @param str 字符串
+     * @param len 每段的长度
+     * @return 切分后的字符串数组
+     */
     public static String[] split(String str, int len) {
         if (str == null) {
             return null;
@@ -272,6 +390,13 @@ public class StringUtil {
         return arr;
     }
 
+    /**
+     * 按正则切分字符串
+     *
+     * @param str   字符串
+     * @param regex 正则表达式
+     * @return 切分后的字符串列表
+     */
     public static List<String> split(String str, String regex) {
         if (str == null || regex == null) {
             return null;
@@ -279,6 +404,13 @@ public class StringUtil {
         return List.of(str.split(regex));
     }
 
+    /**
+     * 内容为空时返回默认值
+     *
+     * @param str          内容
+     * @param defaultValue 默认值
+     * @return 结果
+     */
     public static String emptyToDefault(String str, String defaultValue) {
         if (isEmpty(str)) {
             return defaultValue;
@@ -286,6 +418,13 @@ public class StringUtil {
         return str;
     }
 
+    /**
+     * 内容为空白时返回默认值
+     *
+     * @param str          内容
+     * @param defaultValue 默认值
+     * @return 结果
+     */
     public static String blankToDefault(String str, String defaultValue) {
         if (isBlank(str)) {
             return defaultValue;
@@ -293,6 +432,13 @@ public class StringUtil {
         return str;
     }
 
+    /**
+     * 内容为null时返回默认值
+     *
+     * @param str          内容
+     * @param defaultValue 默认值
+     * @return 结果
+     */
     public static String nullToDefault(String str, String defaultValue) {
         if (str == null) {
             return defaultValue;
@@ -300,6 +446,14 @@ public class StringUtil {
         return str;
     }
 
+    /**
+     * 替换字符串
+     *
+     * @param src     源字符串
+     * @param search  查找字符串
+     * @param replace 替换字符串
+     * @return 结果
+     */
     public static String replace(String src, String search, String replace) {
         if (!isEmpty(src) && !isEmpty(search) && !isEmpty(replace)) {
             return src.replace(search, replace);
@@ -307,6 +461,14 @@ public class StringUtil {
         return src;
     }
 
+    /**
+     * 删除指定区间的字符
+     *
+     * @param str   字符串
+     * @param start 起始下标
+     * @param end   结束下标
+     * @return 结果
+     */
     public static String delete(String str, int start, int end) {
         StringBuilder builder = new StringBuilder(str);
         builder.delete(start, end);
@@ -357,6 +519,12 @@ public class StringUtil {
         return count;
     }
 
+    /**
+     * 首字母转小写
+     *
+     * @param str 字符串
+     * @return 结果
+     */
     public static String lowerFirst(String str) {
         if (isEmpty(str)) {
             return str;
@@ -367,18 +535,46 @@ public class StringUtil {
         return builder.toString();
     }
 
+    /**
+     * 是否以任意一个目标内容结尾
+     *
+     * @param str     内容
+     * @param endText 目标内容列表
+     * @return 结果
+     */
     public static boolean endWithAny(String str, String... endText) {
         return endsWithAny(str, endText);
     }
 
+    /**
+     * 是否包含目标字符串
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean contains(String source, String target) {
         return source != null && target != null && source.contains(target);
     }
 
+    /**
+     * 是否互相包含
+     *
+     * @param str    字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean containsReverse(String str, String target) {
         return contains(str, target) || contains(target, str);
     }
 
+    /**
+     * 是否包含目标字符串，忽略大小写
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean containsIgnoreCase(String source, String target) {
         if (source != null && target != null) {
             return source.toLowerCase().contains(target.toLowerCase());
@@ -386,10 +582,23 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 是否互相包含，忽略大小写
+     *
+     * @param source 源字符串
+     * @param target 目标字符串
+     * @return 结果
+     */
     public static boolean containsIgnoreCaseReverse(String source, String target) {
         return containsIgnoreCase(source, target) || containsIgnoreCase(target, source);
     }
 
+    /**
+     * 首字母转大写
+     *
+     * @param source 源字符串
+     * @return 结果
+     */
     public static String upperFirst(String source) {
         if (source == null || source.isEmpty()) {
             return source;
@@ -397,6 +606,13 @@ public class StringUtil {
         return source.substring(0, 1).toUpperCase() + source.substring(1);
     }
 
+    /**
+     * 是否以目标内容结尾，忽略大小写
+     *
+     * @param source 内容
+     * @param str    目标内容
+     * @return 结果
+     */
     public static boolean endWithIgnoreCase(String source, String str) {
         if (source == null || source.isEmpty() || str == null) {
             return false;
@@ -404,6 +620,13 @@ public class StringUtil {
         return source.toLowerCase().endsWith(str.toLowerCase());
     }
 
+    /**
+     * 是否以任意一个目标内容结尾，忽略大小写
+     *
+     * @param source 内容
+     * @param target 目标内容列表
+     * @return 结果
+     */
     public static boolean endWithAnyIgnoreCase(String source, String... target) {
         if (source != null && target != null) {
             for (String s : target) {
@@ -415,6 +638,13 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 拼接集合
+     *
+     * @param space      拼接字符
+     * @param collection 集合
+     * @return 拼接后的字符串
+     */
     public static String join(String space, Collection<?> collection) {
         StringBuilder builder = new StringBuilder();
         for (Object o : collection) {
@@ -423,18 +653,49 @@ public class StringUtil {
         return builder.substring(space.length());
     }
 
+    /**
+     * 拼接对象数组
+     *
+     * @param space 拼接字符
+     * @param array 对象数组
+     * @return 拼接后的字符串
+     */
     public static String join(String space, Object[] array) {
         return join(space, Arrays.asList(array));
     }
 
+    /**
+     * 拼接字符串数组
+     *
+     * @param space 拼接字符
+     * @param array 字符串数组
+     * @return 拼接后的字符串
+     */
     public static String join(String space, String[] array) {
         return join(space, Arrays.asList(array));
     }
 
+    /**
+     * 替换第一次出现的子串
+     *
+     * @param original    原字符串
+     * @param target      目标子串
+     * @param replacement 替换子串
+     * @return 替换后的字符串
+     */
     public static String replaceOneTime(String original, String target, String replacement) {
         return replaceNTimes(original, target, replacement, 1);
     }
 
+    /**
+     * 替换指定次数的子串
+     *
+     * @param original    原字符串
+     * @param target      目标子串
+     * @param replacement 替换子串
+     * @param n           替换次数
+     * @return 替换后的字符串
+     */
     public static String replaceNTimes(String original, String target, String replacement, int n) {
         if (n <= 0 || target == null || target.isEmpty() || replacement == null) {
             return original;
@@ -466,6 +727,13 @@ public class StringUtil {
         return sb.toString();
     }
 
+    /**
+     * 计算两个字符串的编辑距离
+     *
+     * @param s1 字符串1
+     * @param s2 字符串2
+     * @return 编辑距离
+     */
     public static int levenshteinDistance(String s1, String s2) {
         int m = s1.length();
         int n = s2.length();
@@ -487,6 +755,13 @@ public class StringUtil {
         return dp[m][n];
     }
 
+    /**
+     * 计算两个字符串的相似度
+     *
+     * @param s1 字符串1
+     * @param s2 字符串2
+     * @return 相似度，取值范围为0到1
+     */
     public static double similarity(String s1, String s2) {
         int distance = levenshteinDistance(s1, s2);
         int maxLength = Math.max(s1.length(), s2.length());
@@ -542,8 +817,8 @@ public class StringUtil {
      *
      * @param str           字符串
      * @param target        字符
-     * @param maxOccurrence 最大数
-     * @return 结果
+     * @param maxOccurrence 判定阈值，出现次数达到该值即返回true
+     * @return 达到阈值返回true，否则返回false
      */
     public static boolean checkCountOccurrences(String str, char target, int maxOccurrence) {
         int count = 0;
@@ -603,12 +878,12 @@ public class StringUtil {
     }
 
     /**
-     * 移除尾部内容
+     * 替换最后一次出现的子串
      *
-     * @param str    内容
-     * @param source 源
-     * @param target 目标
-     * @return 结果
+     * @param str    原字符串
+     * @param source 被替换的子串
+     * @param target 替换后的子串
+     * @return 替换后的字符串
      */
     public static String replaceLast(String str, String source, String target) {
         if (str == null || source == null || target == null) {

@@ -5,6 +5,8 @@
 //import java.security.NoSuchAlgorithmException;
 //
 ///**
+// * 密钥对生成工具类，支持 RSA、ED25519 算法。
+// *
 // * @author oyzh
 // * @since 2025-04-03
 // */

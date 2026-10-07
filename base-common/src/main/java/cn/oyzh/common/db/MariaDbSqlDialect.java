@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class MariaDbSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造MariaDB SQL方言实例
+     */
     public MariaDbSqlDialect() {
         super(SqlDatabase.MARIADB, SqlLexicalProfile.MYSQL);
     }

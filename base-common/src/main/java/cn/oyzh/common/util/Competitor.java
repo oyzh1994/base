@@ -24,10 +24,18 @@ public class Competitor {
      */
     private final List<Object> list;
 
+    /**
+     * 构造竞争器，最大竞争数量为1
+     */
     public Competitor() {
         this(1);
     }
 
+    /**
+     * 构造竞争器
+     *
+     * @param max 允许的最大竞争数量
+     */
     public Competitor(int max) {
         if (max <= 0) {
             throw new InvalidParamException("max");

@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
+ * 测试通过 JDBC 连接 H2 与 SQLite 数据库进行建表、写入与查询。
+ *
  * @author oyzh
  * @since 2024-09-23
  */
@@ -19,7 +21,7 @@ public class H2Test {
         Connection connection = null;
         try {
             String file = "d://test_h2";
-            // 连接SQLite数据库文件，如果文件不存在，会自动创建
+            // 连接H2数据库文件，如果文件不存在，会自动创建
             connection = DriverManager.getConnection("jdbc:h2:" + file);
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS users (`id` INTEGER PRIMARY KEY, name TEXT, email TEXT)");

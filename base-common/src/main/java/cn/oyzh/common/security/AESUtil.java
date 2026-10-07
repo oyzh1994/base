@@ -7,18 +7,33 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ * AES 对称加密工具类。
+ *
+ * <p>采用 AES-128-CBC（PKCS5 填充），每次加密随机生成 16 字节 IV，
+ * 密文以“Base64(IV):Base64(密文)”的形式返回，IV 随密文一起携带，解密时无需额外传入。
+ *
+ * @author oyzh
+ * @since 2025-10-11
+ */
 public class AESUtil {
 
-    // 算法模式：AES-128-CBC（固定128位密钥，CBC模式带IV，PKCS5填充）
+    /** 算法模式：AES-128-CBC（固定128位密钥，CBC模式带IV，PKCS5填充） */
     private static final String ALGORITHM = "AES/CBC/PKCS5Padding";
-    private static final int KEY_LENGTH = 16; // 128位密钥（16字节）
-    private static final int IV_LENGTH = 16;  // IV固定16字节（CBC模式要求）
+
+    /** 128位密钥长度（16字节） */
+    private static final int KEY_LENGTH = 16;
+
+    /** IV 长度，固定16字节（CBC模式要求） */
+    private static final int IV_LENGTH = 16;
 
     /**
      * AES加密（入参为字符串）
+     *
      * @param plaintext 明文（待加密的字符串）
-     * @param key 密钥（必须16字节，若不足会自动填充，过长会截断）
+     * @param key       密钥（必须16字节，若不足会自动填充，过长会截断）
      * @return 加密后的字符串（格式：Base64(IV)+":"+Base64(密文)）
+     * @throws Exception 加密失败时抛出
      */
     public static String encrypt(String plaintext, String key) throws Exception {
         // 1. 处理密钥（确保16字节）
@@ -43,9 +58,11 @@ public class AESUtil {
 
     /**
      * AES解密（入参为加密后的字符串）
+     *
      * @param ciphertext 加密后的字符串（格式：Base64(IV)+":"+Base64(密文)）
-     * @param key 密钥（必须与加密时一致）
+     * @param key        密钥（必须与加密时一致）
      * @return 解密后的明文
+     * @throws Exception 密文格式错误或解密失败时抛出
      */
     public static String decrypt(String ciphertext, String key) throws Exception {
         // 1. 拆分IV和密文
@@ -72,6 +89,9 @@ public class AESUtil {
 
     /**
      * 处理密钥：确保长度为16字节（不足补0，过长截断）
+     *
+     * @param key 原始密钥
+     * @return 长度固定为16字节的密钥字节数组
      */
     private static byte[] processKey(String key) {
         byte[] keyBytes = key.getBytes(StandardCharsets.UTF_8);
@@ -80,7 +100,12 @@ public class AESUtil {
         return processed;
     }
 
-    // 测试示例
+    /**
+     * 加解密演示
+     *
+     * @param args 启动参数
+     * @throws Exception 加解密失败时抛出
+     */
     public static void main(String[] args) throws Exception {
         String plaintext = "这是一段需要加密的字符串";
         String key = "mySecretKey123"; // 密钥（任意字符串，内部会处理为16字节）

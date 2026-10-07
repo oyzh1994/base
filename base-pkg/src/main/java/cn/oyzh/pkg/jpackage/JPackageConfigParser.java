@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * jpackage配置
+ * jpackage配置解析器
  *
  * @author oyzh
  * @since 2023/3/8
@@ -89,10 +89,22 @@ public class JPackageConfigParser implements ConfigParser<JPackageConfig> {
         return config;
     }
 
+    /**
+     * 解析配置
+     *
+     * @param object 配置内容
+     * @return 配置类
+     */
     public static JPackageConfig parseConfig(JSONObject object) {
         return new JPackageConfigParser().parse(object);
     }
 
+    /**
+     * 解析配置
+     *
+     * @param configFile 配置文件
+     * @return 配置类
+     */
     public static JPackageConfig parseConfig(String configFile) {
         return new JPackageConfigParser().parse(configFile);
     }

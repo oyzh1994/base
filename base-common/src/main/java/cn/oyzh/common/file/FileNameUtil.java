@@ -13,6 +13,13 @@ import java.io.File;
  */
 public class FileNameUtil {
 
+    /**
+     * 判断名称的扩展名是否属于指定类型之一（忽略大小写）
+     *
+     * @param name  名称
+     * @param types 允许的扩展名
+     * @return 结果
+     */
     public static boolean isType(String name, String... types) {
         if (name == null || !name.contains(".") || types == null || types.length == 0) {
             return false;
@@ -48,6 +55,12 @@ public class FileNameUtil {
         return name.substring(0, name.lastIndexOf("."));
     }
 
+    /**
+     * 获取文件的扩展名
+     *
+     * @param file 文件
+     * @return 扩展名，file 为 null 时返回 null
+     */
     public static String extName(File file) {
         return file == null ? null : extName(file.getName());
     }
@@ -1016,7 +1029,7 @@ public class FileNameUtil {
     }
 
     /**
-     * 是否rtf类型
+     * 是否srt类型（方法名虽为 Stf，实际判断的是 srt）
      *
      * @param fileType 文件类型
      * @return 结果
@@ -1127,7 +1140,7 @@ public class FileNameUtil {
     }
 
     /**
-     * 是否vbs类型
+     * 是否vim类型
      *
      * @param fileType 文件类型
      * @return 结果
@@ -1739,6 +1752,12 @@ public class FileNameUtil {
         return builder.toString();
     }
 
+    /**
+     * 获取文件名后缀（即最后一个点之后的部分）
+     *
+     * @param fileName 文件名
+     * @return 后缀，不含点时返回 null
+     */
     public static String getSuffix(String fileName) {
         final int index = fileName.lastIndexOf(".");
         if (index == -1) {
@@ -1767,6 +1786,12 @@ public class FileNameUtil {
         return path.substring(0, index);
     }
 
+    /**
+     * 获取路径中的文件名部分
+     *
+     * @param path 路径
+     * @return 文件名，path 为空时原样返回
+     */
     public static String name(String path) {
         if (StringUtil.isEmpty(path)) {
             return path;
@@ -1774,6 +1799,13 @@ public class FileNameUtil {
         return path.substring(path.lastIndexOf("/") + 1);
     }
 
+    /**
+     * 拼接目录与文件名（统一使用“/”分隔，自动处理重复或缺失的分隔符）
+     *
+     * @param src  目录
+     * @param name 文件名
+     * @return 拼接后的路径
+     */
     public static String concat(String src, String name) {
         src = src.replace("\\", "/");
         name = name.replace("\\", "/");

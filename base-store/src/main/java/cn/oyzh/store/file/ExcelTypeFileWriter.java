@@ -36,15 +36,23 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
     private FileWriteConfig config;
 
     /**
-     * xls工作薄
+     * excel工作簿
      */
     private Workbook workbook;
 
     /**
-     * xls行记录
+     * excel行索引
      */
     private int xlsRowIndex = 1;
 
+    /**
+     * 构造excel类型文件写入器
+     *
+     * @param config  导出配置
+     * @param columns 字段列表
+     * @throws IOException            异常
+     * @throws InvalidFormatException 异常
+     */
     public ExcelTypeFileWriter(FileWriteConfig config, FileColumns columns) throws IOException, InvalidFormatException {
         this.columns = columns;
         this.config = config;

@@ -21,6 +21,9 @@ import java.util.regex.Pattern;
  */
 public class TextUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private TextUtil() {
     }
 
@@ -96,13 +99,21 @@ public class TextUtil {
     }
 
     /**
-     * 匹配文件
+     * 文本匹配结果
      *
-     * @param index 索引
-     * @param text  文本
+     * @param index 匹配内容在原文中的起始索引
+     * @param text  匹配到的文本
      */
     public record MatchText(int index, String text) {
+
+        /**
+         * 无效匹配（参数非法）
+         */
         public static final MatchText INVALID = new MatchText(-2, null);
+
+        /**
+         * 未匹配到内容
+         */
         public static final MatchText NOT_FOUND = new MatchText(-1, null);
     }
 
@@ -219,6 +230,7 @@ public class TextUtil {
      *
      * @param list          字符串列表
      * @param lineItemLimit 单行内容个数限制
+     * @param spacing       列之间的额外空格间距
      * @return 美化后的字符
      */
     public static String beautifyFormat(Collection<String> list, int lineItemLimit, int spacing) {
@@ -646,7 +658,7 @@ public class TextUtil {
     }
 
     /**
-     * 是否html字符串
+     * 是否css字符串
      *
      * @param str 字符串
      * @return 结果
@@ -738,7 +750,7 @@ public class TextUtil {
     }
 
     /**
-     * 检测类型
+     * 检测数据类型
      * 1 json
      * 2 二进制
      * 3 xml
@@ -748,8 +760,10 @@ public class TextUtil {
      * 7 css
      * 8 properties
      * 9 yaml
+     * 10 python
      *
-     * @return 类型
+     * @param rawData 原始数据
+     * @return 类型编码
      */
     public static byte detectType(Object rawData) {
         if (rawData instanceof byte[] arr) {

@@ -11,9 +11,18 @@ import java.util.Date;
  */
 public class CalendarUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private CalendarUtil() {
     }
 
+    /**
+     * 将日期转换为日历对象
+     *
+     * @param date 日期
+     * @return 日历对象
+     */
     public static Calendar of(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);

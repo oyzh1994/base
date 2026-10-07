@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 /**
+ * SHA256 摘要工具类，提供 SHA256 十六进制哈希与 HMAC-SHA256 计算。
  *
  * @author oyzh
  * @since 2026-06-29

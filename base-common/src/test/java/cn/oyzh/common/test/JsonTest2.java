@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 测试 JSON 工具的序列化、格式化与反序列化。
+ *
  * @author oyzh
  * @since 2024-11-18
  */

@@ -26,9 +26,19 @@ import java.util.jar.JarFile;
  */
 public class ClassUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private ClassUtil() {
     }
 
+    /**
+     * 创建实例，使用public无参构造方法
+     *
+     * @param clazz 类
+     * @param <T>   类型
+     * @return 实例对象，无可用构造方法时返回null
+     */
     public static <T> T newInstance(Class<T> clazz) {
         if (clazz != null) {
             try {
@@ -74,6 +84,15 @@ public class ClassUtil {
         }
     }
 
+    /**
+     * 扫描指定包下的所有类
+     *
+     * @param packageName 包名
+     * @param predicate   类过滤器，可为null表示不过滤
+     * @return 扫描到的类列表
+     * @throws ClassNotFoundException 类加载失败时抛出
+     * @throws IOException            读取资源失败时抛出
+     */
     public static List<Class<?>> scanClasses(String packageName, Predicate<Class<?>> predicate) throws ClassNotFoundException, IOException {
         List<Class<?>> classes = new ArrayList<>();
         String packagePath = packageName.replace(".", "/");
@@ -107,6 +126,15 @@ public class ClassUtil {
         return classes;
     }
 
+    /**
+     * 递归查找目录下的所有类
+     *
+     * @param directory   目录
+     * @param packageName 当前包名
+     * @param classes     结果类列表
+     * @param predicate   类过滤器，可为null表示不过滤
+     * @throws ClassNotFoundException 类加载失败时抛出
+     */
     public static void findClassesInDirectory(File directory, String packageName, List<Class<?>> classes, Predicate<Class<?>> predicate) throws ClassNotFoundException {
         if (!directory.exists() || !directory.isDirectory()) {
             return;
@@ -139,6 +167,12 @@ public class ClassUtil {
         }
     }
 
+    /**
+     * 根据全限定名加载类
+     *
+     * @param typeName 全限定类名
+     * @return 类对象，加载失败时返回null
+     */
     public static Class<?> forName(String typeName) {
         try {
             return Class.forName(typeName);

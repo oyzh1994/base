@@ -12,18 +12,29 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * SOCKS5协议握手处理器，支持用户名/密码认证
+ *
  * @author oyzh
  * @since 2025-09-05
  */
 public class SocksPerformHandler {
 
+    /**
+     * 代理用户名
+     */
     private String proxyUsername;
 
+    /**
+     * 代理密码
+     */
     private String proxyPassword;
 
     /**
-     * Perform SOCKS protocol handshake with authentication support
-     * 执行SOCKS协议握手，支持认证
+     * 执行SOCKS5协议握手（支持认证）
+     *
+     * @param sock       连接通道
+     * @param targetAddr 目标地址
+     * @throws IOException IO异常
      */
     public void performSocksHandshake(SocketChannel sock, InetSocketAddress targetAddr) throws IOException {
         // 确定支持的认证方法
@@ -118,8 +129,10 @@ public class SocksPerformHandler {
     }
 
     /**
-     * Perform username/password authentication for SOCKS5
      * 执行SOCKS5用户名/密码认证
+     *
+     * @param sock 连接通道
+     * @throws IOException IO异常
      */
     private void performUsernamePasswordAuth(SocketChannel sock) throws IOException {
         if (proxyUsername == null || proxyPassword == null) {
@@ -153,8 +166,11 @@ public class SocksPerformHandler {
     }
 
     /**
-     * Build SOCKS connect request based on target address type
      * 根据目标地址类型构建SOCKS连接请求
+     *
+     * @param targetAddr 目标地址
+     * @return 连接请求报文
+     * @throws IOException IO异常
      */
     private byte[] buildConnectRequest(InetSocketAddress targetAddr) throws IOException {
         byte[] addressBytes;
@@ -197,8 +213,13 @@ public class SocksPerformHandler {
     }
 
     /**
-     * Fully read data from socket channel with minimum bytes requirement
-     * 从socket channel完整读取数据，要求至少读取指定数量的字节
+     * 从连接通道完整读取数据，至少读取指定数量的字节
+     *
+     * @param sock     连接通道
+     * @param buffer   缓冲区
+     * @param minBytes 最少读取的字节数
+     * @return 实际读取的字节数
+     * @throws IOException IO异常
      */
     private int readFully(SocketChannel sock, ByteBuffer buffer, int minBytes) throws IOException {
         int totalRead = 0;
@@ -225,8 +246,10 @@ public class SocksPerformHandler {
     }
 
     /**
-     * Get descriptive error message for SOCKS error codes
-     * 获取SOCKS错误代码的描述性错误消息
+     * 获取SOCKS错误码对应的描述信息
+     *
+     * @param errorCode 错误码
+     * @return 错误描述
      */
     private String getSocksErrorDescription(byte errorCode) {
         switch (errorCode) {
@@ -243,8 +266,12 @@ public class SocksPerformHandler {
     }
 
     /**
-     * Fully read data from socket channel
-     * 完整地从socket channel读取数据
+     * 从连接通道完整读取数据
+     *
+     * @param sock   连接通道
+     * @param buffer 缓冲区
+     * @return 实际读取的字节数
+     * @throws IOException IO异常
      */
     private int readFully(SocketChannel sock, ByteBuffer buffer) throws IOException {
         return readFully(sock, buffer, buffer.capacity());
@@ -252,8 +279,11 @@ public class SocksPerformHandler {
 
 
     /**
-     * Fully write data to socket channel
-     * 完整地写入数据到socket channel
+     * 完整地将数据写入连接通道
+     *
+     * @param sock   连接通道
+     * @param buffer 缓冲区
+     * @throws IOException IO异常
      */
     private static void writeFully(SocketChannel sock, ByteBuffer buffer) throws IOException {
         buffer.rewind();
@@ -265,18 +295,38 @@ public class SocksPerformHandler {
         }
     }
 
+    /**
+     * 获取代理用户名
+     *
+     * @return 代理用户名
+     */
     public String getProxyUsername() {
         return proxyUsername;
     }
 
+    /**
+     * 设置代理用户名
+     *
+     * @param proxyUsername 代理用户名
+     */
     public void setProxyUsername(String proxyUsername) {
         this.proxyUsername = proxyUsername;
     }
 
+    /**
+     * 获取代理密码
+     *
+     * @return 代理密码
+     */
     public String getProxyPassword() {
         return proxyPassword;
     }
 
+    /**
+     * 设置代理密码
+     *
+     * @param proxyPassword 代理密码
+     */
     public void setProxyPassword(String proxyPassword) {
         this.proxyPassword = proxyPassword;
     }

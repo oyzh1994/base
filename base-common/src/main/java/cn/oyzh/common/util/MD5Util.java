@@ -12,6 +12,9 @@ import java.security.NoSuchAlgorithmException;
  */
 public class MD5Util {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private MD5Util() {
     }
 

@@ -55,7 +55,7 @@ public abstract class TypeFileWriter implements Closeable {
     /**
      * 写入对象
      *
-     * @param record 对象
+     * @param record 记录
      * @throws Exception 异常
      */
     public abstract void writeRecord(FileRecord record) throws Exception;
@@ -63,7 +63,7 @@ public abstract class TypeFileWriter implements Closeable {
     /**
      * 写入多个对象
      *
-     * @param records 对象
+     * @param records 记录列表
      * @throws Exception 异常
      */
     public void writeRecords(List<FileRecord> records) throws Exception {
@@ -72,10 +72,30 @@ public abstract class TypeFileWriter implements Closeable {
         }
     }
 
+    /**
+     * 将对象数组格式化为一行文本
+     *
+     * @param objects         对象数组
+     * @param prefix          前缀
+     * @param fieldSeparator  字段分隔符号
+     * @param txtIdentifier   文本识别符号
+     * @param recordSeparator 记录分隔符号
+     * @return 格式化后的文本行
+     */
     protected String formatLine(Object[] objects, String prefix, Character fieldSeparator, Character txtIdentifier, String recordSeparator) {
         return this.formatLine(List.of(objects), prefix, fieldSeparator, txtIdentifier, recordSeparator);
     }
 
+    /**
+     * 将列表格式化为一行文本
+     *
+     * @param list            对象列表
+     * @param prefix          前缀
+     * @param fieldSeparator  字段分隔符号
+     * @param txtIdentifier   文本识别符号
+     * @param recordSeparator 记录分隔符号
+     * @return 格式化后的文本行
+     */
     protected String formatLine(List<?> list, String prefix, Character fieldSeparator, Character txtIdentifier, String recordSeparator) {
         StringBuilder sb = new StringBuilder();
         for (Object val : list) {

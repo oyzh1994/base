@@ -15,10 +15,20 @@ public class CompressNameHandler implements PostHandler {
 
     private int order = PackOrder.ORDER_M5;
 
+    /**
+     * 获取排序
+     *
+     * @return 排序
+     */
     public int order() {
         return order;
     }
 
+    /**
+     * 设置排序
+     *
+     * @param order 排序
+     */
     public void order(int order) {
         this.order = order;
     }

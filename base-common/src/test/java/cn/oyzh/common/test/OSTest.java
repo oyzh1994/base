@@ -4,6 +4,12 @@ import org.junit.Test;
 
 import java.util.Properties;
 
+/**
+ * 打印当前 JVM 的操作系统相关系统属性。
+ *
+ * @author oyzh
+ * @since 2025-03-02
+ */
 public class OSTest {
 
     @Test

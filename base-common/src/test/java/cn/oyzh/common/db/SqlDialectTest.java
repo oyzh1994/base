@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
  * SQL方言测试
  *
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public class SqlDialectTest {
 

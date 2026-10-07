@@ -14,6 +14,12 @@ import java.util.logging.StreamHandler;
  */
 public class JulFileHandler extends StreamHandler {
 
+    /**
+     * 构造文件日志处理器，以追加方式写入日志文件
+     *
+     * @param logFile 日志文件
+     * @throws FileNotFoundException 文件不存在异常
+     */
     public JulFileHandler(File logFile) throws FileNotFoundException {
         super(new FileOutputStream(logFile, true), new JulFileFormatter());
     }

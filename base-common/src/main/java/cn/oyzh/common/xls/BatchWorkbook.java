@@ -28,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 批处理表格
+ * 支持分批追加写入的 Excel 工作薄，内部按需创建 XSSF/HSSF 工作薄并落盘
  *
  * @author oyzh
  * @since 2024/8/29
@@ -57,6 +57,7 @@ public class BatchWorkbook implements Workbook {
 
     /**
      * 构造器
+     *
      * @param file 文件
      * @throws IOException 异常
      */
@@ -66,7 +67,8 @@ public class BatchWorkbook implements Workbook {
 
     /**
      * 构造器
-     * @param filePath 文件
+     *
+     * @param filePath 文件路径
      * @throws IOException 异常
      */
     public BatchWorkbook(String filePath) throws IOException {
@@ -75,8 +77,9 @@ public class BatchWorkbook implements Workbook {
 
     /**
      * 构造器
-     * @param isXlsx 是否xlsx
-     * @param filePath 文件
+     *
+     * @param isXlsx   是否xlsx
+     * @param filePath 文件路径
      * @throws IOException 异常
      */
     public BatchWorkbook(boolean isXlsx, String filePath) throws IOException {
@@ -85,8 +88,9 @@ public class BatchWorkbook implements Workbook {
 
     /**
      * 构造器
+     *
      * @param isXlsx 是否xlsx
-     * @param file 文件
+     * @param file   文件
      * @throws IOException 异常
      */
     public BatchWorkbook(boolean isXlsx, File file) throws IOException {
@@ -95,8 +99,16 @@ public class BatchWorkbook implements Workbook {
         this.initWorkbook();
     }
 
+    /**
+     * 是否已关闭
+     */
     private boolean isClosed = true;
 
+    /**
+     * 初始化工作薄，仅在关闭状态下创建实例
+     *
+     * @throws IOException 异常
+     */
     protected void initWorkbook() throws IOException {
         if (this.isClosed) {
             if (this.isXlsx) {
@@ -116,6 +128,11 @@ public class BatchWorkbook implements Workbook {
         }
     }
 
+    /**
+     * 关闭工作薄，释放底层资源
+     *
+     * @throws IOException 异常
+     */
     private void closeWorkbook() throws IOException {
         this.isClosed = true;
         if (this.workbook != null) {

@@ -18,9 +18,20 @@ import java.util.stream.IntStream;
  */
 public class CollectionUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private CollectionUtil() {
     }
 
+    /**
+     * 获取指定索引处的元素
+     *
+     * @param collection 集合
+     * @param index      索引
+     * @param <T>        泛型
+     * @return 对应元素，索引非法时返回null
+     */
     public static <T> T indexOf(Collection<T> collection, int index) {
         if (collection != null && !collection.isEmpty() && index > 0 && index < collection.size()) {
             int i = 0;
@@ -68,18 +79,42 @@ public class CollectionUtil {
         return null;
     }
 
+    /**
+     * 判断集合是否为空
+     *
+     * @param list 集合
+     * @return 为null或没有元素时返回true
+     */
     public static boolean isEmpty(Collection<?> list) {
         return list == null || list.isEmpty();
     }
 
+    /**
+     * 判断集合是否不为空
+     *
+     * @param collection 集合
+     * @return 不为null且有元素时返回true
+     */
     public static boolean isNotEmpty(Collection<?> collection) {
         return !isEmpty(collection);
     }
 
+    /**
+     * 判断Map是否为空
+     *
+     * @param map Map
+     * @return 为null或没有元素时返回true
+     */
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
     }
 
+    /**
+     * 判断Map是否不为空
+     *
+     * @param map Map
+     * @return 不为null且有元素时返回true
+     */
     public static boolean isNotEmpty(Map<?, ?> map) {
         return !isEmpty(map);
     }
@@ -159,10 +194,24 @@ public class CollectionUtil {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 判断集合是否包含指定元素
+     *
+     * @param list 集合
+     * @param t    目标元素
+     * @return 包含返回true，否则返回false
+     */
     public static boolean contains(List<?> list, Object t) {
         return list != null && list.contains(t);
     }
 
+    /**
+     * 获取首个元素
+     *
+     * @param list 集合
+     * @param <T>  泛型
+     * @return 首个元素，集合为空时返回null
+     */
     public static <T> T getFirst(List<T> list) {
         if (list != null && !list.isEmpty()) {
             return list.getFirst();
@@ -186,6 +235,13 @@ public class CollectionUtil {
         return null;
     }
 
+    /**
+     * 获取末尾元素
+     *
+     * @param list 集合
+     * @param <T>  泛型
+     * @return 末尾元素，集合为空时返回null
+     */
     public static <T> T getLast(List<T> list) {
         if (list != null && !list.isEmpty()) {
             return list.getLast();
@@ -193,6 +249,13 @@ public class CollectionUtil {
         return null;
     }
 
+    /**
+     * 使用指定分隔符拼接集合
+     *
+     * @param collection    字符串集合
+     * @param lineSeparator 分隔符
+     * @return 拼接后的字符串，集合或分隔符为null时返回null
+     */
     public static String join(Collection<String> collection, String lineSeparator) {
         if (collection == null || lineSeparator == null) {
             return null;
@@ -200,10 +263,22 @@ public class CollectionUtil {
         return String.join(lineSeparator, collection);
     }
 
+    /**
+     * 移除集合中的空白字符串
+     *
+     * @param elements 字符串集合
+     */
     public static void removeBlank(List<String> elements) {
         elements.removeIf(StringUtil::isBlank);
     }
 
+    /**
+     * 移除并返回Map中的随机元素
+     *
+     * @param map Map
+     * @param <T> 值类型
+     * @return 被移除的随机元素，Map为空时返回null
+     */
     public static <T> T removeRandom(Map<?, T> map) {
         if (map == null || map.isEmpty()) {
             return null;
@@ -251,6 +326,12 @@ public class CollectionUtil {
         return get(list, index);
     }
 
+    /**
+     * 获取集合大小
+     *
+     * @param collection 集合
+     * @return 集合大小，集合为空时返回0
+     */
     public static int size(Collection<?> collection) {
         if (collection == null || collection.isEmpty()) {
             return 0;

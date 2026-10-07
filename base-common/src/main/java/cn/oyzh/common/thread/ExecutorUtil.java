@@ -50,7 +50,7 @@ public class ExecutorUtil {
      * 提交任务
      *
      * @param task 任务
-     * @return 任务
+     * @return 任务执行结果
      */
     public static Future<?> submit(Runnable task) {
         return executor().submit(task);

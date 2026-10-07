@@ -30,6 +30,13 @@ public class HtmlTypeFileWriter extends TypeFileWriter {
      */
     private LineFileWriter writer;
 
+    /**
+     * 构造html类型文件写入器
+     *
+     * @param config  导出配置
+     * @param columns 字段列表
+     * @throws FileNotFoundException 异常
+     */
     public HtmlTypeFileWriter(FileWriteConfig config, FileColumns columns) throws FileNotFoundException {
         this.columns = columns;
         this.config = config;

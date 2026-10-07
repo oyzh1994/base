@@ -21,7 +21,7 @@ public class JsonTypeFileWriter extends TypeFileWriter {
     private FileColumns columns;
 
     /**
-     * 文件读取器
+     * 文件写入器
      */
     private LineFileWriter writer;
 
@@ -35,6 +35,13 @@ public class JsonTypeFileWriter extends TypeFileWriter {
      */
     private FileWriteConfig config;
 
+    /**
+     * 构造json类型文件写入器
+     *
+     * @param config  导出配置
+     * @param columns 字段列表
+     * @throws FileNotFoundException 异常
+     */
     public JsonTypeFileWriter(FileWriteConfig config, FileColumns columns) throws FileNotFoundException {
         this.columns = columns;
         this.config = config;

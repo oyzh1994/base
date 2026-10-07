@@ -17,6 +17,11 @@ public abstract class JdbcOperator {
      */
     protected final TableDefinition tableDefinition;
 
+    /**
+     * 构造jdbc操作器
+     *
+     * @param tableDefinition 表定义
+     */
     public JdbcOperator(TableDefinition tableDefinition) {
         this.tableDefinition = tableDefinition;
     }
@@ -65,6 +70,11 @@ public abstract class JdbcOperator {
     protected void createTable() throws SQLException {
     }
 
+    /**
+     * 获取表定义
+     *
+     * @return 表定义
+     */
     public TableDefinition getTableDefinition() {
         return this.tableDefinition;
     }

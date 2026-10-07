@@ -18,23 +18,41 @@ import java.nio.file.Paths;
 import java.util.List;
 
 /**
- * windows arm处理器
+ * windows on arm 的 jfx 模块更新处理，用 jmod 中的本地库更新 maven 仓库中的 jfx jar
  *
  * @author oyzh
  * @since 2026/09/18
  */
 public class WoaHandler {
 
+    /**
+     * javafx版本
+     */
     private String jfxVersion;
 
+    /**
+     * 获取javafx版本
+     *
+     * @return javafx版本
+     */
     public String getJfxVersion() {
         return jfxVersion;
     }
 
+    /**
+     * 设置javafx版本
+     *
+     * @param jfxVersion javafx版本
+     */
     public void setJfxVersion(String jfxVersion) {
         this.jfxVersion = jfxVersion;
     }
 
+    /**
+     * 获取javafx版本，为空时取jdk版本
+     *
+     * @return javafx版本
+     */
     private String jfxVersion() {
         if (StringUtil.isBlank(this.jfxVersion)) {
             return SystemUtil.getJdkVersion();
@@ -212,6 +230,7 @@ public class WoaHandler {
      * jar解压
      *
      * @param jarPath jar文件
+     * @return 解压目录
      * @throws Exception 异常
      */
     private String jarXf(String jarPath) throws Exception {

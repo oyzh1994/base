@@ -15,10 +15,22 @@ import java.util.Date;
  */
 public class DateUtil {
 
+    /**
+     * 从Number转为date对象
+     *
+     * @param n 时间
+     * @return 结果
+     */
     public static Date of(Number n) {
         return of(n.longValue());
     }
 
+    /**
+     * 从long转为date对象
+     *
+     * @param l 时间
+     * @return 结果
+     */
     public static Date of(long l) {
         return new Date(l);
     }

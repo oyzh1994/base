@@ -7,7 +7,7 @@ import cn.oyzh.pkg.ConfigMargeAble;
 import java.util.Set;
 
 /**
- * jar配置
+ * jdeps配置
  *
  * @author oyzh
  * @since 2024/06/17
@@ -44,50 +44,110 @@ public class JDepsConfig implements ConfigMargeAble<JDepsConfig> {
      */
     private Boolean enable;
 
+    /**
+     * 是否启用
+     *
+     * @return 是否启用
+     */
     public boolean isEnable() {
         return BooleanUtil.isTrue(this.enable);
     }
 
+    /**
+     * 设置是否启用
+     *
+     * @param enable 是否启用
+     */
     public void setEnable(boolean enable) {
         this.enable = enable;
     }
 
+    /**
+     * 是否汇总信息
+     *
+     * @return 是否汇总信息
+     */
     public boolean isSummary() {
         return BooleanUtil.isTrue(this.summary);
     }
 
+    /**
+     * 设置是否汇总信息
+     *
+     * @param summary 汇总信息
+     */
     public void setSummary(boolean summary) {
         this.summary = summary;
     }
 
+    /**
+     * 是否详细模式
+     *
+     * @return 是否详细模式
+     */
     public boolean isVerbose() {
         return BooleanUtil.isTrue(this.verbose);
     }
 
+    /**
+     * 设置是否详细模式
+     *
+     * @param verbose 详细模式
+     */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
 
+    /**
+     * 获取跳过的文件
+     *
+     * @return 跳过的文件
+     */
     public Set<String> getSkips() {
         return skips;
     }
 
+    /**
+     * 设置跳过的文件
+     *
+     * @param skips 跳过的文件
+     */
     public void setSkips(Set<String> skips) {
         this.skips = skips;
     }
 
+    /**
+     * 获取排除的文件
+     *
+     * @return 排除的文件
+     */
     public Set<String> getExcludes() {
         return excludes;
     }
 
+    /**
+     * 设置排除的文件
+     *
+     * @param excludes 排除的文件
+     */
     public void setExcludes(Set<String> excludes) {
         this.excludes = excludes;
     }
 
+    /**
+     * 获取多版本
+     *
+     * @return 多版本
+     */
     public Integer getMultiRelease() {
         return multiRelease;
     }
 
+    /**
+     * 设置多版本
+     *
+     * @param multiRelease 多版本
+     */
     public void setMultiRelease(Integer multiRelease) {
         this.multiRelease = multiRelease;
     }

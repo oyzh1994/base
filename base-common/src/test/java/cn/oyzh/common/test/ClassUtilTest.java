@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.function.Predicate;
 
 /**
+ * 测试类路径扫描工具 ClassUtil 的类扫描能力。
  *
  * @author oyzh
  * @since 2026-05-12

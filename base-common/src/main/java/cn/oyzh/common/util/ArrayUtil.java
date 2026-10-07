@@ -14,6 +14,9 @@ import java.util.List;
  */
 public class ArrayUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private ArrayUtil() {
     }
 
@@ -45,6 +48,14 @@ public class ArrayUtil {
         return null;
     }
 
+    /**
+     * 合并两个数组
+     *
+     * @param arr1 数组1
+     * @param arr2 数组2
+     * @param <T>  数据类型
+     * @return 合并后的新数组
+     */
     public static <T> T[] append(T[] arr1, T[] arr2) {
         int len1 = arr1.length;
         int len2 = arr2.length;
@@ -53,10 +64,25 @@ public class ArrayUtil {
         return result;
     }
 
+    /**
+     * 判断数组是否为空
+     *
+     * @param arr 数组
+     * @param <T> 数据类型
+     * @return 为null或长度为0时返回true
+     */
     public static <T> boolean isEmpty(T[] arr) {
         return arr == null || arr.length == 0;
     }
 
+    /**
+     * 获取指定索引处的元素
+     *
+     * @param arr   数组
+     * @param index 索引
+     * @param <T>   数据类型
+     * @return 对应元素，索引越界时返回null
+     */
     public static <T> T indexOf(T[] arr, int index) {
         if (index < 0 || index >= arr.length) {
             return null;
@@ -64,10 +90,24 @@ public class ArrayUtil {
         return arr[index];
     }
 
+    /**
+     * 判断数组是否不为空
+     *
+     * @param arr 数组
+     * @param <T> 数据类型
+     * @return 不为null且长度大于0时返回true
+     */
     public static <T> boolean isNotEmpty(T[] arr) {
         return !isEmpty(arr);
     }
 
+    /**
+     * 数组转字符串
+     *
+     * @param arr 数组
+     * @param <T> 数据类型
+     * @return 数组的字符串表示，空数组返回空字符串
+     */
     public static <T> String toString(T[] arr) {
         if (isEmpty(arr)) {
             return "";
@@ -75,6 +115,14 @@ public class ArrayUtil {
         return Arrays.toString(arr);
     }
 
+    /**
+     * 判断数组是否包含指定元素
+     *
+     * @param arr 数组
+     * @param obj 目标元素
+     * @param <T> 数据类型
+     * @return 包含返回true，否则返回false
+     */
     public static <T> boolean contains(T[] arr, T obj) {
         if (arr != null && arr.length > 0 && obj != null) {
             for (T t : arr) {
@@ -86,6 +134,15 @@ public class ArrayUtil {
         return false;
     }
 
+    /**
+     * 截取数组
+     *
+     * @param arr   数组
+     * @param start 起始索引（含）
+     * @param end   结束索引（不含）
+     * @param <T>   数据类型
+     * @return 截取后的新数组，参数非法时原样返回原数组
+     */
     public static <T> T[] sub(T[] arr, int start, int end) {
         if (arr == null || start < 0 || end < start || arr.length < end) {
             return arr;
@@ -93,10 +150,27 @@ public class ArrayUtil {
         return Arrays.copyOfRange(arr, start, end);
     }
 
+    /**
+     * 截取数组
+     *
+     * @param arr   数组
+     * @param start 起始索引（含）
+     * @param end   结束索引（不含）
+     * @param <T>   数据类型
+     * @return 截取后的新数组，参数非法时原样返回原数组
+     */
     public static <T> T[] subarray(T[] arr, int start, int end) {
         return sub(arr, start, end);
     }
 
+    /**
+     * 截取字节数组
+     *
+     * @param arr   字节数组
+     * @param start 起始索引（含）
+     * @param end   结束索引（不含）
+     * @return 截取后的新数组，参数非法时原样返回原数组
+     */
     public static byte[] sub(byte[] arr, int start, int end) {
         if (arr == null || start < 0 || end < start || arr.length < end) {
             return arr;
@@ -104,10 +178,26 @@ public class ArrayUtil {
         return Arrays.copyOfRange(arr, start, end);
     }
 
+    /**
+     * 截取字节数组
+     *
+     * @param arr   字节数组
+     * @param start 起始索引（含）
+     * @param end   结束索引（不含）
+     * @return 截取后的新数组，参数非法时原样返回原数组
+     */
     public static byte[] subarray(byte[] arr, int start, int end) {
         return sub(arr, start, end);
     }
 
+    /**
+     * 集合转数组
+     *
+     * @param elements 集合
+     * @param clazz    数组元素类型
+     * @param <T>      数据类型
+     * @return 转换后的数组，集合或类型为null时返回null
+     */
     public static <T> T[] toArray(Collection<T> elements, Class<T> clazz) {
         if (elements == null || clazz == null) {
             return null;
@@ -116,16 +206,35 @@ public class ArrayUtil {
         return elements.toArray(result);
     }
 
+    /**
+     * 复制字节数组到目标数组
+     *
+     * @param source 源数组
+     * @param target 目标数组
+     */
     public static void copy(byte[] source, byte[] target) {
         System.arraycopy(source, 0, target, 0, source.length);
     }
 
+    /**
+     * 复制指定长度的字节数组
+     *
+     * @param source 源数组
+     * @param length 复制长度
+     * @return 复制后的新数组
+     */
     public static byte[] copy(byte[] source, int length) {
         byte[] target = new byte[length];
         System.arraycopy(source, 0, target, 0, length);
         return target;
     }
 
+    /**
+     * 反转字符数组
+     *
+     * @param charArray 字符数组
+     * @return 反转后的新数组
+     */
     public static char[] reverse(char[] charArray) {
         List<Character> list = new ArrayList<>();
         for (char c : charArray) {

@@ -57,21 +57,35 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
      */
     private final Set<SshClient> clients = ConcurrentHashMap.newKeySet();
 
+    /**
+     * 交互式认证处理器
+     */
     private UserInteraction userInteraction;
 
+    /**
+     * 获取交互式认证处理器
+     *
+     * @return 交互式认证处理器
+     */
     public UserInteraction getUserInteraction() {
         return userInteraction;
     }
 
+    /**
+     * 设置交互式认证处理器
+     *
+     * @param userInteraction 交互式认证处理器
+     */
     public void setUserInteraction(UserInteraction userInteraction) {
         this.userInteraction = userInteraction;
     }
 
     /**
-     * 初始化客户端
+     * 初始化ssh客户端
      *
-     * @param connect 连接
-     * @return 客户端
+     * @param connect 连接信息
+     * @return ssh客户端
+     * @throws Exception 异常
      */
     protected JGitSshClient initClient(SSHConnect connect) throws Exception {
         // 客户端构建器
@@ -185,6 +199,8 @@ public class SSHJumpForwarder2 extends SSHForwarder2 {
     /**
      * 初始化ssh会话
      *
+     * @param connect 连接信息
+     * @return ssh会话
      * @throws Exception 异常
      */
     public ClientSession initSession(SSHConnect connect) throws Exception {

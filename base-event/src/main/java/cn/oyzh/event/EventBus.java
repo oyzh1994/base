@@ -68,9 +68,9 @@ public class EventBus {
      * 发送事件
      *
      * @param event       事件
-     * @param config      配置
-     * @param delayMillis 延迟时间
-     * @param <C>         范型
+     * @param config      事件配置
+     * @param delayMillis 延迟毫秒数
+     * @param <C>         事件配置类型
      */
     public <C extends EventConfig> void post(Object event, C config, Integer delayMillis) {
         if (event != null) {
@@ -98,7 +98,7 @@ public class EventBus {
      * 执行事件发送
      *
      * @param event   事件
-     * @param verbose 是否详细信息
+     * @param verbose 是否输出详细日志
      */
     protected void doEventPost(Object event, boolean verbose) {
         try {

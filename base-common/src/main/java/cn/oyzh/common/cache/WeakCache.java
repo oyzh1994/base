@@ -14,8 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WeakCache<K, V> implements Cache<K, V> {
 
+    /**
+     * 缓存数据
+     */
     private final Map<K, WeakReference<V>> cache;
 
+    /**
+     * 构造弱引用缓存
+     */
     public WeakCache() {
         this.cache = new ConcurrentHashMap<>();
     }

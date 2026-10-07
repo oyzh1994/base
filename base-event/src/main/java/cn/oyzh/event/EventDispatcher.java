@@ -19,8 +19,8 @@ public class EventDispatcher {
      *
      * @param event       事件
      * @param subscribers 订阅者列表
-     * @throws InvocationTargetException 异常
-     * @throws IllegalAccessException    异常
+     * @throws InvocationTargetException 调用目标方法时抛出
+     * @throws IllegalAccessException    无法访问目标方法时抛出
      */
     public void post(Object event, List<EventSubscriber> subscribers) throws InvocationTargetException, IllegalAccessException {
         if (event != null) {

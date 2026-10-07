@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * jar工具类
+ * jmod工具类
  *
  * @author oyzh
  * @since 2026/09/18
@@ -19,11 +19,11 @@ import java.nio.file.Paths;
 public class JModUtil {
 
     /**
-     * 解压
+     * 解压jmod模块
      *
-     * @param modeName 模块名
+     * @param modeName 模块文件名
      * @param jdkPath  jdk路径
-     * @return 文件名
+     * @return 模块解压目录，模块文件不存在时返回 null
      * @throws Exception 异常
      */
     public static String extract(String modeName, String jdkPath) throws Exception {

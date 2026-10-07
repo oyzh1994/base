@@ -12,8 +12,17 @@ import cn.oyzh.common.util.UUIDUtil;
  */
 public class KeyGenerator {
 
+    /**
+     * 单例
+     */
     public static final KeyGenerator INSTANCE = new KeyGenerator();
 
+    /**
+     * 根据列类型生成主键值
+     *
+     * @param columnType 列类型
+     * @return 主键值
+     */
     public Object generator(String columnType) {
         if (StringUtil.containsAnyIgnoreCase(columnType, "text", "LONGVARCHAR", "NVARCHAR", "NCHAR", "varchar", "char")) {
             return UUIDUtil.uuid();
@@ -24,6 +33,12 @@ public class KeyGenerator {
         return null;
     }
 
+    /**
+     * 根据列类型生成主键值
+     *
+     * @param columnType 列类型
+     * @return 主键值
+     */
     public static Object generatorKey(String columnType) {
         return INSTANCE.generator(columnType);
     }

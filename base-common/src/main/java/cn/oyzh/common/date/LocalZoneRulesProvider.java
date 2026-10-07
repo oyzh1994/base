@@ -28,17 +28,26 @@ import java.util.Set;
 import java.util.TreeMap;
 
 /**
- * 本地日期规则工具类
+ * 本地时区规则提供者，从本地 tzdb.dat 加载时区规则并缓存
  *
  * @author oyzh
  * @since 2024-09-27
  */
 public class LocalZoneRulesProvider extends ZoneRulesProvider {
 
+    /**
+     * 时区数据版本标识
+     */
     private String versionId;
 
+    /**
+     * 时区区域标识列表
+     */
     private List<String> regionIds;
 
+    /**
+     * 构造并加载本地时区规则
+     */
     public LocalZoneRulesProvider() {
         try {
             this.doLoad();
@@ -75,6 +84,11 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
         return map;
     }
 
+    /**
+     * 从本地 tzdb.dat 加载时区数据并写入缓存
+     *
+     * @throws Exception 加载过程中的异常
+     */
     private void doLoad() throws Exception {
         String libDir = System.getProperty("java.home") + File.separator + "lib";
         DataInputStream dis = new DataInputStream(new BufferedInputStream(new FileInputStream(new File(libDir, "tzdb.dat"))));
@@ -82,24 +96,24 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
             if (dis.readByte() != 1) {
                 throw new StreamCorruptedException("File format not recognised");
             }
-            // group
+            // 分组
             String groupId = dis.readUTF();
             if (!"TZDB".equals(groupId)) {
                 throw new StreamCorruptedException("File format not recognised");
             }
-            // versions
+            // 版本
             int versionCount = dis.readShort();
             for (int i = 0; i < versionCount; i++) {
                 this.versionId = dis.readUTF().intern();
             }
-            // regions
+            // 区域
             int regionCount = dis.readShort();
             String[] regionArray = new String[regionCount];
             for (int i = 0; i < regionCount; i++) {
                 regionArray[i] = dis.readUTF().intern();
             }
             this.regionIds = Arrays.asList(regionArray);
-            // rules
+            // 规则
             int ruleCount = dis.readShort();
             Object[] ruleArray = new Object[ruleCount];
             for (int i = 0; i < ruleCount; i++) {
@@ -107,7 +121,7 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
                 dis.readFully(bytes);
                 ruleArray[i] = bytes;
             }
-            // link version-region-rules
+            // 关联版本-区域-规则
             for (int i = 0; i < versionCount; i++) {
                 int versionRegionCount = dis.readShort();
                 for (int j = 0; j < versionRegionCount; j++) {
@@ -122,6 +136,13 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
         }
     }
 
+    /**
+     * 将时区规则写入本地缓存文件
+     *
+     * @param zoneId 时区标识
+     * @param rules  时区规则
+     * @throws IOException 写入过程中的异常
+     */
     private void doCache(String zoneId, ZoneRules rules) throws IOException {
         String cacheDir = SysConst.cacheDir();
         File file = new File(cacheDir, zoneId);
@@ -132,6 +153,15 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
         }
     }
 
+    /**
+     * 从字节数组反序列化时区规则
+     *
+     * @param bytes 规则字节数组
+     * @return 时区规则
+     * @throws ClassNotFoundException    类未找到异常
+     * @throws InvocationTargetException 方法调用异常
+     * @throws IllegalAccessException    非法访问异常
+     */
     private ZoneRules readRules(byte[] bytes) throws ClassNotFoundException, InvocationTargetException, IllegalAccessException {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bytes));
         Class<?> clazz = Class.forName("java.time.zone.Ser");
@@ -140,6 +170,14 @@ public class LocalZoneRulesProvider extends ZoneRulesProvider {
         return (ZoneRules) method.invoke(null, dis);
     }
 
+    /**
+     * 从本地缓存文件读取时区规则
+     *
+     * @param zoneId 时区标识
+     * @return 时区规则，缓存不存在时返回 null
+     * @throws IOException            读取异常
+     * @throws ClassNotFoundException 类未找到异常
+     */
     private ZoneRules readCache(String zoneId) throws IOException, ClassNotFoundException {
         String cacheDir = SysConst.cacheDir();
         File file = new File(cacheDir, zoneId);

@@ -14,11 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * h2键值操作器
+ *
  * @author oyzh
  * @since 2024-12-21
  */
 public class H2KeyValueOperator extends JdbcKeyValueOperator {
 
+    /**
+     * 构造h2键值操作器
+     *
+     * @param tableDefinition 表定义
+     */
     public H2KeyValueOperator(TableDefinition tableDefinition) {
         super(tableDefinition);
     }

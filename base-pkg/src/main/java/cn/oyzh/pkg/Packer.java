@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 打包器，负责注册各类处理器并按顺序执行打包流程
+ *
  * @author oyzh
  * @since 2024/6/14
  */
@@ -58,14 +60,23 @@ public class Packer {
         this.registerCompressNameHandler();
     }
 
+    /**
+     * 注册目标目录处理器
+     */
     public void registerDestHandler() {
         this.registerHandler(new DestHandler());
     }
 
+    /**
+     * 注册结束处理器
+     */
     public void registerEndHandler() {
         this.registerHandler(new EndHandler());
     }
 
+    /**
+     * 注册开始处理器
+     */
     public void registerStartHandler() {
         this.registerHandler(new StartHandler());
     }
@@ -74,6 +85,9 @@ public class Packer {
     //     this.registerHandler(new PackrHandler());
     // }
 
+    /**
+     * 注册jpackage处理器
+     */
     public void registerJPackageHandler() {
         this.registerHandler(new JPackageHandler());
     }
@@ -82,34 +96,63 @@ public class Packer {
     //     this.registerHandler(new AppConfigHandler());
     // }
 
+    /**
+     * 注册jre处理器
+     */
     public void registerJreHandler() {
         this.registerHandler(new JreHandler());
     }
 
+    /**
+     * 注册jar处理器
+     */
     public void registerJarHandler() {
         this.registerHandler(new JarHandler());
     }
 
+    /**
+     * 注册maven处理器
+     *
+     * @param projectDir   项目目录
+     * @param dependencies 依赖列表
+     */
     public void registerMvnHandler(String projectDir, List<String> dependencies) {
         this.registerHandler(new MvnHandler(projectDir, dependencies));
     }
 
+    /**
+     * 注册项目信息处理器
+     */
     public void registerProjectHandler() {
         this.registerHandler(new ProjectHandler());
     }
 
+    /**
+     * 注册项目信息处理器
+     *
+     * @param file 项目信息文件
+     */
     public void registerProjectHandler(String file) {
         this.registerHandler(new ProjectHandler(file));
     }
 
+    /**
+     * 注册jdeps处理器
+     */
     public void registerJdepsHandler() {
         this.registerHandler(new JDepsHandler());
     }
 
+    /**
+     * 注册github actions处理器
+     */
     public void registerGitHubActionsHandler() {
         this.registerHandler(new GitHubActionsHandler());
     }
 
+    /**
+     * 注册AppImage处理器
+     */
     public void registerAppImageHandler() {
         this.registerHandler(new AppImageHandler());
     }
@@ -118,18 +161,30 @@ public class Packer {
 //        this.registerHandler(new WoaHandler());
 //    }
 
+    /**
+     * 注册jlink处理器
+     */
     public void registerJLinkHandler() {
         this.registerHandler(new JLinkHandler());
     }
 
+    /**
+     * 注册打包配置处理器
+     */
     public void registerPackConfigHandler() {
         this.registerHandler(new PackConfigHandler());
     }
 
+    /**
+     * 注册压缩处理器
+     */
     public void registerCompressHandler() {
         this.registerHandler(new CompressHandler());
     }
 
+    /**
+     * 注册压缩名称处理器
+     */
     public void registerCompressNameHandler() {
         this.registerHandler(new CompressNameHandler());
     }
@@ -182,7 +237,7 @@ public class Packer {
     /**
      * 获取打包处理器
      *
-     * @return 后置处理器列表
+     * @return 打包处理器列表
      */
     public List<PackHandler> packHandlers() {
         List<PackHandler> list = new ArrayList<>();
@@ -273,6 +328,7 @@ public class Packer {
 
     /**
      * 配置github actions
+     *
      * @param properties 属性
      */
     public void steupGitHub(Map<String, Object> properties) {

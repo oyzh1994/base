@@ -14,6 +14,7 @@ import java.util.Set;
  */
 public class LexicalSqlFormatter implements SqlFormatter {
 
+    /** SQL关键字集合，输出时统一转为大写 */
     private static final Set<String> KEYWORDS = Set.of(
             "ALL", "ALTER", "AND", "ANY", "AS", "ASC", "BEGIN", "BETWEEN", "BY",
             "CALL", "CASE", "CAST", "CONNECT", "CONSTRAINT", "CREATE", "CROSS",
@@ -30,17 +31,25 @@ public class LexicalSqlFormatter implements SqlFormatter {
             "USING", "VALUES", "VIEW", "WHEN", "WHERE", "WHILE", "WINDOW", "WITH", "WORK"
     );
 
+    /** 子句起始关键字集合，遇到时另起一行 */
     private static final Set<String> CLAUSE_STARTS = Set.of(
             "SELECT", "FROM", "WHERE", "HAVING", "VALUES", "SET", "UNION",
             "INTERSECT", "EXCEPT", "LIMIT", "OFFSET", "RETURNING", "WINDOW"
     );
 
+    /** 块结构起始关键字集合 */
     private static final Set<String> BLOCK_STARTS = Set.of(
             "BEGIN", "DECLARE", "IF", "LOOP", "WHILE", "REPEAT"
     );
 
+    /** 词法分析配置 */
     private final SqlLexicalProfile profile;
 
+    /**
+     * 构造方法
+     *
+     * @param profile 词法分析配置
+     */
     public LexicalSqlFormatter(SqlLexicalProfile profile) {
         this.profile = profile;
     }
@@ -145,6 +154,13 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return output.toString();
     }
 
+    /**
+     * 判断当前位置是否为子句起始关键字，含双词子句及JOIN、DDL关键字
+     *
+     * @param tokens 词法单元列表
+     * @param index  当前位置
+     * @return 结果
+     */
     private static boolean isClauseStart(List<SqlToken> tokens, int index) {
         String firstWord = phrase(tokens, index, 1);
         String twoWords = phrase(tokens, index, 2);
@@ -170,16 +186,40 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return Set.of("CREATE", "ALTER", "DROP", "TRUNCATE", "UPDATE", "WITH").contains(word);
     }
 
+    /**
+     * 判断左括号之后是否为嵌套查询
+     *
+     * @param tokens 词法单元列表
+     * @param index  左括号之后的位置
+     * @return 结果
+     */
     private static boolean startsNestedQuery(List<SqlToken> tokens, int index) {
         String next = nextWord(tokens, index);
         return Set.of("SELECT", "WITH", "VALUES", "UPDATE", "DELETE").contains(next)
                 || nextTokenText(tokens, index).equals("(");
     }
 
+    /**
+     * 判断END是否用于结束CASE表达式
+     *
+     * @param tokens    词法单元列表
+     * @param index     END的位置
+     * @param caseDepth 当前CASE嵌套深度
+     * @param blockDepth 当前块结构嵌套深度
+     * @return 结果
+     */
     private static boolean isCaseEnd(List<SqlToken> tokens, int index, int caseDepth, int blockDepth) {
         return caseDepth > 0 && (nextWord(tokens, index + 1).equals("CASE") || blockDepth == 0);
     }
 
+    /**
+     * 判断当前关键字是否开始一个块结构
+     *
+     * @param tokens     词法单元列表
+     * @param index      当前位置
+     * @param blockDepth 当前块结构嵌套深度
+     * @return 结果
+     */
     private static boolean startsBlock(List<SqlToken> tokens, int index, int blockDepth) {
         SqlToken token = tokens.get(index);
         String word = token.text().toUpperCase(Locale.ROOT);
@@ -192,6 +232,14 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return !previousWord(tokens, index - 1).equals("END");
     }
 
+    /**
+     * 获取从指定位置开始、由连续单词组成的短语，最多maxWords个单词
+     *
+     * @param tokens   词法单元列表
+     * @param index    当前位置
+     * @param maxWords 最大单词数
+     * @return 大写短语
+     */
     private static String phrase(List<SqlToken> tokens, int index, int maxWords) {
         StringBuilder result = new StringBuilder();
         int count = 0;
@@ -212,6 +260,13 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return result.toString();
     }
 
+    /**
+     * 获取指定位置之后的第一个单词，统一转为大写
+     *
+     * @param tokens 词法单元列表
+     * @param index  当前位置
+     * @return 单词文本，未找到返回空字符串
+     */
     private static String nextWord(List<SqlToken> tokens, int index) {
         for (int cursor = index; cursor < tokens.size(); cursor++) {
             SqlToken token = tokens.get(cursor);
@@ -225,6 +280,13 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return "";
     }
 
+    /**
+     * 获取指定位置之后的第一个非空白、非注释词法单元的文本
+     *
+     * @param tokens 词法单元列表
+     * @param index  当前位置
+     * @return 词法单元文本，未找到返回空字符串
+     */
     private static String nextTokenText(List<SqlToken> tokens, int index) {
         for (int cursor = index; cursor < tokens.size(); cursor++) {
             SqlToken token = tokens.get(cursor);
@@ -235,6 +297,13 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return "";
     }
 
+    /**
+     * 获取指定位置之前的第一个单词，统一转为大写
+     *
+     * @param tokens 词法单元列表
+     * @param index  当前位置
+     * @return 单词文本，未找到返回空字符串
+     */
     private static String previousWord(List<SqlToken> tokens, int index) {
         for (int cursor = index; cursor >= 0; cursor--) {
             SqlToken token = tokens.get(cursor);
@@ -248,6 +317,13 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return "";
     }
 
+    /**
+     * 追加注释，必要时先换行，单行注释之后换行
+     *
+     * @param output  输出缓冲
+     * @param comment 注释文本
+     * @param indent  缩进层级
+     */
     private static void appendComment(StringBuilder output, String comment, int indent) {
         if (output.length() > 0 && !atLineStart(output)) {
             newline(output, indent);
@@ -258,6 +334,12 @@ public class LexicalSqlFormatter implements SqlFormatter {
         }
     }
 
+    /**
+     * 追加普通词法单元，处理字符串字面量前缀、运算符及点号前后的空格
+     *
+     * @param output 输出缓冲
+     * @param token  词法单元
+     */
     private static void appendToken(StringBuilder output, SqlToken token) {
         String text = token.text();
         if (token.type() == SqlTokenType.STRING && hasLiteralPrefix(output)) {
@@ -283,6 +365,12 @@ public class LexicalSqlFormatter implements SqlFormatter {
         appendText(output, text);
     }
 
+    /**
+     * 判断输出末尾是否为字符串字面量前缀（如N、E、X、B、U&amp;等）
+     *
+     * @param output 输出缓冲
+     * @return 结果
+     */
     private static boolean hasLiteralPrefix(StringBuilder output) {
         int end = output.length();
         while (end > 0 && Character.isWhitespace(output.charAt(end - 1))) {
@@ -310,6 +398,12 @@ public class LexicalSqlFormatter implements SqlFormatter {
                 || (word.length() > 1 && word.charAt(0) == '_');
     }
 
+    /**
+     * 追加文本，按需补充前导空格
+     *
+     * @param output 输出缓冲
+     * @param text   文本
+     */
     private static void appendText(StringBuilder output, String text) {
         if (needsSpace(output, text)) {
             appendSpace(output);
@@ -317,6 +411,13 @@ public class LexicalSqlFormatter implements SqlFormatter {
         output.append(text);
     }
 
+    /**
+     * 判断追加文本前是否需要空格
+     *
+     * @param output 输出缓冲
+     * @param text   待追加的文本
+     * @return 结果
+     */
     private static boolean needsSpace(StringBuilder output, String text) {
         if (output.length() == 0 || Character.isWhitespace(output.charAt(output.length() - 1))) {
             return false;
@@ -329,10 +430,22 @@ public class LexicalSqlFormatter implements SqlFormatter {
         return last != '(' && last != '.' && first != ')' && first != ',' && first != ';';
     }
 
+    /**
+     * 判断文本是否为运算符
+     *
+     * @param text 文本
+     * @return 结果
+     */
     private static boolean isOperator(String text) {
         return Set.of("+", "-", "*", "/", "%", "=", "<>", "!=", "<", ">", "<=", ">=", "=>", ":=", "||").contains(text);
     }
 
+    /**
+     * 换行并按层级写入缩进
+     *
+     * @param output 输出缓冲
+     * @param indent 缩进层级
+     */
     private static void newline(StringBuilder output, int indent) {
         stripTrailingSpace(output);
         if (output.length() > 0 && output.charAt(output.length() - 1) != '\n') {
@@ -341,12 +454,22 @@ public class LexicalSqlFormatter implements SqlFormatter {
         output.append(" ".repeat(Math.max(0, indent * 4)));
     }
 
+    /**
+     * 追加一个空格（末尾已存在空白时不追加）
+     *
+     * @param output 输出缓冲
+     */
     private static void appendSpace(StringBuilder output) {
         if (output.length() > 0 && !Character.isWhitespace(output.charAt(output.length() - 1))) {
             output.append(' ');
         }
     }
 
+    /**
+     * 去除输出末尾的空格与制表符
+     *
+     * @param output 输出缓冲
+     */
     private static void stripTrailingSpace(StringBuilder output) {
         while (output.length() > 0 && (output.charAt(output.length() - 1) == ' '
                 || output.charAt(output.length() - 1) == '\t')) {
@@ -354,6 +477,12 @@ public class LexicalSqlFormatter implements SqlFormatter {
         }
     }
 
+    /**
+     * 判断输出是否位于行首
+     *
+     * @param output 输出缓冲
+     * @return 结果
+     */
     private static boolean atLineStart(StringBuilder output) {
         int index = output.length() - 1;
         while (index >= 0) {

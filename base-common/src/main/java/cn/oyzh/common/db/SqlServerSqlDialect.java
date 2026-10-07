@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class SqlServerSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造SQL Server SQL方言实例
+     */
     public SqlServerSqlDialect() {
         super(SqlDatabase.SQL_SERVER, SqlLexicalProfile.SQL_SERVER);
     }

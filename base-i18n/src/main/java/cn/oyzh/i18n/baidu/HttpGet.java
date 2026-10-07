@@ -35,23 +35,64 @@ import java.util.Map;
  * @since 2025-01-23
  */
 class HttpGet {
+
+    /**
+     * 连接超时时间（毫秒）
+     */
     protected static final int SOCKET_TIMEOUT = 10000;
+
+    /**
+     * GET请求方法名
+     */
     protected static final String GET = "GET";
+
+    /**
+     * 信任所有证书的信任管理器
+     */
     private static TrustManager myX509TrustManager = new X509TrustManager() {
+        /**
+         * 获取受信任的证书颁发者
+         *
+         * @return 证书颁发者数组，此处返回null表示信任所有颁发者
+         */
         public X509Certificate[] getAcceptedIssuers() {
             return null;
         }
 
+        /**
+         * 校验服务端证书
+         *
+         * @param chain    证书链
+         * @param authType 认证类型
+         * @throws CertificateException 证书校验异常
+         */
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
 
+        /**
+         * 校验客户端证书
+         *
+         * @param chain    证书链
+         * @param authType 认证类型
+         * @throws CertificateException 证书校验异常
+         */
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
     };
 
+    /**
+     * 构造HttpGet实例
+     */
     HttpGet() {
     }
 
+    /**
+     * 发起GET请求并返回响应内容
+     *
+     * @param host   请求地址
+     * @param params 请求参数
+     * @return 响应内容，请求失败时返回null
+     */
     public static String get(String host, Map<String, String> params) {
         try {
             SSLContext sslcontext = SSLContext.getInstance("TLS");
@@ -97,6 +138,13 @@ class HttpGet {
         return null;
     }
 
+    /**
+     * 将请求参数拼接到请求地址后形成完整URL
+     *
+     * @param url    请求地址
+     * @param params 请求参数，为null时直接返回原地址
+     * @return 拼接参数后的URL
+     */
     public static String getUrlWithQueryString(String url, Map<String, String> params) {
         if (params == null) {
             return url;
@@ -128,6 +176,11 @@ class HttpGet {
         }
     }
 
+    /**
+     * 关闭可关闭的资源，忽略关闭时的异常
+     *
+     * @param closeable 待关闭的资源
+     */
     protected static void close(Closeable closeable) {
         if (closeable != null) {
             try {
@@ -139,6 +192,12 @@ class HttpGet {
 
     }
 
+    /**
+     * 对参数值进行utf-8编码
+     *
+     * @param input 待编码内容
+     * @return 编码后的内容，输入为null时返回空字符串
+     */
     public static String encode(String input) {
         if (input == null) {
             return "";

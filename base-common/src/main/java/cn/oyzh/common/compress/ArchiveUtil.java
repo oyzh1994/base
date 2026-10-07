@@ -22,6 +22,9 @@ import java.util.stream.Stream;
  * 跨平台文件归档工具（保留 Unix 权限）
  * 支持 ZIP、TAR、TAR.GZ 三种格式。
  * 依赖：org.apache.commons:commons-compress:1.26.1+
+ *
+ * @author oyzh
+ * @since 2026-09-18
  */
 public class ArchiveUtil {
 
@@ -34,6 +37,7 @@ public class ArchiveUtil {
      *
      * @param sourceDir 待打包的源目录
      * @param targetZip 目标 ZIP 文件路径
+     * @throws IOException IO异常
      */
     public static void createZip(File sourceDir, File targetZip) throws IOException {
         createZip(sourceDir.toPath(), targetZip.toPath());
@@ -45,6 +49,7 @@ public class ArchiveUtil {
      *
      * @param sourceDir 待打包的源目录
      * @param targetZip 目标 ZIP 文件路径
+     * @throws IOException IO异常
      */
     public static void createZip(Path sourceDir, Path targetZip) throws IOException {
         try (OutputStream os = Files.newOutputStream(targetZip);
@@ -53,7 +58,7 @@ public class ArchiveUtil {
             stream.forEach(path -> {
                 // 计算相对路径，根目录本身不打包（空条目跳过）
                 String entryName = sourceDir.relativize(path).toString();
-                // 跳过macos的💩
+                // 跳过 macOS 的 .DS_Store 文件
                 if (FileNameUtil.isDsstoreType(FileNameUtil.extName(entryName))) {
                     return;
                 }
@@ -92,6 +97,7 @@ public class ArchiveUtil {
      *
      * @param sourceDir 源目录
      * @param targetTar 目标文件
+     * @throws IOException IO异常
      */
     public static void createTar(File sourceDir, File targetTar) throws IOException {
         createTar(sourceDir.toPath(), targetTar.toPath());
@@ -102,6 +108,7 @@ public class ArchiveUtil {
      *
      * @param sourceDir 源目录
      * @param targetTar 目标文件
+     * @throws IOException IO异常
      */
     public static void createTar(Path sourceDir, Path targetTar) throws IOException {
         try (OutputStream os = Files.newOutputStream(targetTar);
@@ -118,6 +125,7 @@ public class ArchiveUtil {
      *
      * @param sourceDir 源目录
      * @param targetTar 目标文件
+     * @throws IOException IO异常
      */
     public static void createTarGz(File sourceDir, File targetTar) throws IOException {
         createTarGz(sourceDir.toPath(), targetTar.toPath());
@@ -128,6 +136,7 @@ public class ArchiveUtil {
      *
      * @param sourceDir   源目录
      * @param targetTarGz 目标文件
+     * @throws IOException IO异常
      */
     public static void createTarGz(Path sourceDir, Path targetTarGz) throws IOException {
         try (OutputStream os = Files.newOutputStream(targetTarGz);
@@ -140,6 +149,14 @@ public class ArchiveUtil {
 
     // ==================== 私有递归方法（TAR 系列复用） ====================
 
+    /**
+     * 递归地将目录下的文件与子目录添加到 TAR 归档流
+     *
+     * @param rootDir    根目录（用于计算相对路径）
+     * @param currentDir 当前处理的目录
+     * @param tos        TAR 归档输出流
+     * @throws IOException IO异常
+     */
     private static void addFilesToTar(Path rootDir, Path currentDir, TarArchiveOutputStream tos) throws IOException {
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(currentDir)) {
             for (Path path : stream) {

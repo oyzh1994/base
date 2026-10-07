@@ -28,6 +28,11 @@ public class XMLDocument {
      */
     private XMLEventReader reader;
 
+    /**
+     * 构造XML文档实例
+     *
+     * @param reader 读取器
+     */
     XMLDocument(XMLEventReader reader) {
         this.reader = reader;
     }
@@ -51,11 +56,11 @@ public class XMLDocument {
     }
 
     /**
-     * 解析文档
+     * 解析文档，返回根节点
      *
      * @param reader 读取器
-     * @return 结果
-     * @throws XMLStreamException 异常
+     * @return 根节点
+     * @throws XMLStreamException 解析XML失败时抛出
      */
     static XMLElement parse(XMLEventReader reader) throws XMLStreamException {
         // 当前等级

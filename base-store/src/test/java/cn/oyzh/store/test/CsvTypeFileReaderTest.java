@@ -8,6 +8,7 @@ import cn.oyzh.store.file.FileRecord;
 import org.junit.Test;
 
 /**
+ * 测试 CSV 类型文件读取器按配置逐行读取记录。
  *
  * @author oyzh
  * @since 2026-05-12

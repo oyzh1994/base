@@ -10,7 +10,7 @@ import static org.junit.Assert.assertTrue;
  * SQL显示压缩测试
  *
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public class SqlCompressorTest {
 

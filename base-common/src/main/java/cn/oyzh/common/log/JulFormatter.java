@@ -75,6 +75,13 @@ public abstract class JulFormatter extends Formatter {
      */
     public abstract String formatThrow(String message, Throwable throwable, String sourceClassName, String sourceMethodName, int lineNumber);
 
+    /**
+     * 预处理参数，转为字符串并按需转义
+     *
+     * @param arg    参数
+     * @param escape 是否转义
+     * @return 处理后的字符串
+     */
     protected String pretreatmentArg(Object arg, boolean escape) {
         if (arg == null) {
             return "null";

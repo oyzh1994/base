@@ -53,50 +53,110 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
      */
     private String javafxPath;
 
+    /**
+     * 是否移除空jar
+     *
+     * @return 是否移除空jar
+     */
     public boolean isRemoveEmpty() {
         return removeEmpty == null || this.removeEmpty;
     }
 
+    /**
+     * 设置是否移除空jar
+     *
+     * @param removeEmpty 是否移除空jar
+     */
     public void setRemoveEmpty(boolean removeEmpty) {
         this.removeEmpty = removeEmpty;
     }
 
+    /**
+     * 获取排除的文件
+     *
+     * @return 排除的文件
+     */
     public Set<String> getExcludes() {
         return excludes;
     }
 
+    /**
+     * 设置排除的文件
+     *
+     * @param excludes 排除的文件
+     */
     public void setExcludes(Set<String> excludes) {
         this.excludes = excludes;
     }
 
+    /**
+     * 获取跳过的jar
+     *
+     * @return 跳过的jar
+     */
     public Set<String> getSkipsJar() {
         return skipsJar;
     }
 
+    /**
+     * 设置跳过的jar
+     *
+     * @param skipsJar 跳过的jar
+     */
     public void setSkipsJar(Set<String> skipsJar) {
         this.skipsJar = skipsJar;
     }
 
+    /**
+     * 是否启用
+     *
+     * @return 是否启用
+     */
     public boolean isEnable() {
         return enable == null || this.enable;
     }
 
+    /**
+     * 设置是否启用
+     *
+     * @param enable 是否启用
+     */
     public void setEnable(boolean enable) {
         this.enable = enable;
     }
 
+    /**
+     * 是否启用javafx优化
+     *
+     * @return 是否启用javafx优化
+     */
     public boolean isJavafxOptimize(){
         return javafxOptimize != null && this.javafxOptimize;
     }
 
+    /**
+     * 设置是否启用javafx优化
+     *
+     * @param javafxOptimize javafx优化
+     */
     public void setJavafxOptimize(Boolean javafxOptimize) {
         this.javafxOptimize = javafxOptimize;
     }
 
+    /**
+     * 是否启用二进制库优化
+     *
+     * @return 是否启用二进制库优化
+     */
     public boolean isBinlibOptimize(){
         return binlibOptimize != null && this.binlibOptimize;
     }
 
+    /**
+     * 设置是否启用二进制库优化
+     *
+     * @param binlibOptimize 二进制库优化
+     */
     public void setBinlibOptimize(Boolean binlibOptimize) {
         this.binlibOptimize = binlibOptimize;
     }
@@ -109,10 +169,20 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
 //        this.executableOptimize = executableOptimize;
 //    }
 
+    /**
+     * 获取javafx路径
+     *
+     * @return javafx路径
+     */
     public String getJavafxPath() {
         return javafxPath;
     }
 
+    /**
+     * 设置javafx路径
+     *
+     * @param javafxPath javafx路径
+     */
     public void setJavafxPath(String javafxPath) {
         this.javafxPath = javafxPath;
     }

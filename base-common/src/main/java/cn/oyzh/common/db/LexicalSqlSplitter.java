@@ -14,8 +14,14 @@ import java.util.Locale;
  */
 public class LexicalSqlSplitter implements SqlSplitter {
 
+    /** 词法分析配置 */
     private final SqlLexicalProfile profile;
 
+    /**
+     * 构造方法
+     *
+     * @param profile 词法分析配置
+     */
     public LexicalSqlSplitter(SqlLexicalProfile profile) {
         this.profile = profile;
     }
@@ -104,6 +110,14 @@ public class LexicalSqlSplitter implements SqlSplitter {
         return statements;
     }
 
+    /**
+     * 将指定区间内的文本作为一条语句加入结果，空白内容会被忽略
+     *
+     * @param statements 语句结果集
+     * @param sql        SQL脚本
+     * @param start      起始位置
+     * @param end        结束位置
+     */
     private static void addStatement(List<String> statements, String sql, int start, int end) {
         if (start >= end) {
             return;
@@ -114,6 +128,14 @@ public class LexicalSqlSplitter implements SqlSplitter {
         }
     }
 
+    /**
+     * 跳过当前行剩余的词法单元
+     *
+     * @param tokens       词法单元列表
+     * @param index        当前词法单元位置
+     * @param nextLineStart 下一行的起始位置
+     * @return 下一行起始位置对应的词法单元位置
+     */
     private static int skipLine(List<SqlToken> tokens, int index, int nextLineStart) {
         int result = index + 1;
         while (result < tokens.size() && tokens.get(result).start() < nextLineStart) {
@@ -122,6 +144,14 @@ public class LexicalSqlSplitter implements SqlSplitter {
         return result;
     }
 
+    /**
+     * 跳过结束符所占的词法单元
+     *
+     * @param tokens   词法单元列表
+     * @param index    当前词法单元位置
+     * @param position 结束符之后的位置
+     * @return 结束符之后的词法单元位置
+     */
     private static int skipDelimiter(List<SqlToken> tokens, int index, int position) {
         int result = index;
         while (result < tokens.size() && tokens.get(result).start() < position) {
@@ -130,6 +160,14 @@ public class LexicalSqlSplitter implements SqlSplitter {
         return result;
     }
 
+    /**
+     * 获取词法单元中结束符所在的位置，可从单元起始处或末尾匹配
+     *
+     * @param sql       SQL脚本
+     * @param token     词法单元
+     * @param delimiter 结束符
+     * @return 结束符位置，未匹配返回-1
+     */
     private static int delimiterPosition(String sql, SqlToken token, String delimiter) {
         if (delimiter.isEmpty()) {
             return -1;
@@ -143,11 +181,25 @@ public class LexicalSqlSplitter implements SqlSplitter {
                 : -1;
     }
 
+    /**
+     * 获取指定位置所在行的起始位置
+     *
+     * @param sql      SQL脚本
+     * @param position 位置
+     * @return 行起始位置
+     */
     private static int lineStart(String sql, int position) {
         int result = Math.max(sql.lastIndexOf('\n', position - 1), sql.lastIndexOf('\r', position - 1));
         return result < 0 ? 0 : result + 1;
     }
 
+    /**
+     * 获取指定位置所在行的结束位置
+     *
+     * @param sql      SQL脚本
+     * @param position 位置
+     * @return 行结束位置
+     */
     private static int lineEnd(String sql, int position) {
         int result = position;
         while (result < sql.length() && sql.charAt(result) != '\n' && sql.charAt(result) != '\r') {
@@ -156,6 +208,13 @@ public class LexicalSqlSplitter implements SqlSplitter {
         return result;
     }
 
+    /**
+     * 获取指定行结束位置之后下一行的起始位置，兼容回车换行
+     *
+     * @param sql     SQL脚本
+     * @param lineEnd 行结束位置
+     * @return 下一行起始位置
+     */
     private static int nextLineStart(String sql, int lineEnd) {
         int result = lineEnd;
         if (result < sql.length() && sql.charAt(result) == '\r') {
@@ -167,10 +226,23 @@ public class LexicalSqlSplitter implements SqlSplitter {
         return result;
     }
 
+    /**
+     * 判断字符串是否为空
+     *
+     * @param value 字符串
+     * @return 结果
+     */
     private static boolean isBlank(String value) {
         return value.isBlank();
     }
 
+    /**
+     * 判断某行是否为DELIMITER指令
+     *
+     * @param sql       SQL脚本
+     * @param lineStart 行起始位置
+     * @return 结果
+     */
     private static boolean isDelimiterDirective(String sql, int lineStart) {
         int position = lineStart;
         while (position < sql.length() && Character.isWhitespace(sql.charAt(position))
@@ -183,17 +255,38 @@ public class LexicalSqlSplitter implements SqlSplitter {
                 || Character.isWhitespace(sql.charAt(position + prefix.length())));
     }
 
+    /**
+     * 判断某行是否为GO批处理标记，支持GO、GO n及后跟注释的形式
+     *
+     * @param sql      SQL脚本
+     * @param position 位置
+     * @return 结果
+     */
     private static boolean isGoLine(String sql, int position) {
         String line = sql.substring(position, lineEnd(sql, position)).strip();
         return line.matches("(?i)GO\\s*(--.*)?")
                 || line.matches("(?i)GO\\s+\\d+\\s*(--.*)?");
     }
 
+    /**
+     * 判断某行是否为斜杠结束标记
+     *
+     * @param sql      SQL脚本
+     * @param position 位置
+     * @return 结果
+     */
     private static boolean isSlashLine(String sql, int position) {
         String line = sql.substring(position, lineEnd(sql, position)).strip();
         return line.equals("/") || line.matches("/\\s*(--.*)?");
     }
 
+    /**
+     * 解析DELIMITER指令，提取新的结束符及下一行的起始位置
+     *
+     * @param sql      SQL脚本
+     * @param position 位置
+     * @return DELIMITER指令信息，解析失败返回null
+     */
     private static DelimiterDirective parseDelimiterDirective(String sql, int position) {
         int lineEnd = lineEnd(sql, position);
         int keywordStart = position;
@@ -222,6 +315,13 @@ public class LexicalSqlSplitter implements SqlSplitter {
         return new DelimiterDirective(value, nextLineStart(sql, lineEnd));
     }
 
+    /**
+     * 获取当前位置之后的第一个单词
+     *
+     * @param tokens 词法单元列表
+     * @param index  当前位置
+     * @return 单词文本，未找到返回空字符串
+     */
     private static String nextWord(List<SqlToken> tokens, int index) {
         for (int cursor = index + 1; cursor < tokens.size(); cursor++) {
             SqlToken token = tokens.get(cursor);
@@ -235,22 +335,48 @@ public class LexicalSqlSplitter implements SqlSplitter {
         return "";
     }
 
+    /**
+     * DELIMITER指令信息
+     *
+     * @param delimiter     新的结束符
+     * @param nextLineStart 指令之后下一行的起始位置
+     */
     private record DelimiterDirective(String delimiter, int nextLineStart) {
     }
 
+    /**
+     * 块结构追踪器，用于识别存储过程、函数等过程体，避免在过程体内错误地按分号拆分
+     */
     private static final class BlockTracker {
 
+        /** 词法分析配置 */
         private final SqlLexicalProfile profile;
+        /** 当前嵌套的块结构栈 */
         private final Deque<String> constructs = new ArrayDeque<>();
+        /** 是否已出现CREATE或ALTER，用于判断后续是否可能是过程对象 */
         private boolean createCandidate;
+        /** 是否处于过程体模式 */
         private boolean routineMode;
+        /** 过程体是否已结束 */
         private boolean routineEnded;
+        /** 当前语句已遇到的单词数量 */
         private int statementWordCount;
 
+        /**
+         * 构造方法
+         *
+         * @param profile 词法分析配置
+         */
         private BlockTracker(SqlLexicalProfile profile) {
             this.profile = profile;
         }
 
+        /**
+         * 接收一个词法单元，更新块结构的嵌套状态
+         *
+         * @param token    词法单元
+         * @param nextWord 该词法单元之后的下一个单词
+         */
         private void accept(SqlToken token, String nextWord) {
             if (token.type() != SqlTokenType.WORD) {
                 return;
@@ -291,10 +417,20 @@ public class LexicalSqlSplitter implements SqlSplitter {
             }
         }
 
+        /**
+         * 判断当前单词是否处于语句起始位置
+         *
+         * @return 结果
+         */
         private boolean isStatementStart() {
             return statementWordCount <= 2 || constructs.isEmpty();
         }
 
+        /**
+         * 根据结束关键字弹出一个块结构，必要时回退到匹配的结构
+         *
+         * @param nextWord END之后的下一个单词
+         */
         private void popConstruct(String nextWord) {
             String expected = switch (nextWord) {
                 case "IF" -> "IF";
@@ -322,6 +458,11 @@ public class LexicalSqlSplitter implements SqlSplitter {
             }
         }
 
+        /**
+         * 判断当前是否处于受保护的块结构内（不应按分号拆分）
+         *
+         * @return 结果
+         */
         private boolean isProtected() {
             if (routineMode && !routineEnded) {
                 return true;
@@ -329,10 +470,18 @@ public class LexicalSqlSplitter implements SqlSplitter {
             return !constructs.isEmpty();
         }
 
+        /**
+         * 判断当前是否处于过程体语句中
+         *
+         * @return 结果
+         */
         private boolean isRoutineStatement() {
             return routineMode;
         }
 
+        /**
+         * 重置状态，用于开始一条新语句时
+         */
         private void reset() {
             constructs.clear();
             createCandidate = false;
@@ -341,6 +490,12 @@ public class LexicalSqlSplitter implements SqlSplitter {
             statementWordCount = 0;
         }
 
+        /**
+         * 判断单词是否为过程对象关键字（存储过程、函数、触发器等）
+         *
+         * @param word 单词
+         * @return 结果
+         */
         private static boolean isRoutineObject(String word) {
             return switch (word) {
                 case "PROCEDURE", "FUNCTION", "TRIGGER", "EVENT", "PACKAGE", "TYPE" -> true;

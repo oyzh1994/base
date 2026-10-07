@@ -26,8 +26,8 @@ public class QRCodeUtil {
     /**
      * 生成二维码
      *
-     * @param content 源内宿
-     * @param charset 生成二维码保存的路径
+     * @param content 二维码内容
+     * @param charset 字符集编码
      * @param imgW    图片宽
      * @param imgH    图片高
      * @return 返回二维码图片
@@ -54,8 +54,8 @@ public class QRCodeUtil {
     /**
      * 在生成的二维码中插入图片
      *
-     * @param source       源文件
-     * @param imgPath      文件路径
+     * @param source       二维码图片
+     * @param imgPath      logo图片文件
      * @param imgW         logo宽
      * @param imgH         logo高
      * @param needCompress 是否需要压缩
@@ -76,7 +76,7 @@ public class QRCodeUtil {
             Image image = src.getScaledInstance(width, height, Image.SCALE_SMOOTH);
             BufferedImage tag = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             Graphics g = tag.getGraphics();
-            // 绘制缩小后的囿
+            // 绘制缩小后的logo
             g.drawImage(image, 0, 0, null);
             g.dispose();
             src = image;

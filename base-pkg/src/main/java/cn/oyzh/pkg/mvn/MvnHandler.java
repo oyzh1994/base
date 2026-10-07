@@ -14,6 +14,8 @@ import java.util.List;
 
 
 /**
+ * maven处理器，先安装依赖工程再打包当前工程
+ *
  * @author oyzh
  * @since 2024/6/19
  */
@@ -53,6 +55,12 @@ public class MvnHandler implements PreHandler, SingleHandler {
         this.executed = executed;
     }
 
+    /**
+     * 构造maven处理器
+     *
+     * @param projectDir   项目工程目录
+     * @param dependencies 依赖工程目录列表
+     */
     public MvnHandler(String projectDir, List<String> dependencies) {
         this.dependencies = dependencies;
         this.projectDir = projectDir;

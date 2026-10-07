@@ -24,6 +24,12 @@ public class EventSubscriber {
      */
     private final WeakReference<Object> listener;
 
+    /**
+     * 构造订阅器
+     *
+     * @param method   订阅方法
+     * @param listener 监听器
+     */
     public EventSubscriber(Method method, Object listener) {
         this.method = method;
         this.listener = new WeakReference<>(listener);

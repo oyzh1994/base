@@ -9,47 +9,86 @@ import java.io.File;
 import java.util.Set;
 
 /**
- * javafx的覆盖管理器
+ * i18n覆盖检查器，用于校验各语言资源文件的键是否与主体资源文件完全一致
  *
  * @author oyzh
  * @since 2026/09/06
  */
 public class I18nCoverChecker {
 
+    /**
+     * 资源文件前缀
+     */
     private String prefx;
 
+    /**
+     * 主体i18n资源文件名称
+     */
     private String mainI18n;
 
+    /**
+     * 项目路径
+     */
     private String projectPath;
 
+    /**
+     * 获取资源文件前缀
+     *
+     * @return 资源文件前缀
+     */
     public String getPrefx() {
         return prefx;
     }
 
+    /**
+     * 设置资源文件前缀
+     *
+     * @param prefx 资源文件前缀
+     */
     public void setPrefx(String prefx) {
         this.prefx = prefx;
     }
 
+    /**
+     * 获取主体i18n资源文件名称
+     *
+     * @return 主体i18n资源文件名称
+     */
     public String getMainI18n() {
         return mainI18n;
     }
 
+    /**
+     * 设置主体i18n资源文件名称
+     *
+     * @param mainI18n 主体i18n资源文件名称
+     */
     public void setMainI18n(String mainI18n) {
         this.mainI18n = mainI18n;
     }
 
+    /**
+     * 获取项目路径
+     *
+     * @return 项目路径
+     */
     public String getProjectPath() {
         return projectPath;
     }
 
+    /**
+     * 设置项目路径
+     *
+     * @param projectPath 项目路径
+     */
     public void setProjectPath(String projectPath) {
         this.projectPath = projectPath;
     }
 
     /**
-     * i18n检查
+     * 执行i18n检查，逐一比对各语言资源文件与主体资源文件的键集合，不一致时结束检查
      *
-     * @throws Exception 异常
+     * @throws Exception 检查不通过时抛出异常
      */
     public void i18Check() throws Exception {
         JulLog.info("i18n check start");

@@ -12,6 +12,7 @@ import java.util.Map;
  */
 public final class SqlDialects {
 
+    /** 数据库类型与SQL方言的映射 */
     private static final Map<SqlDatabase, SqlDialect> DIALECTS = new EnumMap<>(SqlDatabase.class);
 
     static {
@@ -26,17 +27,38 @@ public final class SqlDialects {
         DIALECTS.put(SqlDatabase.DM, new DmSqlDialect());
     }
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private SqlDialects() {
     }
 
+    /**
+     * 获取指定数据库类型的SQL方言
+     *
+     * @param database 数据库类型
+     * @return SQL方言
+     */
     public static SqlDialect get(SqlDatabase database) {
         return DIALECTS.get(database == null ? SqlDatabase.ANSI : database);
     }
 
+    /**
+     * 获取指定数据库名称的SQL方言
+     *
+     * @param database 数据库名称
+     * @return SQL方言
+     */
     public static SqlDialect get(String database) {
         return get(parse(database));
     }
 
+    /**
+     * 解析数据库名称，无法识别时返回ANSI
+     *
+     * @param database 数据库名称
+     * @return 数据库类型
+     */
     public static SqlDatabase parse(String database) {
         if (database == null || database.isBlank()) {
             return SqlDatabase.ANSI;

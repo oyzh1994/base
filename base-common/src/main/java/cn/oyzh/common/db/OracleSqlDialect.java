@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class OracleSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造Oracle SQL方言实例
+     */
     public OracleSqlDialect() {
         super(SqlDatabase.ORACLE, SqlLexicalProfile.ORACLE);
     }

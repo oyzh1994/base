@@ -8,6 +8,9 @@ package cn.oyzh.common.util;
  */
 public class HexUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private HexUtil() {
     }
 
@@ -61,7 +64,7 @@ public class HexUtil {
     }
 
     /**
-     * 将十六进制转换为字符串字节数组
+     * 将十六进制字符串转换为字节数组
      *
      * @param s 十六进制字符串
      * @return 字节数组

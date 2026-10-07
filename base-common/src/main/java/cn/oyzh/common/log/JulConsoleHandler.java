@@ -15,6 +15,11 @@ import java.util.logging.StreamHandler;
  */
 public class JulConsoleHandler extends StreamHandler {
 
+    /**
+     * 构造控制台日志处理器，输出到标准输出
+     *
+     * @throws UnsupportedEncodingException 设置编码异常
+     */
     public JulConsoleHandler() throws UnsupportedEncodingException {
         super(System.out, new JulConsoleFormatter());
         String enc = resolveEncoding();

@@ -16,10 +16,12 @@ import java.lang.reflect.Method;
 public class BeanUtil {
 
     /**
+     * 获取属性值
+     *
      * @param bean 对象
-     * @param name 名称
-     * @param <T>  参数类型
-     * @return 对象
+     * @param name 属性名称
+     * @param <T>  属性值类型
+     * @return 属性值
      */
     public static <T> T getValue(Object bean, String name) {
         return getValue(bean, name, true);
@@ -55,12 +57,12 @@ public class BeanUtil {
     }
 
     /**
-     * 获取get放
+     * 获取get方法
      *
      * @param clazz     类
-     * @param name      名称
-     * @param callSuper 是否调用父类
-     * @return 方法
+     * @param name      属性名称
+     * @param callSuper 是否查找父类
+     * @return get方法，未找到时返回null
      */
     public static Method getGetterMethod(Class<?> clazz, String name, boolean callSuper) {
         String property = StringUtil.upperFirst(name);
@@ -98,12 +100,12 @@ public class BeanUtil {
     }
 
     /**
-     * 获取get方法
+     * 设置属性值
      *
      * @param bean      对象
-     * @param name      名称
-     * @param value     值
-     * @param callSuper 调用父类
+     * @param name      属性名称
+     * @param value     属性值
+     * @param callSuper 是否查找父类
      */
     public static void setValue(Object bean, String name, Object value, boolean callSuper) {
         if (bean == null) {

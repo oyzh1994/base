@@ -29,10 +29,22 @@ public class JreConfigParser implements ConfigParser<JreConfig> {
         return config;
     }
 
+    /**
+     * 解析配置
+     *
+     * @param object 配置内容
+     * @return 配置类
+     */
     public static JreConfig parseConfig(JSONObject object) {
         return new JreConfigParser().parse(object);
     }
 
+    /**
+     * 解析配置
+     *
+     * @param configFile 配置文件
+     * @return 配置类
+     */
     public static JreConfig parseConfig(String configFile) {
         return new JreConfigParser().parse(configFile);
     }

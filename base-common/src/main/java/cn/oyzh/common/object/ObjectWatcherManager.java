@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 对象观察者管理器，负责注册观察者并检测对象是否被回收
  *
  * @author oyzh
  * @since 2025-12-05
@@ -15,12 +16,12 @@ import java.util.List;
 public class ObjectWatcherManager {
 
     /**
-     * 禁用对象观察者
+     * 禁用对象观察者的系统属性名
      */
     public static String WATCHER_DISABLE = "OBJECT_WATCHER_DISABLE";
 
     /**
-     * 观察者
+     * 已注册的观察者列表
      */
     private static final List<ObjectWatcher> WATCHERS = new ArrayList<>();
 
@@ -100,7 +101,8 @@ public class ObjectWatcherManager {
      * 观察对象
      *
      * @param object 对象
-     * @return 对象观察者
+     * @param name   观察者名称，可为空
+     * @return 对象观察者，对象为空或观察者被禁用时返回null
      */
     public static ObjectWatcher watch(Object object, String name) {
         if (ObjectWatcherManager.isEnabled() && object != null) {

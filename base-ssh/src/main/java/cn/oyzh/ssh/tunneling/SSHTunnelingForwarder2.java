@@ -23,7 +23,7 @@ public class SSHTunnelingForwarder2 extends SSHForwarder2 {
      * 端口转发
      *
      * @param tunnelings ssh隧道信息
-     * @param session    ssh回话
+     * @param session    ssh会话
      * @throws SSHException ssh异常
      */
     public void forward(List<? extends SSHTunneling> tunnelings, ClientSession session) throws SSHException {

@@ -160,6 +160,11 @@ public class SSHUtil {
      */
     private static Pattern ANSI_PATTERN;
 
+    /**
+     * 获取ansi正则，为空时初始化
+     *
+     * @return ansi正则
+     */
     private static Pattern ansiPattern() {
         if (ANSI_PATTERN == null) {
             ANSI_PATTERN = Pattern.compile("\u001B\\[[;\\d]*[ -/]*[@-~]");

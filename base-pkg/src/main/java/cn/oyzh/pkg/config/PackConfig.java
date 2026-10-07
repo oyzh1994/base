@@ -161,10 +161,22 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      */
     private final Map<String, Object> properties = new HashMap<>();
 
+    /**
+     * 设置属性
+     *
+     * @param key   属性键
+     * @param value 属性值
+     */
     public void putProperty(String key, Object value) {
         this.properties.put(key, value);
     }
 
+    /**
+     * 获取属性
+     *
+     * @param key 属性键
+     * @return 属性值
+     */
     public Object getProperty(String key) {
         return this.properties.get(key);
     }
@@ -174,14 +186,29 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      */
     private final List<String> tempFiles = new ArrayList<>();
 
+    /**
+     * 添加临时文件
+     *
+     * @param tempFile 临时文件
+     */
     public void addTempFile(String tempFile){
         this.tempFiles.add(tempFile);
     }
 
+    /**
+     * 获取临时文件
+     *
+     * @return 临时文件
+     */
     public List<String> tempFiles() {
         return tempFiles;
     }
 
+    /**
+     * 获取主程序，优先返回最小化后的主程序
+     *
+     * @return 主程序
+     */
     public String mainJar() {
         if (this.minimizeManJar != null) {
             return this.minimizeManJar;
@@ -189,6 +216,11 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         return this.mainJar;
     }
 
+    /**
+     * 获取主程序文件名
+     *
+     * @return 主程序文件名
+     */
     public String mainJarName() {
         String mainJar = this.mainJar();
         if (mainJar != null) {
@@ -202,6 +234,11 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         return mainJar;
     }
 
+    /**
+     * 获取输出路径，优先返回最终压缩文件路径
+     *
+     * @return 输出路径
+     */
     public String outPath() {
         if (this.compressFile != null) {
             return this.compressFile.getPath();
@@ -209,6 +246,11 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         return this.dest;
     }
 
+    /**
+     * 获取应用版本，去除版本号前导的 v
+     *
+     * @return 应用版本
+     */
     public String appVersion() {
         if (this.appVersion == null) {
             return null;
@@ -219,6 +261,11 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         return this.appVersion;
     }
 
+    /**
+     * 获取主应用版本，即去掉最后一段的主版本号
+     *
+     * @return 主应用版本
+     */
     public String mainAppVersion() {
         String appVersion = this.appVersion();
         if (StringUtil.checkCountOccurrences(appVersion, '.', 3)) {
@@ -231,6 +278,11 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
 //        return this.packMode.equalsIgnoreCase("packr");
 //    }
 
+    /**
+     * 获取jre路径，优先返回最小化后的jre，其次返回jlink后的jre
+     *
+     * @return jre路径
+     */
     public String jrePath() {
         if (this.minimizeJre != null) {
             return this.minimizeJre;
@@ -241,62 +293,137 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         return this.jrePath;
     }
 
+    /**
+     * 是否macos平台
+     *
+     * @return 是返回 true，否则返回 false
+     */
     public boolean isPlatformMacos() {
         return StringUtil.containsAnyIgnoreCase(this.platform, "macos");
     }
 
+    /**
+     * 是否windows平台
+     *
+     * @return 是返回 true，否则返回 false
+     */
     public boolean isPlatformWindows() {
         return StringUtil.containsAnyIgnoreCase(this.platform, "win");
     }
 
+    /**
+     * 是否linux平台
+     *
+     * @return 是返回 true，否则返回 false
+     */
     public boolean isPlatformLinux() {
         return StringUtil.containsAnyIgnoreCase(this.platform, "linux");
     }
 
+    /**
+     * 获取jfx版本
+     *
+     * @return jfx版本
+     */
     public String getJfxVersion() {
         return jfxVersion;
     }
 
+    /**
+     * 设置jfx版本
+     *
+     * @param jfxVersion jfx版本
+     */
     public void setJfxVersion(String jfxVersion) {
         this.jfxVersion = jfxVersion;
     }
 
+    /**
+     * 获取目标目录
+     *
+     * @return 目标目录
+     */
     public String getDest() {
         return dest;
     }
 
+    /**
+     * 设置目标目录
+     *
+     * @param dest 目标目录
+     */
     public void setDest(String dest) {
         this.dest = dest;
     }
 
+    /**
+     * 获取jlink后的jre目录
+     *
+     * @return jlink后的jre目录
+     */
     public String getJlinkJre() {
         return jlinkJre;
     }
 
+    /**
+     * 设置jlink后的jre目录
+     *
+     * @param jlinkJre jlink后的jre目录
+     */
     public void setJlinkJre(String jlinkJre) {
         this.jlinkJre = jlinkJre;
     }
 
+    /**
+     * 获取最小化后的jre目录
+     *
+     * @return 最小化后的jre目录
+     */
     public String getMinimizeJre() {
         return minimizeJre;
     }
 
+    /**
+     * 设置最小化后的jre目录
+     *
+     * @param minimizeJre 最小化后的jre目录
+     */
     public void setMinimizeJre(String minimizeJre) {
         this.minimizeJre = minimizeJre;
     }
 
+    /**
+     * 获取jPackage输入目录
+     *
+     * @return jPackage输入目录
+     */
     public String getJPackageInput() {
         return jPackageInput;
     }
 
+    /**
+     * 设置jPackage输入目录
+     *
+     * @param jPackageInput jPackage输入目录
+     */
     public void setJPackageInput(String jPackageInput) {
         this.jPackageInput = jPackageInput;
     }
 
+    /**
+     * 获取jar解压目录
+     *
+     * @return jar解压目录
+     */
     public String getJarUnDir() {
         return jarUnDir;
     }
 
+    /**
+     * 设置jar解压目录
+     *
+     * @param jarUnDir jar解压目录
+     */
     public void setJarUnDir(String jarUnDir) {
         this.jarUnDir = jarUnDir;
     }
@@ -309,114 +436,254 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
 //        this.packMode = packMode;
 //    }
 
+    /**
+     * 获取最小化后的主程序
+     *
+     * @return 最小化后的主程序
+     */
     public String getMinimizeManJar() {
         return minimizeManJar;
     }
 
+    /**
+     * 设置最小化后的主程序
+     *
+     * @param minimizeManJar 最小化后的主程序
+     */
     public void setMinimizeManJar(String minimizeManJar) {
         this.minimizeManJar = minimizeManJar;
     }
 
+    /**
+     * 获取主程序
+     *
+     * @return 主程序
+     */
     public String getMainJar() {
         return mainJar;
     }
 
+    /**
+     * 设置主程序
+     *
+     * @param mainJar 主程序
+     */
     public void setMainJar(String mainJar) {
         this.mainJar = mainJar;
     }
 
+    /**
+     * 获取应用名称
+     *
+     * @return 应用名称
+     */
     public String getAppName() {
         return appName;
     }
 
+    /**
+     * 设置应用名称
+     *
+     * @param appName 应用名称
+     */
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
+    /**
+     * 获取应用图标
+     *
+     * @return 应用图标
+     */
     public String getAppIcon() {
         return appIcon;
     }
 
+    /**
+     * 设置应用图标
+     *
+     * @param appIcon 应用图标
+     */
     public void setAppIcon(String appIcon) {
         this.appIcon = appIcon;
     }
 
+    /**
+     * 获取应用版本
+     *
+     * @return 应用版本
+     */
     public String getAppVersion() {
         return appVersion;
     }
 
+    /**
+     * 设置应用版本
+     *
+     * @param appVersion 应用版本
+     */
     public void setAppVersion(String appVersion) {
         this.appVersion = appVersion;
     }
 
+    /**
+     * 获取构建类型
+     *
+     * @return 构建类型
+     */
     public String getBuildType() {
         return buildType;
     }
 
+    /**
+     * 设置构建类型
+     *
+     * @param buildType 构建类型
+     */
     public void setBuildType(String buildType) {
         this.buildType = buildType;
     }
 
+    /**
+     * 获取最终压缩文件
+     *
+     * @return 最终压缩文件
+     */
     public File getCompressFile() {
         return compressFile;
     }
 
+    /**
+     * 设置最终压缩文件
+     *
+     * @param compressFile 最终压缩文件
+     */
     public void setCompressFile(File compressFile) {
         this.compressFile = compressFile;
     }
 
+    /**
+     * 获取打包用的jre路径
+     *
+     * @return 打包用的jre路径
+     */
     public String getJrePath() {
         return jrePath;
     }
 
+    /**
+     * 设置打包用的jre路径
+     *
+     * @param jrePath 打包用的jre路径
+     */
     public void setJrePath(String jrePath) {
         this.jrePath = jrePath;
     }
 
+    /**
+     * 获取执行用的jdk路径
+     *
+     * @return 执行用的jdk路径
+     */
     public String getJdkPath() {
         return jdkPath;
     }
 
+    /**
+     * 设置执行用的jdk路径
+     *
+     * @param jdkPath 执行用的jdk路径
+     */
     public void setJdkPath(String jdkPath) {
         this.jdkPath = jdkPath;
     }
 
+    /**
+     * 获取平台
+     *
+     * @return 平台
+     */
     public String getPlatform() {
         return platform;
     }
 
+    /**
+     * 设置平台
+     *
+     * @param platform 平台
+     */
     public void setPlatform(String platform) {
         this.platform = platform;
     }
 
+    /**
+     * 获取jar配置
+     *
+     * @return jar配置
+     */
     public JarConfig getJarConfig() {
         return jarConfig;
     }
 
+    /**
+     * 设置jar配置
+     *
+     * @param jarConfig jar配置
+     */
     public void setJarConfig(JarConfig jarConfig) {
         this.jarConfig = jarConfig;
     }
 
+    /**
+     * 获取jre配置
+     *
+     * @return jre配置
+     */
     public JreConfig getJreConfig() {
         return jreConfig;
     }
 
+    /**
+     * 设置jre配置
+     *
+     * @param jreConfig jre配置
+     */
     public void setJreConfig(JreConfig jreConfig) {
         this.jreConfig = jreConfig;
     }
 
+    /**
+     * 获取jdeps配置
+     *
+     * @return jdeps配置
+     */
     public JDepsConfig getJDepsConfig() {
         return jDepsConfig;
     }
 
+    /**
+     * 设置jdeps配置
+     *
+     * @param jDepsConfig jdeps配置
+     */
     public void setJDepsConfig(JDepsConfig jDepsConfig) {
         this.jDepsConfig = jDepsConfig;
     }
 
+    /**
+     * 获取jlink配置
+     *
+     * @return jlink配置
+     */
     public JLinkConfig getJLinkConfig() {
         return jLinkConfig;
     }
 
+    /**
+     * 设置jlink配置
+     *
+     * @param jLinkConfig jlink配置
+     */
     public void setJLinkConfig(JLinkConfig jLinkConfig) {
         this.jLinkConfig = jLinkConfig;
     }
@@ -429,30 +696,65 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
 //        this.packrConfig = packrConfig;
 //    }
 
+    /**
+     * 获取jPackage配置
+     *
+     * @return jPackage配置
+     */
     public JPackageConfig getjPackageConfig() {
         return jPackageConfig;
     }
 
+    /**
+     * 设置jPackage配置
+     *
+     * @param jPackageConfig jPackage配置
+     */
     public void setjPackageConfig(JPackageConfig jPackageConfig) {
         this.jPackageConfig = jPackageConfig;
     }
 
+    /**
+     * 获取压缩配置
+     *
+     * @return 压缩配置
+     */
     public CompressConfig getCompressConfig() {
         return compressConfig;
     }
 
+    /**
+     * 设置压缩配置
+     *
+     * @param compressConfig 压缩配置
+     */
     public void setCompressConfig(CompressConfig compressConfig) {
         this.compressConfig = compressConfig;
     }
 
+    /**
+     * 获取属性
+     *
+     * @return 属性
+     */
     public Map<String, Object> getProperties() {
         return properties;
     }
 
+    /**
+     * 获取appImageRuntime目录
+     *
+     * @return appImageRuntime目录
+     */
     public String getAppImageRuntime() {
         return appImageRuntime;
     }
 
+    /**
+     * 设置appImageRuntime目录
+     *
+     * @param appImageRuntime appImageRuntime目录
+     */
     public void setAppImageRuntime(String appImageRuntime) {
         this.appImageRuntime = appImageRuntime;
     }
@@ -527,7 +829,7 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
     /**
      * 获取打包类型
      *
-     * @return 结果
+     * @return 打包类型
      */
     public String packageType() {
         return this.getjPackageConfig() == null ? null : this.getjPackageConfig().getType();

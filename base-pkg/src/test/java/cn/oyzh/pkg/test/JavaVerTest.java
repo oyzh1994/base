@@ -5,6 +5,7 @@ import cn.oyzh.common.system.SystemUtil;
 import org.junit.Test;
 
 /**
+ * 测试获取 Java/JDK 版本相关信息的多种方式。
  *
  * @author oyzh
  * @since 2026-09-18

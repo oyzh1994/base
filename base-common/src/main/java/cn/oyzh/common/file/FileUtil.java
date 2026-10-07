@@ -79,18 +79,52 @@ public class FileUtil {
         return null;
     }
 
+    /**
+     * 获取文件写入器
+     *
+     * @param file    文件
+     * @param charset 字符集
+     * @param append  是否追加写入
+     * @return 缓冲写入器
+     * @throws FileNotFoundException 文件不存在时抛出
+     */
     public static BufferedWriter getWriter(File file, Charset charset, boolean append) throws FileNotFoundException {
         return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, append), charset));
     }
 
+    /**
+     * 获取文件读取器
+     *
+     * @param filePath 文件路径
+     * @param charset  字符集
+     * @return 缓冲读取器
+     * @throws FileNotFoundException 文件不存在时抛出
+     */
     public static BufferedReader getReader(String filePath, Charset charset) throws FileNotFoundException {
         return getReader(new File(filePath), charset);
     }
 
+    /**
+     * 获取文件读取器
+     *
+     * @param file    文件
+     * @param charset 字符集
+     * @return 缓冲读取器
+     * @throws FileNotFoundException 文件不存在时抛出
+     */
     public static BufferedReader getReader(File file, Charset charset) throws FileNotFoundException {
         return new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
     }
 
+    /**
+     * 将字符串写入文件
+     *
+     * @param content 内容
+     * @param file    目标文件
+     * @param charset 字符集
+     * @param append  是否追加写入
+     * @return 目标文件，写入失败时返回 null
+     */
     public static File writeString(String content, File file, Charset charset, boolean append) {
         try {
             if (content != null && file != null) {
@@ -108,22 +142,52 @@ public class FileUtil {
         return null;
     }
 
+    /**
+     * 将字符串以默认字符集覆盖写入文件
+     *
+     * @param content 内容
+     * @param file    目标文件
+     */
     public static void writeString(String content, File file) {
         writeString(content, file, Charset.defaultCharset(), false);
     }
 
+    /**
+     * 将字符串以 UTF-8 编码覆盖写入文件
+     *
+     * @param content 内容
+     * @param file    目标文件
+     */
     public static void writeUtf8String(String content, File file) {
         writeString(content, file, StandardCharsets.UTF_8, false);
     }
 
+    /**
+     * 将字符串以 UTF-8 编码覆盖写入文件
+     *
+     * @param content 内容
+     * @param file    目标文件路径
+     */
     public static void writeUtf8String(String content, String file) {
         writeString(content, new File(file), StandardCharsets.UTF_8, false);
     }
 
+    /**
+     * 将字节数组写入文件
+     *
+     * @param data     数据
+     * @param fileName 文件路径
+     */
     public static void writeBytes(byte[] data, String fileName) {
         writeBytes(data, new File(fileName));
     }
 
+    /**
+     * 将字节数组写入文件
+     *
+     * @param data 数据
+     * @param file 目标文件
+     */
     public static void writeBytes(byte[] data, File file) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -236,10 +300,22 @@ public class FileUtil {
         return file.delete();
     }
 
+    /**
+     * 读取文件全部字节
+     *
+     * @param file 文件路径
+     * @return 字节数组
+     */
     public static byte[] readBytes(String file) {
         return file == null ? null : readBytes(new File(file));
     }
 
+    /**
+     * 读取文件全部字节
+     *
+     * @param file 文件
+     * @return 字节数组，文件不存在或为目录时返回 null
+     */
     public static byte[] readBytes(File file) {
         if (file == null || !file.exists() || file.isDirectory()) {
             return null;
@@ -262,18 +338,43 @@ public class FileUtil {
         return bytes;
     }
 
+    /**
+     * 判断文件是否存在
+     *
+     * @param file 文件路径
+     * @return 结果
+     */
     public static boolean exists(String file) {
         return file != null && exists(new File(file));
     }
 
+    /**
+     * 判断文件是否存在
+     *
+     * @param file 文件
+     * @return 结果
+     */
     public static boolean exists(File file) {
         return file != null && file.exists();
     }
 
+    /**
+     * 判断路径是否存在
+     *
+     * @param file 路径
+     * @return 结果
+     */
     public static boolean exists(Path file) {
         return file != null && Files.exists(file);
     }
 
+    /**
+     * 读取 URL 内容的所有行
+     *
+     * @param url     URL
+     * @param charset 字符集
+     * @return 行列表
+     */
     public static List<String> readLines(URL url, Charset charset) {
         try {
             InputStreamReader reader = new InputStreamReader(url.openStream(), charset);
@@ -291,6 +392,13 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 读取输入流的所有行
+     *
+     * @param stream  输入流
+     * @param charset 字符集
+     * @return 行列表
+     */
     public static List<String> readLines(InputStream stream, Charset charset) {
         try (InputStreamReader reader = new InputStreamReader(stream, charset);
              BufferedReader bufferedReader = new BufferedReader(reader);
@@ -308,6 +416,13 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 读取输入流的全部内容为字符串（每行后补换行符）
+     *
+     * @param stream  输入流
+     * @param charset 字符集
+     * @return 内容
+     */
     public static String readString(InputStream stream, Charset charset) {
         try {
             InputStreamReader reader = new InputStreamReader(stream, charset);
@@ -325,6 +440,13 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 读取 URL 的全部内容为字符串
+     *
+     * @param url     URL
+     * @param charset 字符集
+     * @return 内容，读取失败时返回 null
+     */
     public static String readString(URL url, Charset charset) {
         try {
             return readString(url.openStream(), charset);
@@ -334,6 +456,13 @@ public class FileUtil {
         return null;
     }
 
+    /**
+     * 读取文件的全部内容为字符串
+     *
+     * @param file    文件
+     * @param charset 字符集
+     * @return 内容，文件不存在或读取失败时返回 null
+     */
     public static String readString(File file, Charset charset) {
         if (file.exists() && file.isFile()) {
             try {
@@ -345,14 +474,32 @@ public class FileUtil {
         return null;
     }
 
+    /**
+     * 以 UTF-8 编码读取文件全部内容
+     *
+     * @param file 文件路径
+     * @return 内容
+     */
     public static String readUtf8String(String file) {
         return readUtf8String(new File(file));
     }
 
+    /**
+     * 以 UTF-8 编码读取文件全部内容
+     *
+     * @param file 文件
+     * @return 内容
+     */
     public static String readUtf8String(File file) {
         return readString(file, StandardCharsets.UTF_8);
     }
 
+    /**
+     * 列出目录下的文件
+     *
+     * @param dir 目录路径
+     * @return 文件数组，目录不存在时返回 null
+     */
     public static File[] ls(Path dir) {
         if (dir == null) {
             return null;
@@ -360,6 +507,12 @@ public class FileUtil {
         return ls(dir.toFile());
     }
 
+    /**
+     * 列出目录下的文件
+     *
+     * @param dir 目录
+     * @return 文件数组，目录不存在时返回 null
+     */
     public static File[] ls(File dir) {
         if (dir == null) {
             return null;
@@ -367,10 +520,23 @@ public class FileUtil {
         return ls(dir.getPath(), null);
     }
 
+    /**
+     * 列出目录下的文件
+     *
+     * @param dir 目录路径
+     * @return 文件数组，目录不存在时返回 null
+     */
     public static File[] ls(String dir) {
         return ls(dir, null);
     }
 
+    /**
+     * 按过滤器列出目录下的文件
+     *
+     * @param dir    目录路径
+     * @param filter 过滤器，为 null 时列出全部
+     * @return 文件数组，目录不存在时返回 null
+     */
     public static File[] ls(String dir, FileFilter filter) {
         if (dir == null) {
             return null;
@@ -385,6 +551,12 @@ public class FileUtil {
         return dirFile.listFiles(filter);
     }
 
+    /**
+     * 获取文件输入流
+     *
+     * @param file 文件路径
+     * @return 输入流，打开失败时返回 null
+     */
     public static InputStream getInputStream(String file) {
         try {
             return new FileInputStream(file);
@@ -394,6 +566,13 @@ public class FileUtil {
         return null;
     }
 
+    /**
+     * 将多行内容以追加方式写入文件
+     *
+     * @param content 内容列表
+     * @param file    文件路径
+     * @param charset 字符集名称
+     */
     public static void appendLines(List<String> content, String file, String charset) {
         try {
             BufferedWriter writer = getWriter(new File(file), Charset.forName(charset), true);
@@ -408,11 +587,14 @@ public class FileUtil {
     }
 
     /**
-     * 移动文件到文件夹
-     * 3. source为文件，target为目录，移动到target
+     * 将文件移动到指定目录下。
+     * <p>
+     * source 必须是已存在的文件，dir 必须是已存在的目录；若目标目录下已存在同名文件
+     * 且 override 为 false，则不执行移动并返回 false。
      *
      * @param source   源文件
-     * @param override 是否覆盖
+     * @param dir      目标目录
+     * @param override 是否覆盖同名文件
      * @return 结果
      * @throws IOException 异常
      */
@@ -431,13 +613,13 @@ public class FileUtil {
     }
 
     /**
-     * 移动文件夹
-     * 1. source为文件，target为文件，直接覆盖
-     * 2. source为目录，target为目录，直接覆盖
-     * 3. source为文件，target为目录，移动到target
+     * 移动目录。
+     * <p>
+     * source 必须是已存在的目录；目标已存在且 override 为 false 时返回 false；
+     * 移动完成后会删除源目录。
      *
-     * @param source   源文件
-     * @param target   目标文件
+     * @param source   源目录
+     * @param target   目标路径
      * @param override 是否覆盖
      * @return 结果
      * @throws IOException 异常
@@ -447,13 +629,13 @@ public class FileUtil {
     }
 
     /**
-     * 移动文件夹
-     * 1. source为文件，target为文件，直接覆盖
-     * 2. source为目录，target为目录，直接覆盖
-     * 3. source为文件，target为目录，移动到target
+     * 移动目录。
+     * <p>
+     * source 必须是已存在的目录；目标已存在且 override 为 false 时返回 false；
+     * 移动完成后会删除源目录。
      *
-     * @param source   源文件
-     * @param target   目标文件
+     * @param source   源目录
+     * @param target   目标路径
      * @param override 是否覆盖
      * @return 结果
      * @throws IOException 异常
@@ -535,6 +717,12 @@ public class FileUtil {
         return false;
     }
 
+    /**
+     * 创建目录（含多级父目录）
+     *
+     * @param dir 目录路径
+     * @return 是否创建成功
+     */
     public static boolean mkdir(Path dir) {
         if (dir == null) {
             return false;
@@ -542,6 +730,12 @@ public class FileUtil {
         return mkdir(dir.toFile());
     }
 
+    /**
+     * 创建目录（含多级父目录）
+     *
+     * @param dir 目录
+     * @return 是否创建成功
+     */
     public static boolean mkdir(File dir) {
         if (dir != null && !dir.exists()) {
             return dir.mkdirs();
@@ -549,6 +743,12 @@ public class FileUtil {
         return false;
     }
 
+    /**
+     * 创建目录（含多级父目录）
+     *
+     * @param dir 目录路径
+     * @return 是否创建成功
+     */
     public static boolean mkdir(String dir) {
         if (dir == null) {
             return false;
@@ -560,6 +760,13 @@ public class FileUtil {
     //        return exist(Path.of(file));
     //    }
 
+    /**
+     * 判断路径是否存在
+     *
+     * @param file 起始路径
+     * @param more 追加的子路径
+     * @return 结果
+     */
     public static boolean exists(String file, String... more) {
         if (file == null) {
             return false;
@@ -567,16 +774,34 @@ public class FileUtil {
         return exists(Path.of(file, more));
     }
 
+    /**
+     * 递归获取目录下的所有文件
+     *
+     * @param folder 目录路径
+     * @return 文件列表
+     */
     public static List<File> getAllFiles(String folder) {
         return getAllFiles(new File(folder));
     }
 
+    /**
+     * 递归获取目录下的所有文件
+     *
+     * @param folder 目录
+     * @return 文件列表
+     */
     public static List<File> getAllFiles(File folder) {
         List<File> fileList = new ArrayList<>();
         getAllFiles(folder, fileList);
         return fileList;
     }
 
+    /**
+     * 递归获取目录下的所有文件并收集到指定列表
+     *
+     * @param folder   目录
+     * @param fileList 结果列表
+     */
     public static void getAllFiles(File folder, List<File> fileList) {
         File[] files = folder.listFiles();
         if (files != null) {
@@ -641,6 +866,11 @@ public class FileUtil {
         return new File(file).length();
     }
 
+    /**
+     * 创建目录（不存在时）
+     *
+     * @param dir 目录
+     */
     public static void forceMkdir(File dir) {
         mkdir(dir);
     }
@@ -677,7 +907,7 @@ public class FileUtil {
     }
 
     /**
-     * 清空目录
+     * 删除目录及其全部内容
      *
      * @param directory 目录
      * @return 结果
@@ -687,9 +917,9 @@ public class FileUtil {
     }
 
     /**
-     * 清空目录
+     * 删除目录及其全部内容
      *
-     * @param directory 目录
+     * @param directory 目录路径
      * @return 结果
      */
     public static boolean cleanDir(Path directory) {
@@ -700,7 +930,7 @@ public class FileUtil {
     }
 
     /**
-     * 清空目录
+     * 删除目录及其全部内容
      *
      * @param directory 目录
      * @return 结果
@@ -726,10 +956,20 @@ public class FileUtil {
         writeString(builder.toString(), file);
     }
 
+    /**
+     * 获取系统临时目录路径
+     *
+     * @return 临时目录路径
+     */
     public static String tmpPath() {
         return System.getProperty("java.io.tmpdir");
     }
 
+    /**
+     * 获取系统临时目录
+     *
+     * @return 临时目录
+     */
     public static File tmpdir() {
         return new File(tmpPath());
     }
@@ -800,6 +1040,14 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 复制文件或目录
+     *
+     * @param source   来源路径
+     * @param target   目标路径
+     * @param override 是否覆盖
+     * @return 目标文件或目录
+     */
     public static File copy(String source, String target, boolean override) {
         return copy(new File(source), new File(target), override);
     }
@@ -1044,11 +1292,12 @@ public class FileUtil {
     }
 
     /**
-     * 计算目录
+     * 统计目录
      *
      * @param file      文件
      * @param fileCount 文件总数
      * @param fileSize  文件大小
+     * @param callback  回调函数
      * @param filter    过滤器
      */
     public static void calcDir(File file, LongAdder fileCount, LongAdder fileSize, BiConsumer<LongAdder, LongAdder> callback, Function<File, Boolean> filter) {

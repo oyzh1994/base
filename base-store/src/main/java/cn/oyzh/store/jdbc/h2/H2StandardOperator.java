@@ -18,11 +18,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * h2标准操作器
+ *
  * @author oyzh
  * @since 2024-09-23
  */
 public class H2StandardOperator extends JdbcStandardOperator {
 
+    /**
+     * 构造h2标准操作器
+     *
+     * @param tableDefinition 表定义
+     */
     public H2StandardOperator(TableDefinition tableDefinition) {
         super(tableDefinition);
     }

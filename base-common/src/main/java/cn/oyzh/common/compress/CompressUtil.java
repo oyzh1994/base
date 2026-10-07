@@ -33,13 +33,27 @@ import java.util.zip.ZipFile;
  */
 public class CompressUtil {
 
-    // 压缩类型枚举（明确支持的格式）
+    /**
+     * 压缩类型枚举（明确支持的格式）
+     */
     public enum CompressType {
-        ZIP,        // ZIP格式
-        TAR,        // TAR格式（仅打包）
-        TAR_GZ      // TAR+GZIP格式（打包并压缩）
+        /**
+         * ZIP格式
+         */
+        ZIP,
+        /**
+         * TAR格式（仅打包）
+         */
+        TAR,
+        /**
+         * TAR+GZIP格式（打包并压缩）
+         */
+        TAR_GZ
     }
 
+    /**
+     * 缓冲区大小
+     */
     private static final int BUFFER_SIZE = 8192;
 
     /**
@@ -91,6 +105,11 @@ public class CompressUtil {
 
     /**
      * 向归档流添加文件/文件夹（保持目录结构）
+     *
+     * @param archiveOut  归档输出流
+     * @param sourceFiles 源文件/文件夹列表
+     * @param baseDir     条目名称前缀（用于保持目录层级）
+     * @throws IOException IO异常
      */
     private static void addFilesToArchive(ArchiveOutputStream archiveOut, List<File> sourceFiles, String baseDir)
             throws IOException {
@@ -119,7 +138,14 @@ public class CompressUtil {
         }
     }
 
-    // 简化方法：压缩单个文件
+    /**
+     * 压缩单个文件/文件夹到目标归档
+     *
+     * @param sourcePath   源文件/文件夹路径
+     * @param targetPath   目标归档文件路径
+     * @param compressType 压缩类型（ZIP/TAR/TAR_GZ）
+     * @throws IOException IO异常
+     */
     public static void compress(String sourcePath, String targetPath, CompressType compressType) throws IOException {
         //        List<String> sources = new ArrayList<>();
         //        sources.add(sourcePath);
@@ -187,6 +213,7 @@ public class CompressUtil {
      * @param name    文件名称
      * @param appDest app目录
      * @return 压缩后的文件
+     * @throws IOException IO异常
      */
     public static File zipDest(String name, String appDest) throws IOException {
         String compressName = name + ".zip";
@@ -205,6 +232,7 @@ public class CompressUtil {
      * @param name    文件名称
      * @param appDest app目录
      * @return 压缩后的文件
+     * @throws IOException IO异常
      */
     public static File zipDestByMacos(String name, String appDest) throws IOException {
         String compressName = name + ".zip";
@@ -223,6 +251,7 @@ public class CompressUtil {
      * @param name    文件名称
      * @param appDest app目录
      * @return 压缩后的文件
+     * @throws IOException IO异常
      */
     public static File tarDest(String name, String appDest) throws IOException {
         String compressName = name + ".tar";
@@ -236,11 +265,12 @@ public class CompressUtil {
     }
 
     /**
-     * 压缩打包文件，tar.gz格式
+     * 压缩打包目录，tar.gz格式
      *
      * @param name    文件名称
      * @param appDest app目录
      * @return 压缩后的文件
+     * @throws IOException IO异常
      */
     public static File tgzDest(String name, String appDest) throws IOException {
         String compressName = name + ".tar.gz";

@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class MySqlSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造MySQL SQL方言实例
+     */
     public MySqlSqlDialect() {
         super(SqlDatabase.MYSQL, SqlLexicalProfile.MYSQL);
     }

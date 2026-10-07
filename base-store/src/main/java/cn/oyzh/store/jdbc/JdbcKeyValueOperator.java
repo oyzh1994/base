@@ -17,14 +17,19 @@ import java.util.Map;
  */
 public abstract class JdbcKeyValueOperator extends JdbcOperator {
 
+    /**
+     * 构造jdbc键值操作器
+     *
+     * @param tableDefinition 表定义
+     */
     public JdbcKeyValueOperator(TableDefinition tableDefinition) {
         super(tableDefinition);
     }
 
     /**
-     * 更新数据
+     * 清空并覆盖写入全部键值数据
      *
-     * @param record 记录列表
+     * @param record 记录
      * @return 更新结果
      * @throws Exception 异常
      */

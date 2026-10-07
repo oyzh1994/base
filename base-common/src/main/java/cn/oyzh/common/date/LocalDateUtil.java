@@ -12,6 +12,12 @@ import java.util.Date;
  */
 public class LocalDateUtil {
 
+    /**
+     * 将日期转换为本地日期
+     *
+     * @param date 日期
+     * @return 本地日期
+     */
     public static LocalDate of(Date date) {
         return LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
     }

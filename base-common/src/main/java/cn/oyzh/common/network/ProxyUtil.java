@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 代理工具类，提供 SOCKS5 协议握手及 HTTP/SOCKS 代理选择器创建能力
+ *
  * @author oyzh
  * @since 2025-09-05
  */
@@ -21,11 +23,12 @@ public class ProxyUtil {
     /**
      * 实现SOCKS5协议握手（包括认证）
      *
-     * @param proxySocket   连接
-     * @param targetHost    目标连接
+     * @param proxySocket   代理连接
+     * @param targetHost    目标主机
      * @param targetPort    目标端口
      * @param proxyUser     代理用户
-     * @param proxyPassword 代理米啊么
+     * @param proxyPassword 代理密码
+     * @throws IOException IO异常
      */
     public static void socks5Handshake(Socket proxySocket,
                                        String targetHost,
@@ -105,10 +108,10 @@ public class ProxyUtil {
     }
 
     /**
-     * socks握手
+     * 执行SOCKS5协议握手（包括认证）
      *
      * @param sock          连接通道
-     * @param addr          地址
+     * @param addr          目标地址
      * @param proxyUser     代理用户
      * @param proxyPassword 代理密码
      * @throws IOException 异常

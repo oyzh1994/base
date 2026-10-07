@@ -321,7 +321,7 @@ public class ProcessUtil {
     /**
      * 检查指定名称的进程是否正在运行
      *
-     * @param processName 要检查的进程名，需包含 .exe 后缀
+     * @param processName 要检查的进程名，可传入多个（任意一个匹配即视为运行中）
      * @return 如果进程正在运行返回 true，否则返回 false
      */
     public static boolean isProcessRunning(String... processName) {

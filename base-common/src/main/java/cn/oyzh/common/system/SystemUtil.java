@@ -15,7 +15,7 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 系统工具类
+ * 系统信息与 JVM 运行时工具类，提供内存、GC、类加载及常用系统属性、环境变量的访问。
  *
  * @author oyzh
  * @since 2023/04/05
@@ -40,8 +40,14 @@ public class SystemUtil {
         properties.remove("debugger.agent.enable.coroutines");
     }
 
+    /** 内存 MXBean 缓存 */
     private static MemoryMXBean memoryMXBean;
 
+    /**
+     * 获取内存 MXBean
+     *
+     * @return 内存 MXBean
+     */
     private static MemoryMXBean getMemoryMXBean() {
         if (memoryMXBean == null) {
             memoryMXBean = ManagementFactory.getMemoryMXBean();
@@ -49,8 +55,14 @@ public class SystemUtil {
         return memoryMXBean;
     }
 
+    /** 类加载 MXBean 缓存 */
     private static ClassLoadingMXBean classLoadingMXBean;
 
+    /**
+     * 获取类加载 MXBean
+     *
+     * @return 类加载 MXBean
+     */
     private static ClassLoadingMXBean getClassLoadingMXBean() {
         if (classLoadingMXBean == null) {
             classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
@@ -186,7 +198,7 @@ public class SystemUtil {
     /**
      * 打开系统目录
      *
-     * @param path 文件路径
+     * @param path 目录路径
      */
     public static void openFolderViaCommand(String path) {
         ProcessBuilder builder = new ProcessBuilder();
@@ -219,6 +231,7 @@ public class SystemUtil {
 
     /**
      * 获取mvn home目录
+     *
      * @return 结果
      */
     public static String mvnHomeEnv(){

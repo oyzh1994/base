@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
+ * 调用百度翻译为各项目生成并校正多语言资源文件。
+ *
  * @author oyzh
  * @since 2025-01-23
  */

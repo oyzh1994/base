@@ -15,5 +15,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PrimaryKey {
 
+    /**
+     * 是否自动生成主键值
+     *
+     * @return 结果
+     */
     boolean autoGeneration() default true;
 }

@@ -26,6 +26,9 @@ import java.util.zip.ZipEntry;
  */
 public class ResourceUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private ResourceUtil() {
     }
 
@@ -183,6 +186,7 @@ public class ResourceUtil {
      *
      * @param resourceDir 资源目录，例如 "static/images"
      * @return 相对于 resourceDir 的路径列表，例如 "logo/a.png"
+     * @throws Exception 读取资源失败或协议不支持时抛出
      */
     public static List<String> listFiles(String resourceDir) throws Exception {
         URL url = getResource(resourceDir);

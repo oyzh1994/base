@@ -23,23 +23,41 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * windows arm处理器
+ * windows on arm 的 jfx 模块转换处理，将 jmod 转换为 maven 构件并安装到本地仓库
  *
  * @author oyzh
  * @since 2026/09/18
  */
 public class WinArmHandler {
 
+    /**
+     * javafx版本
+     */
     private String jfxVersion;
 
+    /**
+     * 获取javafx版本
+     *
+     * @return javafx版本
+     */
     public String getJfxVersion() {
         return jfxVersion;
     }
 
+    /**
+     * 设置javafx版本
+     *
+     * @param jfxVersion javafx版本
+     */
     public void setJfxVersion(String jfxVersion) {
         this.jfxVersion = jfxVersion;
     }
 
+    /**
+     * 获取javafx版本，为空时取jdk版本
+     *
+     * @return javafx版本
+     */
     private String jfxVersion() {
         if (this.jfxVersion == null) {
             return SystemUtil.getJdkVersion();

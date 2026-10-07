@@ -5,6 +5,8 @@ import org.junit.Test;
 import java.util.Locale;
 
 /**
+ * 打印若干 Locale 常量的字符串表示，便于核对本地化标识。
+ *
  * @author oyzh
  * @since 2025-02-11
  */

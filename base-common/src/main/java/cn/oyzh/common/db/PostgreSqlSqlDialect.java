@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class PostgreSqlSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造PostgreSQL SQL方言实例
+     */
     public PostgreSqlSqlDialect() {
         super(SqlDatabase.POSTGRESQL, SqlLexicalProfile.POSTGRESQL);
     }

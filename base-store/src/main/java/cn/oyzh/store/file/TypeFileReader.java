@@ -14,12 +14,30 @@ import java.util.List;
  */
 public abstract class TypeFileReader implements Closeable {
 
+    /**
+     * 初始化
+     *
+     * @throws Exception 异常
+     */
     protected void init() throws Exception {
 
     }
 
+    /**
+     * 读取一条记录
+     *
+     * @return 文件记录，读取完毕时返回null
+     * @throws Exception 异常
+     */
     public abstract FileRecord readRecord() throws Exception;
 
+    /**
+     * 读取指定数量的记录
+     *
+     * @param count 读取数量
+     * @return 文件记录列表
+     * @throws Exception 异常
+     */
     public List<FileRecord> readRecords(int count) throws Exception {
         // 数据列表
         List<FileRecord> records = new ArrayList<>();
@@ -34,6 +52,15 @@ public abstract class TypeFileReader implements Closeable {
         return records;
     }
 
+    /**
+     * 解析单行文本为字段值列表
+     *
+     * @param line           待解析的文本行
+     * @param txtIdentifier  文本识别符号，用于包裹字段值
+     * @param fieldSeparator 字段分隔符号
+     * @return 字段值列表
+     * @throws IOException 异常
+     */
     protected List<String> parseLine(String line, Character txtIdentifier, Character fieldSeparator) throws IOException {
         List<String> list = new ArrayList<>();
         StringBuilder sb = new StringBuilder();

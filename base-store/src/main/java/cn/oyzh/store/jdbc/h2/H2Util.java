@@ -9,15 +9,29 @@ import java.time.LocalTime;
 import java.util.List;
 
 /**
+ * h2工具类
+ *
  * @author oyzh
  * @since 2024-09-24
  */
 public class H2Util {
 
+    /**
+     * 包装标识符，转为大写并加上反引号
+     *
+     * @param obj 标识符
+     * @return 包装后的标识符
+     */
     public static String wrap(String obj) {
         return "`" + obj.toUpperCase() + "`";
     }
 
+    /**
+     * 包装数据值
+     *
+     * @param data 数据值
+     * @return 包装后的数据值
+     */
     public static Object wrapData(Object data) {
         if (data == null) {
             return "";
@@ -28,6 +42,12 @@ public class H2Util {
         return "'" + data + "'";
     }
 
+    /**
+     * 将Java类型映射为h2的sql类型
+     *
+     * @param javaType Java类型
+     * @return sql类型
+     */
     public static String toSqlType(Class<?> javaType) {
         if (CollectionUtil.contains(List.of(Long.class, long.class), javaType)) {
             return "bigint";
@@ -65,6 +85,13 @@ public class H2Util {
         return "varchar";
     }
 
+    /**
+     * 校验sql类型是否匹配
+     *
+     * @param sqlType  sql类型
+     * @param typeName 数据库中的类型名称
+     * @return 结果
+     */
     public static boolean checkSqlType(String sqlType, String typeName) {
         if (sqlType.equalsIgnoreCase(typeName)) {
             return true;

@@ -17,13 +17,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * jdbc标准存储
+ *
  * @author oyzh
  * @since 2024-09-23
  */
 public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStore<M> {
 
+    /**
+     * 标准操作器
+     */
     private final JdbcStandardOperator operator;
 
+    /**
+     * 构造jdbc标准存储
+     */
     public JdbcStandardStore() {
         try {
             TableDefinition tableDefinition = this.tableDefinition();
@@ -48,6 +56,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return TableDefinition.ofClass(this.modelClass());
     }
 
+    /**
+     * 新增模型数据
+     *
+     * @param model 模型
+     * @return 结果
+     */
     public boolean insert(M model) {
         if (model != null) {
             try {
@@ -61,6 +75,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 更新模型数据
+     *
+     * @param model 模型
+     * @return 结果
+     */
     public boolean update(M model) {
         if (model != null) {
             try {
@@ -78,6 +98,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 是否存在指定主键的数据
+     *
+     * @param primaryKey 主键值
+     * @return 结果
+     */
     public boolean exist(Object primaryKey) {
         if (primaryKey != null) {
             try {
@@ -89,6 +115,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 是否存在符合条件的数据
+     *
+     * @param params 查询条件
+     * @return 结果
+     */
     public boolean exist(Map<String, Object> params) {
         try {
             return this.operator.exist(params);
@@ -98,6 +130,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 根据主键查询单个模型
+     *
+     * @param primaryKey 主键值
+     * @return 模型
+     */
     public M selectOne(Object primaryKey) {
         try {
             return this.toModel(this.operator.selectOne(primaryKey));
@@ -107,6 +145,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return null;
     }
 
+    /**
+     * 根据查询参数查询单个模型
+     *
+     * @param selectParam 查询参数
+     * @return 模型
+     */
     public M selectOne(SelectParam selectParam) {
         try {
             return this.toModel(this.operator.selectOne(selectParam));
@@ -116,6 +160,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return null;
     }
 
+    /**
+     * 根据查询条件查询单个模型
+     *
+     * @param queryParam 查询条件
+     * @return 模型
+     */
     public M selectOne(QueryParam queryParam) {
         try {
             return this.toModel(this.operator.selectOne(queryParam));
@@ -125,16 +175,33 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return null;
     }
 
+    /**
+     * 查询全部模型
+     *
+     * @return 模型列表
+     */
     public List<M> selectList() {
         return this.selectList((SelectParam) null);
     }
 
+    /**
+     * 根据查询条件查询模型列表
+     *
+     * @param queryParam 查询条件
+     * @return 模型列表
+     */
     public List<M> selectList(QueryParam queryParam) {
         SelectParam param = new SelectParam();
         param.addQueryParam(queryParam);
         return this.selectList(param);
     }
 
+    /**
+     * 根据查询参数查询模型列表
+     *
+     * @param param 查询参数
+     * @return 模型列表
+     */
     public List<M> selectList(SelectParam param) {
         try {
             List<Map<String, Object>> list = this.operator.selectList(param);
@@ -151,6 +218,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return new ArrayList<>();
     }
 
+    /**
+     * 根据查询条件统计数据条数
+     *
+     * @param queryParam 查询条件
+     * @return 数据条数
+     */
     public long selectCount(QueryParam queryParam) {
         try {
             return this.operator.selectCount(List.of(queryParam));
@@ -160,6 +233,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return 0L;
     }
 
+    /**
+     * 根据查询条件列表统计数据条数
+     *
+     * @param params 查询条件列表
+     * @return 数据条数
+     */
     public long selectCount(List<QueryParam> params) {
         try {
             return this.operator.selectCount(params);
@@ -169,10 +248,25 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return 0L;
     }
 
+    /**
+     * 根据关键字统计数据条数
+     *
+     * @param kw      关键字
+     * @param columns 关键字匹配的列
+     * @return 数据条数
+     */
     public long selectCount(String kw, List<String> columns) {
         return this.selectCount(kw, columns, null);
     }
 
+    /**
+     * 根据关键字和查询条件统计数据条数
+     *
+     * @param kw          关键字
+     * @param columns     关键字匹配的列
+     * @param queryParams 查询条件
+     * @return 数据条数
+     */
     public long selectCount(String kw, List<String> columns, QueryParams queryParams) {
         try {
             return this.operator.selectCount(kw, columns, queryParams);
@@ -182,6 +276,14 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return 0L;
     }
 
+    /**
+     * 分页查询模型列表
+     *
+     * @param kw        关键字
+     * @param columns   关键字匹配的列
+     * @param pageParam 分页参数
+     * @return 模型列表
+     */
     public List<M> selectPage(String kw, List<String> columns, PageParam pageParam) {
         try {
             List<Map<String, Object>> list = this.operator.selectPage(kw, columns, pageParam);
@@ -198,6 +300,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return Collections.emptyList();
     }
 
+    /**
+     * 根据模型删除数据
+     *
+     * @param model 模型
+     * @return 结果
+     */
     public boolean delete(M model) {
         if (model != null) {
             try {
@@ -210,6 +318,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 根据主键删除数据
+     *
+     * @param primaryKey 主键值
+     * @return 结果
+     */
     public boolean delete(Object primaryKey) {
         if (primaryKey != null) {
             try {
@@ -221,6 +335,12 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 根据删除参数删除数据
+     *
+     * @param deleteParam 删除参数
+     * @return 结果
+     */
     public boolean delete(DeleteParam deleteParam) {
         try {
             return this.operator.delete(deleteParam) > 0;
@@ -230,6 +350,11 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 清空全部数据
+     *
+     * @return 结果
+     */
     public boolean clear() {
         return this.delete((DeleteParam) null);
     }

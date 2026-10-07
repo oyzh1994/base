@@ -13,8 +13,17 @@ import java.util.function.BiConsumer;
  */
 public class WeakBiConsumer<T, U> extends WeakFunction implements BiConsumer<T, U> {
 
+    /**
+     * 被代理的BiConsumer
+     */
     private final BiConsumer<T, U> consumer;
 
+    /**
+     * 构造弱引用BiConsumer
+     *
+     * @param obj      被弱引用的对象
+     * @param consumer 被代理的BiConsumer
+     */
     public WeakBiConsumer(Object obj, BiConsumer<T, U> consumer) {
         super(obj);
         this.consumer = consumer;

@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.util.regex.Pattern;
 
 /**
+ * 测试正则表达式对文件扩展名（.MF）的匹配。
  *
  * @author oyzh
  * @since 2026-10-06

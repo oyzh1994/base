@@ -64,7 +64,7 @@ public class JarHandler implements PreHandler {
     }
 
     /**
-     * jar配置
+     * 打包配置
      */
     private PackConfig config;
 
@@ -351,6 +351,7 @@ public class JarHandler implements PreHandler {
      * @param jarUnDir 主jar解压目录
      * @param mainJar  主jar
      * @param jdkPath  jdk路径
+     * @throws Exception 异常
      */
     private void mergeLibs(String jarUnDir, String mainJar, String jdkPath) throws Exception {
         JulLog.info("mergeLibs start, jarUnDir: {} mainJar: {}.", jarUnDir, mainJar);

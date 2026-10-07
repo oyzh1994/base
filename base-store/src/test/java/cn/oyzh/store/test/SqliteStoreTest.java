@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * 测试基于 SQLite 的 JdbcStandardStore 增删改查能力。
+ *
  * @author oyzh
  * @since 2024-09-23
  */

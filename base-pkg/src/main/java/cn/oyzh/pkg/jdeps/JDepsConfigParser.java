@@ -45,10 +45,22 @@ public class JDepsConfigParser implements ConfigParser<JDepsConfig> {
         return config;
     }
 
+    /**
+     * 解析配置
+     *
+     * @param object 配置内容
+     * @return 配置类
+     */
     public static JDepsConfig parseConfig(JSONObject object) {
         return new JDepsConfigParser().parse(object);
     }
 
+    /**
+     * 解析配置
+     *
+     * @param configFile 配置文件
+     * @return 配置类
+     */
     public static JDepsConfig parseConfig(String configFile) {
         return new JDepsConfigParser().parse(configFile);
     }

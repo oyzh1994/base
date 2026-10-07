@@ -20,11 +20,19 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
+ * jdbc数据转换工具类
+ *
  * @author oyzh
  * @since 2024-09-25
  */
 public class JdbcUtil {
 
+    /**
+     * 转为布尔对象
+     *
+     * @param sqlData 数据库数据
+     * @return 布尔对象
+     */
     public static Boolean toBool(Object sqlData) {
         if (sqlData instanceof Boolean b) {
             return b;
@@ -38,11 +46,23 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为布尔值，无法转换时返回false
+     *
+     * @param sqlData 数据库数据
+     * @return 布尔值
+     */
     public static boolean toBoolVal(Object sqlData) {
         Boolean b = toBool(sqlData);
         return b != null && b;
     }
 
+    /**
+     * 转为字节对象
+     *
+     * @param sqlData 数据库数据
+     * @return 字节对象
+     */
     public static Byte toByte(Object sqlData) {
         if (sqlData instanceof Byte) {
             return (Byte) sqlData;
@@ -56,23 +76,53 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为字节值，无法转换时返回0
+     *
+     * @param sqlData 数据库数据
+     * @return 字节值
+     */
     public static Byte toByteVal(Object sqlData) {
         Byte b = toByte(sqlData);
         return b == null ? 0 : b;
     }
 
+    /**
+     * 转为字符串
+     *
+     * @param sqlData 数据库数据
+     * @return 字符串
+     */
     public static String toString(Object sqlData) {
         return sqlData == null ? null : sqlData.toString();
     }
 
+    /**
+     * 转为StringBuffer
+     *
+     * @param sqlData 数据库数据
+     * @return StringBuffer
+     */
     public static StringBuffer toStringBuffer(Object sqlData) {
         return sqlData == null ? null : new StringBuffer(sqlData.toString());
     }
 
+    /**
+     * 转为StringBuilder
+     *
+     * @param sqlData 数据库数据
+     * @return StringBuilder
+     */
     public static StringBuilder toStringBuilder(Object sqlData) {
         return sqlData == null ? null : new StringBuilder(sqlData.toString());
     }
 
+    /**
+     * 转为int值
+     *
+     * @param sqlData 数据库数据
+     * @return int值
+     */
     public static int toInt(Object sqlData) {
         if (sqlData == null) {
             throw new IllegalArgumentException("sqlData");
@@ -83,6 +133,12 @@ public class JdbcUtil {
         return Integer.parseInt(sqlData.toString());
     }
 
+    /**
+     * 转为Integer对象
+     *
+     * @param sqlData 数据库数据
+     * @return Integer对象
+     */
     public static Integer toIntVal(Object sqlData) {
         if (sqlData == null) {
             return null;
@@ -90,6 +146,12 @@ public class JdbcUtil {
         return toInt(sqlData);
     }
 
+    /**
+     * 转为long值
+     *
+     * @param sqlData 数据库数据
+     * @return long值
+     */
     public static long toLong(Object sqlData) {
         if (sqlData == null) {
             throw new IllegalArgumentException("sqlData");
@@ -103,6 +165,12 @@ public class JdbcUtil {
         return Long.parseLong(sqlData.toString());
     }
 
+    /**
+     * 转为Long对象
+     *
+     * @param sqlData 数据库数据
+     * @return Long对象
+     */
     public static Long toLongVal(Object sqlData) {
         if (sqlData == null) {
             return null;
@@ -110,6 +178,12 @@ public class JdbcUtil {
         return toLong(sqlData);
     }
 
+    /**
+     * 转为double值
+     *
+     * @param sqlData 数据库数据
+     * @return double值
+     */
     public static double toDouble(Object sqlData) {
         if (sqlData == null) {
             throw new IllegalArgumentException("sqlData");
@@ -120,6 +194,12 @@ public class JdbcUtil {
         return Double.parseDouble(sqlData.toString());
     }
 
+    /**
+     * 转为Double对象
+     *
+     * @param sqlData 数据库数据
+     * @return Double对象
+     */
     public static Double toDoubleVal(Object sqlData) {
         if (sqlData == null) {
             return null;
@@ -127,6 +207,12 @@ public class JdbcUtil {
         return toDouble(sqlData);
     }
 
+    /**
+     * 转为float值
+     *
+     * @param sqlData 数据库数据
+     * @return float值
+     */
     public static float toFloat(Object sqlData) {
         if (sqlData == null) {
             throw new IllegalArgumentException("sqlData");
@@ -137,6 +223,12 @@ public class JdbcUtil {
         return Float.parseFloat(sqlData.toString());
     }
 
+    /**
+     * 转为Float对象
+     *
+     * @param sqlData 数据库数据
+     * @return Float对象
+     */
     public static Float toFloatVal(Object sqlData) {
         if (sqlData == null) {
             return null;
@@ -144,6 +236,12 @@ public class JdbcUtil {
         return toFloat(sqlData);
     }
 
+    /**
+     * 转为short值
+     *
+     * @param sqlData 数据库数据
+     * @return short值
+     */
     public static short toShort(Object sqlData) {
         if (sqlData == null) {
             throw new IllegalArgumentException("sqlData");
@@ -154,6 +252,12 @@ public class JdbcUtil {
         return Short.parseShort(sqlData.toString());
     }
 
+    /**
+     * 转为Short对象
+     *
+     * @param sqlData 数据库数据
+     * @return Short对象
+     */
     public static Short toShortVal(Object sqlData) {
         if (sqlData == null) {
             return null;
@@ -161,6 +265,12 @@ public class JdbcUtil {
         return toShort(sqlData);
     }
 
+    /**
+     * 转为char值
+     *
+     * @param sqlData 数据库数据
+     * @return char值
+     */
     public static char toChar(Object sqlData) {
         if (sqlData == null) {
             throw new IllegalArgumentException("sqlData");
@@ -171,6 +281,12 @@ public class JdbcUtil {
         return 0;
     }
 
+    /**
+     * 转为Character对象
+     *
+     * @param sqlData 数据库数据
+     * @return Character对象
+     */
     public static Character toCharVal(Object sqlData) {
         if (sqlData == null) {
             return null;
@@ -178,6 +294,14 @@ public class JdbcUtil {
         return toChar(sqlData);
     }
 
+    /**
+     * 转为字节数组
+     *
+     * @param sqlData 数据库数据
+     * @return 字节数组
+     * @throws SQLException 异常
+     * @throws IOException  异常
+     */
     public static byte[] toBytes(Object sqlData) throws SQLException, IOException {
         if (sqlData instanceof Blob blob) {
             InputStream inputStream = blob.getBinaryStream();
@@ -198,6 +322,12 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为Date对象
+     *
+     * @param sqlData 数据库数据
+     * @return Date对象
+     */
     public static Date toDate(Object sqlData) {
         if (sqlData instanceof Date date) {
             return date;
@@ -208,6 +338,12 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为LocalTime对象
+     *
+     * @param sqlData 数据库数据
+     * @return LocalTime对象
+     */
     public static LocalTime toLocalTime(Object sqlData) {
         if (sqlData instanceof Date date) {
             return LocalTimeUtil.of(date);
@@ -215,6 +351,12 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为LocalDate对象
+     *
+     * @param sqlData 数据库数据
+     * @return LocalDate对象
+     */
     public static LocalDate toLocalDate(Object sqlData) {
         if (sqlData instanceof Date date) {
             return LocalDateUtil.of(date);
@@ -222,6 +364,12 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为LocalDateTime对象
+     *
+     * @param sqlData 数据库数据
+     * @return LocalDateTime对象
+     */
     public static LocalDateTime toLocalDateTime(Object sqlData) {
         if (sqlData instanceof Date date) {
             return LocalDateTimeUtil.of(date);
@@ -229,6 +377,12 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 转为ZonedDateTime对象
+     *
+     * @param sqlData 数据库数据
+     * @return ZonedDateTime对象
+     */
     public static ZonedDateTime toZonedDateTime(Object sqlData) {
         if (sqlData instanceof Date date) {
             return ZonedDateTimeUtil.of(date);
@@ -335,6 +489,12 @@ public class JdbcUtil {
         return null;
     }
 
+    /**
+     * 包装标识符，按当前方言处理
+     *
+     * @param data 标识符
+     * @return 包装后的标识符
+     */
     public static Object wrap(String data) {
         if (JdbcManager.dialect == JdbcDialect.H2) {
             return H2Util.wrap(data);
@@ -343,6 +503,12 @@ public class JdbcUtil {
 //        return SqlLiteUtil.wrap(data);
     }
 
+    /**
+     * 包装数据值，按当前方言处理
+     *
+     * @param data 数据值
+     * @return 包装后的数据值
+     */
     public static Object wrapData(Object data) {
         if (JdbcManager.dialect == JdbcDialect.H2) {
             return H2Util.wrapData(data);

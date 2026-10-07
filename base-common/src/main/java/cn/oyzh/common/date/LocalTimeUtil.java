@@ -13,10 +13,22 @@ import java.util.Date;
  */
 public class LocalTimeUtil {
 
+    /**
+     * 从Date转为本地时间对象
+     *
+     * @param date 时间
+     * @return 结果
+     */
     public static LocalTime of(Date date) {
         return of(date.toInstant());
     }
 
+    /**
+     * 从Instant转为本地时间对象
+     *
+     * @param instant 时间
+     * @return 结果
+     */
     public static LocalTime of(Instant instant) {
         return LocalTime.ofInstant(instant, ZoneId.systemDefault());
     }

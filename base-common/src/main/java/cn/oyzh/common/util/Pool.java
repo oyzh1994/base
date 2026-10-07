@@ -17,25 +17,31 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public abstract class Pool<T> {
 
     /**
-     * 最小值
+     * 池中对象的最小数量
      */
     private int minSize;
 
     /**
-     * 最大值
+     * 池中对象的最大数量
      */
     private int maxSize;
 
     /**
-     * 对象列表
+     * 池中的对象列表
      */
     private List<T> list;
 
     /**
-     * 如果没有可用对象，则一直等待接用
+     * 没有可用对象时是否一直等待借用
      */
     private boolean waitingBorrow;
 
+    /**
+     * 构造池
+     *
+     * @param minSize 最小对象数量
+     * @param maxSize 最大对象数量
+     */
     public Pool(int minSize, int maxSize) {
         if (minSize < 0) {
             throw new InvalidParamException("minSize");
@@ -50,18 +56,38 @@ public abstract class Pool<T> {
         this.maxSize = maxSize;
     }
 
+    /**
+     * 是否一直等待借用
+     *
+     * @return 结果
+     */
     public boolean isWaitingBorrow() {
         return waitingBorrow;
     }
 
+    /**
+     * 设置是否一直等待借用
+     *
+     * @param waitingBorrow 是否一直等待借用
+     */
     public void setWaitingBorrow(boolean waitingBorrow) {
         this.waitingBorrow = waitingBorrow;
     }
 
+    /**
+     * 获取池中对象的最小数量
+     *
+     * @return 池中对象的最小数量
+     */
     public int getMinSize() {
         return minSize;
     }
 
+    /**
+     * 设置池中对象的最小数量
+     *
+     * @param minSize 池中对象的最小数量
+     */
     public void setMinSize(int minSize) {
         if (minSize > this.maxSize) {
             throw new InvalidParamException("minSize");
@@ -72,10 +98,20 @@ public abstract class Pool<T> {
         this.minSize = minSize;
     }
 
+    /**
+     * 获取池中对象的最大数量
+     *
+     * @return 池中对象的最大数量
+     */
     public int getMaxSize() {
         return maxSize;
     }
 
+    /**
+     * 设置池中对象的最大数量
+     *
+     * @param maxSize 池中对象的最大数量
+     */
     public void setMaxSize(int maxSize) {
         if (maxSize < this.minSize) {
             throw new InvalidParamException("maxSize");
@@ -86,6 +122,11 @@ public abstract class Pool<T> {
         this.maxSize = maxSize;
     }
 
+    /**
+     * 获取对象列表，列表未初始化时创建
+     *
+     * @return 对象列表
+     */
     public List<T> list() {
         if (this.list == null) {
             this.list = new CopyOnWriteArrayList<>();
@@ -93,6 +134,11 @@ public abstract class Pool<T> {
         return this.list;
     }
 
+    /**
+     * 设置对象列表
+     *
+     * @param list 对象列表
+     */
     public void list(List<T> list) {
         this.list = list;
     }

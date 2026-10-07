@@ -37,7 +37,7 @@ public class JSONUtil {
     /**
      * 美化
      *
-     * @param str 对象
+     * @param str json字符串
      * @return json美化字符串
      */
     public static String toPretty(String str) {
@@ -57,7 +57,7 @@ public class JSONUtil {
      // *
      // * @param str 对象
      // * @return json取消美化字符串
-     // */
+     */
     //public static String unPretty(String str) {
     //    if (str != null) {
     //        StringBuilder builder = new StringBuilder();
@@ -188,10 +188,10 @@ public class JSONUtil {
     }
 
     /**
-     * 解析为json树组
+     * 解析为json数组
      *
      * @param json json串
-     * @return json树组
+     * @return json数组
      */
     public static JSONArray parseArray(String json) {
         JSONArray array = JSONArray.parseArray(json);
@@ -204,7 +204,9 @@ public class JSONUtil {
     /**
      * 解析为bean
      *
-     * @param json json串
+     * @param json      json串
+     * @param beanClass bean类型
+     * @param <T>       对象泛型
      * @return java对象
      */
     public static <T> T toBean(String json, Class<T> beanClass) {
@@ -220,7 +222,9 @@ public class JSONUtil {
     /**
      * 解析为bean
      *
-     * @param obj 对象
+     * @param obj       对象
+     * @param beanClass bean类型
+     * @param <T>       对象泛型
      * @return java对象
      */
     public static <T> T toBean(Object obj, Class<T> beanClass) {
@@ -236,8 +240,9 @@ public class JSONUtil {
     /**
      * 转换为java对象列表
      *
-     * @param json json字符串
-     * @param <T>  对象泛型
+     * @param json      json字符串
+     * @param beanClass bean类型
+     * @param <T>       对象泛型
      * @return java对象列表
      */
     public static <T> List<T> toList(String json, Class<T> beanClass) {
@@ -253,8 +258,9 @@ public class JSONUtil {
     /**
      * 转换为java对象列表
      *
-     * @param array json字符串
-     * @param <T>   对象泛型
+     * @param array     json数组
+     * @param beanClass bean类型
+     * @param <T>       对象泛型
      * @return java对象列表
      */
     public static <T> List<T> toList(JSONArray array, Class<T> beanClass) {
@@ -271,8 +277,10 @@ public class JSONUtil {
     /**
      * 转换为java对象列表
      *
-     * @param object json对象
-     * @param <T>    对象泛型
+     * @param object    json对象
+     * @param key       数组所在的键
+     * @param beanClass bean类型
+     * @param <T>       对象泛型
      * @return java对象列表
      */
     public static <T> List<T> toList(JSONObject object, String key, Class<T> beanClass) {

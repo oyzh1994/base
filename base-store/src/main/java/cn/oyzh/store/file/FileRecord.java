@@ -10,6 +10,13 @@ import java.util.HashMap;
  */
 public class FileRecord extends HashMap<Integer, Object> {
 
+    /**
+     * 获取指定字段的值，并按目标类型进行转换
+     *
+     * @param key   字段索引
+     * @param clazz 目标类型
+     * @return 转换后的值，字段为空时返回null
+     */
     public Object getValue(Integer key, Class<?> clazz) {
         Object val = this.get(key);
         if (val == null) {

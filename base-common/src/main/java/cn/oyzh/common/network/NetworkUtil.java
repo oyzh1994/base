@@ -20,40 +20,94 @@ import java.util.function.BiConsumer;
  */
 public class NetworkUtil {
 
+    /**
+     * FTP服务默认端口
+     */
     public static final short FTP_PORT = 21;
 
+    /**
+     * SSH服务默认端口
+     */
     public static final short SSH_PORT = 22;
 
+    /**
+     * HTTP服务默认端口
+     */
     public static final short HTTP_PORT = 80;
 
+    /**
+     * VNC服务默认端口
+     */
     public static final short VNC_PORT = 5900;
 
+    /**
+     * RDP服务默认端口
+     */
     public static final short RDP_PORT = 3389;
 
+    /**
+     * HTTPS服务默认端口
+     */
     public static final short HTTPS_PORT = 443;
 
+    /**
+     * Telnet服务默认端口
+     */
     public static final short TELNET_PORT = 23;
 
+    /**
+     * RTSP服务默认端口
+     */
     public static final short RTSP_PORT = 554;
 
+    /**
+     * RLogin服务默认端口
+     */
     public static final short RLOGIN_PORT = 513;
 
+    /**
+     * Mysql服务默认端口
+     */
     public static final short Mysql_PORT = 3306;
 
+    /**
+     * Redis服务默认端口
+     */
     public static final short Redis_PORT = 6379;
 
+    /**
+     * Oracle服务默认端口
+     */
     public static final short Oracle_PORT = 1521;
 
+    /**
+     * MongoDB服务默认端口
+     */
     public static final short MongoDB_PORT = 27017;
 
+    /**
+     * Zookeeper服务默认端口
+     */
     public static final short Zookeeper_PORT = 2281;
 
+    /**
+     * PostgreSQL服务默认端口
+     */
     public static final short PostgreSQL_PORT = 5432;
 
+    /**
+     * Memcached服务默认端口
+     */
     public static final short Memcached_PORT = 11211;
 
+    /**
+     * SQL Server服务默认端口
+     */
     public static final short SQLServer_PORT = 1433;
 
+    /**
+     * Elasticsearch服务默认端口
+     */
     public static final short Elasticsearch_PORT = 9200;
 
     /**
@@ -61,7 +115,7 @@ public class NetworkUtil {
      *
      * @param host    地址
      * @param port    端口
-     * @param timeout 超市时间
+     * @param timeout 超时时间
      * @return 结果
      */
     public static boolean reachable(String host, int port, int timeout) {
@@ -106,7 +160,7 @@ public class NetworkUtil {
      * @param host           地址
      * @param callback       结果回调
      * @param finishCallback 结束回调
-     * @return Thread
+     * @return 执行扫描任务的线程
      */
     public static Thread scanAsync(int start, int end, int timeout, String host, BiConsumer<Integer, Boolean> callback, Runnable finishCallback) {
         if (start < 0 || end < 0 || end > 65535 || end < start) {
@@ -142,7 +196,7 @@ public class NetworkUtil {
      * @param host           地址
      * @param callback       结果回调
      * @param finishCallback 结束回调
-     * @return Thread
+     * @return 执行扫描任务的线程
      */
     public static Thread scanMultiple(int start, int end, int timeout, int threadNum, String host, ExceptionBiConsumer<Integer, Boolean> callback, Runnable finishCallback) {
         if (start < 0 || end < 0 || end > 65535 || end < start) {

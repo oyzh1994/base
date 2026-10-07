@@ -80,10 +80,22 @@ public class JLinkConfigParser implements ConfigParser<JLinkConfig> {
         return config;
     }
 
+    /**
+     * 解析配置
+     *
+     * @param object 配置内容
+     * @return 配置类
+     */
     public static JLinkConfig parseConfig(JSONObject object) {
         return new JLinkConfigParser().parse(object);
     }
 
+    /**
+     * 解析配置
+     *
+     * @param configFile 配置文件
+     * @return 配置类
+     */
     public static JLinkConfig parseConfig(String configFile) {
         return new JLinkConfigParser().parse(configFile);
     }

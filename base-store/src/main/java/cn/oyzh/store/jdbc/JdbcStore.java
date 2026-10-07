@@ -58,7 +58,7 @@ public abstract class JdbcStore<M extends Serializable> {
     /**
      * 转换为模型对象
      *
-     * @param record 记录列表
+     * @param record 记录
      * @return 模型对象
      * @throws Exception 异常
      */

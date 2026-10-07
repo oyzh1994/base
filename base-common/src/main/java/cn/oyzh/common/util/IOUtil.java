@@ -21,13 +21,26 @@ import java.nio.charset.StandardCharsets;
  */
 public class IOUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private IOUtil() {
     }
 
+    /**
+     * 静默关闭对象，忽略关闭异常
+     *
+     * @param closeable 待关闭对象
+     */
     public static void closeQuietly(AutoCloseable closeable) {
         close(closeable);
     }
 
+    /**
+     * 关闭对象，忽略关闭异常
+     *
+     * @param closeable 待关闭对象
+     */
     public static void close(AutoCloseable closeable) {
         if (closeable != null) {
             try {
@@ -40,7 +53,7 @@ public class IOUtil {
     /**
      * 异步关闭
      *
-     * @param closeable 对象
+     * @param closeable 待关闭对象
      */
     public static void closeAsync(AutoCloseable closeable) {
         if (closeable != null) {
@@ -48,6 +61,12 @@ public class IOUtil {
         }
     }
 
+    /**
+     * 读取输入流的全部字节
+     *
+     * @param stream 输入流
+     * @return 字节数组，流为null或读取失败时返回null
+     */
     public static byte[] readBytes(InputStream stream) {
         if (stream != null) {
             try {
@@ -59,6 +78,12 @@ public class IOUtil {
         return null;
     }
 
+    /**
+     * 读取文件的全部字节
+     *
+     * @param filePath 文件路径
+     * @return 字节数组，读取失败时返回null
+     */
     public static byte[] readBytes(String filePath) {
         try {
             return readBytes(new FileInputStream(filePath));
@@ -68,6 +93,13 @@ public class IOUtil {
         return null;
     }
 
+    /**
+     * 以指定字符集读取输入流的文本
+     *
+     * @param stream  输入流
+     * @param charset 字符集
+     * @return 文本内容，流为null或读取失败时返回null
+     */
     public static String readString(InputStream stream, Charset charset) {
         byte[] bytes = readBytes(stream);
         if (bytes == null) {
@@ -76,14 +108,32 @@ public class IOUtil {
         return new String(bytes, charset);
     }
 
+    /**
+     * 以UTF-8字符集读取输入流的文本
+     *
+     * @param stream 输入流
+     * @return 文本内容
+     */
     public static String readUtf8String(InputStream stream) {
         return readString(stream, StandardCharsets.UTF_8);
     }
 
+    /**
+     * 以系统默认字符集读取输入流的文本
+     *
+     * @param stream 输入流
+     * @return 文本内容
+     */
     public static String readDefaultString(InputStream stream) {
         return readString(stream, Charset.defaultCharset());
     }
 
+    /**
+     * 将字节数组转换为输入流
+     *
+     * @param bytes 字节数组
+     * @return 字节输入流
+     */
     public static InputStream toStream(byte[] bytes) {
         return new ByteArrayInputStream(bytes);
     }
@@ -91,7 +141,7 @@ public class IOUtil {
     /**
      * 保存到文件
      *
-     * @param stream   流
+     * @param stream   输入流
      * @param filePath 文件路径
      */
     public static void saveToFile(InputStream stream, String filePath) {
@@ -114,7 +164,7 @@ public class IOUtil {
     }
 
     /**
-     * 保存到文件
+     * 将输入流内容复制到输出流
      *
      * @param in  输入流
      * @param out 输出流
@@ -133,7 +183,14 @@ public class IOUtil {
         }
     }
 
-    /** 从流中读取最多 max 字节（可能少于 max，如果流提前结束） */
+    /**
+     * 从流中读取最多max个字节
+     *
+     * @param in  输入流
+     * @param max 最多读取的字节数
+     * @return 读取到的字节数组，可能少于max（流提前结束时）
+     * @throws IOException 读取过程中发生IO异常时抛出
+     */
     public static byte[] readAtMost(InputStream in, int max) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(Math.min(max, 8192));
         byte[] buf = new byte[Math.min(max, 8192)];

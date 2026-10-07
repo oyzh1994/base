@@ -31,6 +31,13 @@ public class JsonTypeFileReader extends TypeFileReader {
      */
     private FileColumns columns;
 
+    /**
+     * 构造json类型文件读取器
+     *
+     * @param config  导入配置
+     * @param columns 字段列表
+     * @throws FileNotFoundException 异常
+     */
     public JsonTypeFileReader(FileReadConfig config, FileColumns columns) throws FileNotFoundException {
         this.config = config;
         this.columns = columns;

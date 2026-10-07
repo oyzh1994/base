@@ -19,10 +19,20 @@ public class EventConfig {
      */
     protected Boolean verbose;
 
+    /**
+     * 是否异步
+     *
+     * @return 是否异步
+     */
     public boolean isAsync() {
         return async != null && async;
     }
 
+    /**
+     * 是否输出详细日志
+     *
+     * @return 是否输出详细日志
+     */
     public boolean isVerbose() {
         return verbose != null && verbose;
     }

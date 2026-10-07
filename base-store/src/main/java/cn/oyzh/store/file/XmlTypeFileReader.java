@@ -31,6 +31,13 @@ public class XmlTypeFileReader extends TypeFileReader {
      */
     private FileColumns columns;
 
+    /**
+     * 构造xml类型文件读取器
+     *
+     * @param config  导入配置
+     * @param columns 字段列表
+     * @throws Exception 异常
+     */
     public XmlTypeFileReader(FileReadConfig config, FileColumns columns) throws Exception {
         this.config = config;
         this.columns = columns;

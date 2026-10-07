@@ -11,9 +11,19 @@ import java.util.List;
  */
 public final class SqlLexer {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private SqlLexer() {
     }
 
+    /**
+     * 对SQL进行词法分析，拆解为词法单元列表
+     *
+     * @param sql     SQL脚本
+     * @param profile 词法分析配置
+     * @return 词法单元列表
+     */
     public static List<SqlToken> tokenize(String sql, SqlLexicalProfile profile) {
         List<SqlToken> tokens = new ArrayList<>();
         if (sql == null || sql.isEmpty()) {
@@ -60,10 +70,26 @@ public final class SqlLexer {
         return tokens;
     }
 
+    /**
+     * 根据起止位置构建词法单元
+     *
+     * @param type  词法单元类型
+     * @param sql   SQL脚本
+     * @param start 起始位置
+     * @param end   结束位置
+     * @return 词法单元
+     */
     private static SqlToken token(SqlTokenType type, String sql, int start, int end) {
         return new SqlToken(type, sql.substring(start, end), start, end);
     }
 
+    /**
+     * 扫描空白字符，遇到换行时终止，以便保留行结构
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结束后的位置
+     */
     private static int scanWhitespace(String sql, int index) {
         int result = index;
         while (result < sql.length() && Character.isWhitespace(sql.charAt(result))) {
@@ -80,6 +106,14 @@ public final class SqlLexer {
         return result;
     }
 
+    /**
+     * 判断当前位置是否为行注释的开始
+     *
+     * @param sql     SQL脚本
+     * @param index   起始位置
+     * @param profile 词法分析配置
+     * @return 结果
+     */
     private static boolean isLineComment(String sql, int index, SqlLexicalProfile profile) {
         if (index + 1 < sql.length() && sql.charAt(index) == '-' && sql.charAt(index + 1) == '-') {
             return true;
@@ -87,6 +121,14 @@ public final class SqlLexer {
         return profile.isHashComment() && sql.charAt(index) == '#';
     }
 
+    /**
+     * 扫描行注释，直到行尾
+     *
+     * @param sql     SQL脚本
+     * @param index   起始位置
+     * @param profile 词法分析配置
+     * @return 结束后的位置
+     */
     private static int scanLineComment(String sql, int index, SqlLexicalProfile profile) {
         int result = index;
         while (result < sql.length()) {
@@ -99,6 +141,14 @@ public final class SqlLexer {
         return result;
     }
 
+    /**
+     * 扫描块注释，配置支持嵌套时按嵌套层级匹配结束
+     *
+     * @param sql     SQL脚本
+     * @param index   起始位置（指向注释起始的斜杠星号）
+     * @param profile 词法分析配置
+     * @return 结束后的位置
+     */
     private static int scanBlockComment(String sql, int index, SqlLexicalProfile profile) {
         int depth = 1;
         int result = index + 2;
@@ -121,6 +171,15 @@ public final class SqlLexer {
         return result;
     }
 
+    /**
+     * 扫描被引号包裹的内容，连续两个引号视为转义，支持反斜杠转义配置
+     *
+     * @param sql     SQL脚本
+     * @param index   起始位置
+     * @param quote   起始引号字符
+     * @param profile 词法分析配置
+     * @return 结束后的位置
+     */
     private static int scanQuoted(String sql, int index, char quote, SqlLexicalProfile profile) {
         char closing = quote == '[' ? ']' : quote;
         int result = index + 1;
@@ -142,6 +201,13 @@ public final class SqlLexer {
         return sql.length();
     }
 
+    /**
+     * 判断当前位置是否为美元符引用字符串的开始（$tag$形式）
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结果
+     */
     private static boolean startsDollarQuote(String sql, int index) {
         int result = index + 1;
         while (result < sql.length()) {
@@ -157,6 +223,13 @@ public final class SqlLexer {
         return false;
     }
 
+    /**
+     * 扫描美元符引用字符串，直到匹配到相同的标记
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结束后的位置
+     */
     private static int scanDollarQuote(String sql, int index) {
         int markerEnd = index + 1;
         while (markerEnd < sql.length() && sql.charAt(markerEnd) != '$') {
@@ -168,6 +241,13 @@ public final class SqlLexer {
         return close < 0 ? sql.length() : close + marker.length();
     }
 
+    /**
+     * 判断当前位置是否为Oracle的q-quote字符串开始（q'x...x'形式）
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结果
+     */
     private static boolean startsOracleQuote(String sql, int index) {
         if ((sql.charAt(index) != 'q' && sql.charAt(index) != 'Q')
                 || index + 2 >= sql.length()
@@ -178,6 +258,13 @@ public final class SqlLexer {
         return closeQuote(open) != 0;
     }
 
+    /**
+     * 扫描Oracle的q-quote字符串，直到匹配到对应的结束定界符
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结束后的位置
+     */
     private static int scanOracleQuote(String sql, int index) {
         char open = sql.charAt(index + 2);
         char close = closeQuote(open);
@@ -191,6 +278,12 @@ public final class SqlLexer {
         return sql.length();
     }
 
+    /**
+     * 获取q-quote起始定界符对应的结束定界符
+     *
+     * @param open 起始定界符
+     * @return 结束定界符
+     */
     private static char closeQuote(char open) {
         return switch (open) {
             case '[' -> ']';
@@ -201,6 +294,13 @@ public final class SqlLexer {
         };
     }
 
+    /**
+     * 扫描单词（标识符或关键字）
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结束后的位置
+     */
     private static int scanWord(String sql, int index) {
         int result = index;
         while (result < sql.length()) {
@@ -213,6 +313,13 @@ public final class SqlLexer {
         return result;
     }
 
+    /**
+     * 扫描数字，支持小数点与指数部分
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结束后的位置
+     */
     private static int scanNumber(String sql, int index) {
         int result = index;
         boolean exponent = false;
@@ -230,6 +337,13 @@ public final class SqlLexer {
         return result;
     }
 
+    /**
+     * 判断当前位置是否为参数占位符的开始
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结果
+     */
     private static boolean isParameterStart(String sql, int index) {
         char current = sql.charAt(index);
         if (current == '?' || current == '@') {
@@ -243,6 +357,13 @@ public final class SqlLexer {
                 && (sql.charAt(index + 1) == '{');
     }
 
+    /**
+     * 扫描参数占位符，支持?、@、:name、#{name}、${name}等形式
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结束后的位置
+     */
     private static int scanParameter(String sql, int index) {
         char current = sql.charAt(index);
         if (current == '#' || current == '$') {
@@ -264,6 +385,13 @@ public final class SqlLexer {
         return result;
     }
 
+    /**
+     * 扫描标点符号，双字符运算符整体作为一个词法单元
+     *
+     * @param sql   SQL脚本
+     * @param index 起始位置
+     * @return 结束后的位置
+     */
     private static int scanPunctuation(String sql, int index) {
         if (index + 1 < sql.length()) {
             String pair = sql.substring(index, index + 2);

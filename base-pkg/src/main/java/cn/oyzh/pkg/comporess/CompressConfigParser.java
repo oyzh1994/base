@@ -23,10 +23,22 @@ public class CompressConfigParser implements ConfigParser<CompressConfig> {
         return config;
     }
 
+    /**
+     * 解析配置
+     *
+     * @param object 配置内容
+     * @return 配置类
+     */
     public static CompressConfig parseConfig(JSONObject object) {
         return new CompressConfigParser().parse(object);
     }
 
+    /**
+     * 解析配置
+     *
+     * @param configFile 配置文件
+     * @return 配置类
+     */
     public static CompressConfig parseConfig(String configFile) {
         return new CompressConfigParser().parse(configFile);
     }

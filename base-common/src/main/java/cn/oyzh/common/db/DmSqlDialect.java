@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class DmSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造达梦数据库SQL方言实例
+     */
     public DmSqlDialect() {
         super(SqlDatabase.DM, SqlLexicalProfile.DM);
     }

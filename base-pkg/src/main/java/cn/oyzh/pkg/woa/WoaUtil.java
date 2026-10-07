@@ -15,6 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
+ * windows on arm 工具类
  *
  * @author oyzh
  * @since 2026-09-19

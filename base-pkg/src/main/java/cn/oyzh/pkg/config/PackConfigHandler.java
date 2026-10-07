@@ -18,6 +18,9 @@ import java.util.List;
  */
 public class PackConfigHandler implements PreHandler {
 
+    /**
+     * 排序
+     */
     private int order = PackOrder.ORDER_P8;
 
     @Override

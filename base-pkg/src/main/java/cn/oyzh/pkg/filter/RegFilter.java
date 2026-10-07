@@ -23,10 +23,18 @@ public class RegFilter implements Function<String, Boolean> {
      */
     private final Set<String> excludes = new CopyOnWriteArraySet<>();
 
+    /**
+     * 构造正则过滤器实例
+     */
     public RegFilter() {
 
     }
 
+    /**
+     * 构造正则过滤器实例
+     *
+     * @param excludes 排除的文件列表
+     */
     public RegFilter(Collection<String> excludes) {
         this.addExcludes(excludes);
     }

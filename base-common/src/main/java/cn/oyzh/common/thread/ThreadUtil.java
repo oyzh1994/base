@@ -324,7 +324,7 @@ public class ThreadUtil {
     }
 
     /**
-     * 线程是否结束
+     * 当前线程是否已中断
      *
      * @return 结果
      */
@@ -333,7 +333,7 @@ public class ThreadUtil {
     }
 
     /**
-     * 线程是否结束
+     * 线程是否已中断，线程为空时视为已中断
      *
      * @param thread 线程
      * @return 结果
@@ -353,7 +353,7 @@ public class ThreadUtil {
     }
 
     /**
-     * 结束线程
+     * 中断线程
      *
      * @param thread 线程
      */
@@ -364,7 +364,7 @@ public class ThreadUtil {
     }
 
     /**
-     * 加入线程
+     * 等待线程执行结束
      *
      * @param thread 线程
      */

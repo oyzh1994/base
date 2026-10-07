@@ -37,6 +37,7 @@ public class PemUtil {
      * @param pemFile            包含证书和私钥的 PEM 文件（证书在前，私钥在后，可多个证书）
      * @param privateKeyPassword 私钥密码，null 表示无密码
      * @return 解析结果，包含证书列表和私钥
+     * @throws Exception 异常
      */
     public static PemKeyCertData loadKeyAndCertificates(String pemFile, String privateKeyPassword) throws Exception {
         List<X509Certificate> certificates = new ArrayList<>();
@@ -81,7 +82,11 @@ public class PemUtil {
     }
 
     /**
-     * 仅加载 PEM 文件中的证书（不要求私钥）
+     * 仅加载 PEM 文件中的证书
+     *
+     * @param pemFile PEM文件路径
+     * @return 证书数组
+     * @throws Exception 异常
      */
     public static X509Certificate[] loadCertificates(String pemFile) throws Exception {
         List<X509Certificate> certs = new ArrayList<>();
@@ -102,19 +107,41 @@ public class PemUtil {
      */
     public static class PemKeyCertData {
 
+        /**
+         * 私钥
+         */
         private final PrivateKey privateKey;
 
+        /**
+         * 证书列表
+         */
         private final List<X509Certificate> certificates;
 
+        /**
+         * 构造辅助数据类实例
+         *
+         * @param privateKey   私钥
+         * @param certificates 证书列表
+         */
         public PemKeyCertData(PrivateKey privateKey, List<X509Certificate> certificates) {
             this.privateKey = privateKey;
             this.certificates = certificates;
         }
 
+        /**
+         * 获取私钥
+         *
+         * @return 私钥
+         */
         public PrivateKey getPrivateKey() {
             return privateKey;
         }
 
+        /**
+         * 获取证书列表
+         *
+         * @return 证书列表
+         */
         public List<X509Certificate> getCertificates() {
             return certificates;
         }

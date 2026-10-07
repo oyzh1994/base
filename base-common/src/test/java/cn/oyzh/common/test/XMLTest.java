@@ -6,6 +6,8 @@ import cn.oyzh.common.xml.XMLReader;
 import org.junit.Test;
 
 /**
+ * 测试 XML 读取工具解析 SVG 文档的性能与结果。
+ *
  * @author oyzh
  * @since 2024-11-14
  */

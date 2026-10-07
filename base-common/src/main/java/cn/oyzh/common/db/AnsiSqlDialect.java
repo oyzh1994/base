@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class AnsiSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造ANSI SQL方言实例
+     */
     public AnsiSqlDialect() {
         super(SqlDatabase.ANSI, SqlLexicalProfile.ANSI);
     }

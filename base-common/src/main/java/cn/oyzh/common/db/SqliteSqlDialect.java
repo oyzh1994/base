@@ -8,6 +8,9 @@ package cn.oyzh.common.db;
  */
 public class SqliteSqlDialect extends AbstractSqlDialect {
 
+    /**
+     * 构造SQLite SQL方言实例
+     */
     public SqliteSqlDialect() {
         super(SqlDatabase.SQLITE, SqlLexicalProfile.ANSI);
     }

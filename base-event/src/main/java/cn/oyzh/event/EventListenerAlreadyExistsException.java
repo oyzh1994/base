@@ -8,6 +8,11 @@ package cn.oyzh.event;
  */
 public class EventListenerAlreadyExistsException extends RuntimeException {
 
+    /**
+     * 构造异常
+     *
+     * @param listener 已存在的监听器
+     */
     public EventListenerAlreadyExistsException(Object listener) {
         super("Event listener " + listener + " already exists");
     }

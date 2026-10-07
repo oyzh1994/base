@@ -8,19 +8,22 @@ package cn.oyzh.common.util;
  */
 public class ColorUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private ColorUtil() {
     }
 
     /**
-     * 获取颜色16进制值
+     * 将RGB颜色值转换为16进制颜色字符串
      *
-     * @param r 颜色
-     * @param g 颜色
-     * @param b 颜色
-     * @return 16进制值
+     * @param r 红色分量（0-255）
+     * @param g 绿色分量（0-255）
+     * @param b 蓝色分量（0-255）
+     * @return #RRGGBB格式的16进制颜色字符串
      */
     public static String rgbToHex(int r, int g, int b) {
-        // 将归一化的RGB值缩放到0-255范围
+        // 直接使用传入的0-255范围颜色分量
         int scaledRed = r;
         int scaledGreen = g;
         int scaledBlue = b;

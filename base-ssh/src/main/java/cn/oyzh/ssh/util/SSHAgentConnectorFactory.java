@@ -24,14 +24,28 @@ import java.util.List;
  */
 public class SSHAgentConnectorFactory extends JGitSshAgentFactory implements ConnectorFactory {
 
+    /**
+     * 构造ssh agent连接工厂实例，使用默认连接工厂
+     */
     public SSHAgentConnectorFactory() {
         this(ConnectorFactory.getDefault(), null);
     }
 
+    /**
+     * 构造ssh agent连接工厂实例，使用默认连接工厂
+     *
+     * @param homeDir 用户主目录
+     */
     public SSHAgentConnectorFactory(File homeDir) {
         this(ConnectorFactory.getDefault(), homeDir);
     }
 
+    /**
+     * 构造ssh agent连接工厂实例
+     *
+     * @param factory 连接工厂
+     * @param homeDir 用户主目录
+     */
     public SSHAgentConnectorFactory(ConnectorFactory factory, File homeDir) {
         super(factory, homeDir);
     }

@@ -23,11 +23,16 @@ import java.util.zip.ZipEntry;
  */
 public class JarUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private JarUtil() {
     }
 
     /**
-     * 获取 JAR 目录路径
+     * 获取JAR目录路径
+     *
+     * @return JAR所在目录路径，非JAR运行时返回null
      */
     public static String getJarDir() {
         String jarPath = getJarPath();
@@ -38,7 +43,9 @@ public class JarUtil {
     }
 
     /**
-     * 获取 JAR 文件路径
+     * 获取JAR文件路径
+     *
+     * @return JAR文件路径，非JAR运行时返回null
      */
     public static String getJarPath() {
         String path = null;
@@ -65,12 +72,15 @@ public class JarUtil {
         return path;
     }
 
+    /**
+     * 是否运行在jar中的缓存结果
+     */
     private static Boolean isInJar;
 
     /**
-     * 是否运行在jar中
+     * 判断是否运行在jar中
      *
-     * @return 结果
+     * @return 运行在jar中返回true，否则返回false
      */
     public static boolean isInJar() {
         if (isInJar == null) {
@@ -97,10 +107,11 @@ public class JarUtil {
     }
 
     /**
-     * 是否有class
+     * 判断JAR文件中是否包含class文件
      *
-     * @param jarFile jar文件
-     * @return 结果
+     * @param jarFile jar文件路径
+     * @return 包含class文件返回true，否则返回false
+     * @throws IOException 读取jar文件失败时抛出
      */
     public static boolean hasClass(String jarFile) throws IOException {
         if (!FileUtil.exists(jarFile)) {
@@ -131,6 +142,7 @@ public class JarUtil {
      *
      * @param src     源文件
      * @param destDir 目标目录
+     * @return 解压后的目标目录文件
      */
     public static File unJar(String src, String destDir) {
         if (!FileUtil.exists(src)) {
@@ -147,9 +159,10 @@ public class JarUtil {
 
 
     /**
-     * 是否jar
+     * 判断文件是否jar
      *
      * @param file 文件
+     * @return 是jar文件返回true，否则返回false
      */
     public static boolean isJar(File file) {
         if (file == null || !file.isFile() || !file.exists()) {
@@ -159,17 +172,20 @@ public class JarUtil {
     }
 
     /**
-     * 是否jar
+     * 判断名称是否为jar
      *
      * @param name 名称
+     * @return 是jar返回true，否则返回false
      */
     public static boolean isJar(String name) {
         return FileNameUtil.isJarType(FileNameUtil.extName(name));
     }
 
     /**
-     * 是否class
+     * 判断文件是否class文件
+     *
      * @param file 文件
+     * @return 是class文件返回true，否则返回false
      */
     public static boolean isClass(File file) {
         if (file == null || !file.isFile() || !file.exists()) {
@@ -179,9 +195,10 @@ public class JarUtil {
     }
 
     /**
-     * 是否class
+     * 判断名称是否为class文件
      *
      * @param name 名称
+     * @return 是class文件返回true，否则返回false
      */
     public static boolean isClass(String name) {
         return FileNameUtil.isClassType(FileNameUtil.extName(name));

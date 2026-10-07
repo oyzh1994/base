@@ -36,6 +36,9 @@ public class I18nResourceBundle extends ResourceBundle {
      */
     private final Map<Locale, ResourceBundle> i18n_resources = new HashMap<>();
 
+    /**
+     * 构造i18n资源绑定实例
+     */
     private I18nResourceBundle() {
 
     }
@@ -98,13 +101,16 @@ public class I18nResourceBundle extends ResourceBundle {
         return resource.containsKey(key);
     }
 
+    /**
+     * 清除资源缓存
+     */
     public void clear() {
         this.base_resources.clear();
         this.i18n_resources.clear();
     }
 
     /**
-     * 获取基础的国际化资源，字符串
+     * 获取国际化资源字符串
      *
      * @param key 键
      * @return 值
@@ -119,10 +125,10 @@ public class I18nResourceBundle extends ResourceBundle {
     }
 
     /**
-     * 获取基础的国际化资源，对象
+     * 按顺序拼接多个国际化资源值并返回；英文区域下首段首字母大写、其余首字母小写，并以空格分隔
      *
      * @param keys 键
-     * @return 值
+     * @return 拼接后的值
      */
     public static String i18nString(String... keys) {
         try {
@@ -154,7 +160,7 @@ public class I18nResourceBundle extends ResourceBundle {
     }
 
     /**
-     * 获取基础的国际化资源，对象
+     * 获取国际化资源对象
      *
      * @param key 键
      * @return 值
@@ -169,10 +175,10 @@ public class I18nResourceBundle extends ResourceBundle {
     }
 
     /**
-     * 是否存在值
+     * 是否存在指定键的国际化资源
      *
      * @param key 键
-     * @return 值
+     * @return 是否存在
      */
     public static boolean containsI18nKey(String key) {
         return INSTANCE.containsKey(key);

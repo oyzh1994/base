@@ -15,6 +15,9 @@ import java.util.Properties;
  */
 public class ProjectHandler implements PreHandler {
 
+    /**
+     * 排序
+     */
     private int order = PackOrder.ORDER_P9;
 
     @Override
@@ -27,12 +30,23 @@ public class ProjectHandler implements PreHandler {
         this.order = order;
     }
 
+    /**
+     * 项目信息文件
+     */
     private String projectFile = "project.properties";
 
+    /**
+     * 构造项目信息处理器实例
+     */
     public ProjectHandler() {
 
     }
 
+    /**
+     * 构造项目信息处理器实例
+     *
+     * @param projectFile 项目信息文件
+     */
     public ProjectHandler(String projectFile) {
         this.projectFile = projectFile;
     }

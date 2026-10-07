@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * 测试压缩工具 CompressUtil 对多个文件或目录的打包功能。
  *
  * @author oyzh
  * @since 2025-09-26

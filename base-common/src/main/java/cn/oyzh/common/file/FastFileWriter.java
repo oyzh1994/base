@@ -16,20 +16,46 @@ import java.util.Collection;
  */
 public class FastFileWriter implements Closeable {
 
+    /** 底层文件写入器 */
     private final FileWriter writer;
 
+    /**
+     * 以 UTF-8 编码创建写入器
+     *
+     * @param filePath 文件路径
+     * @throws IOException 打开文件失败时抛出
+     */
     public FastFileWriter(String filePath) throws IOException {
         this(new File(filePath), StandardCharsets.UTF_8);
     }
 
+    /**
+     * 以 UTF-8 编码创建写入器
+     *
+     * @param file 文件
+     * @throws IOException 打开文件失败时抛出
+     */
     public FastFileWriter(File file) throws IOException {
         this(file, StandardCharsets.UTF_8);
     }
 
+    /**
+     * 以指定字符集创建写入器
+     *
+     * @param file    文件
+     * @param charset 字符集
+     * @throws IOException 打开文件失败时抛出
+     */
     public FastFileWriter(File file, Charset charset) throws IOException {
         this.writer = new FileWriter(file, charset);
     }
 
+    /**
+     * 追加一行（自动补换行符）并立即刷新
+     *
+     * @param line 行内容，为 null 时不处理
+     * @throws IOException 写入失败时抛出
+     */
     public void appendLine(String line) throws IOException {
         if (line != null) {
             if (!line.endsWith("\n")) {
@@ -40,6 +66,12 @@ public class FastFileWriter implements Closeable {
         }
     }
 
+    /**
+     * 批量追加多行（每行自动补换行符）并立即刷新
+     *
+     * @param lines 行集合，为 null 时不处理
+     * @throws IOException 写入失败时抛出
+     */
     public void appendLines(Collection<String> lines) throws IOException {
         if (lines != null) {
             StringBuilder sb = new StringBuilder();
@@ -55,6 +87,12 @@ public class FastFileWriter implements Closeable {
         }
     }
 
+    /**
+     * 写入一行（自动补换行符）并立即刷新
+     *
+     * @param line 行内容，为 null 时不处理
+     * @throws IOException 写入失败时抛出
+     */
     public void writeLine(String line) throws IOException {
         if (line != null) {
             if (line.endsWith("\n")) {
@@ -66,6 +104,12 @@ public class FastFileWriter implements Closeable {
         }
     }
 
+    /**
+     * 批量写入多行（每行自动补换行符），不主动刷新
+     *
+     * @param lines 行集合，为 null 时不处理
+     * @throws IOException 写入失败时抛出
+     */
     public void writeLines(Collection<String> lines) throws IOException {
         if (lines != null) {
             StringBuilder sb = new StringBuilder();
@@ -80,6 +124,11 @@ public class FastFileWriter implements Closeable {
         }
     }
 
+    /**
+     * 刷新缓冲区
+     *
+     * @throws IOException 刷新失败时抛出
+     */
     public void fulsh() throws IOException {
         this.writer.flush();
     }

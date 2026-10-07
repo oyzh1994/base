@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 爬取指定小说站点的章节内容并合并为完整文本文件。
  *
  * @author oyzh
  * @since 2025-09-18

@@ -267,7 +267,7 @@ public class RuntimeUtil {
     // }
 
     /**
-     * 执行并返回字符传
+     * 执行并返回字符串
      *
      * @param cmd 命令
      * @return 结果
@@ -285,7 +285,7 @@ public class RuntimeUtil {
     }
 
     /**
-     * 执行并返回字符传
+     * 执行并返回字符串
      *
      * @param cmdArr 命令列表
      * @return 结果
@@ -326,8 +326,8 @@ public class RuntimeUtil {
      * 执行并返回结果
      *
      * @param cmdArr 命令列表
-     * @param envp   环境
-     * @param dir    文件
+     * @param envp   环境变量
+     * @param dir    执行目录
      * @return 结果
      */
     public static ProcessExecResult execForResult(String[] cmdArr, String[] envp, File dir) {
@@ -348,8 +348,8 @@ public class RuntimeUtil {
      * 执行并返回结果
      *
      * @param cmd  命令
-     * @param envp 环境
-     * @param dir  文件
+     * @param envp 环境变量
+     * @param dir  执行目录
      * @return 结果
      */
     public static ProcessExecResult execForResult(String cmd, String[] envp, File dir) {
@@ -532,10 +532,20 @@ public class RuntimeUtil {
         return -1;
     }
 
+    /**
+     * 获取处理器数量
+     *
+     * @return 处理器数量
+     */
     public static int getProcessorCount() {
         return Runtime.getRuntime().availableProcessors();
     }
 
+    /**
+     * 注册 JVM 关闭钩子
+     *
+     * @param thread 关闭时执行的线程
+     */
     public static void addShutdownHook(Thread thread) {
         Runtime.getRuntime().addShutdownHook(thread);
     }

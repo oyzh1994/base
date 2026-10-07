@@ -69,7 +69,7 @@ public class EventFactory {
     /**
      * 获取同步配置
      *
-     * @return 结果
+     * @return 同步配置
      */
     public static EventConfig syncEventConfig() {
         if (syncEventConfig == null) {
@@ -85,7 +85,7 @@ public class EventFactory {
     /**
      * 获取异步配置
      *
-     * @return 结果
+     * @return 异步配置
      */
     public static EventConfig asyncEventConfig() {
         if (asyncEventConfig == null) {
@@ -101,7 +101,7 @@ public class EventFactory {
     /**
      * 获取默认配置
      *
-     * @return 结果
+     * @return 默认配置
      */
     public static EventConfig defaultEventConfig() {
         if (defaultEventConfig == null) {
@@ -115,9 +115,9 @@ public class EventFactory {
     }
 
     /**
-     * 事件总线实例
+     * 创建事件总线实例
      *
-     * @return 结果
+     * @return 事件总线实例
      */
     public static EventBus newInstance() {
         if (eventBusClass == null) {

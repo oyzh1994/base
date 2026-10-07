@@ -95,6 +95,12 @@ public class PackConfigParser implements ConfigParser<PackConfig> {
         return config;
     }
 
+    /**
+     * 解析打包配置文件
+     *
+     * @param configFile 配置文件
+     * @return 打包配置
+     */
     public static PackConfig parseConfig(String configFile) {
         return new PackConfigParser().parse(configFile);
     }

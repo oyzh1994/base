@@ -6,13 +6,21 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * jdbc键值存储
+ *
  * @author oyzh
  * @since 2024-12-21
  */
 public abstract class JdbcKeyValueStore<M extends Serializable> extends JdbcStore<M> {
 
+    /**
+     * 键值操作器
+     */
     private final JdbcKeyValueOperator operator;
 
+    /**
+     * 构造jdbc键值存储
+     */
     public JdbcKeyValueStore() {
         try {
             TableDefinition tableDefinition = this.tableDefinition();
@@ -37,6 +45,12 @@ public abstract class JdbcKeyValueStore<M extends Serializable> extends JdbcStor
         return TableDefinition.ofClass(this.modelClass());
     }
 
+    /**
+     * 覆盖写入模型数据
+     *
+     * @param model 模型
+     * @return 结果
+     */
     public boolean update(M model) {
         if (model != null) {
             try {
@@ -49,6 +63,11 @@ public abstract class JdbcKeyValueStore<M extends Serializable> extends JdbcStor
         return false;
     }
 
+    /**
+     * 查询模型数据
+     *
+     * @return 模型
+     */
     public M select() {
         try {
             return this.toModel(this.operator.select());
@@ -58,6 +77,11 @@ public abstract class JdbcKeyValueStore<M extends Serializable> extends JdbcStor
         return null;
     }
 
+    /**
+     * 清空数据
+     *
+     * @return 结果
+     */
     public boolean clear() {
         try {
             return this.operator.clear();

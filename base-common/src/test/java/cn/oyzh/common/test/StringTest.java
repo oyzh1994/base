@@ -3,6 +3,7 @@ package cn.oyzh.common.test;
 import org.junit.Test;
 
 /**
+ * 验证字符串对嵌套 jar 路径中特殊分隔符的匹配判断。
  *
  * @author oyzh
  * @since 2026-09-17

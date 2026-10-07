@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * 分页信息
  *
- * @param <T> 形参
+ * @param <T> 分页数据类型
  * @author oyzh
  * @since 2020/9/15
  */
@@ -50,14 +50,30 @@ public class Paging<T> {
      */
     public static final Paging<Object> EMPTY = new Paging<>(Collections.emptyList());
 
+    /**
+     * 构造分页实例
+     *
+     * @param limit 每页显示数量
+     */
     public Paging(long limit) {
         this(Collections.emptyList(), limit);
     }
 
+    /**
+     * 构造分页实例
+     *
+     * @param dataList 数据列表
+     */
     public Paging(List<T> dataList) {
         this.dataList(dataList);
     }
 
+    /**
+     * 构造分页实例
+     *
+     * @param dataList 数据列表
+     * @param limit    每页显示数量
+     */
     public Paging(List<T> dataList, long limit) {
         if (limit <= 0) {
             limit = 10;
@@ -66,6 +82,13 @@ public class Paging<T> {
         this.dataList(dataList);
     }
 
+    /**
+     * 构造分页实例
+     *
+     * @param dataList 数据列表
+     * @param limit    每页显示数量
+     * @param count    数据总数
+     */
     public Paging(List<T> dataList, long limit, long count) {
         if (limit <= 0) {
             limit = 10;
@@ -139,7 +162,7 @@ public class Paging<T> {
     }
 
     /**
-     * 下一页页
+     * 下一页
      *
      * @return 分页内容
      */
@@ -261,6 +284,12 @@ public class Paging<T> {
         return this.dataList.subList((int) start, (int) end);
     }
 
+    /**
+     * 修正页码，使其落在有效范围内
+     *
+     * @param pageNo 页码
+     * @return 修正后的页码
+     */
     public long fixPageNo(long pageNo) {
         if (pageNo >= this.countPage) {
             pageNo = this.countPage - 1;
@@ -270,22 +299,47 @@ public class Paging<T> {
         return pageNo;
     }
 
+    /**
+     * 获取数据总数
+     *
+     * @return 数据总数
+     */
     public long count() {
         return this.count;
     }
 
+    /**
+     * 获取每页显示数量
+     *
+     * @return 每页显示数量
+     */
     public long limit() {
         return this.limit;
     }
 
+    /**
+     * 获取总页数
+     *
+     * @return 总页数
+     */
     public long countPage() {
         return this.countPage;
     }
 
+    /**
+     * 获取当前页
+     *
+     * @return 当前页
+     */
     public long currentPage() {
         return this.currentPage;
     }
 
+    /**
+     * 获取数据列表
+     *
+     * @return 数据列表
+     */
     public List<T> dataList() {
         return this.dataList;
     }

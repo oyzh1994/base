@@ -45,6 +45,11 @@ public class JdbcManager {
         }
     }
 
+    /**
+     * 是否H2方言
+     *
+     * @return 结果
+     */
     public static boolean isH2Dialect() {
         return JdbcDialect.H2 == dialect;
     }

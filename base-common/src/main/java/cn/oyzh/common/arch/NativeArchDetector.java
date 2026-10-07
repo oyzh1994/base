@@ -106,6 +106,9 @@ public final class NativeArchDetector {
     private static final int CPU_TYPE_ARM64 = 0x0100000C;
     private static final int CPU_TYPE_POWERPC64 = 0x01000012;
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private NativeArchDetector() {
     }
 
@@ -250,6 +253,9 @@ public final class NativeArchDetector {
         return elfMachineToArch(machine, is64, little);
     }
 
+    /**
+     * 将 ELF 的 e_machine 与字长、字节序映射为架构，无法对应时返回 {@link NativeArch#UNKNOWN}
+     */
     private static NativeArch elfMachineToArch(int machine, boolean is64, boolean little) {
         return switch (machine) {
             case EM_386 -> is64 ? NativeArch.UNKNOWN : NativeArch.X86;
@@ -288,6 +294,9 @@ public final class NativeArchDetector {
 
     // ======================== PE 解析 ========================
 
+    /**
+     * 解析 PE 文件的 machine 字段，非法时返回 null
+     */
     private static NativeArch parsePe(byte[] d) {
         if (d.length < 0x40) {
             return null;
@@ -328,6 +337,9 @@ public final class NativeArchDetector {
 
     // ======================== Mach-O 解析 ========================
 
+    /**
+     * 解析 Mach-O 头部的 cpu type，非法时返回 null
+     */
     private static NativeArch parseMachO(byte[] d) {
         if (d.length < 8) {
             return null;
@@ -345,6 +357,9 @@ public final class NativeArchDetector {
         return machoCpuToArch(cpuType);
     }
 
+    /**
+     * 解析通用二进制（Fat Mach-O）中包含的全部架构
+     */
     private static List<NativeArch> parseFatMachO(byte[] d) {
         FatHeader header = readFatHeader(d);
         if (header == null) {
@@ -405,6 +420,9 @@ public final class NativeArchDetector {
         return new FatHeader(order, count, archLength);
     }
 
+    /**
+     * 将 Mach-O 的 cpu type 映射为架构，无法对应时返回 {@link NativeArch#UNKNOWN}
+     */
     private static NativeArch machoCpuToArch(int cpuType) {
         return switch (cpuType) {
             case CPU_TYPE_X86 -> NativeArch.X86;
@@ -421,6 +439,9 @@ public final class NativeArchDetector {
 
     // ======================== 字节读取工具 ========================
 
+    /**
+     * 将单个架构包装为列表，无法识别时返回空列表
+     */
     private static List<NativeArch> toArches(NativeArch arch) {
         if (arch == null || arch == NativeArch.UNKNOWN) {
             return Collections.emptyList();
@@ -428,20 +449,32 @@ public final class NativeArchDetector {
         return Collections.singletonList(arch);
     }
 
+    /**
+     * 按大端序读取 4 字节整数
+     */
     private static int readIntBE(byte[] d, int i) {
         return ((d[i] & 0xFF) << 24) | ((d[i + 1] & 0xFF) << 16)
                 | ((d[i + 2] & 0xFF) << 8) | (d[i + 3] & 0xFF);
     }
 
+    /**
+     * 按小端序读取 4 字节整数
+     */
     private static int readIntLE(byte[] d, int i) {
         return (d[i] & 0xFF) | ((d[i + 1] & 0xFF) << 8)
                 | ((d[i + 2] & 0xFF) << 16) | ((d[i + 3] & 0xFF) << 24);
     }
 
+    /**
+     * 按指定字节序读取 4 字节整数
+     */
     private static int readInt(byte[] d, int i, ByteOrder o) {
         return o == ByteOrder.BIG_ENDIAN ? readIntBE(d, i) : readIntLE(d, i);
     }
 
+    /**
+     * 按指定字节序读取 2 字节整数
+     */
     private static int readShort(byte[] d, int i, ByteOrder o) {
         return o == ByteOrder.BIG_ENDIAN
                 ? ((d[i] & 0xFF) << 8) | (d[i + 1] & 0xFF)

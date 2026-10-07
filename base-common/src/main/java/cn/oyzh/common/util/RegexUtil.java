@@ -10,6 +10,9 @@ import java.util.regex.Pattern;
  */
 public class RegexUtil {
 
+    /**
+     * 私有构造，禁止实例化
+     */
     private RegexUtil() {
     }
 
@@ -56,10 +59,10 @@ public class RegexUtil {
     public final static Pattern MOBILE_PATTERN = Pattern.compile(MOBILE_REGEX);
 
     /**
-     * 是否数字
+     * 是否数字（含小数）
      *
      * @param str 字符串
-     * @return 结果
+     * @return 是数字返回true，否则返回false
      */
     public static boolean isDecimal(String str) {
         if (StringUtil.isBlank(str)) {
@@ -108,6 +111,7 @@ public class RegexUtil {
      * @param wholeWord     是否全词匹配（true = 是）
      * @param useRegex      是否启用正则表达式（true = 是）
      * @return 编译好的 Pattern
+     * @throws IllegalArgumentException 搜索文本为空时抛出
      */
     public static Pattern createSearchPattern(
             String searchText,

@@ -1,6 +1,7 @@
 package cn.oyzh.pkg;
 
 /**
+ * 打包常量，定义打包过程中使用的属性键
  *
  * @author oyzh
  * @since 2025-09-22

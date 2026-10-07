@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 抓取 CSDN 文章中列举的镜像地址并逐个校验其可用性。
+ *
  * @author oyzh
  * @since 2025-02-12
  */

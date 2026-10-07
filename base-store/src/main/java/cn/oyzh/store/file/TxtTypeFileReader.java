@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * xml类型文件读取器
+ * txt类型文件读取器
  *
  * @author oyzh
  * @since 2024-09-04
@@ -31,6 +31,13 @@ public class TxtTypeFileReader extends TypeFileReader {
      */
     private SkipAbleFileReader reader;
 
+    /**
+     * 构造txt类型文件读取器
+     *
+     * @param config  导入配置
+     * @param columns 字段列表
+     * @throws IOException 异常
+     */
     public TxtTypeFileReader(FileReadConfig config, FileColumns columns) throws IOException {
         this.config = config;
         this.columns = columns;

@@ -25,6 +25,11 @@ public class JreConfig implements ConfigMargeAble<JreConfig> {
      */
     private Set<String> excludes;
 
+    /**
+     * 解析配置
+     *
+     * @param object 配置内容
+     */
     public void parseConfig(JSONObject object) {
         JSONArray excludes = object.getJSONArray("excludes");
         if (excludes != null) {
@@ -35,18 +40,38 @@ public class JreConfig implements ConfigMargeAble<JreConfig> {
         }
     }
 
+    /**
+     * 获取排除的文件
+     *
+     * @return 排除的文件
+     */
     public Set<String> getExcludes() {
         return excludes;
     }
 
+    /**
+     * 设置排除的文件
+     *
+     * @param excludes 排除的文件
+     */
     public void setExcludes(Set<String> excludes) {
         this.excludes = excludes;
     }
 
+    /**
+     * 是否启用
+     *
+     * @return 是否启用
+     */
     public boolean isEnable() {
         return enable == null || this.enable;
     }
 
+    /**
+     * 设置是否启用
+     *
+     * @param enable 是否启用
+     */
     public void setEnable(boolean enable) {
         this.enable = enable;
     }

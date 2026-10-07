@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 事件订阅者
+ * 事件订阅注解，用于标记事件订阅方法
  *
  * @author oyzh
  * @since 2024-12-27

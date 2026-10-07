@@ -23,10 +23,21 @@ import java.util.Map;
  */
 public abstract class JdbcStandardOperator extends JdbcOperator {
 
+    /**
+     * 构造jdbc标准操作器
+     *
+     * @param tableDefinition 表定义
+     */
     public JdbcStandardOperator(TableDefinition tableDefinition) {
         super(tableDefinition);
     }
 
+    /**
+     * 根据主键值构建主键列
+     *
+     * @param primaryKey 主键值
+     * @return 主键列
+     */
     protected PrimaryKeyColumn getPrimaryKeyColumn(Object primaryKey) {
         ColumnDefinition columnDefinition = this.tableDefinition.primaryKey();
         if (columnDefinition == null) {
@@ -35,6 +46,13 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         return new PrimaryKeyColumn(columnDefinition.getColumnName(), primaryKey);
     }
 
+    /**
+     * 新增数据
+     *
+     * @param record 记录
+     * @return 影响行数
+     * @throws Exception 异常
+     */
     public int insert(Map<String, Object> record) throws Exception {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("INSERT INTO ");
@@ -60,11 +78,27 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据主键值更新数据
+     *
+     * @param record     记录
+     * @param primaryKey 主键值
+     * @return 影响行数
+     * @throws Exception 异常
+     */
     public int update(Map<String, Object> record, Object primaryKey) throws Exception {
         PrimaryKeyColumn primaryKeyColumn = this.getPrimaryKeyColumn(primaryKey);
         return primaryKeyColumn == null ? 0 : this.update(record, primaryKeyColumn);
     }
 
+    /**
+     * 根据主键列更新数据
+     *
+     * @param record     记录
+     * @param primaryKey 主键列
+     * @return 影响行数
+     * @throws Exception 异常
+     */
     public int update(Map<String, Object> record, PrimaryKeyColumn primaryKey) throws Exception {
         record.remove(primaryKey.getColumnName());
         String tableName = this.tableName();
@@ -91,11 +125,25 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据主键值判断数据是否存在
+     *
+     * @param primaryKey 主键值
+     * @return 结果
+     * @throws SQLException 异常
+     */
     public boolean exist(Object primaryKey) throws SQLException {
         PrimaryKeyColumn primaryKeyColumn = this.getPrimaryKeyColumn(primaryKey);
         return primaryKeyColumn != null && this.exist(primaryKeyColumn);
     }
 
+    /**
+     * 根据主键列判断数据是否存在
+     *
+     * @param primaryKey 主键列
+     * @return 结果
+     * @throws SQLException 异常
+     */
     public boolean exist(PrimaryKeyColumn primaryKey) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
@@ -117,6 +165,13 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 判断符合条件的数据是否存在
+     *
+     * @param params 查询条件
+     * @return 结果
+     * @throws SQLException 异常
+     */
     public boolean exist(Map<String, Object> params) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
@@ -149,11 +204,25 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据主键值查询单条记录
+     *
+     * @param primaryKey 主键值
+     * @return 记录
+     * @throws Exception 异常
+     */
     public Map<String, Object> selectOne(Object primaryKey) throws Exception {
         PrimaryKeyColumn primaryKeyColumn = this.getPrimaryKeyColumn(primaryKey);
         return primaryKeyColumn == null ? null : this.selectOne(primaryKeyColumn);
     }
 
+    /**
+     * 根据主键列查询单条记录
+     *
+     * @param primaryKey 主键列
+     * @return 记录
+     * @throws SQLException 异常
+     */
     public Map<String, Object> selectOne(PrimaryKeyColumn primaryKey) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT * FROM ");
@@ -180,12 +249,26 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据查询条件查询单条记录
+     *
+     * @param queryParam 查询条件
+     * @return 记录
+     * @throws SQLException 异常
+     */
     public Map<String, Object> selectOne(QueryParam queryParam) throws SQLException {
         SelectParam selectParam = new SelectParam();
         selectParam.addQueryParam(queryParam);
         return this.selectOne(selectParam);
     }
 
+    /**
+     * 根据查询参数查询单条记录
+     *
+     * @param selectParam 查询参数
+     * @return 记录
+     * @throws SQLException 异常
+     */
     public Map<String, Object> selectOne(SelectParam selectParam) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT ");
@@ -251,6 +334,13 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据查询参数查询记录列表
+     *
+     * @param selectParam 查询参数
+     * @return 记录列表
+     * @throws SQLException 异常
+     */
     public List<Map<String, Object>> selectList(SelectParam selectParam) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT ");
@@ -318,6 +408,13 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据查询条件列表统计数据条数
+     *
+     * @param params 查询条件列表
+     * @return 数据条数
+     * @throws SQLException 异常
+     */
     public long selectCount(List<QueryParam> params) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
@@ -350,6 +447,15 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据关键字和查询条件统计数据条数
+     *
+     * @param kw          关键字
+     * @param columns     关键字匹配的列
+     * @param queryParams 查询条件
+     * @return 数据条数
+     * @throws SQLException 异常
+     */
     public long selectCount(String kw, List<String> columns, QueryParams queryParams) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
@@ -396,6 +502,15 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 分页查询记录列表
+     *
+     * @param kw        关键字
+     * @param columns   关键字匹配的列
+     * @param pageParam 分页参数
+     * @return 记录列表
+     * @throws SQLException 异常
+     */
     public List<Map<String, Object>> selectPage(String kw, List<String> columns, PageParam pageParam) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT * FROM ");
@@ -453,11 +568,25 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据主键值删除数据
+     *
+     * @param primaryKey 主键值
+     * @return 影响行数
+     * @throws Exception 异常
+     */
     public int delete(Object primaryKey) throws Exception {
         PrimaryKeyColumn primaryKeyColumn = this.getPrimaryKeyColumn(primaryKey);
         return primaryKeyColumn == null ? 0 : this.delete(primaryKeyColumn);
     }
 
+    /**
+     * 根据主键列删除数据
+     *
+     * @param primaryKey 主键列
+     * @return 影响行数
+     * @throws SQLException 异常
+     */
     public int delete(PrimaryKeyColumn primaryKey) throws SQLException {
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("DELETE FROM ");
@@ -473,5 +602,12 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
     }
 
+    /**
+     * 根据删除参数删除数据
+     *
+     * @param deleteParam 删除参数
+     * @return 影响行数
+     * @throws SQLException 异常
+     */
     public abstract int delete(DeleteParam deleteParam) throws SQLException;
 }

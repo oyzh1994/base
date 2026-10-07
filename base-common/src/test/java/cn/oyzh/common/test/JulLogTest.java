@@ -4,6 +4,8 @@ import cn.oyzh.common.log.JulLog;
 import org.junit.Test;
 
 /**
+ * 测试日志组件 JulLog 在不同占位符风格下的输出。
+ *
  * @author oyzh
  * @since 2024-11-15
  */
