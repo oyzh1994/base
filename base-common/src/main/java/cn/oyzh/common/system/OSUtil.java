@@ -6,7 +6,7 @@ import cn.oyzh.common.util.StringUtil;
  * 系统工具类
  *
  * @author oyzh
- * @since 2023/3/9
+ * @since 2024-10-18
  */
 public class OSUtil {
 

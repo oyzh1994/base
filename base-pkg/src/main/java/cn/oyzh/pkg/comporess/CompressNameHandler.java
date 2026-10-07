@@ -9,7 +9,7 @@ import cn.oyzh.pkg.config.PackConfig;
  * 压缩名称处理器
  *
  * @author oyzh
- * @since 2024/06/18
+ * @since 2026-09-18
  */
 public class CompressNameHandler implements PostHandler {
 

@@ -5,7 +5,7 @@ package cn.oyzh.store.file;
  * 文件字段
  *
  * @author oyzh
- * @since 2024-11-27
+ * @since 2024-11-28
  */
 public class FileColumn {
 

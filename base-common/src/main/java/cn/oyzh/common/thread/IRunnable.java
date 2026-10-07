@@ -4,7 +4,7 @@ package cn.oyzh.common.thread;
  * 可抛出异常的 Runnable
  *
  * @author oyzh
- * @since 2024-10-14
+ * @since 2024-10-18
  */
 public interface IRunnable {
 

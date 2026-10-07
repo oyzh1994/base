@@ -4,7 +4,7 @@ package cn.oyzh.common.object;
  * 对象比较器
  *
  * @author oyzh
- * @since 2023/04/24
+ * @since 2024-10-18
  * @param <T> 参数
  */
 public interface ObjectComparator<T> {

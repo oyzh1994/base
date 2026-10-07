@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
  * ssh连接信息
  *
  * @author oyzh
- * @since 2023/12/15
+ * @since 2024-10-18
  */
 public class SSHConnect implements ObjectCopier<SSHConnect> {
 

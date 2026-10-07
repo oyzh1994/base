@@ -11,7 +11,7 @@
 //  * 配置处理器
 //  *
 //  * @author oyzh
-//  * @since 2024/6/14
+//  * @since 2026-09-18
 //  */
 // @Deprecated
 // public class AppConfigHandler implements PostHandler {

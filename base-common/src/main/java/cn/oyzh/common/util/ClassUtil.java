@@ -22,7 +22,7 @@ import java.util.jar.JarFile;
  * 类工具类
  *
  * @author oyzh
- * @since 2023/05/18
+ * @since 2024-10-18
  */
 public class ClassUtil {
 

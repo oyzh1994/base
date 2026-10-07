@@ -12,7 +12,7 @@ import java.util.logging.Logger;
  * jul日志对象
  *
  * @author oyzh
- * @since 2024-09-27
+ * @since 2024-10-18
  */
 public class JulLog {
 

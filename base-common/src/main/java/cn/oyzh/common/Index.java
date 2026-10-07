@@ -4,7 +4,7 @@ package cn.oyzh.common;
  * 索引接口
  *
  * @author oyzh
- * @since 2022/6/6
+ * @since 2024-10-18
  */
 public interface Index {
 

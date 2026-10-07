@@ -5,7 +5,7 @@ package cn.oyzh.i18n;
  * i18n辅助类
  *
  * @author oyzh
- * @since 2024/5/13
+ * @since 2024-11-01
  */
 public class I18nHelper {
 

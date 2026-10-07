@@ -6,7 +6,7 @@ import java.util.HashMap;
  * 线程本地变量工具类，按线程隔离存取键值数据
  *
  * @author oyzh
- * @since 2023/1/3
+ * @since 2024-10-18
  */
 public class ThreadLocalUtil {
 

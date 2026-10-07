@@ -4,7 +4,7 @@ package cn.oyzh.store.jdbc;
  * jdbc方言
  *
  * @author oyzh
- * @since 2024-09-27
+ * @since 2024-10-18
  */
 public enum JdbcDialect {
     /**

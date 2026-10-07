@@ -16,7 +16,7 @@ import java.util.List;
  * 最终产物处理器，按规则重命名最终构建产物
  *
  * @author oyzh
- * @since 2025-11-28
+ * @since 2026-09-18
  */
 public class DestHandler implements PostHandler {
 

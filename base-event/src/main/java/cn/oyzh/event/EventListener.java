@@ -4,7 +4,7 @@ package cn.oyzh.event;
  * 事件监听接口
  *
  * @author oyzh
- * @since 2024/3/29
+ * @since 2024-11-01
  */
 public interface EventListener {
 

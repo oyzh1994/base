@@ -38,7 +38,7 @@ import java.util.zip.ZipEntry;
  * jar处理器
  *
  * @author oyzh
- * @since 2024/06/17
+ * @since 2026-09-18
  */
 public class JarHandler implements PreHandler {
 
@@ -167,7 +167,7 @@ public class JarHandler implements PreHandler {
                         }
                         Files.copy(file.toPath(), path2);
                     });
-                    cn.oyzh.common.file.FileUtil.cleanDir(libPath);
+                    FileUtil.del(libPath);
                     return;
                 }
             }

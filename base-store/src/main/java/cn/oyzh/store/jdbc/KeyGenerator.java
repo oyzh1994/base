@@ -8,7 +8,7 @@ import cn.oyzh.common.util.UUIDUtil;
  * 键生成器
  *
  * @author oyzh
- * @since 2024-09-24
+ * @since 2024-10-18
  */
 public class KeyGenerator {
 

@@ -21,7 +21,7 @@ import java.util.List;
  * AppImage处理器
  *
  * @author oyzh
- * @since 2025/10/20
+ * @since 2026-09-18
  */
 public class AppImageHandler implements PostHandler {
 

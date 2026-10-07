@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * 查询参数列表
  *
  * @author oyzh
- * @since 2024-09-26
+ * @since 2024-12-19
  */
 public class QueryParams extends ArrayList<QueryParam> {
 

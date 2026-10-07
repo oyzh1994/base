@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * 正则过滤器
  *
  * @author oyzh
- * @since 2024/06/17
+ * @since 2026-09-18
  */
 public class RegFilter implements Function<String, Boolean> {
 

@@ -19,7 +19,7 @@ import java.util.Map;
  * 二维码生成工具
  *
  * @author oyzh
- * @since 2024-11-08
+ * @since 2024-10-18
  */
 public class QRCodeUtil {
 

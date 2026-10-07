@@ -11,7 +11,7 @@ import java.util.Set;
  * JPackage配置
  *
  * @author oyzh
- * @since 2023/3/8
+ * @since 2026-09-18
  */
 public class JPackageConfig implements ConfigMargeAble<JPackageConfig> {
 

@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
  * 事件订阅无效异常
  *
  * @author oyzh
- * @since 2024-11-18
+ * @since 2025-11-12
  */
 public class EventSubscribeInvalidException extends RuntimeException {
 

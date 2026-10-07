@@ -7,7 +7,7 @@
 // * jsch日志对象
 // *
 // * @author oyzh
-// * @since 2025/04/15
+// * @since 2025-04-15
 // */
 //@Deprecated
 //public class JschLogger implements Logger {

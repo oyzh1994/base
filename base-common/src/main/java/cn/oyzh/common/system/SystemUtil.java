@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * 系统信息与 JVM 运行时工具类，提供内存、GC、类加载及常用系统属性、环境变量的访问。
  *
  * @author oyzh
- * @since 2023/04/05
+ * @since 2024-10-18
  */
 public class SystemUtil {
 

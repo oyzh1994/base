@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
  * i18n资源绑定
  *
  * @author oyzh
- * @since 2024/4/10
+ * @since 2024-11-01
  */
 public class I18nResourceBundle extends ResourceBundle {
 

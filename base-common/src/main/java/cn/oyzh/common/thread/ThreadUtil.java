@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
  * 线程工具类
  *
  * @author oyzh
- * @since 2023/1/3
+ * @since 2024-10-18
  */
 public class ThreadUtil {
 

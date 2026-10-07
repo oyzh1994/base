@@ -4,7 +4,7 @@ package cn.oyzh.common.db;
  * SQL词法单元类型
  *
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public enum SqlTokenType {
 

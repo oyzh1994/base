@@ -9,7 +9,7 @@ import java.util.Set;
  * jar配置
  *
  * @author oyzh
- * @since 2024/06/17
+ * @since 2026-09-18
  */
 public class JarConfig implements ConfigMargeAble<JarConfig> {
 

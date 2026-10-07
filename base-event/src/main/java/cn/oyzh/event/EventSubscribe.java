@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * 事件订阅注解，用于标记事件订阅方法
  *
  * @author oyzh
- * @since 2024-12-27
+ * @since 2024-11-14
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

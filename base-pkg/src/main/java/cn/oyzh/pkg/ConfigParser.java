@@ -15,7 +15,7 @@ import java.util.Map;
  * 配置解析器
  *
  * @author oyzh
- * @since 2024/6/14
+ * @since 2026-09-18
  */
 public interface ConfigParser<C> {
 

@@ -29,7 +29,7 @@ import java.util.zip.ZipFile;
  * 支持格式：ZIP、TAR、TAR_GZ
  *
  * @author oyzh
- * @since 2025/09/26
+ * @since 2025-09-26
  */
 public class CompressUtil {
 

@@ -11,7 +11,7 @@ import java.util.List;
  * jpackage配置解析器
  *
  * @author oyzh
- * @since 2023/3/8
+ * @since 2026-09-18
  */
 public class JPackageConfigParser implements ConfigParser<JPackageConfig> {
 
@@ -55,7 +55,7 @@ public class JPackageConfigParser implements ConfigParser<JPackageConfig> {
             config.setVendor(vendor);
         }
         Boolean verbose = object.getBoolean("verbose");
-        if (vendor != null) {
+        if (verbose != null) {
             config.setVerbose(verbose);
         }
         List<String> javaOptions = JSONUtil.toList(object, "java-options", String.class);

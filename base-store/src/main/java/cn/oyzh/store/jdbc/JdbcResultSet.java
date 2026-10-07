@@ -8,7 +8,7 @@ import java.sql.Statement;
  * jdbc结果
  *
  * @author oyzh
- * @since 2024-09-25
+ * @since 2024-10-18
  */
 public class JdbcResultSet implements AutoCloseable {
 

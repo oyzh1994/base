@@ -17,7 +17,7 @@ import java.util.List;
  * jre处理
  *
  * @author oyzh
- * @since 2024/06/17
+ * @since 2026-09-18
  */
 public class JreHandler implements PreHandler, SingleHandler {
 
@@ -87,7 +87,7 @@ public class JreHandler implements PreHandler, SingleHandler {
             // 设置为临时文件路径
             packConfig.addTempFile(dest.getPath());
         } else {// 不裁剪
-            JulLog.warn("jar裁剪未启用，已跳过");
+            JulLog.warn("jre裁剪未启用，已跳过");
         }
         this.executed = true;
     }

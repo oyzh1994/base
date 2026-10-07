@@ -14,7 +14,7 @@ import java.util.List;
  * github actions处理器
  *
  * @author oyzh
- * @since 2025/09/22
+ * @since 2026-09-18
  */
 public class GitHubActionsHandler implements PostHandler {
 

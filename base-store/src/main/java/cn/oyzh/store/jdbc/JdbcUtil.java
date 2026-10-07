@@ -23,7 +23,7 @@ import java.util.Date;
  * jdbc数据转换工具类
  *
  * @author oyzh
- * @since 2024-09-25
+ * @since 2024-10-18
  */
 public class JdbcUtil {
 

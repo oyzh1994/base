@@ -15,7 +15,7 @@ import java.util.Collection;
  * jdbc辅助类
  *
  * @author oyzh
- * @since 2024-09-25
+ * @since 2024-10-18
  */
 public class JdbcHelper {
 

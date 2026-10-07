@@ -19,7 +19,7 @@ import java.util.Map;
  * 打包配置
  *
  * @author oyzh
- * @since 2024/6/14
+ * @since 2026-09-18
  */
 public class PackConfig implements ConfigMargeAble<PackConfig> {
 

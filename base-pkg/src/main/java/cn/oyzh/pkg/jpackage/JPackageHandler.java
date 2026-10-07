@@ -21,7 +21,7 @@ import java.util.Set;
  * jpackage处理
  *
  * @author oyzh
- * @since 2023/3/8
+ * @since 2026-09-18
  */
 public class JPackageHandler implements PackHandler {
 
@@ -93,7 +93,7 @@ public class JPackageHandler implements PackHandler {
             packConfig.setDest(dest);
         }
         if (FileUtil.exists(packConfig.getDest())) {
-            FileUtil.cleanDir(packConfig.getDest());
+            FileUtil.del(packConfig.getDest());
         }
         if (jPackageConfig.getDest() == null) {
             jPackageConfig.setDest(packConfig.getDest());

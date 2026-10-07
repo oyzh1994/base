@@ -6,7 +6,7 @@ import java.util.HashMap;
  * 文件记录
  *
  * @author oyzh
- * @since 2024-11-27
+ * @since 2024-11-28
  */
 public class FileRecord extends HashMap<Integer, Object> {
 

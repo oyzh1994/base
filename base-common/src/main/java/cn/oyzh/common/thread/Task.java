@@ -6,7 +6,7 @@ import java.util.function.Consumer;
  * 任务封装，支持开始、成功、结束、异常回调
  *
  * @author oyzh
- * @since 2023/9/14
+ * @since 2024-10-18
  */
 public class Task implements Runnable {
 

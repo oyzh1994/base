@@ -4,7 +4,7 @@ package cn.oyzh.common.db;
  * SQL方言基础实现
  *
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public abstract class AbstractSqlDialect implements SqlDialect {
 

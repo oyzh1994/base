@@ -10,7 +10,7 @@ import java.util.logging.LogRecord;
  * jul文件日志格式化器
  *
  * @author oyzh
- * @since 2024-09-27
+ * @since 2024-11-15
  */
 public class JulFileFormatter extends JulFormatter {
 

@@ -7,7 +7,7 @@ import java.util.function.Consumer;
  * 事件工具类
  *
  * @author oyzh
- * @since 2023/4/10
+ * @since 2024-11-01
  */
 public class EventUtil {
 

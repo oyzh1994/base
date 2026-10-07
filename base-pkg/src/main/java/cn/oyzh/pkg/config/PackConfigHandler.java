@@ -14,7 +14,7 @@ import java.util.List;
  * 打包信息处理器
  *
  * @author oyzh
- * @since 2024/6/18
+ * @since 2026-09-18
  */
 public class PackConfigHandler implements PreHandler {
 
@@ -69,14 +69,7 @@ public class PackConfigHandler implements PreHandler {
         // 清除打包目录
         List<File> files = FileUtil.getAllFiles(packConfig.getDest());
         for (File file : files) {
-            if (!file.exists()) {
-                continue;
-            }
-            if (file.isFile()) {
-                FileUtil.del(file);
-            } else {
-                FileUtil.cleanDir(file);
-            }
+            FileUtil.del(file);
         }
     }
 }

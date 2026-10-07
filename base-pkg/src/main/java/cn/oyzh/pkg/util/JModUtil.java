@@ -14,7 +14,7 @@ import java.nio.file.Paths;
  * jmod工具类
  *
  * @author oyzh
- * @since 2026/09/18
+ * @since 2026-09-18
  */
 public class JModUtil {
 

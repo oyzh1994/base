@@ -4,7 +4,7 @@ package cn.oyzh.common.object;
  * 对象复制器
  *
  * @author oyzh
- * @since 2024/07/03
+ * @since 2024-10-18
  * @param <T> 形参
  */
 public interface ObjectCopier<T> {

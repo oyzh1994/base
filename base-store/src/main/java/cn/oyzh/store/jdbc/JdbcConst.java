@@ -6,7 +6,7 @@ import cn.oyzh.common.log.JulLog;
  * jdbc常量
  *
  * @author oyzh
- * @since 2024-09-27
+ * @since 2024-10-18
  */
 public class JdbcConst {
 

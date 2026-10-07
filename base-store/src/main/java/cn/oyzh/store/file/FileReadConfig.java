@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
  * 文件读取配置
  *
  * @author oyzh
- * @since 2024/09/02
+ * @since 2024-11-28
  */
 public class FileReadConfig {
 

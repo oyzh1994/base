@@ -10,7 +10,7 @@ import java.util.List;
  * 数组工具类
  *
  * @author oyzh
- * @since 2022/5/7
+ * @since 2024-10-18
  */
 public class ArrayUtil {
 

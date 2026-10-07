@@ -25,7 +25,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * jdeps处理器
  *
  * @author oyzh
- * @since 2024/06/20
+ * @since 2026-09-18
  */
 public class JDepsHandler implements PreHandler {
 

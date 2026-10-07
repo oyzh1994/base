@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
  * 资源工具类
  *
  * @author oyzh
- * @since 2023/02/28
+ * @since 2024-10-18
  */
 public class ResourceUtil {
 

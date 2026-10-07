@@ -9,7 +9,7 @@ import java.util.Locale;
  * 国际化管理器
  *
  * @author oyzh
- * @since 2024/04/07
+ * @since 2024-11-01
  */
 public class I18nManager {
 

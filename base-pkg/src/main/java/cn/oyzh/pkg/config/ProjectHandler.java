@@ -11,7 +11,7 @@ import java.util.Properties;
  * 项目信息处理器
  *
  * @author oyzh
- * @since 2024/6/18
+ * @since 2026-09-18
  */
 public class ProjectHandler implements PreHandler {
 

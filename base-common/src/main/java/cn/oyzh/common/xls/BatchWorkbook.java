@@ -31,7 +31,7 @@ import java.util.List;
  * 支持分批追加写入的 Excel 工作薄，内部按需创建 XSSF/HSSF 工作薄并落盘
  *
  * @author oyzh
- * @since 2024/8/29
+ * @since 2024-10-18
  */
 public class BatchWorkbook implements Workbook {
 

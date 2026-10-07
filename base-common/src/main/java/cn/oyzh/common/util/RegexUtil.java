@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
  * 正则工具类
  *
  * @author oyzh
- * @since 2023/2/24
+ * @since 2024-10-18
  */
 public class RegexUtil {
 

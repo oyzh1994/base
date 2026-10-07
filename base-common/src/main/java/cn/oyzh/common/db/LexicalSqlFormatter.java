@@ -10,7 +10,7 @@ import java.util.Set;
  * 基于词法分析的SQL美化器
  *
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public class LexicalSqlFormatter implements SqlFormatter {
 

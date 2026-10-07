@@ -26,7 +26,7 @@ import java.util.List;
  * windows on arm 的 jfx 模块转换处理，将 jmod 转换为 maven 构件并安装到本地仓库
  *
  * @author oyzh
- * @since 2026/09/18
+ * @since 2026-09-18
  */
 public class WinArmHandler {
 
@@ -180,7 +180,6 @@ public class WinArmHandler {
                 FileUtil.del(file);
                 JulLog.info("file:{} is deleted.", file);
             } else if (file.isDirectory() && file.getName().contains(".")) {
-                FileUtil.cleanDir(file);
                 FileUtil.del(file);
                 JulLog.info("file:{} is deleted.", file);
             }

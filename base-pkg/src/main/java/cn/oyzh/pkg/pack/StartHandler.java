@@ -8,7 +8,7 @@ import cn.oyzh.pkg.config.PackConfig;
  * 起始处理器，记录打包开始时间
  *
  * @author oyzh
- * @since 2024/6/14
+ * @since 2026-09-18
  */
 public class StartHandler implements PreHandler {
 

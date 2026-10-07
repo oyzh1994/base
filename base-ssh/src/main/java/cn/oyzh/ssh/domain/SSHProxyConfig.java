@@ -11,7 +11,7 @@ import java.io.Serializable;
  * ssh代理配置
  *
  * @author oyzh
- * @since 2025-04-14
+ * @since 2025-05-19
  */
 public class SSHProxyConfig implements Serializable, ObjectCopier<SSHProxyConfig> {
 

@@ -9,7 +9,7 @@ import org.junit.Test;
  * 测试 Windows on ARM 平台下 JavaFX 本地库的处理流程。
  *
  * @author oyzh
- * @since 2026-09-18
+ * @since 2026-09-19
  */
 public class WoaPreHandler {
 

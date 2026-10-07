@@ -10,7 +10,7 @@ import cn.oyzh.pkg.config.PackConfig;
  * 结束处理器，清理临时文件并输出打包耗时
  *
  * @author oyzh
- * @since 2024/6/14
+ * @since 2026-09-18
  */
 public class EndHandler implements PostHandler {
 

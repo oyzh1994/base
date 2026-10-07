@@ -8,7 +8,7 @@ import java.util.List;
  * 查询参数，包含查询列、查询条件、排序与分页
  *
  * @author oyzh
- * @since 2024-09-26
+ * @since 2024-10-18
  */
 public class SelectParam {
 

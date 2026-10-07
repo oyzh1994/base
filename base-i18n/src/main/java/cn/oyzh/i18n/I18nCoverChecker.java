@@ -12,7 +12,7 @@ import java.util.Set;
  * i18n覆盖检查器，用于校验各语言资源文件的键是否与主体资源文件完全一致
  *
  * @author oyzh
- * @since 2026/09/06
+ * @since 2026-09-07
  */
 public class I18nCoverChecker {
 

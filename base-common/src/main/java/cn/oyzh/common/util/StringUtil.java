@@ -10,7 +10,7 @@ import java.util.Objects;
  * String工具类
  *
  * @author oyzh
- * @since 2023/08/12 0024 18:16
+ * @since 2024-10-18
  */
 public class StringUtil {
 
@@ -371,21 +371,12 @@ public class StringUtil {
         if (len <= 0) {
             return new String[]{str};
         }
-        int mod = str.length() % len;
-
-        int arrLen = mod == 0 ? mod : mod + 1;
-        String[] arr = new String[arrLen];
-
-        int aIndex = 0;
-        int idx = 0;
-        while (true) {
-            if (idx + len < str.length()) {
-                idx = idx + len;
-                arr[aIndex++] = str.substring(idx, idx);
-                continue;
-            }
-            arr[aIndex] = str.substring(idx);
-            break;
+        int length = str.length();
+        int size = (length + len - 1) / len;
+        String[] arr = new String[size];
+        for (int i = 0; i < size; i++) {
+            int start = i * len;
+            arr[i] = str.substring(start, Math.min(start + len, length));
         }
         return arr;
     }

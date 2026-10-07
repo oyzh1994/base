@@ -41,7 +41,7 @@ import java.util.function.Function;
  * 文件工具类
  *
  * @author oyzh
- * @since 2024-09-29
+ * @since 2024-10-18
  */
 public class FileUtil {
 
@@ -231,6 +231,16 @@ public class FileUtil {
     /**
      * 删除
      *
+     * @param path 文件
+     * @return 结果
+     */
+    public static boolean del(Path path) {
+        return path != null && del(path.toFile(), false);
+    }
+
+    /**
+     * 删除
+     *
      * @param file 文件
      * @return 结果
      */
@@ -260,7 +270,7 @@ public class FileUtil {
         if (file == null || !file.exists()) {
             return true;
         }
-        boolean success = deleteRecursively(file);
+        boolean success = deleteRecursively(file, true);
         if (!success && force) {
             try {
                 if (OSUtil.isWindows()) {
@@ -280,10 +290,11 @@ public class FileUtil {
     /**
      * 递归删除
      *
-     * @param file 文件
+     * @param file    文件
+     * @param delSelf 是否删除自身
      * @return 结果
      */
-    private static boolean deleteRecursively(File file) {
+    private static boolean deleteRecursively(File file, boolean delSelf) {
         if (file == null || !file.exists()) {
             return true;
         }
@@ -291,11 +302,14 @@ public class FileUtil {
             File[] children = file.listFiles();
             if (children != null) {
                 for (File child : children) {
-                    if (!deleteRecursively(child)) {
+                    if (!deleteRecursively(child, true)) {
                         return false;
                     }
                 }
             }
+        }
+        if (!delSelf) {
+            return true;
         }
         return file.delete();
     }
@@ -895,15 +909,7 @@ public class FileUtil {
         if (directory == null || !directory.exists() || !directory.isDirectory()) {
             return true;
         }
-        File[] files = directory.listFiles();
-        if (files != null) {
-            for (File child : files) {
-                if (!deleteRecursively(child)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        return deleteRecursively(directory, false);
     }
 
     /**
@@ -912,6 +918,7 @@ public class FileUtil {
      * @param directory 目录
      * @return 结果
      */
+    @Deprecated
     public static boolean cleanDir(String directory) {
         return cleanDir(new File(directory));
     }
@@ -922,6 +929,7 @@ public class FileUtil {
      * @param directory 目录路径
      * @return 结果
      */
+    @Deprecated
     public static boolean cleanDir(Path directory) {
         if (directory == null) {
             return false;
@@ -935,11 +943,9 @@ public class FileUtil {
      * @param directory 目录
      * @return 结果
      */
+    @Deprecated
     public static boolean cleanDir(File directory) {
-        if (directory == null || !directory.exists() || !directory.isDirectory()) {
-            return true;
-        }
-        return deleteRecursively(directory);
+        return clean(directory);
     }
 
     /**

@@ -11,7 +11,7 @@ import java.util.List;
  * jar配置解析器
  *
  * @author oyzh
- * @since 2024/6/17
+ * @since 2026-09-18
  */
 public class JarConfigParser implements ConfigParser<JarConfig> {
 

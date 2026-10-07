@@ -11,7 +11,7 @@ import java.util.List;
  * 对象观察者管理器，负责注册观察者并检测对象是否被回收
  *
  * @author oyzh
- * @since 2025-12-05
+ * @since 2026-05-15
  */
 public class ObjectWatcherManager {
 

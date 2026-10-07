@@ -31,7 +31,7 @@ import java.util.Map;
  * 打包器，负责注册各类处理器并按顺序执行打包流程
  *
  * @author oyzh
- * @since 2024/6/14
+ * @since 2026-09-18
  */
 public class Packer {
 

@@ -6,7 +6,7 @@ package cn.oyzh.common.cache;
  * @param <K> 键
  * @param <V> 值
  * @author oyzh
- * @since 2024-09-29
+ * @since 2024-10-18
  */
 public interface Cache<K, V> {
 

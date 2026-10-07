@@ -11,7 +11,7 @@ import java.util.function.Consumer;
  * 事件总线
  *
  * @author oyzh
- * @since 2024-11-13
+ * @since 2024-11-14
  */
 public class EventBus {
 

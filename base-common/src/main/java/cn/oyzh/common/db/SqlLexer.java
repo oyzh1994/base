@@ -7,7 +7,7 @@ import java.util.List;
  * SQL词法分析器
  *
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public final class SqlLexer {
 

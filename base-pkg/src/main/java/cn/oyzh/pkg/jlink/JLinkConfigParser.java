@@ -15,7 +15,7 @@ import java.util.List;
  * jlink配置解析器
  *
  * @author oyzh
- * @since 2024/6/17
+ * @since 2026-09-18
  */
 public class JLinkConfigParser implements ConfigParser<JLinkConfig> {
 
@@ -74,7 +74,7 @@ public class JLinkConfigParser implements ConfigParser<JLinkConfig> {
             config.setStripJavaDebugAttributes(stripJavaDebugAttributes);
         }
         String stripNativeDebugSymbols = object.getString("strip-native-debug-symbols");
-        if (stripJavaDebugAttributes != null) {
+        if (stripNativeDebugSymbols != null) {
             config.setStripNativeDebugSymbols(stripNativeDebugSymbols);
         }
         return config;

@@ -10,7 +10,7 @@ import java.util.Locale;
  * i18n区域列表，维护系统支持的语言区域及其显示名称
  *
  * @author oyzh
- * @since 2024/4/7
+ * @since 2024-11-01
  */
 public class I18nLocales {
 

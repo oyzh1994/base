@@ -74,7 +74,7 @@ public class EventFactory {
     public static EventConfig syncEventConfig() {
         if (syncEventConfig == null) {
             synchronized (EventFactory.class) {
-                if (defaultEventConfig == null) {
+                if (syncEventConfig == null) {
                     syncEventConfig = EventConfig.SYNC;
                 }
             }
@@ -90,7 +90,7 @@ public class EventFactory {
     public static EventConfig asyncEventConfig() {
         if (asyncEventConfig == null) {
             synchronized (EventFactory.class) {
-                if (defaultEventConfig == null) {
+                if (asyncEventConfig == null) {
                     asyncEventConfig = EventConfig.ASYNC;
                 }
             }

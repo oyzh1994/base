@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
  * 集合工具类
  *
  * @author oyzh
- * @since 2024/7/1
+ * @since 2024-10-18
  */
 public class CollectionUtil {
 

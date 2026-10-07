@@ -7,7 +7,7 @@ import java.util.List;
  * SQL语句分析工具
  *
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public final class SqlAnalyzer {
 
@@ -83,70 +83,6 @@ public final class SqlAnalyzer {
      */
     public static boolean isAllFieldsQuery(String sql, String database) {
         return isAllFieldsQuery(sql, SqlDialects.parse(database));
-    }
-
-    /**
-     * 判断是否为查询全部字段的SQL（isAllFieldsQuery的别名）
-     *
-     * @param sql SQL脚本
-     * @return 结果
-     */
-    public static boolean isAllFieldQuery(String sql) {
-        return isAllFieldsQuery(sql);
-    }
-
-    /**
-     * 判断是否为查询全部字段的SQL（isAllFieldsQuery的别名）
-     *
-     * @param sql      SQL脚本
-     * @param database 数据库类型
-     * @return 结果
-     */
-    public static boolean isAllFieldQuery(String sql, SqlDatabase database) {
-        return isAllFieldsQuery(sql, database);
-    }
-
-    /**
-     * 判断是否为查询全部字段的SQL（isAllFieldsQuery的别名）
-     *
-     * @param sql      SQL脚本
-     * @param database 数据库名称
-     * @return 结果
-     */
-    public static boolean isAllFieldQuery(String sql, String database) {
-        return isAllFieldsQuery(sql, database);
-    }
-
-    /**
-     * 判断是否为查询全部字段的SQL（isAllFieldsQuery的别名）
-     *
-     * @param sql SQL脚本
-     * @return 结果
-     */
-    public static boolean isSelectAll(String sql) {
-        return isAllFieldsQuery(sql);
-    }
-
-    /**
-     * 判断是否为查询全部字段的SQL（isAllFieldsQuery的别名）
-     *
-     * @param sql      SQL脚本
-     * @param database 数据库类型
-     * @return 结果
-     */
-    public static boolean isSelectAll(String sql, SqlDatabase database) {
-        return isAllFieldsQuery(sql, database);
-    }
-
-    /**
-     * 判断是否为查询全部字段的SQL（isAllFieldsQuery的别名）
-     *
-     * @param sql      SQL脚本
-     * @param database 数据库名称
-     * @return 结果
-     */
-    public static boolean isSelectAll(String sql, String database) {
-        return isAllFieldsQuery(sql, database);
     }
 
     /**

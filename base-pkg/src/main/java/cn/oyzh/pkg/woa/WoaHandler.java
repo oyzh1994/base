@@ -21,7 +21,7 @@ import java.util.List;
  * windows on arm 的 jfx 模块更新处理，用 jmod 中的本地库更新 maven 仓库中的 jfx jar
  *
  * @author oyzh
- * @since 2026/09/18
+ * @since 2026-09-18
  */
 public class WoaHandler {
 
@@ -185,7 +185,7 @@ public class WoaHandler {
         // 压缩jar
         this.jarCf(path.toString(), jarDir);
         // 删除目录
-        FileUtil.cleanDir(jarDir);
+        FileUtil.del(jarDir);
     }
 
     /**
@@ -201,7 +201,6 @@ public class WoaHandler {
         File[] files = FileUtil.ls(p.toFile());
         for (File file : files) {
             if (file.isDirectory() && file.getName().contains(".")) {
-                FileUtil.cleanDir(file);
                 FileUtil.del(file);
                 JulLog.info("file:{} is deleted.", file);
             }
@@ -238,7 +237,7 @@ public class WoaHandler {
         String pPath = p.getParent().toString();
         Path fPath = Path.of(pPath, p.toFile().getName().substring(0, p.toFile().getName().lastIndexOf(".")));
         if (FileUtil.exists(fPath)) {
-            FileUtil.cleanDir(fPath);
+            FileUtil.del(fPath);
         }
         FileUtil.mkdir(fPath);
         String[] jarCmd = PkgUtil.getJarXfCMD(jarPath);

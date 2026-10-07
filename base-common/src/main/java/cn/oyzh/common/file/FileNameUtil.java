@@ -9,7 +9,7 @@ import java.io.File;
  * 文件名工具类
  *
  * @author oyzh
- * @since 2024-09-29
+ * @since 2024-10-18
  */
 public class FileNameUtil {
 
@@ -1029,13 +1029,13 @@ public class FileNameUtil {
     }
 
     /**
-     * 是否srt类型（方法名虽为 Stf，实际判断的是 srt）
+     * 是否srt类型
      *
      * @param fileType 文件类型
      * @return 结果
      */
     public static boolean isStfType(String fileType) {
-        return "srt".equalsIgnoreCase(fileType);
+        return "stf".equalsIgnoreCase(fileType);
     }
 
     /**

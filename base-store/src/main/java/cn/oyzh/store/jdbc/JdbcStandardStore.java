@@ -20,7 +20,7 @@ import java.util.Map;
  * jdbc标准存储
  *
  * @author oyzh
- * @since 2024-09-23
+ * @since 2024-12-21
  */
 public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStore<M> {
 

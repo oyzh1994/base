@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
  * 事件订阅器
  *
  * @author oyzh
- * @since 2024-12-27
+ * @since 2024-11-14
  */
 public class EventSubscriber {
 

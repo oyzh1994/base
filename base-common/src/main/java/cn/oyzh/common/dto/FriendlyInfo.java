@@ -5,7 +5,7 @@ package cn.oyzh.common.dto;
  *
  * @param <T> 原始值类型
  * @author oyzh
- * @since 2020/3/26
+ * @since 2024-10-18
  */
 public class FriendlyInfo<T> {
 

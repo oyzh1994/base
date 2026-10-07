@@ -5,7 +5,7 @@ package cn.oyzh.event;
  * 事件
  *
  * @author oyzh
- * @since 2023/4/10
+ * @since 2024-11-01
  */
 public class Event<D> {
 

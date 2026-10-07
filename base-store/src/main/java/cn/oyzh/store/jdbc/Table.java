@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * 表
  *
  * @author oyzh
- * @since 2024-09-24
+ * @since 2024-10-18
  */
 @Target(value = ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

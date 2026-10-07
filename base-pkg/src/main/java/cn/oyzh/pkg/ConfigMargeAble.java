@@ -4,7 +4,7 @@ package cn.oyzh.pkg;
  * 配置合并接口，用于将其他配置合并到当前配置
  *
  * @author oyzh
- * @since 2025-11-12
+ * @since 2026-09-18
  */
 public interface ConfigMargeAble<T> {
 

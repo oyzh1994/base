@@ -7,7 +7,7 @@ import com.alibaba.fastjson2.JSONObject;
  * 压缩配置解析器
  *
  * @author oyzh
- * @since 2024/06/18
+ * @since 2026-09-18
  */
 public class CompressConfigParser implements ConfigParser<CompressConfig> {
 

@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
  * bean工具类
  *
  * @author oyzh
- * @since 2024-09-24
+ * @since 2024-11-18
  */
 public class BeanUtil {
 

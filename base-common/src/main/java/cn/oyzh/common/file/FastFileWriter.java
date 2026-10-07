@@ -12,7 +12,7 @@ import java.util.Collection;
  * 快速文件写入器
  *
  * @author oyzh
- * @since 2024/08/23
+ * @since 2024-10-18
  */
 public class FastFileWriter implements Closeable {
 
@@ -100,7 +100,7 @@ public class FastFileWriter implements Closeable {
             } else {
                 this.writer.write(line + "\n");
             }
-            this.appendLine(line);
+            this.fulsh();
         }
     }
 

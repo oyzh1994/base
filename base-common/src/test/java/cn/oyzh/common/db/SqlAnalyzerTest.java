@@ -51,7 +51,7 @@ public class SqlAnalyzerTest {
         assertTrue(SqlUtil.isAllFieldsQuery("select * from (select id from t) nested"));
         assertTrue(SqlUtil.isAllFieldsQuery("select *"));
         assertTrue(SqlUtil.isAllFieldsQuery("select top 10 * from t", SqlDatabase.SQL_SERVER));
-        assertTrue(SqlUtil.isSelectAll("select * from t"));
+        assertTrue(SqlUtil.isAllFieldsQuery("select * from t"));
         assertTrue(SqlUtil.isAllFieldsQuery("select * from t", "DM"));
     }
 
@@ -64,7 +64,7 @@ public class SqlAnalyzerTest {
         assertFalse(SqlUtil.isAllFieldsQuery("select * as all_columns from t"));
         assertFalse(SqlUtil.isAllFieldsQuery("select * into target from source"));
         assertFalse(SqlUtil.isAllFieldsQuery("select * from t; select id from t"));
-        assertFalse(SqlUtil.isAllFieldQuery("select id from t"));
+        assertFalse(SqlUtil.isAllFieldsQuery("select id from t"));
     }
 
     @Test

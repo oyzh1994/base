@@ -5,7 +5,7 @@ package cn.oyzh.store.jdbc;
  * 主键字段
  *
  * @author oyzh
- * @since 2024-09-26
+ * @since 2024-10-18
  */
 public class PrimaryKeyColumn {
 

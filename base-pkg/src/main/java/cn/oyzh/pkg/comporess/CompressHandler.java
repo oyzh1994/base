@@ -12,7 +12,7 @@ import java.io.File;
  * 压缩处理器
  *
  * @author oyzh
- * @since 2024/4/2
+ * @since 2026-09-18
  */
 public class CompressHandler implements PostHandler {
 

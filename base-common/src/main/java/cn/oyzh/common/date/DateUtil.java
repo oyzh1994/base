@@ -11,7 +11,7 @@ import java.util.Date;
  * 日期工具类
  *
  * @author oyzh
- * @since 2024/7/2
+ * @since 2024-10-18
  */
 public class DateUtil {
 

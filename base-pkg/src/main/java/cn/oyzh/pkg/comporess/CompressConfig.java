@@ -7,7 +7,7 @@ import cn.oyzh.pkg.ConfigMargeAble;
  * 压缩配置
  *
  * @author oyzh
- * @since 2024/06/18
+ * @since 2026-09-18
  */
 public class CompressConfig implements ConfigMargeAble<CompressConfig> {
 

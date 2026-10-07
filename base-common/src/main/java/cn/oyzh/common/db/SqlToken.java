@@ -8,7 +8,7 @@ package cn.oyzh.common.db;
  * @param start 起始位置
  * @param end   结束位置
  * @author oyzh
- * @since 2026/10/6
+ * @since 2026-10-06
  */
 public record SqlToken(SqlTokenType type, String text, int start, int end) {
 

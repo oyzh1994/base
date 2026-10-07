@@ -8,7 +8,7 @@ import java.util.List;
  * jdbc操作器
  *
  * @author oyzh
- * @since 2024-12-21
+ * @since 2024-10-18
  */
 public abstract class JdbcOperator {
 

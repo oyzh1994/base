@@ -7,7 +7,7 @@ import org.junit.Test;
  * 测试数值范围校验工具 NumberUtil.checkBound 的边界判断。
  *
  * @author oyzh
- * @since 2024-08-14
+ * @since 2024-10-18
  */
 public class NumUtilTest {
 

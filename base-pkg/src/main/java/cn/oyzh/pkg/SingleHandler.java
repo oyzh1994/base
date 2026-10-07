@@ -4,7 +4,7 @@ package cn.oyzh.pkg;
  * 单次执行处理器，用于标记任务是否已执行
  *
  * @author oyzh
- * @since 2024/6/19
+ * @since 2026-09-18
  */
 public interface SingleHandler {
 

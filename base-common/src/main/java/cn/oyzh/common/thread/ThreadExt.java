@@ -4,7 +4,7 @@ package cn.oyzh.common.thread;
  * 线程扩展，中断后仍能被持续判断为已中断
  *
  * @author oyzh
- * @since 2024/6/7
+ * @since 2024-10-18
  */
 public class ThreadExt extends Thread {
 
