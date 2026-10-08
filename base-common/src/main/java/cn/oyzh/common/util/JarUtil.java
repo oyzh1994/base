@@ -126,8 +126,11 @@ public class JarUtil {
         ) {
             while (true) {
                 ZipEntry entry = jarIn.getNextJarEntry();
-                if (entry == null) {
+                if (entry == null ) {
                     break;
+                }
+                if(entry.isDirectory()){
+                    continue;
                 }
                 if (isClass(entry.getName())) {
                     return true;

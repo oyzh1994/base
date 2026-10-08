@@ -629,6 +629,9 @@ public class PkgUtil {
                 if (entry == null) {
                     break;
                 }
+                if(entry.isDirectory()){
+                    continue;
+                }
                 String name = entry.getName();
                 // 执行过滤
                 if (function.apply(src, name)) {

@@ -22,22 +22,34 @@ import java.util.List;
  */
 public final class NativeArchDetector {
 
-    /** ELF 头部中 e_machine 之前的内容长度 */
+    /**
+     * ELF 头部中 e_machine 之前的内容长度
+     */
     private static final int ELF_MACHINE_MIN_LENGTH = 0x14;
 
-    /** PE 头中 e_lfanew 的位置 */
+    /**
+     * PE 头中 e_lfanew 的位置
+     */
     private static final int PE_LFANEW_OFFSET = 0x3C;
 
-    /** PE 签名（PE\0\0）长度，签名之后紧跟 2 字节的 machine */
+    /**
+     * PE 签名（PE\0\0）长度，签名之后紧跟 2 字节的 machine
+     */
     private static final int PE_SIGNATURE_LENGTH = 4;
 
-    /** Fat Mach-O 头部允许的最大架构数量 */
+    /**
+     * Fat Mach-O 头部允许的最大架构数量
+     */
     private static final int MAX_FAT_ARCHES = 32;
 
-    /** 32 位 Fat 头中每个架构信息的长度 */
+    /**
+     * 32 位 Fat 头中每个架构信息的长度
+     */
     private static final int FAT_ARCH_LENGTH = 20;
 
-    /** 64 位 Fat 头中每个架构信息的长度 */
+    /**
+     * 64 位 Fat 头中每个架构信息的长度
+     */
     private static final int FAT_ARCH_64_LENGTH = 32;
 
     // Fat 头 magic（均为大端存放）
@@ -68,9 +80,13 @@ public final class NativeArchDetector {
     private static final int EM_AARCH64 = 0xB7;
     private static final int EM_RISCV = 0xF3;
     private static final int EM_LOONGARCH = 0x102;
-    /** binutils 分配的 EM_SW64（申威） */
+    /**
+     * binutils 分配的 EM_SW64（申威）
+     */
     private static final int EM_SW64 = 268;
-    /** 早期申威工具链在未分配编号前使用的 EM_SW_64 */
+    /**
+     * 早期申威工具链在未分配编号前使用的 EM_SW_64
+     */
     private static final int EM_SW64_LEGACY = 0x9916;
 
     // PE machine
