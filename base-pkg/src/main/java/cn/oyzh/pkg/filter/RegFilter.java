@@ -89,7 +89,8 @@ public class RegFilter implements Function<String, Boolean> {
                 if (matcher.matches()) {
                     return false;
                 }
-            } else if (exclude.equals(name) || exclude.endsWith(name) || name.endsWith(exclude)) {// 普通模式
+            } else if (exclude.equals(name)) {// 普通模式
+//            } else if (exclude.equals(name) || exclude.endsWith(name) || name.endsWith(exclude)) {// 普通模式
                 return false;
             }
         }
