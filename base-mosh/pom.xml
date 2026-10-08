@@ -9,8 +9,8 @@
         <version>1.0.4</version>
     </parent>
 
-    <name>base-mosh4j</name>
-    <artifactId>base-mosh4j</artifactId>
+    <name>base-mosh</name>
+    <artifactId>base-mosh</artifactId>
     <description>
         base for mosh
     </description>

@@ -32,13 +32,13 @@
     <version>1.0.4</version>
     <modules>
         <module>base-common</module>
-        <module>base-store</module>
-        <module>base-ssh</module>
-        <module>base-i18n</module>
         <module>base-event</module>
+        <module>base-i18n</module>
+        <module>base-mosh</module>
         <module>base-pkg</module>
+        <module>base-ssh</module>
+        <module>base-store</module>
         <module>base-zookeeper</module>
-        <module>base-mosh4j</module>
     </modules>
     <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
@@ -145,10 +145,10 @@
                 <artifactId>base-pkg</artifactId>
                 <version>${base.version}</version>
             </dependency>
-            <!-- 自定义类库，mosh4j模块 -->
+            <!-- 自定义类库，mosh模块 -->
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
-                <artifactId>base-mosh4j</artifactId>
+                <artifactId>base-mosh</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，zookeeper模块 -->
