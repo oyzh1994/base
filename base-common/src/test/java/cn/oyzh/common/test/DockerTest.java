@@ -1,9 +1,5 @@
 package cn.oyzh.common.test;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpUtil;
-import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,6 +7,13 @@ import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +29,17 @@ public class DockerTest {
 
     @Test
     public void checkLink() throws IOException, InterruptedException {
-        Connection connection = Jsoup.connect(csdnUrl);
-        Document document = connection.get();
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(1))
+                .followRedirects(HttpClient.Redirect.NORMAL)
+                .build();
+        HttpRequest pageRequest = HttpRequest.newBuilder(URI.create(csdnUrl))
+                .timeout(Duration.ofSeconds(10))
+                .GET()
+                .build();
+        HttpResponse<String> pageResponse = client.send(pageRequest,
+                HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        Document document = Jsoup.parse(pageResponse.body());
         Element element = document.getElementById("content_views");
         Elements tables = element.getElementsByTag("table");
         Element tbody = tables.getFirst().getElementsByTag("tbody").getFirst();
@@ -41,11 +53,7 @@ public class DockerTest {
             if (text.contains(".")) {
                 String url1 = "http://" + text;
                 try {
-                    HttpRequest request1 = HttpUtil.createGet(url1);
-                    request1.timeout(1000);
-                    HttpResponse response1 = request1.execute();
-                    response1.close();
-                    if (response1.contentLength() > 0) {
+                    if (isAvailable(client, url1)) {
                         System.out.println("地址:" + url1 + "可用");
                         urls.add(url1);
                     } else {
@@ -56,11 +64,7 @@ public class DockerTest {
                 }
                 String url2 = "https://" + text;
                 try {
-                    HttpRequest request2 = HttpUtil.createGet(url1);
-                    request2.timeout(1000);
-                    HttpResponse response2 = request2.execute();
-                    response2.close();
-                    if (response2.contentLength() > 0) {
+                    if (isAvailable(client, url2)) {
                         urls.add(url2);
                         System.out.println("地址:" + url2 + "可用");
                     } else {
@@ -84,5 +88,17 @@ public class DockerTest {
         }
         System.out.println(builder);
         // System.out.println(tbody.text());
+    }
+
+    private boolean isAvailable(HttpClient client, String url) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+                .timeout(Duration.ofSeconds(1))
+                .GET()
+                .build();
+        HttpResponse<InputStream> response = client.send(request,
+                HttpResponse.BodyHandlers.ofInputStream());
+        try (InputStream body = response.body()) {
+            return response.statusCode() < 400 && body.read() != -1;
+        }
     }
 }

@@ -70,13 +70,13 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-http -->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-            <version>5.8.35</version>
-            <scope>test</scope>
-        </dependency>
+        <!-- &lt;!&ndash; https://mvnrepository.com/artifact/cn.hutool/hutool-http &ndash;&gt; -->
+        <!-- <dependency> -->
+        <!--     <groupId>cn.hutool</groupId> -->
+        <!--     <artifactId>hutool-http</artifactId> -->
+        <!--     <version>5.8.35</version> -->
+        <!--     <scope>test</scope> -->
+        <!-- </dependency> -->
     </dependencies>
 
 </project>
