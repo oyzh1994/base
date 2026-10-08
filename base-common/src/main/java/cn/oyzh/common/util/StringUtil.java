@@ -804,6 +804,22 @@ public class StringUtil {
     }
 
     /**
+     * 是否以任意目标内容结尾，忽略大小写
+     *
+     * @param str     内容
+     * @param endText 目标内容
+     * @return 结果
+     */
+    public static boolean endsWithAnyIgnoreCase(String str, String... endText) {
+        for (String s : endText) {
+            if (endsWithIgnoreCase(str, s)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 统计出现的字符数是否大于等于指定数量
      *
      * @param str           字符串

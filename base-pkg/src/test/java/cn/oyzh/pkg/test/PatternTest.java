@@ -18,4 +18,9 @@ public class PatternTest {
         Pattern pattern = Pattern.compile(".*.MF", Pattern.CASE_INSENSITIVE);
         System.out.println(pattern.matcher("xx/xx.MF").matches());
     }
+
+    @Test
+    public void test2(){
+        System.out.println("xx".endsWith(""));
+    }
 }

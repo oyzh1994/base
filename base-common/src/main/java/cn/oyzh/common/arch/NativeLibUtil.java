@@ -32,7 +32,10 @@ public class NativeLibUtil {
      */
     public static boolean isLinuxLib(String name) {
         String fileName = fileName(name);
-        return fileName.endsWith(".so") || fileName.contains(".so.");
+        if (StringUtil.containsIgnoreCase(fileName, ".so.")) {
+            return true;
+        }
+        return StringUtil.endsWithAnyIgnoreCase(fileName, "", ".so");
     }
 
     /**
@@ -42,7 +45,7 @@ public class NativeLibUtil {
      * @return 结果
      */
     public static boolean isAixLib(String name) {
-        return StringUtil.endsWithAny(fileName(name), ".a");
+        return StringUtil.endsWithAnyIgnoreCase(fileName(name), "", ".a");
     }
 
     /**
@@ -52,7 +55,7 @@ public class NativeLibUtil {
      * @return 结果
      */
     public static boolean isWindowsLib(String name) {
-        return StringUtil.endsWithAny(fileName(name), ".dll", ".exe", ".sys", ".ocx", ".cpl", ".scr", ".efi");
+        return StringUtil.endsWithAnyIgnoreCase(fileName(name), ".dll", ".exe", ".sys", ".ocx", ".cpl", ".scr", ".efi");
     }
 
     /**
@@ -62,7 +65,7 @@ public class NativeLibUtil {
      * @return 结果
      */
     public static boolean isMacosLib(String name) {
-        return StringUtil.endsWithAny(fileName(name), ".dylib", ".jnilib");
+        return StringUtil.endsWithAnyIgnoreCase(fileName(name), "", ".dylib", ".jnilib");
     }
 
     /**
