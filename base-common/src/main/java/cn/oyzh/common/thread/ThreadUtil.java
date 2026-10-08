@@ -243,13 +243,23 @@ public class ThreadUtil {
             return;
         }
         int pCount = RuntimeUtil.processorCount();
-        // 异步，平台线程
-        if (pCount >= 8) {
+        // 异步，平台线程1
+        if (pCount >= 12) {
+            List<List<Runnable>> lists = CollectionUtil.split(tasks, pCount * 2);
+            for (List<Runnable> list : lists) {
+                submit(list);
+            }
+        } else if (pCount >= 8) {  // 异步，平台线程2
             List<List<Runnable>> lists = CollectionUtil.split(tasks, pCount);
             for (List<Runnable> list : lists) {
                 submit(list);
             }
-        } else if (pCount >= 4) {// 异步，虚拟线程
+        } else if (pCount >= 4) {// 异步，虚拟线程1
+            List<List<Runnable>> lists = CollectionUtil.split(tasks, pCount * 2);
+            for (List<Runnable> list : lists) {
+                submitVirtual(list);
+            }
+        } else if (pCount >= 2) {// 异步，虚拟线程2
             List<List<Runnable>> lists = CollectionUtil.split(tasks, pCount);
             for (List<Runnable> list : lists) {
                 submitVirtual(list);
