@@ -37,6 +37,7 @@
         <module>base-i18n</module>
         <module>base-event</module>
         <module>base-pkg</module>
+        <module>base-zookeeper</module>
     </modules>
     <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
@@ -140,6 +141,12 @@
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
                 <artifactId>base-pkg</artifactId>
+                <version>${base.version}</version>
+            </dependency>
+            <!-- 自定义类库，zookeeper模块 -->
+            <dependency>
+                <groupId>io.github.oyzh1994</groupId>
+                <artifactId>base-zookeeper</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 测试类库 -->
