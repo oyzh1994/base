@@ -38,6 +38,7 @@
         <module>base-event</module>
         <module>base-pkg</module>
         <module>base-zookeeper</module>
+        <module>base-mosh4j</module>
     </modules>
     <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
@@ -59,6 +60,7 @@
         <junit.version>4.13.2</junit.version>
         <slf4j.version>2.0.17</slf4j.version>
         <guava.version>33.5.0-jre</guava.version>
+        <protobuf.version>4.35.1</protobuf.version>
         <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
         <netty.version>4.2.10.Final</netty.version>
         <fastjson2.version>2.0.64</fastjson2.version>
@@ -141,6 +143,12 @@
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
                 <artifactId>base-pkg</artifactId>
+                <version>${base.version}</version>
+            </dependency>
+            <!-- 自定义类库，mosh4j模块 -->
+            <dependency>
+                <groupId>io.github.oyzh1994</groupId>
+                <artifactId>base-mosh4j</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，zookeeper模块 -->
