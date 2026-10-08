@@ -245,9 +245,15 @@ public class ThreadUtil {
         int pCount = RuntimeUtil.processorCount();
         // 异步，平台线程
         if (pCount >= 8) {
-            submit(tasks);
+            List<List<Runnable>> lists = CollectionUtil.split(tasks, pCount);
+            for (List<Runnable> list : lists) {
+                submit(list);
+            }
         } else if (pCount >= 4) {// 异步，虚拟线程
-            submitVirtual(tasks);
+            List<List<Runnable>> lists = CollectionUtil.split(tasks, pCount);
+            for (List<Runnable> list : lists) {
+                submitVirtual(list);
+            }
         } else {// 同步执行
             for (Runnable task : tasks) {
                 task.run();
