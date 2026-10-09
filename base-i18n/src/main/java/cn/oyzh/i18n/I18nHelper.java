@@ -349,6 +349,14 @@ public class I18nHelper {
 
     public static final String BIT = "base.bit";
 
+    public static final String performance = "base.performance";
+
+    public static final String balance = "base.balance";
+
+    public static final String compatible = "base.compatible";
+
+    public static final String restartTip1 = "base.restartTip1";
+
     public static final String TOUCH_FILE = "base.touchFile";
 
     public static final String MKDIR = "base.mkdir";
@@ -10024,6 +10032,22 @@ public class I18nHelper {
      */
     public static String bit() {
         return I18nResourceBundle.i18nString(BIT);
+    }
+
+    public static String performance() {
+        return I18nResourceBundle.i18nString(performance);
+    }
+
+    public static String balance() {
+        return I18nResourceBundle.i18nString(balance);
+    }
+
+    public static String compatible() {
+        return I18nResourceBundle.i18nString(compatible);
+    }
+
+    public static String restartTip1() {
+        return I18nResourceBundle.i18nString(restartTip1);
     }
 
     /**
