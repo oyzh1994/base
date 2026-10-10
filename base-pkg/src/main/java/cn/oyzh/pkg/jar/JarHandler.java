@@ -1,7 +1,9 @@
 package cn.oyzh.pkg.jar;
 
 import cn.oyzh.common.arch.NativeArchDetector;
+import cn.oyzh.common.arch.NativeFormat;
 import cn.oyzh.common.arch.NativeLibUtil;
+import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.function.ExceptionConsumer;
 import cn.oyzh.common.log.JulLog;
@@ -152,7 +154,7 @@ public class JarHandler implements PreHandler {
                     // ms库文件
                     List<String> mslibs = JFXUtil.msLibNames();
                     // 遍历文件
-                    cn.oyzh.common.file.FileUtil.getAllFiles(libPath.toFile(), (ExceptionConsumer<File>) file -> {
+                    FileUtil.getAllFiles(libPath.toFile(), (ExceptionConsumer<File>) file -> {
                         // 非库文件，跳过
                         if (!StringUtil.endsWithAny(file.getName(), ".dylib", ".dll", ".so")) {
                             return;
@@ -204,17 +206,21 @@ public class JarHandler implements PreHandler {
      * @return 结果
      */
     private boolean handleBinLib(String src, String name) {
-        if (OSUtil.isMacOS() && !NativeLibUtil.isMacosLib(name)) {
-            return false;
-        }
-        if (OSUtil.isLinux() && !NativeLibUtil.isLinuxLib(name)) {
-            return false;
-        }
-        if (OSUtil.isWindows() && !NativeLibUtil.isWindowsLib(name)) {
-            return false;
-        }
-        if (OSUtil.isAix() && !NativeLibUtil.isAixLib(name)) {
-            return false;
+        // 判断是否无扩展名
+        boolean emptyExt = FileNameUtil.extName(name).isEmpty();
+        if (!emptyExt) {
+            if (OSUtil.isMacOS() && !NativeLibUtil.isMacosLib(name)) {
+                return false;
+            }
+            if (OSUtil.isLinux() && !NativeLibUtil.isLinuxLib(name)) {
+                return false;
+            }
+            if (OSUtil.isWindows() && !NativeLibUtil.isWindowsLib(name)) {
+                return false;
+            }
+            if (OSUtil.isAix() && !NativeLibUtil.isAixLib(name)) {
+                return false;
+            }
         }
         boolean result = false;
         try {
@@ -231,6 +237,10 @@ public class JarHandler implements PreHandler {
                     }
                     // 只读头部
                     byte[] head = IOUtil.readAtMost(jarIn, 4096);
+                    // 无扩展名，先判断是否库，不是库需保留
+                    if (emptyExt && NativeArchDetector.detectFormat(head) == NativeFormat.UNKNOWN) {
+                        return true;
+                    }
                     // 判断库是否符合当前平台
                     result = NativeArchDetector.isCompatibleWithCurrentJvm(head);
                 }
@@ -265,9 +275,7 @@ public class JarHandler implements PreHandler {
                 return false;
             }
             // 二进制库优化
-            if (jarConfig.isBinlibOptimize()
-                    && NativeLibUtil.isNativeLibName(name)
-                    && !this.handleBinLib(src, name)) {
+            if (jarConfig.isBinlibOptimize() && !this.handleBinLib(src, name)) {
                 JulLog.info("二进制库:{}非当前平台，被过滤.", name);
                 return false;
             }
