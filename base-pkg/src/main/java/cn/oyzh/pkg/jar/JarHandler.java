@@ -206,9 +206,14 @@ public class JarHandler implements PreHandler {
      * @return 结果
      */
     private boolean handleBinLib(String src, String name) {
-        // 判断是否无扩展名
-        boolean emptyExt = FileNameUtil.extName(name).isEmpty();
-        if (!emptyExt) {
+        boolean extEmpty = FileNameUtil.extName(name).isEmpty();
+        boolean isNativeLib = NativeLibUtil.isNativeLibName(name);
+        // 有扩展名，但非二进制库
+        if (!extEmpty && !isNativeLib) {
+            return true;
+        }
+        // 判断平台
+        if (isNativeLib) {
             if (OSUtil.isMacOS() && !NativeLibUtil.isMacosLib(name)) {
                 return false;
             }
@@ -222,6 +227,7 @@ public class JarHandler implements PreHandler {
                 return false;
             }
         }
+
         boolean result = false;
         try {
             // 普通jar处理
@@ -238,7 +244,7 @@ public class JarHandler implements PreHandler {
                     // 只读头部
                     byte[] head = IOUtil.readAtMost(jarIn, 4096);
                     // 无扩展名，先判断是否库，不是库需保留
-                    if (emptyExt && NativeArchDetector.detectFormat(head) == NativeFormat.UNKNOWN) {
+                    if (extEmpty && NativeArchDetector.detectFormat(head) == NativeFormat.UNKNOWN) {
                         return true;
                     }
                     // 判断库是否符合当前平台
@@ -285,6 +291,7 @@ public class JarHandler implements PreHandler {
             //                return false;
             //            }
         }
+
         // 其他文件
         boolean accept = this.filter.apply(name);
         if (!accept) {
