@@ -366,9 +366,8 @@ public class JarHandler implements PreHandler {
      * @param jarUnDir 主jar解压目录
      * @param mainJar  主jar
      * @param jdkPath  jdk路径
-     * @throws Exception 异常
      */
-    private void mergeLibs(String jarUnDir, String mainJar, String jdkPath) throws Exception {
+    private void mergeLibs(String jarUnDir, String mainJar, String jdkPath) {
         JulLog.info("mergeLibs start, jarUnDir: {} mainJar: {}.", jarUnDir, mainJar);
         // 新jar文件
         File mainJarNewFile = new File(jarUnDir, "temp.jar");
@@ -379,7 +378,7 @@ public class JarHandler implements PreHandler {
         // lib目录合并
         if (FileUtil.exists(jarUnDir + "/BOOT-INF/lib")) {
             // 合并lib目录到主jar文件
-            String[] cmdArr = new String[]{"jar", "-uvf0", mainJarNewFile.getName(), "./BOOT-INF/lib"};
+            String[] cmdArr = new String[]{"jar", "-uvf", mainJarNewFile.getName(), "./BOOT-INF/lib"};
             cmdArr = PkgUtil.getJDKExecCMD(jdkPath, cmdArr);
             String cmdStr = StringUtil.join(" ", cmdArr);
             JulLog.info(cmdStr);
@@ -393,7 +392,7 @@ public class JarHandler implements PreHandler {
             files = files.parallelStream().filter(f -> f.isFile() && f.getName().endsWith(".jar")).toList();
             for (File file : files) {
                 String fName = file.getPath().replace(dir.getPath(), "");
-                String[] cmdArr = new String[]{"jar", "-uvf0", mainJarNewFile.getName(), "." + fName};
+                String[] cmdArr = new String[]{"jar", "-uvf", mainJarNewFile.getName(), "." + fName};
                 cmdArr = PkgUtil.getJDKExecCMD(jdkPath, cmdArr);
                 String cmdStr = StringUtil.join(" ", cmdArr);
                 JulLog.info(cmdStr);
