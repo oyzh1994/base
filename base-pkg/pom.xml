@@ -67,13 +67,19 @@
             <version>0.7.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.luccappellaro</groupId>
+            <artifactId>jzopfli</artifactId>
+            <version>0.0.4</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- 测试类库 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
