@@ -264,6 +264,7 @@ public class ProcessUtil {
                 appDirBak = appDir + "_bak";
                 // 紧凑jar
                 if (classPath.contains("compact-jar-cache")) {
+                    JulLog.info("handle with compact.");
                     File[] files = FileUtil.ls(appDir);
                     if (files != null) {
                         for (File file : files) {
