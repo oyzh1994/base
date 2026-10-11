@@ -339,13 +339,20 @@ public class ProcessUtil {
             } else {
                 javaPath += "/bin/java";
             }
-            ProcessBuilder builder ;
+            ProcessBuilder builder;
             // 是否压缩包重启
             String compactRestart = System.getProperty("compactRestart");
             if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "tue")) {
                 commands.add("nohup");
                 commands.add(javaPath);
-                commands.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
+                // 添加参数
+                for (String arg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+                    // 重启后就不是APPIMAGE了
+                    if (arg.startsWith("APPDIR") || appDir.startsWith("APPIMAGE")) {
+                        continue;
+                    }
+                    commands.add(arg);
+                }
                 commands.add("-DcompactRestart=true");
                 commands.add("-jar");
                 commands.add(classPath);
