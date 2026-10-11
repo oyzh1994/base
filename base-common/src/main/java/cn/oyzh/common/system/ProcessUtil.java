@@ -277,7 +277,7 @@ public class ProcessUtil {
                                 JulLog.warn("path:{} is not exists", p);
                                 continue;
                             }
-                            File[] files1 = FileUtil.ls(file);
+                            File[] files1 = FileUtil.ls(p);
                             if (files1 == null) {
                                 JulLog.warn("files1 is null", p);
                                 continue;
