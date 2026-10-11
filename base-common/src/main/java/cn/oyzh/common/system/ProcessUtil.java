@@ -216,6 +216,7 @@ public class ProcessUtil {
     public static void restartApplication2(int timeout, Runnable exitAction) throws IOException {
         // 获取当前Java程序的路径和classpath
         String javaPath = System.getProperty("java.home");
+        JulLog.info("javaPath:{}", javaPath);
         // 工作目录
         File dir = new File(javaPath).getParentFile();
         // windows平台
