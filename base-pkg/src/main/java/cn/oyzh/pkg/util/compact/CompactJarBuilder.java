@@ -1,5 +1,7 @@
 package cn.oyzh.pkg.util.compact;
 
+import cn.oyzh.common.system.RuntimeUtil;
+import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.thread.ThreadUtil;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZInputStream;
@@ -61,20 +63,30 @@ public final class CompactJarBuilder {
     private static final String LAUNCHER_CLASS_PATH = LAUNCHER_CLASS.replace('.', '/');
     private static final String XZ_CLASS_PREFIX = "org/tukaani/xz/";
 
-    /** 原始 ZIP 分块是 I/O 型任务，保留三个并行度即可。 */
+    /**
+     * 原始 ZIP 分块是 I/O 型任务，保留三个并行度即可。
+     */
     private static final int DEFAULT_RAW_CHUNK_THREADS = 3;
 
-    /** XZ 编码器内存开销较大，默认限制为两个，避免多个大字典同时分配。 */
+    /**
+     * XZ 编码器内存开销较大，默认限制为两个，避免多个大字典同时分配。
+     */
     private static final int DEFAULT_XZ_COMPRESS_THREADS = 2;
 
-    /** preset 9 默认字典为 64 MiB；默认上限压到 32 MiB，实测压缩率损失很小。 */
+    /**
+     * preset 9 默认字典为 64 MiB；默认上限压到 32 MiB，实测压缩率损失很小。
+     */
     private static final int DEFAULT_XZ_DICT_SIZE = 32 * 1024 * 1024;
 
-    /** 仅允许并发参数处于该范围，防止配置错误创建大量 CPU 密集型线程。 */
+    /**
+     * 仅允许并发参数处于该范围，防止配置错误创建大量 CPU 密集型线程。
+     */
     private static final int MIN_PARALLELISM = 1;
     private static final int MAX_PARALLELISM = 16;
 
-    /** 最多使用当前空闲堆的四分之三，给调用方业务线程和 GC 留出空间。 */
+    /**
+     * 最多使用当前空闲堆的四分之三，给调用方业务线程和 GC 留出空间。
+     */
     private static final int COMPRESSION_HEAP_PERCENT = 75;
 
     private CompactJarBuilder() {
@@ -288,8 +300,13 @@ public final class CompactJarBuilder {
         int dictSizeLimit = readIntProperty(
                 "compact.jar.xz.dict.size", DEFAULT_XZ_DICT_SIZE,
                 LZMA2Options.DICT_SIZE_MIN, LZMA2Options.DICT_SIZE_MAX);
+        // TODO: 对于低配环境，单线程执行
+        int xzThreads = DEFAULT_XZ_COMPRESS_THREADS;
+        if (SystemUtil.isCIEnv() || RuntimeUtil.processorCount() <= 4) {
+            xzThreads = 1;
+        }
         int parallelismLimit = readIntProperty(
-                "compact.jar.xz.compress.threads", DEFAULT_XZ_COMPRESS_THREADS,
+                "compact.jar.xz.compress.threads", xzThreads,
                 MIN_PARALLELISM, MAX_PARALLELISM);
 
         LZMA2Options options = new LZMA2Options(xzPreset);
@@ -354,7 +371,7 @@ public final class CompactJarBuilder {
     /**
      * 一次构建中固定的压缩参数，保证所有 XZ 块使用相同字典大小。
      *
-     * @param dictSize   LZMA2 字典大小，单位为字节
+     * @param dictSize    LZMA2 字典大小，单位为字节
      * @param parallelism 实际 XZ 压缩并发数
      */
     private record CompressionConfig(int dictSize, int parallelism) {
