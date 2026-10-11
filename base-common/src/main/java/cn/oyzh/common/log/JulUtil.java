@@ -8,6 +8,7 @@ import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * jul工具类
@@ -80,7 +81,7 @@ public class JulUtil {
         }
         //        // 正式环境
         //        if (JarUtil.isInJar()) {
-        filePath = FileNameUtil.concat(baseDir, "logs");
+        filePath = Path.of(baseDir, "logs").toString();
         //            filePath = SysConst.storeDir() + "logs" + File.separator;
         //        } else {// 开发环境
         //                    filePath = SystemUtil.userDir() + File.separator + "logs" + File.separator;

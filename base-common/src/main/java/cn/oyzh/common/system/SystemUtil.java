@@ -7,6 +7,7 @@ import cn.oyzh.common.util.JarUtil;
 import cn.oyzh.common.util.NumberUtil;
 import cn.oyzh.common.util.StringUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
@@ -170,7 +171,16 @@ public class SystemUtil {
      * @return 临时目录
      */
     public static String tmpdir() {
-        return System.getProperty("java.io.tmpdir");
+        String dir = System.getProperty("java.io.tmpdir");
+        // windows短名
+        if (OSUtil.isWindows()) {
+            try {
+                return new File(dir).getCanonicalPath();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return dir;
     }
 
     /**
