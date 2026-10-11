@@ -46,7 +46,7 @@ Path executableJar = Path.of("target/application.jar");
 Path applicationJar = Path.of("target/application.jar.original");
 Path outputJar = Path.of("target/application-compressed.jar");
 
-// 默认 XZ preset 9，优先保证分发体积。
+// 默认 XZ preset 9，优先保证分发体积；XZ 字典默认最多使用 32 MiB。
 CompactJarTool.compact(executableJar, applicationJar, outputJar);
 
 // 构建服务器更看重打包速度时可降低 preset。
@@ -93,15 +93,31 @@ Payload-Chunk-Sizes: 1468716,24427656,18804392
 Cache-Version: 4
 ```
 
-启动器严格按这些长度切分 `compact-payload.xz`，每个块使用独立 XZ 解码器并行恢复。JAR 写出任务与 XZ 解码分离，并通过信号量限制同时保留的原始条目数量。
+启动器严格按这些长度切分 `compact-payload.xz`，每个块使用独立 XZ 解码器并行恢复。应用和依赖条目直接流式写入临时 JAR，不在堆中排队保存整个条目内容。
 
 ## 并行策略
 
 打包阶段：
 
 - 原始应用块和两个依赖块并行生成。
-- 三个 XZ 块并行压缩。
+- XZ 任务由固定大小的工作线程队列执行，默认最多两个编码器同时运行。
+- LZMA2 字典默认最多使用 32 MiB，并会按构建 JVM 当前空闲堆自动下调字典和并发数。
 - 使用 `ThreadUtil.newThread()` 创建一次性工作线程，不使用共享缓存线程池，避免打包进程结束后仍等待空闲线程退出。
+
+压缩内存参数通过 JVM 系统属性调整：
+
+```bash
+java -Dcompact.jar.xz.dict.size=50331648 \
+     -Dcompact.jar.xz.compress.threads=2 \
+     -cp "$BASE_PKG_CLASSES:$BASE_COMMON_JAR:$XZ_JAR" \
+     cn.oyzh.pkg.util.compact.CompactJarTool ...
+```
+
+- `compact.jar.xz.dict.size`：LZMA2 字典大小上限，单位为字节，默认 `33554432`（32 MiB）。
+- `compact.jar.xz.compress.threads`：XZ 压缩线程上限，默认 `2`，允许范围为 1 到 16。
+- 两个参数都是上限而不是无条件值。构建器会读取 `Runtime` 当前空闲堆，只使用其中约 75% 作为编码器预算；必要时减少并发并逐级降低字典。
+- preset 9 的原始默认字典是 64 MiB。它会让三个编码器同时产生较大数组分配，也是旧版 Linux 构建 OOM 的主要来源。32 MiB 默认值相当于更保守的 preset 8 字典，但其他 preset 9 匹配参数保持不变。
+- 机器内存充足且更看重体积时，可显式把字典上限设为 48 MiB 或 64 MiB；系统属性写错或越界会直接报错，不会静默忽略。
 
 启动阶段：
 
@@ -161,14 +177,15 @@ java @resource/vmArgs.windows.txt -jar target/application-compressed.jar
 
 ## 实测取舍
 
-以下数据来自同一个约 108 MB 的实际 Spring Boot 应用、macOS、JDK 28、XZ preset 9。数值用于比较方案，不同应用和硬件会变化。
+以下数据来自同一个约 103 MB 的实际 Spring Boot 应用、macOS、XZ preset 9。不同应用和硬件会变化；不同字典和并发组合的耗时、峰值 RSS 不应直接横向等价比较。
 
-| 方案 | 产物大小 | 相对原包缩小 | 构建压缩时间 | 冷缓存创建 | 热缓存检查 |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| 单一 XZ 流基线 | 44,752,251 bytes | 58.5474% | 84.1 秒 | 约 7.5 秒 | 约 0.05 秒 |
-| 三个 XZ 块并行 | 44,873,634 bytes | 58.4349% | 44.4 秒 | 1.8–2.2 秒 | 0.10 秒 |
+| 方案 | 产物大小 | 相对旧方案 | 构建及预热时间 | 峰值 RSS |
+| --- | ---: | ---: | ---: | ---: |
+| 旧方案：64 MiB 字典、三个压缩线程 | 39,200,773 bytes | 基线 | 约 45 秒 | 未记录 |
+| 当前默认：32 MiB 上限、`-Xmx512m` 自动降为单线程 | 39,799,089 bytes | 增加 1.53% | 66.3 秒 | 583 MB |
+| 压缩优先：48 MiB 上限、两个压缩线程、`-Xmx2g` | 39,323,139 bytes | 增加 0.31% | 47.3 秒 | 1.78 GB |
 
-原始完整 JAR 为 107,960,006 bytes。三块方案相对单流只增加 121,383 bytes，即产物额外增加约 0.2712%，但压缩阶段缩短约 47%。当前实测冷缓存创建约 1.8–2.2 秒，缓存展开后约 110 MiB；热缓存检查约 0.10 秒。不同磁盘、JDK 和后台负载会改变绝对耗时。
+另外使用包含 256 MiB 单一条目的嵌套依赖做低堆回归：`-Xmx256m`、preset 9 构建、`unzip -t` 和实际 `java -jar` 启动均通过，输出正常。这验证了大条目不再整体进入堆，同时低堆时会自动降低 XZ 字典。
 
 XZ preset 主要影响打包时间与最终体积：
 
@@ -176,7 +193,7 @@ XZ preset 主要影响打包时间与最终体积：
 - preset 6：构建更快，产物通常明显变大。
 - preset 0 到 3：适合频繁打包的开发环境，不建议用于正式分发。
 
-当前默认使用 preset 9。若要继续优先压缩率，不建议增加分块数量；8 个以上独立 XZ 流会明显损失跨文件字典收益。三块是压缩率、并行度和首次缓存创建时间之间的平衡点。
+当前默认使用 preset 9 和 32 MiB 字典上限。若要继续优先压缩率，可提高 `compact.jar.xz.dict.size`，但不建议增加分块数量；8 个以上独立 XZ 流会明显损失跨文件字典收益。三块是压缩率、并行度和首次缓存创建时间之间的平衡点。
 
 ## 正确性保障
 
@@ -198,6 +215,8 @@ XZ preset 主要影响打包时间与最终体积：
 - `javac` 编译三个压缩组件：通过。
 - 最终压缩 JAR `unzip -t`：通过。
 - 通用最小 Spring Boot 布局冒烟测试：应用和依赖恢复成功，退出码为 0。
+- 256 MiB 大条目、`-Xmx256m`、preset 9 构建和启动：通过。
+- 实际 EasyShell 输入使用 32 MiB 和 48 MiB 字典构建、缓存预热、ZIP 完整性检查：通过。
 - 实际应用空缓存启动：进入 JavaFX 主界面并持续运行。
 - 实际应用热缓存启动：正常复用缓存。
 - Manifest 分块长度、缓存版本和依赖数量读取：通过。

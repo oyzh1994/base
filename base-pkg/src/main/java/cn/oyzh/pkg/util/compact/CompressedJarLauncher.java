@@ -24,13 +24,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -38,7 +35,6 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.stream.Stream;
-import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -268,8 +264,6 @@ public final class CompressedJarLauncher {
         }
         Path lib = cache.resolve("lib");
         Files.createDirectories(lib);
-        Path applicationTarget = cache.resolve(APPLICATION_JAR);
-        System.out.println("applicationTarget=" + applicationTarget);
         Map<Integer, String> dependencies = new ConcurrentSkipListMap<>();
         AtomicBoolean applicationPayloadSeen = new AtomicBoolean();
         validateChunkSizes(payloadChunkSizes, payloadEntry.getSize());
@@ -283,16 +277,13 @@ public final class CompressedJarLauncher {
         }
         int decodeThreads = Math.min(payloadChunkSizes.size(), unpackThreads);
         ExecutorService decodeExecutor = Executors.newFixedThreadPool(decodeThreads);
-        ExecutorService jarExecutor = Executors.newFixedThreadPool(unpackThreads);
-        Semaphore slots = new Semaphore(unpackThreads + decodeThreads);
         List<Future<?>> decodeJobs = new ArrayList<>();
-        Queue<Future<?>> jarJobs = new ConcurrentLinkedQueue<>();
         try {
             try (InputStream payload = launcher.getInputStream(payloadEntry)) {
                 for (long chunkSize : payloadChunkSizes) {
                     byte[] compressedChunk = readChunk(payload, chunkSize, payloadEntry.getSize());
                     decodeJobs.add(decodeExecutor.submit(() -> {
-                        unpackChunk(compressedChunk, cache, dependencies, applicationPayloadSeen, jarExecutor, slots, jarJobs);
+                        unpackChunk(compressedChunk, cache, dependencies, applicationPayloadSeen);
                         return null;
                     }));
                 }
@@ -303,18 +294,13 @@ public final class CompressedJarLauncher {
             for (Future<?> job : decodeJobs) {
                 job.get();
             }
-            for (Future<?> job = jarJobs.poll(); job != null; job = jarJobs.poll()) {
-                job.get();
-            }
             if (!applicationPayloadSeen.get()) {
                 throw new IOException("Missing application payload");
             }
             validateDependencies(dependencies, dependencyCount);
         } finally {
             cancelJobs(decodeJobs);
-            cancelJobs(jarJobs);
             decodeExecutor.shutdownNow();
-            jarExecutor.shutdownNow();
         }
         Files.write(cache.resolve("classpath.order"), dependencies.values(), StandardCharsets.UTF_8);
         writeClasspathJar(cache, dependencies.values());
@@ -371,17 +357,18 @@ public final class CompressedJarLauncher {
     }
 
     /**
-     * 解压一个独立 XZ 块，并按依赖 JAR 边界流式提交重建任务。
+     * 解压一个独立 XZ 块，并直接流式写入应用或依赖 JAR。
+     * <p>
+     * 不再把整个 JAR 的条目收集到内存队列中，单个超大资源也只使用固定大小的复制缓冲区。
      */
     private static void unpackChunk(byte[] compressedChunk, Path cache, Map<Integer, String> dependencies,
-                                    AtomicBoolean applicationPayloadSeen, ExecutorService jarExecutor,
-                                    Semaphore slots, Queue<Future<?>> jarJobs) throws Exception {
+                                    AtomicBoolean applicationPayloadSeen) throws Exception {
         Path lib = cache.resolve("lib");
         Path applicationTarget = cache.resolve(APPLICATION_JAR);
-        List<RawEntry> applicationEntries = new ArrayList<>();
-        List<RawEntry> dependencyEntries = new ArrayList<>();
-        Path dependencyTarget = null;
+        JarTarget application = null;
+        JarTarget dependency = null;
         int currentId = -1;
+        boolean success = false;
         try (XZInputStream xz = new XZInputStream(new ByteArrayInputStream(compressedChunk));
              ZipInputStream zip = new ZipInputStream(xz)) {
             ZipEntry entry;
@@ -392,7 +379,13 @@ public final class CompressedJarLauncher {
                 }
                 String name = entry.getName();
                 if (name.startsWith(APPLICATION_PREFIX)) {
-                    applicationEntries.add(new RawEntry(name.substring(APPLICATION_PREFIX.length()), entry.getTime(), zip.readAllBytes()));
+                    if (application == null) {
+                        if (!applicationPayloadSeen.compareAndSet(false, true)) {
+                            throw new IOException("Duplicate application payload");
+                        }
+                        application = new JarTarget(applicationTarget);
+                    }
+                    application.add(entry.getName().substring(APPLICATION_PREFIX.length()), entry, zip);
                     continue;
                 }
                 if (!name.startsWith(DEPENDENCY_PREFIX)) {
@@ -409,49 +402,32 @@ public final class CompressedJarLauncher {
                 }
                 String originalName = relative.substring(separator + 1);
                 if (id != currentId) {
-                    if (currentId >= 0) {
-                        submitJar(jarExecutor, slots, jarJobs, dependencyTarget, dependencyEntries);
-                        dependencyEntries = new ArrayList<>();
-                    }
                     String dependencyName = dependencies.get(id);
                     if (dependencyName == null) {
                         throw new IOException("Missing dependency index: " + id);
                     }
-                    dependencyTarget = lib.resolve(dependencyName);
+                    if (dependency != null) {
+                        dependency.commit();
+                    }
+                    dependency = new JarTarget(lib.resolve(dependencyName));
                     currentId = id;
                 }
-                dependencyEntries.add(new RawEntry(originalName, entry.getTime(), zip.readAllBytes()));
+                dependency.add(originalName, entry, zip);
             }
-        }
-        if (currentId >= 0) {
-            submitJar(jarExecutor, slots, jarJobs, dependencyTarget, dependencyEntries);
-        }
-        if (!applicationEntries.isEmpty()) {
-            if (!applicationPayloadSeen.compareAndSet(false, true)) {
-                throw new IOException("Duplicate application payload");
+            if (dependency != null) {
+                dependency.commit();
+                dependency = null;
             }
-            submitJar(jarExecutor, slots, jarJobs, applicationTarget, applicationEntries);
-        }
-    }
-
-    /**
-     * 提交单个 JAR 重建任务，并通过信号量限制待处理的解压数据量。
-     */
-    private static void submitJar(ExecutorService executor, Semaphore slots, Queue<Future<?>> jobs, Path target, List<RawEntry> entries) throws Exception {
-        slots.acquire();
-        try {
-            jobs.add(executor.submit(() -> {
-                try {
-                    writeJar(target, entries);
-                } catch (IOException ex) {
-                    throw new UncheckedIOException(ex);
-                } finally {
-                    slots.release();
-                }
-            }));
-        } catch (RuntimeException ex) {
-            slots.release();
-            throw ex;
+            if (application != null) {
+                application.commit();
+                application = null;
+            }
+            success = true;
+        } finally {
+            if (!success) {
+                closeQuietly(dependency);
+                closeQuietly(application);
+            }
         }
     }
 
@@ -464,28 +440,54 @@ public final class CompressedJarLauncher {
         }
     }
 
-    private static void writeJar(Path target, List<RawEntry> entries) throws IOException {
-        Path temporary = target.resolveSibling(target.getFileName() + ".tmp");
-        try {
-            try (JarOutputStream output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)))) {
-                output.setLevel(Deflater.BEST_SPEED);
-                for (RawEntry entry : entries) {
-                    ZipEntry outputEntry = new ZipEntry(entry.name());
-                    if (entry.time() >= 0) {
-                        outputEntry.setTime(entry.time());
-                    }
-                    output.putNextEntry(outputEntry);
-                    output.write(entry.data());
-                    output.closeEntry();
-                }
+    private static void closeQuietly(JarTarget target) {
+        if (target != null) {
+            try {
+                target.close();
+            } catch (IOException ignored) {
             }
-            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-        } finally {
-            Files.deleteIfExists(temporary);
         }
     }
 
-    private record RawEntry(String name, long time, byte[] data) {
+    /**
+     * 目标 JAR 的流式写入器；提交前只保留临时文件，不保留条目内容。
+     */
+    private static final class JarTarget implements AutoCloseable {
+        private final Path target;
+        private final Path temporary;
+        private final JarOutputStream output;
+        private boolean committed;
+
+        private JarTarget(Path target) throws IOException {
+            this.target = target;
+            this.temporary = target.resolveSibling(target.getFileName() + ".tmp");
+            this.output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)));
+            this.output.setLevel(java.util.zip.Deflater.BEST_SPEED);
+        }
+
+        private void add(String name, ZipEntry sourceEntry, InputStream input) throws IOException {
+            ZipEntry outputEntry = new ZipEntry(name);
+            if (sourceEntry.getTime() >= 0) {
+                outputEntry.setTime(sourceEntry.getTime());
+            }
+            output.putNextEntry(outputEntry);
+            input.transferTo(output);
+            output.closeEntry();
+        }
+
+        private void commit() throws IOException {
+            output.close();
+            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            committed = true;
+        }
+
+        @Override
+        public void close() throws IOException {
+            if (!committed) {
+                output.close();
+                Files.deleteIfExists(temporary);
+            }
+        }
     }
 
     /**
