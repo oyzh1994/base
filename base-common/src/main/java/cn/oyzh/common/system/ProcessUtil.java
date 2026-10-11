@@ -254,7 +254,10 @@ public class ProcessUtil {
             String classPath = System.getProperty("java.class.path");
             JulLog.info("classPath:{}", classPath);
             // 打印appImagePath路径
-            String appImagePath = System.getenv("APPDIR");
+            String appImagePath = System.getProperty("APPDIR");
+            if (appImagePath == null) {
+                appImagePath = System.getenv("APPDIR");
+            }
             JulLog.info("appImagePath:{}", appImagePath);
             // 寻找app主目录
             String appDir = "";
@@ -343,16 +346,9 @@ public class ProcessUtil {
                 commands.add("nohup");
                 commands.add(javaPath);
                 // 添加参数
-                for (String arg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-                    //// 重启后就不是APPIMAGE了
-                    //if (arg.startsWith("APPDIR") || appDir.startsWith("APPIMAGE")) {
-                    //    continue;
-                    //}
-                    commands.add(arg);
-                }
+                commands.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
                 commands.add("-DcompactRestart=true");
-                //commands.add("-APPDIR=" + appDir);
-                //commands.add("-APPIMAGE=" + System.getenv("APPIMAGE"));
+                commands.add("-DAPPDIR=" + appDirBak);
                 commands.add("-jar");
                 commands.add(classPath);
                 commands.add("&");
