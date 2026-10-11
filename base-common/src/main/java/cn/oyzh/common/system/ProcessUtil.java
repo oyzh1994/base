@@ -266,6 +266,7 @@ public class ProcessUtil {
                     JulLog.info("handle with compact.");
                     File[] files = FileUtil.ls(appDir);
                     if (files != null) {
+                        f1:
                         for (File file : files) {
                             if (!file.isDirectory()) {
                                 continue;
@@ -285,7 +286,7 @@ public class ProcessUtil {
                                 if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
                                     classPath = file1.getPath();
                                     JulLog.info("classPath2:{}", classPath);
-                                    break;
+                                    break f1;
                                 }
                             }
                         }
