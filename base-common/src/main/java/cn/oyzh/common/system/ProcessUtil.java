@@ -1,6 +1,7 @@
 package cn.oyzh.common.system;
 
 import cn.oyzh.common.SysConst;
+import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
@@ -10,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -249,21 +252,48 @@ public class ProcessUtil {
             if (ProcessUtil.isRunningInAppImage()) {
                 // 打印appImagePath路径
                 String appImagePath = System.getenv("APPDIR");
-                if(appImagePath == null){
+                if (appImagePath == null) {
                     appImagePath = System.getenv("APPIMAGE");
                 }
                 JulLog.info("appImagePath:" + appImagePath);
                 // 寻找app主目录
                 String appDir = "";
                 String appDirBak = "";
-                // 重新处理路径
-                for (String s : classPath.split("/")) {
-                    if (StringUtil.isNotBlank(s)) {
-                        appDir += "/" + s;
+                // 紧凑jar
+                if (classPath.contains("compact-jar-cache")) {
+                    appDirBak = appDir + "_bak";
+                    File[] files = FileUtil.ls(appDir);
+                    if (files != null) {
+                        for (File file : files) {
+                            if (!file.isDirectory()) {
+                                continue;
+                            }
+                            Path p = Path.of(file.getPath(), "lib", "app");
+                            if (!Files.exists(p)) {
+                                continue;
+                            }
+                            File[] files1 = FileUtil.ls(appDir);
+                            if (files1 == null) {
+                                continue;
+                            }
+                            for (File file1 : files1) {
+                                if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
+                                    classPath = file1.getPath();
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    if (s.startsWith(".mount_")) {
-                        appDirBak = appDir + "_bak";
-                        break;
+                } else {
+                    // 重新处理路径
+                    for (String s : classPath.split("/")) {
+                        if (StringUtil.isNotBlank(s)) {
+                            appDir = appDir + "/" + s;
+                        }
+                        if (s.startsWith(".mount_")) {
+                            appDirBak = appDir + "_bak";
+                            break;
+                        }
                     }
                 }
                 // 复制目录
