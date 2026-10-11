@@ -313,16 +313,14 @@ public class ProcessUtil {
                 //JulLog.info("classPath:{}", classPath);
                 //// 工作目录重新处理
                 //dir = new File(javaPath).getParentFile();
-                String[] commands = {"nohup", System.getenv("APPIMAGE"), "&"};
-                JulLog.info("commands={}", commands);
-                // 3. 创建 ProcessBuilder
-                ProcessBuilder builder = new ProcessBuilder(commands);
+                JulLog.info("APPIMAGE={}", System.getenv("APPIMAGE"));
+                // 创建 ProcessBuilder
+                ProcessBuilder builder = new ProcessBuilder("nohup", System.getenv("APPIMAGE"), "&");
                 // 设置工作目录
-                builder.directory(new File(System.getProperty("user.home")));
-                // 4. 关键：重定向输入/输出流，使新进程与当前进程解耦
-                builder.redirectOutput(ProcessBuilder.Redirect.DISCARD);
-                builder.redirectError(ProcessBuilder.Redirect.DISCARD);
-                builder.redirectInput(ProcessBuilder.Redirect.INHERIT);
+                builder.directory(dir);
+                // 打印命令
+                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+                // 执行重启命令
                 builder.start();
             } else {
                 if (FileUtil.exists(javaPath + "/bin/javaw")) {
