@@ -21,7 +21,9 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
@@ -117,8 +119,13 @@ public final class CompactJarBuilder {
             throw new IOException("Application JAR not found: " + applicationJar);
         }
         Path normalizedOutput = outputJar.toAbsolutePath().normalize();
-        if (normalizedOutput.equals(executableJar.toAbsolutePath().normalize())
-                || normalizedOutput.equals(applicationJar.toAbsolutePath().normalize())) {
+        Path normalizedExecutable = executableJar.toAbsolutePath().normalize();
+        Path normalizedApplication = applicationJar.toAbsolutePath().normalize();
+        if (normalizedExecutable.equals(normalizedApplication)) {
+            throw new IllegalArgumentException("Executable JAR and application JAR must be different files");
+        }
+        if (normalizedOutput.equals(normalizedExecutable)
+                || normalizedOutput.equals(normalizedApplication)) {
             throw new IllegalArgumentException("Output JAR must not overwrite an input JAR");
         }
     }
@@ -173,7 +180,7 @@ public final class CompactJarBuilder {
      */
     private static List<List<String>> splitDependencies(List<String> dependencies) {
         if (dependencies.size() <= 1) {
-            return List.of(dependencies);
+            return dependencies.isEmpty() ? List.of() : List.of(dependencies);
         }
         int middle = (dependencies.size() + 1) / 2;
         return List.of(dependencies.subList(0, middle), dependencies.subList(middle, dependencies.size()));
@@ -275,7 +282,26 @@ public final class CompactJarBuilder {
             for (FutureTask<T> future : futures) {
                 future.cancel(true);
             }
+            deleteSuccessfulPathResults(futures);
             throw ex;
+        }
+    }
+
+    /**
+     * 并行任务失败时，清理已经成功生成的临时文件，避免异常构建在输出目录留下垃圾。
+     */
+    private static <T> void deleteSuccessfulPathResults(List<FutureTask<T>> futures) {
+        for (FutureTask<T> future : futures) {
+            if (!future.isDone() || future.isCancelled()) {
+                continue;
+            }
+            try {
+                T result = future.get();
+                if (result instanceof Path path) {
+                    Files.deleteIfExists(path);
+                }
+            } catch (Exception ignored) {
+            }
         }
     }
 
@@ -327,6 +353,8 @@ public final class CompactJarBuilder {
                 throw new IOException("Missing classpath index: " + indexName);
             }
             List<String> names = new ArrayList<>();
+            Set<String> seenNames = new HashSet<>();
+            Set<String> seenFileNames = new HashSet<>();
             try (InputStream input = jarFile.getInputStream(indexEntry)) {
                 String index = new String(input.readAllBytes(), StandardCharsets.UTF_8);
                 for (String line : index.split("\\R")) {
@@ -336,14 +364,24 @@ public final class CompactJarBuilder {
                     }
                     String name = value.substring(value.indexOf('"') + 1, value.lastIndexOf('"'));
                     if (name.startsWith(libraryPrefix) && name.endsWith(".jar")) {
+                        String fileName = name.substring(name.lastIndexOf('/') + 1);
+                        validateDependencyName(name, fileName);
+                        if (!seenNames.add(name) || !seenFileNames.add(fileName)) {
+                            throw new IOException("Duplicate dependency in classpath index: " + name);
+                        }
                         names.add(name);
                     }
                 }
             }
-            if (names.isEmpty()) {
-                throw new IOException("No dependencies found in classpath index: " + indexName);
-            }
             return Collections.unmodifiableList(names);
+        }
+    }
+
+    private static void validateDependencyName(String name, String fileName) throws IOException {
+        if (fileName.isBlank() || fileName.equals(".") || fileName.equals("..")
+                || fileName.indexOf('/') >= 0 || fileName.indexOf('\\') >= 0
+                || fileName.indexOf('\t') >= 0 || fileName.indexOf('\r') >= 0 || fileName.indexOf('\n') >= 0) {
+            throw new IOException("Invalid dependency name: " + name);
         }
     }
 

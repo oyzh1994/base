@@ -2,6 +2,7 @@ package cn.oyzh.pkg.util.compact;
 
 import org.tukaani.xz.XZInputStream;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,9 +74,10 @@ public final class CompressedJarLauncher {
         String payloadSha256 = required(manifest, "Payload-SHA256");
         String applicationSha256 = required(manifest, "Application-JAR-SHA256");
         List<Long> payloadChunkSizes = parseChunkSizes(manifest);
+        int dependencyCount = parseDependencyCount(manifest);
         String launcherSha256 = sha256(launcherJar);
         Path cache = cacheDirectory(launcherSha256);
-        prepareCache(launcherJar, cache, payloadEntry, launcherSha256, payloadSha256, applicationSha256, payloadChunkSizes);
+        prepareCache(launcherJar, cache, payloadEntry, launcherSha256, payloadSha256, applicationSha256, payloadChunkSizes, dependencyCount);
         int status = launch(cache, startClass, args);
         System.exit(status);
     }
@@ -111,9 +113,10 @@ public final class CompressedJarLauncher {
         String payloadSha256 = required(manifest, "Payload-SHA256");
         String applicationSha256 = required(manifest, "Application-JAR-SHA256");
         List<Long> payloadChunkSizes = parseChunkSizes(manifest);
+        int dependencyCount = parseDependencyCount(manifest);
         String launcherSha256 = sha256(absoluteLauncherJar);
         Path cache = cacheDirectory(launcherSha256);
-        prepareCache(absoluteLauncherJar, cache, payloadEntry, launcherSha256, payloadSha256, applicationSha256, payloadChunkSizes);
+        prepareCache(absoluteLauncherJar, cache, payloadEntry, launcherSha256, payloadSha256, applicationSha256, payloadChunkSizes, dependencyCount);
     }
 
     private static String required(Manifest manifest, String name) {
@@ -144,6 +147,21 @@ public final class CompressedJarLauncher {
     }
 
     /**
+     * 读取预期依赖数量；旧格式没有该属性时仅校验依赖 ID 是否连续。
+     */
+    private static int parseDependencyCount(Manifest manifest) {
+        String value = manifest.getMainAttributes().getValue("Dependency-Count");
+        if (value == null || value.isBlank()) {
+            return -1;
+        }
+        int count = Integer.parseInt(value.trim());
+        if (count < 0) {
+            throw new IllegalArgumentException("Invalid dependency count: " + count);
+        }
+        return count;
+    }
+
+    /**
      * 根据压缩 JAR 的完整 SHA-256 选择缓存目录，确保 JAR 内容变化后自动更新缓存。
      */
     private static Path cacheDirectory(String launcherSha256) {
@@ -159,7 +177,7 @@ public final class CompressedJarLauncher {
     /**
      * 使用文件锁准备缓存；只有完整重建成功后才写入校验标记。
      */
-    private static void prepareCache(Path launcherJar, Path cache, String payloadEntry, String launcherSha256, String payloadSha256, String applicationSha256, List<Long> payloadChunkSizes) throws Exception {
+    private static void prepareCache(Path launcherJar, Path cache, String payloadEntry, String launcherSha256, String payloadSha256, String applicationSha256, List<Long> payloadChunkSizes, int dependencyCount) throws Exception {
         Files.createDirectories(cache);
         Path lockPath = cache.resolve("cache.lock");
         try (FileChannel channel = FileChannel.open(lockPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
@@ -169,9 +187,12 @@ public final class CompressedJarLauncher {
             }
             clearCache(cache, lockPath);
             try (JarFile launcher = new JarFile(launcherJar.toFile())) {
-                unpackPayload(launcher, payloadEntry, payloadChunkSizes, cache);
+                unpackPayload(launcher, payloadEntry, payloadChunkSizes, dependencyCount, cache);
             }
-            String marker = "launcher=" + launcherSha256 + "\npayload=" + payloadSha256 + "\napplication=" + applicationSha256 + "\n";
+            String marker = "launcher=" + launcherSha256 + "\n"
+                    + "payload=" + payloadSha256 + "\n"
+                    + "application=" + applicationSha256 + "\n"
+                    + "classpath-order=" + sha256(cache.resolve("classpath.order")) + "\n";
             Files.writeString(cache.resolve("cache.ok"), marker, StandardCharsets.UTF_8);
         }
     }
@@ -179,7 +200,7 @@ public final class CompressedJarLauncher {
     /**
      * 检查缓存标记和必要文件，防止使用不完整或旧版本缓存。
      */
-    private static boolean isCacheValid(Path cache, String launcherSha256, String payloadSha256, String applicationSha256) throws IOException {
+    private static boolean isCacheValid(Path cache, String launcherSha256, String payloadSha256, String applicationSha256) throws Exception {
         Path marker = cache.resolve("cache.ok");
         if (!Files.isRegularFile(marker) || !Files.isRegularFile(cache.resolve(APPLICATION_JAR))
                 || !Files.isRegularFile(cache.resolve("classpath.order")) || !Files.isRegularFile(cache.resolve("classpath.jar"))) {
@@ -188,16 +209,29 @@ public final class CompressedJarLauncher {
         String value = Files.readString(marker, StandardCharsets.UTF_8);
         if (!value.contains("launcher=" + launcherSha256)
                 || !value.contains("payload=" + payloadSha256)
-                || !value.contains("application=" + applicationSha256)) {
+                || !value.contains("application=" + applicationSha256)
+                || !value.contains("classpath-order=" + sha256(cache.resolve("classpath.order")))) {
             return false;
         }
         Path lib = cache.resolve("lib");
         if (!Files.isDirectory(lib)) {
             return false;
         }
-        try (DirectoryStream<Path> files = Files.newDirectoryStream(lib, "*.jar")) {
-            return files.iterator().hasNext();
+        List<String> dependencies = Files.readAllLines(cache.resolve("classpath.order"), StandardCharsets.UTF_8);
+        for (String dependency : dependencies) {
+            if (!isSafeDependencyName(dependency)
+                    || !Files.isRegularFile(lib.resolve(dependency))) {
+                return false;
+            }
         }
+        return true;
+    }
+
+    private static boolean isSafeDependencyName(String name) {
+        return name != null && !name.isBlank() && !name.equals(".") && !name.equals("..")
+                && name.endsWith(".jar")
+                && name.indexOf('/') < 0 && name.indexOf('\\') < 0
+                && name.indexOf('\t') < 0 && name.indexOf('\r') < 0 && name.indexOf('\n') < 0;
     }
 
     private static void clearCache(Path cache, Path lockPath) throws IOException {
@@ -227,7 +261,7 @@ public final class CompressedJarLauncher {
      * 每段都是独立 XZ 流。读取线程只保留尚未处理的压缩分块，
      * 解压线程每完成一个依赖 JAR 就立即交给重建线程，避免累计完整解压数据。
      */
-    private static void unpackPayload(JarFile launcher, String payloadEntryName, List<Long> payloadChunkSizes, Path cache) throws Exception {
+    private static void unpackPayload(JarFile launcher, String payloadEntryName, List<Long> payloadChunkSizes, int dependencyCount, Path cache) throws Exception {
         JarEntry payloadEntry = launcher.getJarEntry(payloadEntryName);
         if (payloadEntry == null) {
             throw new IOException("Missing launcher payload: " + payloadEntryName);
@@ -238,8 +272,12 @@ public final class CompressedJarLauncher {
         System.out.println("applicationTarget=" + applicationTarget);
         Map<Integer, String> dependencies = new ConcurrentSkipListMap<>();
         AtomicBoolean applicationPayloadSeen = new AtomicBoolean();
-        int defaultUnpackThreads = Runtime.getRuntime().availableProcessors() * 2;
+        validateChunkSizes(payloadChunkSizes, payloadEntry.getSize());
+        int defaultUnpackThreads = Math.clamp(Runtime.getRuntime().availableProcessors(), 1, 3);
         int unpackThreads = Integer.getInteger(UNPACK_THREADS_PROPERTY, defaultUnpackThreads);
+        //        if (unpackThreads < 1 || unpackThreads > 16) {
+        //            throw new IllegalArgumentException(UNPACK_THREADS_PROPERTY + " must be between 1 and 16");
+        //        }
         if (unpackThreads < 1) {
             unpackThreads = 1;
         }
@@ -271,6 +309,7 @@ public final class CompressedJarLauncher {
             if (!applicationPayloadSeen.get()) {
                 throw new IOException("Missing application payload");
             }
+            validateDependencies(dependencies, dependencyCount);
         } finally {
             cancelJobs(decodeJobs);
             cancelJobs(jarJobs);
@@ -282,13 +321,46 @@ public final class CompressedJarLauncher {
     }
 
     /**
+     * 校验所有依赖 ID 连续且数量与 Manifest 一致，避免部分 payload 被误认为完整缓存。
+     */
+    private static void validateDependencies(Map<Integer, String> dependencies, int expectedCount) throws IOException {
+        if (expectedCount >= 0 && dependencies.size() != expectedCount) {
+            throw new IOException("Dependency count mismatch: expected=" + expectedCount + ", actual=" + dependencies.size());
+        }
+        for (int id = 0; id < dependencies.size(); id++) {
+            if (!dependencies.containsKey(id)) {
+                throw new IOException("Missing dependency id: " + id);
+            }
+        }
+    }
+
+    /**
+     * 校验 Manifest 分块长度总和，防止截断、重复或伪造的 payload 布局进入缓存。
+     */
+    private static void validateChunkSizes(List<Long> chunkSizes, long payloadSize) throws IOException {
+        if (payloadSize < 0 || (chunkSizes.size() == 1 && chunkSizes.get(0) < 0)) {
+            return;
+        }
+        long total = 0;
+        for (long chunkSize : chunkSizes) {
+            if (chunkSize <= 0 || total > Long.MAX_VALUE - chunkSize) {
+                throw new IOException("Invalid payload chunk sizes");
+            }
+            total += chunkSize;
+        }
+        if (total != payloadSize) {
+            throw new IOException("Payload chunk sizes do not match payload entry size");
+        }
+    }
+
+    /**
      * 按 Manifest 长度读取一个独立 XZ 块，避免把整个 payload 同时载入内存。
      */
     private static byte[] readChunk(InputStream payload, long declaredSize, long totalSize) throws IOException {
         if (declaredSize < 0) {
             return payload.readAllBytes();
         }
-        if (declaredSize > Integer.MAX_VALUE || declaredSize > totalSize) {
+        if (declaredSize > Integer.MAX_VALUE || (totalSize >= 0 && declaredSize > totalSize)) {
             throw new IOException("Invalid payload chunk size: " + declaredSize);
         }
         byte[] data = payload.readNBytes((int) declaredSize);
@@ -324,14 +396,17 @@ public final class CompressedJarLauncher {
                     continue;
                 }
                 if (!name.startsWith(DEPENDENCY_PREFIX)) {
-                    continue;
+                    throw new IOException("Unknown payload entry: " + name);
                 }
                 String relative = name.substring(DEPENDENCY_PREFIX.length());
                 int separator = relative.indexOf('/');
-                if (separator <= 0) {
+                if (separator <= 0 || separator == relative.length() - 1) {
                     throw new IOException("Invalid payload entry: " + name);
                 }
                 int id = Integer.parseInt(relative.substring(0, separator));
+                if (id < 0) {
+                    throw new IOException("Invalid dependency id: " + id);
+                }
                 String originalName = relative.substring(separator + 1);
                 if (id != currentId) {
                     if (currentId >= 0) {
@@ -391,19 +466,23 @@ public final class CompressedJarLauncher {
 
     private static void writeJar(Path target, List<RawEntry> entries) throws IOException {
         Path temporary = target.resolveSibling(target.getFileName() + ".tmp");
-        try (JarOutputStream output = new JarOutputStream(Files.newOutputStream(temporary))) {
-            output.setLevel(Deflater.BEST_SPEED);
-            for (RawEntry entry : entries) {
-                ZipEntry outputEntry = new ZipEntry(entry.name());
-                if (entry.time() >= 0) {
-                    outputEntry.setTime(entry.time());
+        try {
+            try (JarOutputStream output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)))) {
+                output.setLevel(Deflater.BEST_SPEED);
+                for (RawEntry entry : entries) {
+                    ZipEntry outputEntry = new ZipEntry(entry.name());
+                    if (entry.time() >= 0) {
+                        outputEntry.setTime(entry.time());
+                    }
+                    output.putNextEntry(outputEntry);
+                    output.write(entry.data());
+                    output.closeEntry();
                 }
-                output.putNextEntry(outputEntry);
-                output.write(entry.data());
-                output.closeEntry();
             }
+            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } finally {
+            Files.deleteIfExists(temporary);
         }
-        Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
 
     private record RawEntry(String name, long time, byte[] data) {
@@ -422,21 +501,42 @@ public final class CompressedJarLauncher {
         manifest.getMainAttributes().putValue("Class-Path", classPath.toString());
         Path target = cache.resolve("classpath.jar");
         Path temporary = cache.resolve("classpath.jar.tmp");
-        try (JarOutputStream output = new JarOutputStream(Files.newOutputStream(temporary), manifest)) {
+        try {
+            try (JarOutputStream output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)), manifest)) {
+            }
+            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+        } finally {
+            Files.deleteIfExists(temporary);
         }
-        Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
 
     private static void parseIndex(byte[] data, Map<Integer, String> dependencies) {
         String value = new String(data, StandardCharsets.UTF_8);
+        boolean formatSeen = false;
         for (String line : value.split("\\R")) {
             if (line.startsWith("format\t")) {
+                if (!"format\t1".equals(line)) {
+                    throw new IllegalArgumentException("Unsupported payload index format: " + line);
+                }
+                formatSeen = true;
                 continue;
             }
             String[] fields = line.split("\t", 2);
-            if (fields.length == 2) {
-                dependencies.put(Integer.parseInt(fields[0]), fields[1]);
+            if (fields.length != 2) {
+                throw new IllegalArgumentException("Invalid payload index line: " + line);
             }
+            int id = Integer.parseInt(fields[0]);
+            String name = fields[1];
+            if (id < 0 || !isSafeDependencyName(name)) {
+                throw new IllegalArgumentException("Invalid payload dependency: " + line);
+            }
+            String previous = dependencies.putIfAbsent(id, name);
+            if (previous != null && !previous.equals(name)) {
+                throw new IllegalArgumentException("Conflicting payload dependency id: " + id);
+            }
+        }
+        if (!formatSeen) {
+            throw new IllegalArgumentException("Missing payload index format");
         }
     }
 

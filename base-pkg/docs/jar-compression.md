@@ -16,6 +16,7 @@ java -jar target/application-compressed.jar
 - 可执行 JAR 中包含 `BOOT-INF/classpath.idx`。
 - 依赖默认位于 `BOOT-INF/lib/`。
 - 提供不包含外部依赖的应用 JAR，用于还原应用自身条目。
+- `classpath.idx` 可以没有外部依赖，此时只生成应用 payload。
 
 不同 Spring Boot 布局可以通过 Manifest 覆盖索引和依赖目录：
 
@@ -108,13 +109,13 @@ Cache-Version: 4
 - 应用和依赖 JAR 并行重建。
 - 每个解压线程处理完一个依赖 JAR 就立即提交写出，不等待整块全部解压。
 
-启动并发数默认为 2，可以通过 JVM 参数调整：
+启动并发数默认为 3（单核机器自动降为 1），可以通过 JVM 参数调整：
 
 ```bash
-java -Dcompact.jar.unpack.threads=2 -jar target/application-compressed.jar
+java -Dcompact.jar.unpack.threads=3 -jar target/application-compressed.jar
 ```
 
-允许范围为 1 到 16。SSD 和多核机器可尝试 3 或 4；机械硬盘、低内存机器建议保持 2。线程过多可能增加 CPU、内存和磁盘争用。
+允许范围为 1 到 16。SSD 和多核机器可尝试 3 或 4；机械硬盘、低内存机器建议设置为 1 或 2。线程过多可能增加 CPU、内存和磁盘争用。
 
 ## 缓存机制
 
@@ -165,9 +166,9 @@ java @resource/vmArgs.windows.txt -jar target/application-compressed.jar
 | 方案 | 产物大小 | 相对原包缩小 | 构建压缩时间 | 冷缓存创建 | 热缓存检查 |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | 单一 XZ 流基线 | 44,752,251 bytes | 58.5474% | 84.1 秒 | 约 7.5 秒 | 约 0.05 秒 |
-| 三个 XZ 块并行 | 44,873,634 bytes | 58.4349% | 44.4 秒 | 6.86 秒 | 0.09 秒 |
+| 三个 XZ 块并行 | 44,873,634 bytes | 58.4349% | 44.4 秒 | 1.8–2.2 秒 | 0.10 秒 |
 
-原始完整 JAR 为 107,960,006 bytes。三块方案相对单流只增加 121,383 bytes，即产物额外增加约 0.2712%，但压缩阶段缩短约 47%。冷缓存创建约 6.86 秒，缓存展开后约 110 MiB。
+原始完整 JAR 为 107,960,006 bytes。三块方案相对单流只增加 121,383 bytes，即产物额外增加约 0.2712%，但压缩阶段缩短约 47%。当前实测冷缓存创建约 1.8–2.2 秒，缓存展开后约 110 MiB；热缓存检查约 0.10 秒。不同磁盘、JDK 和后台负载会改变绝对耗时。
 
 XZ preset 主要影响打包时间与最终体积：
 
@@ -184,8 +185,11 @@ XZ preset 主要影响打包时间与最终体积：
 - 输出 JAR 不允许覆盖任一输入 JAR。
 - Manifest 记录应用 JAR SHA-256、payload SHA-256、XZ preset 和分块长度。
 - payload 顺序写入，启动时校验分块长度以及是否存在多余尾部数据。
+- 依赖文件名必须唯一、不能包含路径分隔符或控制字符，索引中的重复 ID 会被拒绝。
+- payload 索引 ID 必须从 0 连续编号，数量还必须与 Manifest `Dependency-Count` 一致。
 - 应用 payload 只能出现一次，缺失或重复都会中止缓存创建。
-- 依赖 ID、文件名和 classpath 顺序来自 `compact-index.tsv`。
+- 依赖 ID、文件名和 classpath 顺序来自 `compact-index.tsv`；未知 payload 条目会直接报错，不会静默跳过。
+- 缓存命中会校验 `classpath.order` 的 SHA-256，并逐一确认其中列出的 `lib/*.jar` 均存在。
 - JAR 使用临时文件写出，完成后原子移动到目标路径。
 - 最终 JAR 的每个 ZIP 条目仍保留名称、时间和内容 CRC；重建不会修改条目内容。
 
