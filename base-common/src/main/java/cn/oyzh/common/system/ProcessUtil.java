@@ -315,7 +315,7 @@ public class ProcessUtil {
                 //dir = new File(javaPath).getParentFile();
                 JulLog.info("APPIMAGE={}", System.getenv("APPIMAGE"));
                 // 创建 ProcessBuilder
-                ProcessBuilder builder = new ProcessBuilder("nohup", System.getenv("APPIMAGE"), "--no-sandbox", "&");
+                ProcessBuilder builder = new ProcessBuilder("nohup", System.getenv("APPIMAGE"), "--no-sandbox", "--appimage-extract-and-ru", "&");
                 // 设置工作目录
                 builder.directory(dir);
                 // 打印命令
