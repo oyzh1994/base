@@ -121,7 +121,7 @@ public class JarHandler implements PreHandler {
         // 紧凑主jar
         this.compactMainJar();
         // 设置为临时文件路径
-        packConfig.addTempFile(dest);
+        //        packConfig.addTempFile(dest);
         packConfig.addTempFile(jarUnDir);
     }
 
@@ -148,15 +148,16 @@ public class JarHandler implements PreHandler {
                 mainJar = this.config.getMainJar();
             }
             Path mainJarPath = Path.of(mainJar);
-            String name = mainJar.substring(0, mainJar.lastIndexOf("."));
-            Path compactPath = Path.of(mainJarPath.getParent().toString(), name + "_compress.jar");
+            String fName = mainJarPath.toFile().getName();
+            String name = fName.substring(0, fName.lastIndexOf("."));
+            Path compactPath = Path.of(mainJarPath.getParent().toString(), name + "_compact.jar");
             JulLog.info("compactMainJar start...");
             CompactJarTool.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
             // 压缩成功
             if (FileUtil.exists(compactPath)) {
                 String compactFile = compactPath.toString();
                 this.config.setCompactMainJar(compactFile);
-//                this.config.addTempFile(compactFile);
+                //                this.config.addTempFile(compactFile);
                 JulLog.info("compactMainJar success, before:{} after{}.",
                         NumberUtil.formatSize(Files.size(mainJarPath)),
                         NumberUtil.formatSize(Files.size(compactPath))
@@ -432,7 +433,7 @@ public class JarHandler implements PreHandler {
         // lib目录合并
         if (FileUtil.exists(jarUnDir + "/BOOT-INF/lib")) {
             // 合并lib目录到主jar文件
-            String[] cmdArr = new String[]{"jar", "-uvf", mainJarNewFile.getName(), "./BOOT-INF/lib"};
+            String[] cmdArr = new String[]{"jar", "-uvf0", mainJarNewFile.getName(), "./BOOT-INF/lib"};
             cmdArr = PkgUtil.getJDKExecCMD(jdkPath, cmdArr);
             String cmdStr = StringUtil.join(" ", cmdArr);
             JulLog.info(cmdStr);
@@ -446,7 +447,7 @@ public class JarHandler implements PreHandler {
             files = files.parallelStream().filter(f -> f.isFile() && f.getName().endsWith(".jar")).toList();
             for (File file : files) {
                 String fName = file.getPath().replace(dir.getPath(), "");
-                String[] cmdArr = new String[]{"jar", "-uvf", mainJarNewFile.getName(), "." + fName};
+                String[] cmdArr = new String[]{"jar", "-uvf0", mainJarNewFile.getName(), "." + fName};
                 cmdArr = PkgUtil.getJDKExecCMD(jdkPath, cmdArr);
                 String cmdStr = StringUtil.join(" ", cmdArr);
                 JulLog.info(cmdStr);

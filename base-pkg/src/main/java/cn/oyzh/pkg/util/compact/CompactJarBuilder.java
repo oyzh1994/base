@@ -1,5 +1,6 @@
 package cn.oyzh.pkg.util.compact;
 
+import cn.oyzh.common.thread.ThreadUtil;
 import org.tukaani.xz.LZMA2Options;
 import org.tukaani.xz.XZInputStream;
 import org.tukaani.xz.XZOutputStream;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -36,15 +39,15 @@ import java.util.zip.ZipOutputStream;
 /**
  * 通用 Spring Boot 可执行 JAR 二次压缩构建器。
  * <p>
- * 构建器将应用 JAR 与依赖 JAR 展开为原始 ZIP 条目，通过 XZ 全局压缩，
+ * 构建器将应用 JAR 与依赖 JAR 展开为原始 ZIP 条目，通过多个 XZ 流并行压缩，
  * 并把最小启动器和 XZ 运行时嵌入最终 JAR。启动时再按 JAR 哈希重建运行缓存。
  */
 public final class CompactJarBuilder {
 
     private static final String PAYLOAD_INDEX_ENTRY = "META-INF/compact-index.tsv";
     private static final String PAYLOAD_ENTRY = "compact-payload.xz";
-    private static final String APPLICATION_PREFIX = "application/";
-    private static final String DEPENDENCY_PREFIX = "dependencies/";
+    private static final String APPLICATION_PREFIX = "a/";
+    private static final String DEPENDENCY_PREFIX = "d/";
 
     private static final String DEFAULT_CLASSPATH_INDEX = "BOOT-INF/classpath.idx";
     private static final String DEFAULT_LIBRARY_PREFIX = "BOOT-INF/lib/";
@@ -75,7 +78,7 @@ public final class CompactJarBuilder {
     /**
      * 构建可独立启动的压缩 JAR。
      * <p>
-     * 最终 JAR 中只嵌入启动器、XZ 运行时和全局压缩数据，不再单独保存已压缩的应用 JAR。
+     * 最终 JAR 中只嵌入启动器、XZ 运行时和多段压缩数据，不再单独保存已压缩的应用 JAR。
      *
      * @param executableJar  包含依赖和 {@code classpath.idx} 的 Spring Boot 可执行 JAR
      * @param applicationJar 不包含外部依赖的应用 JAR
@@ -90,7 +93,7 @@ public final class CompactJarBuilder {
         Path payload = Files.createTempFile(outputDirectory, "compact-jar-payload-", ".xz");
         try {
             PayloadInfo payloadInfo = writePayload(executableJar, applicationJar, payload, xzPreset);
-            Manifest manifest = createManifest(payload, applicationJar, payloadInfo.startClass(), xzPreset, payloadInfo.dependencies().size());
+            Manifest manifest = createManifest(payload, applicationJar, payloadInfo, xzPreset);
             try (JarOutputStream output = new JarOutputStream(Files.newOutputStream(outputJar), manifest)) {
                 addRuntimeClasses(output);
                 addStoredFile(output, PAYLOAD_ENTRY, payload);
@@ -121,23 +124,159 @@ public final class CompactJarBuilder {
     }
 
     /**
-     * 将应用和依赖的原始条目写入同一个 XZ 压缩流，利用跨文件重复数据提高压缩率。
+     * 将应用和依赖的原始条目写入多个独立 XZ 流。
+     * <p>
+     * 每个流都包含完整 ZIP 条目和依赖索引。原始块生成和 XZ 压缩均并行执行，
+     * 启动阶段也可并行解压，从而缩短打包和首次缓存创建时间。
      */
     private static PayloadInfo writePayload(Path executableJar, Path applicationJar, Path payload, int xzPreset) throws Exception {
         List<String> dependencies = readDependencyNames(executableJar);
         String startClass = resolveStartClass(executableJar, applicationJar);
-        try (JarFile executable = new JarFile(executableJar.toFile());
-             JarFile application = new JarFile(applicationJar.toFile());
-             OutputStream fileOutput = Files.newOutputStream(payload, StandardOpenOption.TRUNCATE_EXISTING);
-             XZOutputStream xzOutput = new XZOutputStream(fileOutput, new LZMA2Options(xzPreset));
-             ZipOutputStream zipOutput = new ZipOutputStream(new BufferedOutputStream(xzOutput))) {
-            writeStoredEntry(zipOutput, PAYLOAD_INDEX_ENTRY, createIndex(dependencies), -1);
-            for (int index = 0; index < dependencies.size(); index++) {
-                writeDependency(zipOutput, executable, dependencies.get(index), index);
+        List<Path> rawChunks = new ArrayList<>();
+        List<Path> compressedChunks = new ArrayList<>();
+        try {
+            byte[] index = createIndex(dependencies);
+            List<Callable<Path>> rawChunkTasks = new ArrayList<>();
+            rawChunkTasks.add(() -> createApplicationChunk(applicationJar, payload.getParent(), index));
+            for (List<String> dependencyGroup : splitDependencies(dependencies)) {
+                rawChunkTasks.add(() -> createDependencyChunk(
+                        executableJar, payload.getParent(), index, dependencies, dependencyGroup));
             }
-            writeApplication(zipOutput, application);
+            rawChunks.addAll(invokeParallel(rawChunkTasks));
+            List<Callable<Path>> compressionTasks = new ArrayList<>(rawChunks.size());
+            for (Path rawChunk : rawChunks) {
+                compressionTasks.add(() -> compressChunk(rawChunk, payload.getParent(), xzPreset));
+            }
+            compressedChunks.addAll(invokeParallel(compressionTasks));
+
+            List<Long> chunkSizes = new ArrayList<>(compressedChunks.size());
+            try (OutputStream fileOutput = Files.newOutputStream(payload, StandardOpenOption.TRUNCATE_EXISTING)) {
+                for (Path compressedChunk : compressedChunks) {
+                    chunkSizes.add(Files.size(compressedChunk));
+                    try (InputStream input = Files.newInputStream(compressedChunk)) {
+                        input.transferTo(fileOutput);
+                    }
+                }
+            }
+            return new PayloadInfo(startClass, dependencies, chunkSizes);
+        } finally {
+            deleteTemporaryFiles(rawChunks);
+            deleteTemporaryFiles(compressedChunks);
         }
-        return new PayloadInfo(startClass, dependencies);
+    }
+
+    /**
+     * 将依赖按数量均衡分成两个大块；应用单独占一块，兼顾压缩率与并行度。
+     * <p>
+     * 依赖列表来自 classpath 索引，连续切分可保持类路径相邻依赖位于同一 XZ 字典中。
+     * 实测比按文件大小切分略好，同时三个块通常也足够均衡。
+     */
+    private static List<List<String>> splitDependencies(List<String> dependencies) {
+        if (dependencies.size() <= 1) {
+            return List.of(dependencies);
+        }
+        int middle = (dependencies.size() + 1) / 2;
+        return List.of(dependencies.subList(0, middle), dependencies.subList(middle, dependencies.size()));
+    }
+
+    /**
+     * 使用独立 XZ 流压缩一个原始 ZIP 块。
+     */
+    private static Path compressChunk(Path rawChunk, Path directory, int xzPreset) throws Exception {
+        Path compressedChunk = Files.createTempFile(directory, "compact-xz-", ".xz");
+        try (InputStream input = new BufferedInputStream(Files.newInputStream(rawChunk));
+             OutputStream output = new BufferedOutputStream(Files.newOutputStream(compressedChunk));
+             XZOutputStream xzOutput = new XZOutputStream(output, new LZMA2Options(xzPreset))) {
+            input.transferTo(xzOutput);
+        } catch (Exception ex) {
+            Files.deleteIfExists(compressedChunk);
+            throw ex;
+        }
+        return compressedChunk;
+    }
+
+    private static void deleteTemporaryFiles(List<Path> files) {
+        for (Path file : files) {
+            try {
+                Files.deleteIfExists(file);
+            } catch (IOException ignored) {
+            }
+        }
+    }
+
+    /**
+     * 创建应用 JAR 的原始 ZIP 块；每次任务使用独立 JarFile，允许与依赖块并行读取。
+     */
+    private static Path createApplicationChunk(Path applicationJar, Path directory, byte[] index) throws Exception {
+        Path rawChunk = Files.createTempFile(directory, "compact-raw-", ".zip");
+        try (JarFile application = new JarFile(applicationJar.toFile());
+             ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(rawChunk)))) {
+            writeStoredEntry(output, PAYLOAD_INDEX_ENTRY, index, -1);
+            writeApplication(output, application);
+        } catch (Exception ex) {
+            deleteTemporaryFile(rawChunk);
+            throw ex;
+        }
+        return rawChunk;
+    }
+
+    /**
+     * 创建一组依赖 JAR 的原始 ZIP 块；每次任务使用独立 JarFile，保证并发读取互不干扰。
+     */
+    private static Path createDependencyChunk(Path executableJar, Path directory, byte[] index,
+                                              List<String> dependencies, List<String> dependencyGroup) throws Exception {
+        Path rawChunk = Files.createTempFile(directory, "compact-raw-", ".zip");
+        try (JarFile executable = new JarFile(executableJar.toFile());
+             ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(rawChunk)))) {
+            writeStoredEntry(output, PAYLOAD_INDEX_ENTRY, index, -1);
+            for (String dependencyName : dependencyGroup) {
+                writeDependency(output, executable, dependencyName, dependencies.indexOf(dependencyName));
+            }
+        } catch (Exception ex) {
+            deleteTemporaryFile(rawChunk);
+            throw ex;
+        }
+        return rawChunk;
+    }
+
+    private static void deleteTemporaryFile(Path file) {
+        try {
+            Files.deleteIfExists(file);
+        } catch (IOException ignored) {
+        }
+    }
+
+    /**
+     * 并行执行有限数量的 CPU 密集型任务，并在返回前线程全部退出。
+     * <p>
+     * 这里使用 {@link ThreadUtil#newThread(Runnable)} 创建一次性工作线程，
+     * 不使用其共享缓存线程池，避免打包命令结束后因空闲线程等待而延迟退出。
+     */
+    private static <T> List<T> invokeParallel(List<Callable<T>> tasks) throws Exception {
+        List<FutureTask<T>> futures = new ArrayList<>(tasks.size());
+        List<Thread> threads = new ArrayList<>(tasks.size());
+        try {
+            for (Callable<T> task : tasks) {
+                FutureTask<T> future = new FutureTask<>(task);
+                Thread thread = ThreadUtil.newThread(future);
+                futures.add(future);
+                threads.add(thread);
+                thread.start();
+            }
+            for (Thread thread : threads) {
+                thread.join();
+            }
+            List<T> results = new ArrayList<>(futures.size());
+            for (FutureTask<T> future : futures) {
+                results.add(future.get());
+            }
+            return results;
+        } catch (Exception ex) {
+            for (FutureTask<T> future : futures) {
+                future.cancel(true);
+            }
+            throw ex;
+        }
     }
 
     /**
@@ -263,19 +402,31 @@ public final class CompactJarBuilder {
         output.closeEntry();
     }
 
-    private static Manifest createManifest(Path payload, Path applicationJar, String startClass, int preset, int dependencyCount) throws Exception {
+    private static Manifest createManifest(Path payload, Path applicationJar, PayloadInfo payloadInfo, int preset) throws Exception {
         Manifest manifest = new Manifest();
         Attributes attributes = manifest.getMainAttributes();
         attributes.put(Attributes.Name.MANIFEST_VERSION, "1.0");
         attributes.putValue("Main-Class", LAUNCHER_CLASS);
-        attributes.putValue("Start-Class", startClass);
+        attributes.putValue("Start-Class", payloadInfo.startClass());
         attributes.putValue("Payload-Entry", PAYLOAD_ENTRY);
         attributes.putValue("Application-JAR-SHA256", sha256(applicationJar));
         attributes.putValue("Payload-SHA256", sha256(payload));
+        attributes.putValue("Payload-Chunk-Sizes", joinChunkSizes(payloadInfo.chunkSizes()));
         attributes.putValue("XZ-Preset", Integer.toString(preset));
-        attributes.putValue("Cache-Version", "3");
-        attributes.putValue("Dependency-Count", Integer.toString(dependencyCount));
+        attributes.putValue("Cache-Version", "4");
+        attributes.putValue("Dependency-Count", Integer.toString(payloadInfo.dependencies().size()));
         return manifest;
+    }
+
+    private static String joinChunkSizes(List<Long> chunkSizes) {
+        StringBuilder value = new StringBuilder();
+        for (long chunkSize : chunkSizes) {
+            if (value.length() > 0) {
+                value.append(',');
+            }
+            value.append(chunkSize);
+        }
+        return value.toString();
     }
 
     private static String sha256(Path file) throws Exception {
@@ -394,6 +545,6 @@ public final class CompactJarBuilder {
         output.closeEntry();
     }
 
-    private record PayloadInfo(String startClass, List<String> dependencies) {
+    private record PayloadInfo(String startClass, List<String> dependencies, List<Long> chunkSizes) {
     }
 }
