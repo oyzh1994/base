@@ -179,6 +179,19 @@ java @resource/vmArgs.windows.txt -jar target/application-compressed.jar
 
 应用参数也会原样传给 `Start-Class`。为避免 Windows 命令行长度限制，子进程 classpath 只指向一个 `classpath.jar`；该 JAR 的 Manifest `Class-Path` 按原 `classpath.idx` 顺序列出 `application.jar` 和 `lib/*.jar`。
 
+### 应用重启
+
+压缩启动器会向实际应用 JVM 注入两个启动信息：
+
+```text
+compact.jar.restart.classpath=<cache>/classpath.jar
+compact.jar.restart.start.class=<Start-Class>
+```
+
+`cn.oyzh.common.system.ProcessUtil.restartApplication2()` 识别到这两个属性后，Linux 会直接从持久缓存以 `-cp classpath.jar Start-Class` 方式重启，不再依赖已经卸载的 AppImage 挂载点或再次运行压缩启动器。当前 JVM 参数会原样转发，并在新进程中重新写入上述属性，因此可以连续多次重启。
+
+AppImage 首次重启时仍会把活动挂载点中的 Java 运行时复制为 `*_bak`，避免原挂载点随后卸载；后续重启发现 `APPDIR`/`APPIMAGE` 已失效，或当前 `java.home` 已位于持久备份目录时，会跳过复制并直接使用缓存。该处理不会绕过按用户和 JAR SHA-256 隔离的缓存校验。
+
 ## 实测取舍
 
 以下数据来自同一个约 103 MB 的实际 Spring Boot 应用、macOS、XZ preset 9。不同应用和硬件会变化；不同字典和并发组合的耗时、峰值 RSS 不应直接横向等价比较。

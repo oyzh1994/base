@@ -55,6 +55,8 @@ public final class CompressedJarLauncher {
     private static final String APPLICATION_JAR = "application.jar";
     private static final String CACHE_DIRECTORY_PROPERTY = "compact.jar.cache.dir";
     private static final String UNPACK_THREADS_PROPERTY = "compact.jar.unpack.threads";
+    private static final String RESTART_CLASSPATH_PROPERTY = "compact.jar.restart.classpath";
+    private static final String RESTART_START_CLASS_PROPERTY = "compact.jar.restart.start.class";
 
     private CompressedJarLauncher() {
     }
@@ -592,6 +594,8 @@ public final class CompressedJarLauncher {
         List<String> command = new ArrayList<>();
         command.add(javaExecutable());
         command.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
+        command.add("-D" + RESTART_CLASSPATH_PROPERTY + "=" + classPath(cache));
+        command.add("-D" + RESTART_START_CLASS_PROPERTY + "=" + startClass);
         command.add("-cp");
         command.add(classPath(cache));
         command.add(startClass);
