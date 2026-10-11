@@ -297,13 +297,30 @@ public final class CompactJarBuilder {
      * 两者都会继续按空闲堆自动下调，避免在 EasyShell 等长驻 JVM 内打包时挤压业务内存。
      */
     private static CompressionConfig createCompressionConfig(int xzPreset, int taskCount) throws Exception {
+        // 判断机器可能的性能，动态分配内存大小
+        int xzDictSize;
+        if (SystemUtil.isCIEnv()) {
+            xzDictSize = DEFAULT_XZ_DICT_SIZE;
+        } else if (RuntimeUtil.processorCount() >= 16) {
+            xzDictSize = 64 * 1024 * 1024;
+        } else if (RuntimeUtil.processorCount() >= 8) {
+            xzDictSize = 48 * 1024 * 1024;
+        } else {
+            xzDictSize = DEFAULT_XZ_DICT_SIZE;
+        }
         int dictSizeLimit = readIntProperty(
-                "compact.jar.xz.dict.size", DEFAULT_XZ_DICT_SIZE,
+                "compact.jar.xz.dict.size", xzDictSize,
                 LZMA2Options.DICT_SIZE_MIN, LZMA2Options.DICT_SIZE_MAX);
-        // TODO: 对于低配环境，单线程执行
-        int xzThreads = DEFAULT_XZ_COMPRESS_THREADS;
-        if (SystemUtil.isCIEnv() || RuntimeUtil.processorCount() <= 4) {
+        // 判断机器可能的性能，动态分配线程大小
+        int xzThreads;
+        if (SystemUtil.isCIEnv()) {
             xzThreads = 1;
+        } else if (RuntimeUtil.processorCount() >= 16) {
+            xzThreads = 4;
+        } else if (RuntimeUtil.processorCount() >= 8) {
+            xzThreads = 3;
+        } else {
+            xzThreads = DEFAULT_XZ_COMPRESS_THREADS;
         }
         int parallelismLimit = readIntProperty(
                 "compact.jar.xz.compress.threads", xzThreads,
