@@ -11,9 +11,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -293,6 +296,7 @@ public class ProcessUtil {
                     }
                 }
             }
+            List<String> commands = new ArrayList<>();
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
                 // 重新处理路径
@@ -335,8 +339,23 @@ public class ProcessUtil {
             } else {
                 javaPath += "/bin/java";
             }
-            // 构建重启命令
-            ProcessBuilder builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+            ProcessBuilder builder ;
+            // 是否压缩包重启
+            String compactRestart = System.getProperty("compactRestart");
+            if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "tue")) {
+                commands.add("nohup");
+                commands.add(javaPath);
+                commands.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
+                commands.add("-DcompactRestart=true");
+                commands.add("-jar");
+                commands.add(classPath);
+                commands.add("&");
+                // 构建重启命令
+                builder = new ProcessBuilder(commands);
+            } else {
+                // 构建重启命令
+                builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+            }
             // 设置运行目录
             builder.directory(dir);
             // 打印命令
