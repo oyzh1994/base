@@ -259,8 +259,9 @@ public class ProcessUtil {
             // 寻找app主目录
             String appDir = "";
             String appDirBak = "";
+            boolean isCompact = classPath.contains("compact-jar-cache");
             // 紧凑jar
-            if (classPath.contains("compact-jar-cache")) {
+            if (isCompact) {
                 appDir = appImagePath;
                 appDirBak = appDir + "_bak";
                 JulLog.info("handle with compact.");
@@ -295,13 +296,15 @@ public class ProcessUtil {
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
                 // 重新处理路径
-                for (String s : classPath.split("/")) {
-                    if (StringUtil.isNotBlank(s)) {
-                        appDir = appDir + "/" + s;
-                    }
-                    if (s.startsWith(".mount_")) {
-                        appDirBak = appDir + "_bak";
-                        break;
+                if (!isCompact) {
+                    for (String s : classPath.split("/")) {
+                        if (StringUtil.isNotBlank(s)) {
+                            appDir = appDir + "/" + s;
+                        }
+                        if (s.startsWith(".mount_")) {
+                            appDirBak = appDir + "_bak";
+                            break;
+                        }
                     }
                 }
                 // 复制目录
