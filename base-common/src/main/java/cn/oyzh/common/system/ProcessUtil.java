@@ -259,9 +259,8 @@ public class ProcessUtil {
                 }
                 JulLog.info("appImagePath:{}", appImagePath);
                 // 寻找app主目录
-                String appDir = "";
-                String appDirBak = "";
-                appDirBak = appDir + "_bak";
+                String appDir = appImagePath;
+                String appDirBak = appDir + "_bak";
                 // 紧凑jar
                 if (classPath.contains("compact-jar-cache")) {
                     JulLog.info("handle with compact.");
