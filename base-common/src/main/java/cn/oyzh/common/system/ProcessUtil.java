@@ -1,6 +1,7 @@
 package cn.oyzh.common.system;
 
 import cn.oyzh.common.SysConst;
+import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
@@ -10,12 +11,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.management.ManagementFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -209,51 +207,6 @@ public class ProcessUtil {
     }
 
     /**
-     * 判断子路径是否位于父路径内部，用于识别当前 Java 运行时是否仍在 AppImage 挂载点中。
-     *
-     * @param child  子路径
-     * @param parent 父路径
-     * @return 结果
-     */
-    private static boolean isPathWithin(Path child, Path parent) {
-        return normalizeExistingPath(child).startsWith(normalizeExistingPath(parent));
-    }
-
-    /**
-     * 优先解析真实路径，避免 AppImage 或 Java home 使用符号链接时误判运行时位置。
-     *
-     * @param path 原始路径
-     * @return 规范化路径
-     */
-    private static Path normalizeExistingPath(Path path) {
-        try {
-            return path.toRealPath().normalize();
-        } catch (IOException ignored) {
-            return path.toAbsolutePath().normalize();
-        }
-    }
-
-    /**
-     * 从当前 Java 路径向上查找 AppImage 的 .mount_* 挂载目录。
-     * <p>
-     * APPDIR 通常可用，但重启后的进程可能保留失效的环境变量，此时不能再以它作为复制来源。
-     *
-     * @param javaPath Java home 路径
-     * @return 挂载目录，找不到时返回 null
-     */
-    private static Path findAppImageDirectory(String javaPath) {
-        Path current = normalizeExistingPath(Path.of(javaPath));
-        while (current != null) {
-            Path fileName = current.getFileName();
-            if (fileName != null && fileName.toString().startsWith(".mount_")) {
-                return current;
-            }
-            current = current.getParent();
-        }
-        return null;
-    }
-
-    /**
      * 重启应用
      * 适用于安装包
      *
@@ -296,124 +249,97 @@ public class ProcessUtil {
         } else if (OSUtil.isLinux()) {
             // 类路径
             String classPath = System.getProperty("java.class.path");
-            String restartClassPath = System.getProperty("compact.jar.restart.classpath");
-            String restartStartClass = System.getProperty("compact.jar.restart.start.class");
-            if (StringUtil.isBlank(restartClassPath) && isCompactCacheClassPath(classPath)) {
-                // 兼容旧版压缩启动器：java.class.path 已经是缓存中的 classpath.jar，
-                // 即使没有显式重启属性，也可以从 sun.java.command 恢复 Start-Class。
-                restartClassPath = classPath;
-            }
-            if (StringUtil.isBlank(restartStartClass)) {
-                restartStartClass = currentStartClass();
-            }
-            boolean compactRestart = StringUtil.isNotBlank(restartClassPath)
-                    && StringUtil.isNotBlank(restartStartClass);
-            if (compactRestart) {
-                classPath = restartClassPath;
-            }
             JulLog.info("classPath:{}", classPath);
+            // 打印appImagePath路径
+            String appImagePath = System.getenv("APPDIR");
+            if (appImagePath == null) {
+                appImagePath = System.getenv("APPIMAGE");
+            }
+            JulLog.info("appImagePath:{}", appImagePath);
+            // 寻找app主目录
+            String appDir = "";
+            String appDirBak = "";
+            // 紧凑jar
+            if (classPath.contains("compact-jar-cache")) {
+                appDir = appImagePath;
+                appDirBak = appDir + "_bak";
+                JulLog.info("handle with compact.");
+                File[] files = FileUtil.ls(appDir);
+                if (files != null) {
+                    f1:
+                    for (File file : files) {
+                        if (!file.isDirectory()) {
+                            continue;
+                        }
+                        JulLog.info("file:{} is dir", file);
+                        Path p = Path.of(file.getPath(), "lib", "app");
+                        if (!Files.exists(p)) {
+                            JulLog.warn("path:{} is not exists", p);
+                            continue;
+                        }
+                        File[] files1 = FileUtil.ls(p);
+                        if (files1 == null) {
+                            JulLog.warn("files1 is null", p);
+                            continue;
+                        }
+                        for (File file1 : files1) {
+                            if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
+                                classPath = file1.getPath();
+                                JulLog.info("classPath2:{}", classPath);
+                                break f1;
+                            }
+                        }
+                    }
+                }
+            }
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
-                // 打印appImagePath路径
-                String appImagePath = System.getenv("APPDIR");
-                if (appImagePath == null || !Files.isDirectory(Path.of(appImagePath))) {
-                    Path mountDirectory = findAppImageDirectory(javaPath);
-                    appImagePath = mountDirectory != null
-                            ? mountDirectory.toString()
-                            : System.getenv("APPIMAGE");
-                }
-                JulLog.info("appImagePath:{}", appImagePath);
-                // 寻找app主目录
-                String appDir = "";
-                String appDirBak = "";
-                // 紧凑jar
-                if (compactRestart) {
-                    if (StringUtil.isBlank(appImagePath)) {
-                        // 第二次以后 APPDIR/APPIMAGE 环境变量可能指向已经卸载的旧挂载点。
-                        // 此时运行时和 classpath.jar 已经位于持久目录，不需要也不能再次复制挂载目录。
-                        JulLog.info("compact restart uses persistent cache without AppImage copy.");
-                    } else {
-                        appDir = appImagePath;
+                // 重新处理路径
+                for (String s : classPath.split("/")) {
+                    if (StringUtil.isNotBlank(s)) {
+                        appDir = appDir + "/" + s;
+                    }
+                    if (s.startsWith(".mount_")) {
                         appDirBak = appDir + "_bak";
-                        JulLog.info("handle with compact.");
-                        Path appDirPath = Path.of(appDir);
-                        Path javaHomePath = Path.of(javaPath);
-                        if (!Files.isDirectory(appDirPath) || !isPathWithin(javaHomePath, appDirPath)) {
-                            appDir = "";
-                            appDirBak = "";
-                            JulLog.info("compact restart uses persistent cache without AppImage copy.");
-                        }
-                    }
-                } else {
-                    // 重新处理路径
-                    for (String s : classPath.split("/")) {
-                        if (StringUtil.isNotBlank(s)) {
-                            appDir = appDir + "/" + s;
-                        }
-                        if (s.startsWith(".mount_")) {
-                            appDirBak = appDir + "_bak";
-                            break;
-                        }
+                        break;
                     }
                 }
-                if (StringUtil.isNotBlank(appDir)) {
-                    // 首次从 AppImage 挂载点启动时，把运行时复制到持久目录，
-                    // 避免挂载点随父进程退出而卸载后无法继续重启。
-                    FileUtil.copyDirectory(appDir, appDirBak);
-                    javaPath = javaPath.replace(appDir, appDirBak);
-                    classPath = classPath.replace(appDir, appDirBak);
-                }
+                // 复制目录
+                FileUtil.copyDirectory(appDir, appDirBak);
+                // 替换为新路径
+                javaPath = javaPath.replace(appDir, appDirBak);
+                classPath = classPath.replace(appDir, appDirBak);
                 // 打印信息
                 JulLog.info("appDir:{}", appDir);
                 JulLog.info("javaPath:{}", javaPath);
                 JulLog.info("classPath:{}", classPath);
                 // 工作目录重新处理
                 dir = new File(javaPath).getParentFile();
-                //JulLog.info("APPIMAGE={}", System.getenv("APPIMAGE"));
-                //// 创建 ProcessBuilder
-                //ProcessBuilder builder = new ProcessBuilder("nohup", System.getenv("APPIMAGE"), "--no-sandbox", "--appimage-extract-and-run", "&");
+                //String[] commands = {"nohup", System.getenv("APPIMAGE"), "&"};
+                //JulLog.info("commands={}", commands);
+                //// 3. 创建 ProcessBuilder
+                //ProcessBuilder builder = new ProcessBuilder(commands);
                 //// 设置工作目录
-                //builder.directory(dir);
-                //// 打印命令
-                //JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
-                //// 执行重启命令
+                //builder.directory(new File(System.getProperty("user.home")));
+                //// 4. 关键：重定向输入/输出流，使新进程与当前进程解耦
+                //builder.redirectOutput(ProcessBuilder.Redirect.DISCARD);
+                //builder.redirectError(ProcessBuilder.Redirect.DISCARD);
+                //builder.redirectInput(ProcessBuilder.Redirect.INHERIT);
                 //builder.start();
             }
-                if (FileUtil.exists(javaPath + "/bin/javaw")) {
-                    javaPath += "/bin/javaw";
-                } else {
-                    javaPath += "/bin/java";
-                }
-                ProcessBuilder builder;
-                if (compactRestart) {
-                    Path restartClassPathPath = Path.of(classPath);
-                    if (!Files.isRegularFile(restartClassPathPath)) {
-                        throw new IOException("Compact restart classpath not found: " + classPath);
-                    }
-                    List<String> command = new ArrayList<>();
-                    command.add(detachCommand());
-                    command.add(javaPath);
-                    for (String argument : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-                        if (!argument.startsWith("-Dcompact.jar.restart.")) {
-                            command.add(argument);
-                        }
-                    }
-                    command.add("-Dcompact.jar.restart.classpath=" + classPath);
-                    command.add("-Dcompact.jar.restart.start.class=" + restartStartClass);
-                    command.add("-cp");
-                    command.add(classPath);
-                    command.add(restartStartClass);
-                    builder = new ProcessBuilder(command);
-                } else {
-                    // 构建重启命令
-                    builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
-                }
-                // 设置运行目录
-                builder.directory(dir);
-                // 打印命令
-                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
-                // 执行重启命令
-                builder.start();
+            if (FileUtil.exists(javaPath + "/bin/javaw")) {
+                javaPath += "/bin/javaw";
+            } else {
+                javaPath += "/bin/java";
+            }
+            // 构建重启命令
+            ProcessBuilder builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+            // 设置运行目录
+            builder.directory(dir);
+            // 打印命令
+            JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+            // 执行重启命令
+            builder.start();
         } else if (OSUtil.isMacOS()) {
             // 可执行程序路径
             String execPath = null;
@@ -442,50 +368,6 @@ public class ProcessUtil {
         }
         // 退出当前进程
         TaskManager.startDelay(Objects.requireNonNullElseGet(exitAction, () -> () -> System.exit(0)), timeout);
-    }
-
-    /**
-     * 判断 classpath 是否为压缩组件生成的缓存路径 JAR。
-     *
-     * @param classPath 当前 classpath
-     * @return 结果
-     */
-    private static boolean isCompactCacheClassPath(String classPath) {
-        if (StringUtil.isBlank(classPath)) {
-            return false;
-        }
-        Path path = Path.of(classPath);
-        Path directory = path.getParent();
-        String fileName = path.getFileName() != null ? path.getFileName().toString() : null;
-        return "classpath.jar".equals(fileName)
-                && directory != null
-                && Files.isRegularFile(directory.resolve("cache.ok"))
-                && Files.isRegularFile(directory.resolve("application.jar"));
-    }
-
-    /**
-     * 从 JVM 的 sun.java.command 中读取当前主类，兼容未注入重启属性的旧压缩启动器。
-     *
-     * @return 主类名，无法确定时返回空字符串
-     */
-    private static String currentStartClass() {
-        String command = System.getProperty("sun.java.command", "");
-        if (StringUtil.isBlank(command)) {
-            return "";
-        }
-        String startClass = command.split("\\s+", 2)[0];
-        return startClass.endsWith(".jar") ? "" : startClass;
-    }
-
-    /**
-     * Linux 优先使用 setsid 创建独立会话；精简系统缺少 setsid 时回退到 nohup。
-     *
-     * @return 分离命令
-     */
-    private static String detachCommand() {
-        return Files.exists(Path.of("/usr/bin/setsid")) || Files.exists(Path.of("/bin/setsid"))
-                ? "setsid"
-                : "nohup";
     }
 
     /**
