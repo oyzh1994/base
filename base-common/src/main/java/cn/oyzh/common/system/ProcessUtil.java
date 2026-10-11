@@ -344,15 +344,15 @@ public class ProcessUtil {
                 commands.add(javaPath);
                 // 添加参数
                 for (String arg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-                    // 重启后就不是APPIMAGE了
-                    if (arg.startsWith("APPDIR") || appDir.startsWith("APPIMAGE")) {
-                        continue;
-                    }
+                    //// 重启后就不是APPIMAGE了
+                    //if (arg.startsWith("APPDIR") || appDir.startsWith("APPIMAGE")) {
+                    //    continue;
+                    //}
                     commands.add(arg);
                 }
                 commands.add("-DcompactRestart=true");
-                commands.add("-APPDIR=" + appDir);
-                commands.add("-APPIMAGE=" + System.getenv("APPIMAGE"));
+                //commands.add("-APPDIR=" + appDir);
+                //commands.add("-APPIMAGE=" + System.getenv("APPIMAGE"));
                 commands.add("-jar");
                 commands.add(classPath);
                 commands.add("&");
