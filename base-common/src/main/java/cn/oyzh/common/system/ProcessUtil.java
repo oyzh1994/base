@@ -342,7 +342,7 @@ public class ProcessUtil {
             ProcessBuilder builder;
             // 是否压缩包重启
             String compactRestart = System.getProperty("compactRestart");
-            if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "tue")) {
+            if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "true")) {
                 commands.add("nohup");
                 commands.add(javaPath);
                 // 添加参数
