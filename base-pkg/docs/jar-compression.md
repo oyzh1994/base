@@ -192,6 +192,8 @@ compact.jar.restart.start.class=<Start-Class>
 
 AppImage 首次重启时仍会把活动挂载点中的 Java 运行时复制为 `*_bak`，避免原挂载点随后卸载；后续重启发现 `APPDIR`/`APPIMAGE` 已失效，或当前 `java.home` 已位于持久备份目录时，会跳过复制并直接使用缓存。该处理不会绕过按用户和 JAR SHA-256 隔离的缓存校验。
 
+Linux 重启进程优先通过 `setsid` 放入独立会话，确保应用退出或 AppImage 卸载时不会向新进程发送挂断信号；系统缺少 `setsid` 时回退到 `nohup`。为兼容旧版压缩启动器，即使没有注入上述属性，`ProcessUtil` 也会识别缓存中的 `classpath.jar`，并从 `sun.java.command` 恢复当前主类。
+
 ## 实测取舍
 
 以下数据来自同一个约 103 MB 的实际 Spring Boot 应用、macOS、XZ preset 9。不同应用和硬件会变化；不同字典和并发组合的耗时、峰值 RSS 不应直接横向等价比较。

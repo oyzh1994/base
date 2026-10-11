@@ -298,6 +298,14 @@ public class ProcessUtil {
             String classPath = System.getProperty("java.class.path");
             String restartClassPath = System.getProperty("compact.jar.restart.classpath");
             String restartStartClass = System.getProperty("compact.jar.restart.start.class");
+            if (StringUtil.isBlank(restartClassPath) && isCompactCacheClassPath(classPath)) {
+                // 兼容旧版压缩启动器：java.class.path 已经是缓存中的 classpath.jar，
+                // 即使没有显式重启属性，也可以从 sun.java.command 恢复 Start-Class。
+                restartClassPath = classPath;
+            }
+            if (StringUtil.isBlank(restartStartClass)) {
+                restartStartClass = currentStartClass();
+            }
             boolean compactRestart = StringUtil.isNotBlank(restartClassPath)
                     && StringUtil.isNotBlank(restartStartClass);
             if (compactRestart) {
@@ -383,7 +391,7 @@ public class ProcessUtil {
                         throw new IOException("Compact restart classpath not found: " + classPath);
                     }
                     List<String> command = new ArrayList<>();
-                    command.add("nohup");
+                    command.add(detachCommand());
                     command.add(javaPath);
                     for (String argument : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
                         if (!argument.startsWith("-Dcompact.jar.restart.")) {
@@ -434,6 +442,50 @@ public class ProcessUtil {
         }
         // 退出当前进程
         TaskManager.startDelay(Objects.requireNonNullElseGet(exitAction, () -> () -> System.exit(0)), timeout);
+    }
+
+    /**
+     * 判断 classpath 是否为压缩组件生成的缓存路径 JAR。
+     *
+     * @param classPath 当前 classpath
+     * @return 结果
+     */
+    private static boolean isCompactCacheClassPath(String classPath) {
+        if (StringUtil.isBlank(classPath)) {
+            return false;
+        }
+        Path path = Path.of(classPath);
+        Path directory = path.getParent();
+        String fileName = path.getFileName() != null ? path.getFileName().toString() : null;
+        return "classpath.jar".equals(fileName)
+                && directory != null
+                && Files.isRegularFile(directory.resolve("cache.ok"))
+                && Files.isRegularFile(directory.resolve("application.jar"));
+    }
+
+    /**
+     * 从 JVM 的 sun.java.command 中读取当前主类，兼容未注入重启属性的旧压缩启动器。
+     *
+     * @return 主类名，无法确定时返回空字符串
+     */
+    private static String currentStartClass() {
+        String command = System.getProperty("sun.java.command", "");
+        if (StringUtil.isBlank(command)) {
+            return "";
+        }
+        String startClass = command.split("\\s+", 2)[0];
+        return startClass.endsWith(".jar") ? "" : startClass;
+    }
+
+    /**
+     * Linux 优先使用 setsid 创建独立会话；精简系统缺少 setsid 时回退到 nohup。
+     *
+     * @return 分离命令
+     */
+    private static String detachCommand() {
+        return Files.exists(Path.of("/usr/bin/setsid")) || Files.exists(Path.of("/bin/setsid"))
+                ? "setsid"
+                : "nohup";
     }
 
     /**
