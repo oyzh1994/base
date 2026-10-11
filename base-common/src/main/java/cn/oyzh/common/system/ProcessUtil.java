@@ -248,7 +248,10 @@ public class ProcessUtil {
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
                 // 打印appImagePath路径
-                String appImagePath = System.getenv("APPIMAGE");
+                String appImagePath = System.getenv("APPDIR");
+                if(appImagePath == null){
+                    appImagePath = System.getenv("APPIMAGE");
+                }
                 JulLog.info("appImagePath:" + appImagePath);
                 // 寻找app主目录
                 String appDir = "";
