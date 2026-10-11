@@ -259,10 +259,12 @@ public class ProcessUtil {
                 }
                 JulLog.info("appImagePath:{}", appImagePath);
                 // 寻找app主目录
-                String appDir = appImagePath;
-                String appDirBak = appDir + "_bak";
+                String appDir = "";
+                String appDirBak = "";
                 // 紧凑jar
                 if (classPath.contains("compact-jar-cache")) {
+                    appDir = appImagePath;
+                    appDirBak = appDir + "_bak";
                     JulLog.info("handle with compact.");
                     File[] files = FileUtil.ls(appDir);
                     if (files != null) {
@@ -291,17 +293,17 @@ public class ProcessUtil {
                             }
                         }
                     }
-                    //} else {
-                    //    // 重新处理路径
-                    //    for (String s : classPath.split("/")) {
-                    //        if (StringUtil.isNotBlank(s)) {
-                    //            appDir = appDir + "/" + s;
-                    //        }
-                    //        if (s.startsWith(".mount_")) {
-                    //            appDirBak = appDir + "_bak";
-                    //            break;
-                    //        }
-                    //    }
+                } else {
+                    // 重新处理路径
+                    for (String s : classPath.split("/")) {
+                        if (StringUtil.isNotBlank(s)) {
+                            appDir = appDir + "/" + s;
+                        }
+                        if (s.startsWith(".mount_")) {
+                            appDirBak = appDir + "_bak";
+                            break;
+                        }
+                    }
                 }
                 // 复制目录
                 FileUtil.copyDirectory(appDir, appDirBak);
