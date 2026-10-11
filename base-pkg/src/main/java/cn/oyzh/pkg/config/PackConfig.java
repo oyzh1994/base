@@ -48,23 +48,25 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      */
     private String jarUnDir;
 
-//    /**
-//     * 打包方式
-//     * jpackage win打包的exe不能重启，mac打包的不能启动，不建议使用
-//     * packr
-//     */
-//    @Deprecated
-//    private String packMode = "jpackage";
-
     /**
      * 最小化后的主程序
      */
-    private String minimizeManJar;
+    private String minimizeMainJar;
+
+    /**
+     * 紧凑的主程序
+     */
+    private String compactMainJar;
 
     /**
      * 主程序
      */
     private String mainJar;
+
+    /**
+     * 主程序，非fat
+     */
+    private String mainTinyJar;
 
     /**
      * 应用名称
@@ -140,12 +142,6 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      */
     private JLinkConfig jLinkConfig;
 
-//    /**
-//     * packr配置
-//     */
-//    @Deprecated
-//    private PackrConfig packrConfig;
-
     /**
      * jPackage配置
      */
@@ -191,7 +187,7 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      *
      * @param tempFile 临时文件
      */
-    public void addTempFile(String tempFile){
+    public void addTempFile(String tempFile) {
         this.tempFiles.add(tempFile);
     }
 
@@ -210,8 +206,11 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      * @return 主程序
      */
     public String mainJar() {
-        if (this.minimizeManJar != null) {
-            return this.minimizeManJar;
+        if (this.compactMainJar != null) {
+            return this.compactMainJar;
+        }
+        if (this.minimizeMainJar != null) {
+            return this.minimizeMainJar;
         }
         return this.mainJar;
     }
@@ -273,10 +272,6 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         }
         return appVersion;
     }
-
-//    public boolean isParkByPackr() {
-//        return this.packMode.equalsIgnoreCase("packr");
-//    }
 
     /**
      * 获取jre路径，优先返回最小化后的jre，其次返回jlink后的jre
@@ -427,31 +422,41 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
     public void setJarUnDir(String jarUnDir) {
         this.jarUnDir = jarUnDir;
     }
-//
-//    public String getPackMode() {
-//        return packMode;
-//    }
-//
-//    public void setPackMode(String packMode) {
-//        this.packMode = packMode;
-//    }
 
     /**
      * 获取最小化后的主程序
      *
      * @return 最小化后的主程序
      */
-    public String getMinimizeManJar() {
-        return minimizeManJar;
+    public String getMinimizeMainJar() {
+        return minimizeMainJar;
     }
 
     /**
      * 设置最小化后的主程序
      *
-     * @param minimizeManJar 最小化后的主程序
+     * @param minimizeMainJar 最小化后的主程序
      */
-    public void setMinimizeManJar(String minimizeManJar) {
-        this.minimizeManJar = minimizeManJar;
+    public void setMinimizeMainJar(String minimizeMainJar) {
+        this.minimizeMainJar = minimizeMainJar;
+    }
+
+    /**
+     * 获取紧凑的主程序
+     *
+     * @return 紧凑的主程序
+     */
+    public String getCompactMainJar() {
+        return compactMainJar;
+    }
+
+    /**
+     * 设置紧凑的主程序
+     *
+     * @param compactMainJar 紧凑的主程序
+     */
+    public void setCompactMainJar(String compactMainJar) {
+        this.compactMainJar = compactMainJar;
     }
 
     /**
@@ -470,6 +475,24 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
      */
     public void setMainJar(String mainJar) {
         this.mainJar = mainJar;
+    }
+
+    /**
+     * 获取主程序，非fat
+     *
+     * @return 主程序，非fat
+     */
+    public String getMainTinyJar() {
+        return mainTinyJar;
+    }
+
+    /**
+     * 设置主程序，非fat
+     *
+     * @param mainTinyJar 主程序，非fat
+     */
+    public void setMainTinyJar(String mainTinyJar) {
+        this.mainTinyJar = mainTinyJar;
     }
 
     /**
@@ -688,14 +711,6 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         this.jLinkConfig = jLinkConfig;
     }
 
-//    public PackrConfig getPackrConfig() {
-//        return packrConfig;
-//    }
-//
-//    public void setPackrConfig(PackrConfig packrConfig) {
-//        this.packrConfig = packrConfig;
-//    }
-
     /**
      * 获取jPackage配置
      *
@@ -778,6 +793,15 @@ public class PackConfig implements ConfigMargeAble<PackConfig> {
         }
         if (config.mainJar != null) {
             this.mainJar = config.mainJar;
+        }
+        if (config.mainTinyJar != null) {
+            this.mainTinyJar = config.mainTinyJar;
+        }
+        if (config.minimizeMainJar != null) {
+            this.minimizeMainJar = config.minimizeMainJar;
+        }
+        if (config.compactMainJar != null) {
+            this.compactMainJar = config.compactMainJar;
         }
         if (config.platform != null) {
             this.platform = config.platform;

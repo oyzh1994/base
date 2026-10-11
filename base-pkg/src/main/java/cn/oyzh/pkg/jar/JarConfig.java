@@ -1,6 +1,7 @@
 package cn.oyzh.pkg.jar;
 
 
+import cn.oyzh.common.util.BooleanUtil;
 import cn.oyzh.pkg.ConfigMargeAble;
 
 import java.util.Set;
@@ -19,6 +20,11 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
     private Boolean enable;
 
     /**
+     * 紧凑文件
+     */
+    private Boolean compact;
+
+    /**
      * 是否移除空jar
      */
     private Boolean removeEmpty;
@@ -33,10 +39,10 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
      */
     private Boolean binlibOptimize;
 
-//    /**
-//     * 可执行程序优化
-//     */
-//    private Boolean executableOptimize;
+    //    /**
+    //     * 可执行程序优化
+    //     */
+    //    private Boolean executableOptimize;
 
     /**
      * 跳过的jar
@@ -126,11 +132,29 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
     }
 
     /**
+     * 是否紧凑
+     *
+     * @return 是否紧凑
+     */
+    public boolean isCompact() {
+        return BooleanUtil.isTrue(compact);
+    }
+
+    /**
+     * 设置是否紧凑
+     *
+     * @param compact 是否紧凑
+     */
+    public void setCompact(boolean compact) {
+        this.compact = compact;
+    }
+
+    /**
      * 是否启用javafx优化
      *
      * @return 是否启用javafx优化
      */
-    public boolean isJavafxOptimize(){
+    public boolean isJavafxOptimize() {
         return javafxOptimize != null && this.javafxOptimize;
     }
 
@@ -148,7 +172,7 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
      *
      * @return 是否启用二进制库优化
      */
-    public boolean isBinlibOptimize(){
+    public boolean isBinlibOptimize() {
         return binlibOptimize != null && this.binlibOptimize;
     }
 
@@ -161,13 +185,13 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
         this.binlibOptimize = binlibOptimize;
     }
 
-//    public boolean isExecutableOptimize(){
-//        return executableOptimize != null && this.executableOptimize;
-//    }
-//
-//    public void setExecutableOptimize(Boolean executableOptimize) {
-//        this.executableOptimize = executableOptimize;
-//    }
+    //    public boolean isExecutableOptimize(){
+    //        return executableOptimize != null && this.executableOptimize;
+    //    }
+    //
+    //    public void setExecutableOptimize(Boolean executableOptimize) {
+    //        this.executableOptimize = executableOptimize;
+    //    }
 
     /**
      * 获取javafx路径
@@ -205,6 +229,9 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
         if (config.enable != null) {
             this.enable = config.enable;
         }
+        if (config.compact != null) {
+            this.compact = config.compact;
+        }
         if (config.removeEmpty != null) {
             this.removeEmpty = config.removeEmpty;
         }
@@ -214,9 +241,9 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
         if (config.binlibOptimize != null) {
             this.binlibOptimize = config.binlibOptimize;
         }
-//        if (config.executableOptimize != null) {
-//            this.executableOptimize = config.executableOptimize;
-//        }
+        //        if (config.executableOptimize != null) {
+        //            this.executableOptimize = config.executableOptimize;
+        //        }
         if (config.javafxPath != null) {
             this.javafxPath = config.javafxPath;
         }

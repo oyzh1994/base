@@ -30,6 +30,10 @@ public class JarConfigParser implements ConfigParser<JarConfig> {
         if (enable != null) {
             config.setEnable(enable);
         }
+        Boolean compact = object.getBoolean("compact");
+        if (compact != null) {
+            config.setCompact(compact);
+        }
         Boolean removeEmpty = object.getBoolean("removeEmpty");
         if (removeEmpty != null) {
             config.setRemoveEmpty(removeEmpty);

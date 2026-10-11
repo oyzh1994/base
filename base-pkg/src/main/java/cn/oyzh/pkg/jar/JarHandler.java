@@ -15,6 +15,7 @@ import cn.oyzh.common.thread.ThreadUtil;
 import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.JFXUtil;
 import cn.oyzh.common.util.JarUtil;
+import cn.oyzh.common.util.NumberUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.common.util.UUIDUtil;
 import cn.oyzh.pkg.PackOrder;
@@ -22,6 +23,7 @@ import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.filter.RegFilter;
 import cn.oyzh.pkg.util.PkgUtil;
+import cn.oyzh.pkg.util.compact.CompactJarTool;
 import cn.oyzh.pkg.woa.WoaUtil;
 
 import java.io.BufferedInputStream;
@@ -76,11 +78,22 @@ public class JarHandler implements PreHandler {
         if (jarConfig == null) {
             return;
         }
+        if (!jarConfig.isEnable()) {
+            JulLog.warn("jar裁剪未启用，已跳过");
+            return;
+        }
         this.config = packConfig;
+        // 处理main jar，非fat
+        if (packConfig.getMainTinyJar() == null) {
+            if (FileUtil.exists(packConfig.getMainJar() + ".original")) {
+                packConfig.setMainTinyJar(packConfig.getMainJar() + ".original");
+            }
+        }
         String jdkPath = packConfig.getJdkPath();
         if (StringUtil.isBlank(jdkPath)) {
             throw new Exception("jdkPath为空！");
         }
+        // 过滤器
         this.filter = new RegFilter(jarConfig.getExcludes());
         this.skipFilter = new RegFilter(jarConfig.getSkipsJar());
         // 来源文件
@@ -95,25 +108,66 @@ public class JarHandler implements PreHandler {
         FileUtil.del(dest);
         // 解压主jar
         JarUtil.unJar(src, jarUnDir);
-        // 裁剪文件
-        if (jarConfig.isEnable()) {
-            // 裁剪主jar
-            PkgUtil.minimize(src, dest, this::jarFilter);
-            // 裁剪类库jar
-            this.handleLibs(jarUnDir);
-            // 合并类库jar
-            this.mergeLibs(jarUnDir, dest, jdkPath);
-        } else {// 不裁剪
-            JulLog.warn("jar裁剪未启用，已跳过");
-            FileUtil.copy(src, dest, true);
-        }
+        // 裁剪主jar
+        PkgUtil.minimize(src, dest, this::jarFilter);
+        // 裁剪类库jar
+        this.handleLibs(jarUnDir);
+        // 合并类库jar
+        this.mergeLibs(jarUnDir, dest, jdkPath);
         // 设置最小化后的主程序
-        packConfig.setMinimizeManJar(dest);
+        packConfig.setMinimizeMainJar(dest);
         // 设置jar解压目录
         packConfig.setJarUnDir(jarUnDir);
+        // 紧凑主jar
+        this.compactMainJar();
         // 设置为临时文件路径
         packConfig.addTempFile(dest);
         packConfig.addTempFile(jarUnDir);
+    }
+
+    /**
+     * 紧凑主jar
+     */
+    private void compactMainJar() {
+        try {
+            // 未开启
+            if (!this.config.getJarConfig().isCompact()) {
+                JulLog.info("compactMainJar compact not enable.");
+                return;
+            }
+            // 判断非fat jar是否存在
+            String mainTinyJar = this.config.getMainTinyJar();
+            if (mainTinyJar == null) {
+                JulLog.warn("mainTinyJar is null, compactMainJar skip.");
+                return;
+            }
+            String mainJar;
+            if (this.config.getMinimizeMainJar() != null) {
+                mainJar = this.config.getMinimizeMainJar();
+            } else {
+                mainJar = this.config.getMainJar();
+            }
+            Path mainJarPath = Path.of(mainJar);
+            String name = mainJar.substring(0, mainJar.lastIndexOf("."));
+            Path compactPath = Path.of(mainJarPath.getParent().toString(), name + "_compress.jar");
+            JulLog.info("compactMainJar start...");
+            CompactJarTool.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
+            // 压缩成功
+            if (FileUtil.exists(compactPath)) {
+                String compactFile = compactPath.toString();
+                this.config.setCompactMainJar(compactFile);
+//                this.config.addTempFile(compactFile);
+                JulLog.info("compactMainJar success, before:{} after{}.",
+                        NumberUtil.formatSize(Files.size(mainJarPath)),
+                        NumberUtil.formatSize(Files.size(compactPath))
+                );
+            } else {
+                JulLog.warn("compactMainJar fail!");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JulLog.error("compactMainJar error", ex);
+        }
     }
 
     /**

@@ -73,12 +73,6 @@ public class JLinkHandler implements PreHandler, SingleHandler {
         String cmdStr = StringUtil.join(" ", cmd);
         JulLog.info("JLink cmd:{}", "\n" + cmdStr);
         // 执行jlink
-//        RuntimeUtil.execAndWait(cmdStr);
-//        ProcessExecBuilder builder = ProcessExecBuilder.newBuilder(cmdStr);
-//        builder.env("MAVEN_OPTS", "-Dfile.encoding=UTF-8");
-//        builder.env("JAVA_OPTS", "-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8");
-//        builder.directory(jdkPath + "/bin");
-//        builder.timeout(30_000);
         ProcessExecResult result = RuntimeUtil.execForResult(cmd);
         JulLog.info("JLink result:{}", result);
         if (!result.isSuccess()) {
