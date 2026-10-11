@@ -339,26 +339,22 @@ public class ProcessUtil {
                 javaPath += "/bin/java";
             }
             List<String> commands = new ArrayList<>();
+            commands.add("nohup");
+            commands.add(javaPath);
             // 是否压缩包重启
             String compactRestart = System.getProperty("compactRestart");
             if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "true")) {
                 JulLog.info("restart with compact.");
-                commands.add("nohup");
-                commands.add(javaPath);
                 // 添加参数
                 commands.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
                 commands.add("-DcompactRestart=true");
                 commands.add("-DAPPDIR=" + appDirBak);
-                commands.add("-jar");
-                commands.add(classPath);
-                commands.add("&");
             } else {
                 JulLog.info("restart with normal.");
-                commands.add("nohup");
-                commands.add("-jar");
-                commands.add(classPath);
-                commands.add("&");
             }
+            commands.add("-jar");
+            commands.add(classPath);
+            commands.add("&");
             // 构建重启命令
             ProcessBuilder builder = new ProcessBuilder(commands);
             // 设置运行目录
