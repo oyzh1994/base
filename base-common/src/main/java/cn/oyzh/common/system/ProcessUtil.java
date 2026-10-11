@@ -274,7 +274,7 @@ public class ProcessUtil {
                             if (!Files.exists(p)) {
                                 continue;
                             }
-                            File[] files1 = FileUtil.ls(appDir);
+                            File[] files1 = FileUtil.ls(file);
                             if (files1 == null) {
                                 continue;
                             }
