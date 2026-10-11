@@ -313,9 +313,10 @@ public class ProcessUtil {
                 //JulLog.info("classPath:{}", classPath);
                 //// 工作目录重新处理
                 //dir = new File(javaPath).getParentFile();
-
+                String[] commands = {"nohup", System.getenv("APPIMAGE"), "&"};
+                JulLog.info("commands={}", commands);
                 // 3. 创建 ProcessBuilder
-                ProcessBuilder builder = new ProcessBuilder(System.getenv("APPIMAGE"));
+                ProcessBuilder builder = new ProcessBuilder(commands);
                 // 设置工作目录
                 builder.directory(new File(System.getProperty("user.home")));
                 // 4. 关键：重定向输入/输出流，使新进程与当前进程解耦
