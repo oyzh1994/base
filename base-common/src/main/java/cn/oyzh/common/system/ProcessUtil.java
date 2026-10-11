@@ -260,9 +260,9 @@ public class ProcessUtil {
                 // 寻找app主目录
                 String appDir = "";
                 String appDirBak = "";
+                appDirBak = appDir + "_bak";
                 // 紧凑jar
                 if (classPath.contains("compact-jar-cache")) {
-                    appDirBak = appDir + "_bak";
                     File[] files = FileUtil.ls(appDir);
                     if (files != null) {
                         for (File file : files) {
@@ -286,17 +286,17 @@ public class ProcessUtil {
                             }
                         }
                     }
-                } else {
-                    // 重新处理路径
-                    for (String s : classPath.split("/")) {
-                        if (StringUtil.isNotBlank(s)) {
-                            appDir = appDir + "/" + s;
-                        }
-                        if (s.startsWith(".mount_")) {
-                            appDirBak = appDir + "_bak";
-                            break;
-                        }
-                    }
+                //} else {
+                //    // 重新处理路径
+                //    for (String s : classPath.split("/")) {
+                //        if (StringUtil.isNotBlank(s)) {
+                //            appDir = appDir + "/" + s;
+                //        }
+                //        if (s.startsWith(".mount_")) {
+                //            appDirBak = appDir + "_bak";
+                //            break;
+                //        }
+                //    }
                 }
                 // 复制目录
                 FileUtil.copyDirectory(appDir, appDirBak);
