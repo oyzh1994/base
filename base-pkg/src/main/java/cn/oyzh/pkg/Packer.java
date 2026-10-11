@@ -21,11 +21,11 @@ import cn.oyzh.pkg.mvn.MvnHandler;
 import cn.oyzh.pkg.pack.DestHandler;
 import cn.oyzh.pkg.pack.EndHandler;
 import cn.oyzh.pkg.pack.StartHandler;
-import cn.oyzh.pkg.woa.WoaHandler;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * 打包器，负责注册各类处理器并按顺序执行打包流程
@@ -157,9 +157,9 @@ public class Packer {
         this.registerHandler(new AppImageHandler());
     }
 
-//    public void registerWoaHandler() {
-//        this.registerHandler(new WoaHandler());
-//    }
+    //    public void registerWoaHandler() {
+    //        this.registerHandler(new WoaHandler());
+    //    }
 
     /**
      * 注册jlink处理器
@@ -267,7 +267,7 @@ public class Packer {
      * @throws Exception 异常
      */
     public void pack(String configFile, Map<String, Object> properties) throws Exception {
-        this.pack(configFile, null, properties);
+        this.pack(configFile, null, properties, null);
     }
 
     /**
@@ -279,12 +279,28 @@ public class Packer {
      * @throws Exception 异常
      */
     public void pack(String configFile, String platformConfigFile, Map<String, Object> properties) throws Exception {
+        this.pack(configFile, platformConfigFile, properties, null);
+    }
+
+    /**
+     * 执行打包
+     *
+     * @param configFile         打包配置
+     * @param platformConfigFile 平台打包配置
+     * @param properties         属性
+     * @param configCallback     配置回调
+     * @throws Exception 异常
+     */
+    public void pack(String configFile, String platformConfigFile, Map<String, Object> properties, Consumer<PackConfig> configCallback) throws Exception {
         // 解析配置
         PackConfig packConfig = this.configParser.parse(configFile);
         // 平台配置
         if (platformConfigFile != null) {
             PackConfig platformPackConfig = this.configParser.parse(platformConfigFile);
             packConfig.marge(platformPackConfig);
+        }
+        if (configCallback != null) {
+            configCallback.accept(packConfig);
         }
         if (CollectionUtil.isNotEmpty(properties)) {
             for (Map.Entry<String, Object> entry : properties.entrySet()) {
