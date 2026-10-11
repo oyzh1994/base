@@ -248,6 +248,7 @@ public class ProcessUtil {
         } else if (OSUtil.isLinux()) {
             // 类路径
             String classPath = System.getProperty("java.class.path");
+            JulLog.info("classPath:{}", classPath);
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
                 // 打印appImagePath路径
@@ -255,7 +256,7 @@ public class ProcessUtil {
                 if (appImagePath == null) {
                     appImagePath = System.getenv("APPIMAGE");
                 }
-                JulLog.info("appImagePath:" + appImagePath);
+                JulLog.info("appImagePath:{}", appImagePath);
                 // 寻找app主目录
                 String appDir = "";
                 String appDirBak = "";
@@ -279,6 +280,7 @@ public class ProcessUtil {
                             for (File file1 : files1) {
                                 if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
                                     classPath = file1.getPath();
+                                    JulLog.info("classPath2:{}", classPath);
                                     break;
                                 }
                             }
