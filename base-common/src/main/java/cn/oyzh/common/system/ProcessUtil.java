@@ -270,12 +270,15 @@ public class ProcessUtil {
                             if (!file.isDirectory()) {
                                 continue;
                             }
+                            JulLog.info("file:{} is dir", file);
                             Path p = Path.of(file.getPath(), "lib", "app");
                             if (!Files.exists(p)) {
+                                JulLog.warn("path:{} is not exists", p);
                                 continue;
                             }
                             File[] files1 = FileUtil.ls(file);
                             if (files1 == null) {
+                                JulLog.warn("files1 is null", p);
                                 continue;
                             }
                             for (File file1 : files1) {
@@ -287,17 +290,17 @@ public class ProcessUtil {
                             }
                         }
                     }
-                //} else {
-                //    // 重新处理路径
-                //    for (String s : classPath.split("/")) {
-                //        if (StringUtil.isNotBlank(s)) {
-                //            appDir = appDir + "/" + s;
-                //        }
-                //        if (s.startsWith(".mount_")) {
-                //            appDirBak = appDir + "_bak";
-                //            break;
-                //        }
-                //    }
+                    //} else {
+                    //    // 重新处理路径
+                    //    for (String s : classPath.split("/")) {
+                    //        if (StringUtil.isNotBlank(s)) {
+                    //            appDir = appDir + "/" + s;
+                    //        }
+                    //        if (s.startsWith(".mount_")) {
+                    //            appDirBak = appDir + "_bak";
+                    //            break;
+                    //        }
+                    //    }
                 }
                 // 复制目录
                 FileUtil.copyDirectory(appDir, appDirBak);
