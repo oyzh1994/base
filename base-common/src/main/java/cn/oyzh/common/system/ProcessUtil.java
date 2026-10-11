@@ -255,9 +255,6 @@ public class ProcessUtil {
             JulLog.info("classPath:{}", classPath);
             // 打印appImagePath路径
             String appImagePath = System.getenv("APPDIR");
-            if (appImagePath == null) {
-                appImagePath = System.getenv("APPIMAGE");
-            }
             JulLog.info("appImagePath:{}", appImagePath);
             // 寻找app主目录
             String appDir = "";
@@ -296,7 +293,6 @@ public class ProcessUtil {
                     }
                 }
             }
-            List<String> commands = new ArrayList<>();
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
                 // 重新处理路径
@@ -339,7 +335,7 @@ public class ProcessUtil {
             } else {
                 javaPath += "/bin/java";
             }
-            ProcessBuilder builder;
+            List<String> commands = new ArrayList<>();
             // 是否压缩包重启
             String compactRestart = System.getProperty("compactRestart");
             if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "true")) {
@@ -355,16 +351,20 @@ public class ProcessUtil {
                     commands.add(arg);
                 }
                 commands.add("-DcompactRestart=true");
+                commands.add("-APPDIR=" + appDir);
+                commands.add("-APPIMAGE=" + System.getenv("APPIMAGE"));
                 commands.add("-jar");
                 commands.add(classPath);
                 commands.add("&");
-                // 构建重启命令
-                builder = new ProcessBuilder(commands);
             } else {
                 JulLog.info("restart with normal.");
-                // 构建重启命令
-                builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+                commands.add("nohup");
+                commands.add("-jar");
+                commands.add(classPath);
+                commands.add("&");
             }
+            // 构建重启命令
+            ProcessBuilder builder = new ProcessBuilder(commands);
             // 设置运行目录
             builder.directory(dir);
             // 打印命令
