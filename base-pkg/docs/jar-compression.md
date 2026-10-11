@@ -135,11 +135,13 @@ java -Dcompact.jar.unpack.threads=3 -jar target/application-compressed.jar
 
 ## 缓存机制
 
-缓存目录由最终压缩 JAR 的完整 SHA-256 决定：
+缓存目录由当前用户标识和最终压缩 JAR 的完整 SHA-256 共同决定：
 
 ```text
-${java.io.tmpdir}/compact-jar-cache/<jar-sha256>/
+${user.home}/.cache/compact-jar-cache/<user-cache-id>/<jar-sha256>/
 ```
+
+`<user-cache-id>` 是由 `user.name` 和 `user.home` 计算出的 16 位 SHA-256 前缀，不包含用户名明文。不同系统用户即使运行 SHA-256 完全相同的 JAR，也会得到独立目录，不会访问、清理或覆盖其他用户的缓存。同一用户的多个进程仍使用相同目录并通过文件锁协调。
 
 压缩 JAR 中任意内容变化都会生成新的 SHA-256 和新缓存，不会误用旧应用或旧依赖。缓存内容包括：
 
@@ -161,7 +163,9 @@ java -Dcompact.jar.cache.dir=/path/to/cache \
   -jar target/application-compressed.jar
 ```
 
-缓存不会自动清理。删除对应 SHA-256 目录即可释放展开后的空间。
+即使配置了共享根目录，启动器也会继续加入 `<user-cache-id>` 用户隔离层。POSIX 系统会把用户目录权限设置为 `0700`；Windows 等非 POSIX 文件系统使用其默认访问控制。`CompactJarTool.compact()` 的预热缓存也只属于调用该工具的系统用户，其他用户首次运行时会创建自己的缓存。
+
+缓存不会自动清理。删除对应 `<user-cache-id>/<jar-sha256>` 目录即可释放展开后的空间。
 
 ## 启动转发
 

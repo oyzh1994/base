@@ -19,11 +19,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -41,7 +44,7 @@ import java.util.zip.ZipInputStream;
 /**
  * 压缩 JAR 的通用启动器。
  * <p>
- * 启动器根据自身 JAR 的 SHA-256 选择缓存目录，并行重建应用和依赖 JAR，
+ * 启动器根据当前用户和自身 JAR 的 SHA-256 选择缓存目录，并行重建应用和依赖 JAR，
  * 再通过路径 JAR 将原始 JVM 参数及应用参数转发给实际主类。
  */
 public final class CompressedJarLauncher {
@@ -158,23 +161,49 @@ public final class CompressedJarLauncher {
     }
 
     /**
-     * 根据压缩 JAR 的完整 SHA-256 选择缓存目录，确保 JAR 内容变化后自动更新缓存。
+     * 根据当前用户和压缩 JAR 的完整 SHA-256 选择缓存目录。
+     * <p>
+     * 用户标识会散列为稳定目录名，因此不同系统用户即使运行完全相同的 JAR，
+     * 也不会共享或覆盖彼此无权访问的缓存；同一用户仍可跨进程复用缓存。
      */
-    private static Path cacheDirectory(String launcherSha256) {
+    private static Path cacheDirectory(String launcherSha256) throws Exception {
         String configured = System.getProperty(CACHE_DIRECTORY_PROPERTY);
-        Path root = configured == null || configured.isBlank()
-                ? Paths.get(System.getProperty("java.io.tmpdir"), "compact-jar-cache")
-                : Paths.get(configured);
-        Path path = root.resolve(launcherSha256);
+        Path root = configured == null || configured.isBlank() ? defaultCacheRoot() : Paths.get(configured);
+        Path path = root.toAbsolutePath().normalize()
+                .resolve(userCacheId())
+                .resolve(launcherSha256);
         System.out.println("compact path=" + path);
         return path;
+    }
+
+    /**
+     * 默认缓存放在当前用户主目录下，避免多用户共享临时目录时发生目录所有权冲突。
+     */
+    private static Path defaultCacheRoot() {
+        String userHome = System.getProperty("user.home");
+        if (userHome == null || userHome.isBlank()) {
+            throw new IllegalStateException("Missing system property: user.home");
+        }
+        return Paths.get(userHome, ".cache", "compact-jar-cache");
+    }
+
+    /**
+     * 生成不含用户名明文的稳定用户缓存标识；用户名或主目录变化后允许重新创建缓存。
+     */
+    private static String userCacheId() throws Exception {
+        String userName = System.getProperty("user.name", "");
+        String userHome = System.getProperty("user.home", "");
+        byte[] identity = ("user.name=" + userName + "\nuser.home=" + userHome)
+                .getBytes(StandardCharsets.UTF_8);
+        return toHex(MessageDigest.getInstance("SHA-256").digest(identity)).substring(0, 16);
     }
 
     /**
      * 使用文件锁准备缓存；只有完整重建成功后才写入校验标记。
      */
     private static void prepareCache(Path launcherJar, Path cache, String payloadEntry, String launcherSha256, String payloadSha256, String applicationSha256, List<Long> payloadChunkSizes, int dependencyCount) throws Exception {
-        Files.createDirectories(cache);
+        createPrivateDirectories(cache.getParent());
+        createPrivateDirectories(cache);
         Path lockPath = cache.resolve("cache.lock");
         try (FileChannel channel = FileChannel.open(lockPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
              FileLock ignored = channel.lock()) {
@@ -191,6 +220,20 @@ public final class CompressedJarLauncher {
                     + "classpath-order=" + sha256(cache.resolve("classpath.order")) + "\n";
             Files.writeString(cache.resolve("cache.ok"), marker, StandardCharsets.UTF_8);
         }
+    }
+
+    /**
+     * 创建仅当前用户可访问的缓存目录；非 POSIX 文件系统使用其默认访问控制。
+     */
+    private static void createPrivateDirectories(Path directory) throws IOException {
+        Files.createDirectories(directory);
+        if (Files.getFileAttributeView(directory, PosixFileAttributeView.class) == null) {
+            return;
+        }
+        Files.setPosixFilePermissions(directory, Set.of(
+                PosixFilePermission.OWNER_READ,
+                PosixFilePermission.OWNER_WRITE,
+                PosixFilePermission.OWNER_EXECUTE));
     }
 
     /**
