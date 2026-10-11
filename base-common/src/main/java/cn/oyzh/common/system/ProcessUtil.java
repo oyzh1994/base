@@ -1,6 +1,7 @@
 package cn.oyzh.common.system;
 
 import cn.oyzh.common.SysConst;
+import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
@@ -10,7 +11,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -213,6 +219,7 @@ public class ProcessUtil {
     public static void restartApplication2(int timeout, Runnable exitAction) throws IOException {
         // 获取当前Java程序的路径和classpath
         String javaPath = System.getProperty("java.home");
+        JulLog.info("javaPath:{}", javaPath);
         // 工作目录
         File dir = new File(javaPath).getParentFile();
         // windows平台
@@ -245,22 +252,62 @@ public class ProcessUtil {
         } else if (OSUtil.isLinux()) {
             // 类路径
             String classPath = System.getProperty("java.class.path");
+            JulLog.info("classPath:{}", classPath);
+            // 打印appImagePath路径
+            String appImagePath = System.getProperty("APPDIR");
+            if (appImagePath == null) {
+                appImagePath = System.getenv("APPDIR");
+            }
+            JulLog.info("appImagePath:{}", appImagePath);
+            // 寻找app主目录
+            String appDir = "";
+            String appDirBak = "";
+            boolean isCompact = classPath.contains("compact-jar-cache");
+            // 紧凑jar
+            if (isCompact) {
+                appDir = appImagePath;
+                appDirBak = appDir + "_bak";
+                JulLog.info("handle with compact.");
+                File[] files = FileUtil.ls(appDir);
+                if (files != null) {
+                    f1:
+                    for (File file : files) {
+                        if (!file.isDirectory()) {
+                            continue;
+                        }
+                        JulLog.info("file:{} is dir", file);
+                        Path p = Path.of(file.getPath(), "lib", "app");
+                        if (!Files.exists(p)) {
+                            JulLog.warn("path:{} is not exists", p);
+                            continue;
+                        }
+                        File[] files1 = FileUtil.ls(p);
+                        if (files1 == null) {
+                            JulLog.warn("files1 is null", p);
+                            continue;
+                        }
+                        for (File file1 : files1) {
+                            if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
+                                classPath = file1.getPath();
+                                JulLog.info("classPath2:{}", classPath);
+                                break f1;
+                            }
+                        }
+                    }
+                }
+            }
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
-                // 打印appImagePath路径
-                String appImagePath = System.getenv("APPIMAGE");
-                JulLog.info("appImagePath:" + appImagePath);
-                // 寻找app主目录
-                String appDir = "";
-                String appDirBak = "";
                 // 重新处理路径
-                for (String s : classPath.split("/")) {
-                    if (StringUtil.isNotBlank(s)) {
-                        appDir += "/" + s;
-                    }
-                    if (s.startsWith(".mount_")) {
-                        appDirBak = appDir + "_bak";
-                        break;
+                if (!isCompact) {
+                    for (String s : classPath.split("/")) {
+                        if (StringUtil.isNotBlank(s)) {
+                            appDir = appDir + "/" + s;
+                        }
+                        if (s.startsWith(".mount_")) {
+                            appDirBak = appDir + "_bak";
+                            break;
+                        }
                     }
                 }
                 // 复制目录
@@ -275,13 +322,30 @@ public class ProcessUtil {
                 // 工作目录重新处理
                 dir = new File(javaPath).getParentFile();
             }
-            if (!FileUtil.exists(javaPath + "/bin/javaw")) {
-                javaPath += "/bin/java";
-            } else {
+            if (FileUtil.exists(javaPath + "/bin/javaw")) {
                 javaPath += "/bin/javaw";
+            } else {
+                javaPath += "/bin/java";
             }
+            List<String> commands = new ArrayList<>();
+            commands.add("nohup");
+            commands.add(javaPath);
+            // 是否压缩包重启
+            String compactRestart = System.getProperty("compactRestart");
+            if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "true")) {
+                JulLog.info("restart with compact.");
+                // 添加参数
+                commands.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
+                commands.add("-DcompactRestart=true");
+                commands.add("-DAPPDIR=" + appDirBak);
+            } else {
+                JulLog.info("restart with normal.");
+            }
+            commands.add("-jar");
+            commands.add(classPath);
+            commands.add("&");
             // 构建重启命令
-            ProcessBuilder builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
+            ProcessBuilder builder = new ProcessBuilder(commands);
             // 设置运行目录
             builder.directory(dir);
             // 打印命令
