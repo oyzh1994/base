@@ -343,6 +343,7 @@ public class ProcessUtil {
             // 是否压缩包重启
             String compactRestart = System.getProperty("compactRestart");
             if (isCompact || StringUtil.equalsIgnoreCase(compactRestart, "true")) {
+                JulLog.info("restart with compact.");
                 commands.add("nohup");
                 commands.add(javaPath);
                 // 添加参数
@@ -360,6 +361,7 @@ public class ProcessUtil {
                 // 构建重启命令
                 builder = new ProcessBuilder(commands);
             } else {
+                JulLog.info("restart with normal.");
                 // 构建重启命令
                 builder = new ProcessBuilder("nohup", javaPath, "-jar", classPath, "&");
             }
