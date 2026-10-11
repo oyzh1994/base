@@ -3,6 +3,7 @@ package cn.oyzh.common.util;
 import cn.oyzh.common.compress.CompressUtil;
 import cn.oyzh.common.file.FileNameUtil;
 import cn.oyzh.common.file.FileUtil;
+import cn.oyzh.common.system.Env;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -126,10 +127,10 @@ public class JarUtil {
         ) {
             while (true) {
                 ZipEntry entry = jarIn.getNextJarEntry();
-                if (entry == null ) {
+                if (entry == null) {
                     break;
                 }
-                if(entry.isDirectory()){
+                if (entry.isDirectory()) {
                     continue;
                 }
                 if (isClass(entry.getName())) {

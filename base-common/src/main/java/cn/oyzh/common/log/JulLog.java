@@ -1,6 +1,7 @@
 package cn.oyzh.common.log;
 
 
+import cn.oyzh.common.system.SystemUtil;
 import cn.oyzh.common.util.JarUtil;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class JulLog {
             // 日志等级
             JulLog.setLevel(JulUtil.getLogLevel());
             // 控制台日志
-            if (!JarUtil.isInJar()) {
+            if (!SystemUtil.isProd()) {
                 LOGGER.addHandler(new JulConsoleHandler());
             }
             // 文件日志

@@ -235,11 +235,13 @@ public final class CompressedJarLauncher {
         Path lib = cache.resolve("lib");
         Files.createDirectories(lib);
         Path applicationTarget = cache.resolve(APPLICATION_JAR);
+        System.out.println("applicationTarget=" + applicationTarget);
         Map<Integer, String> dependencies = new ConcurrentSkipListMap<>();
         AtomicBoolean applicationPayloadSeen = new AtomicBoolean();
-        int unpackThreads = Integer.getInteger(UNPACK_THREADS_PROPERTY, 2);
-        if (unpackThreads < 1 || unpackThreads > 16) {
-            throw new IllegalArgumentException(UNPACK_THREADS_PROPERTY + " must be between 1 and 16");
+        int defaultUnpackThreads = Runtime.getRuntime().availableProcessors() * 2;
+        int unpackThreads = Integer.getInteger(UNPACK_THREADS_PROPERTY, defaultUnpackThreads);
+        if (unpackThreads < 1) {
+            unpackThreads = 1;
         }
         int decodeThreads = Math.min(payloadChunkSizes.size(), unpackThreads);
         ExecutorService decodeExecutor = Executors.newFixedThreadPool(decodeThreads);

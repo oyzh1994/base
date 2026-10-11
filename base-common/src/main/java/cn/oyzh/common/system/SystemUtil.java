@@ -3,6 +3,7 @@ package cn.oyzh.common.system;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.thread.TaskManager;
 import cn.oyzh.common.thread.ThreadUtil;
+import cn.oyzh.common.util.JarUtil;
 import cn.oyzh.common.util.NumberUtil;
 import cn.oyzh.common.util.StringUtil;
 
@@ -40,7 +41,9 @@ public class SystemUtil {
         properties.remove("debugger.agent.enable.coroutines");
     }
 
-    /** 内存 MXBean 缓存 */
+    /**
+     * 内存 MXBean 缓存
+     */
     private static MemoryMXBean memoryMXBean;
 
     /**
@@ -55,7 +58,9 @@ public class SystemUtil {
         return memoryMXBean;
     }
 
-    /** 类加载 MXBean 缓存 */
+    /**
+     * 类加载 MXBean 缓存
+     */
     private static ClassLoadingMXBean classLoadingMXBean;
 
     /**
@@ -234,7 +239,7 @@ public class SystemUtil {
      *
      * @return 结果
      */
-    public static String mvnHomeEnv(){
+    public static String mvnHomeEnv() {
         String mvnHome = System.getenv("MAVEN_HOME");
         if (StringUtil.isBlank(mvnHome)) {
             mvnHome = System.getenv("M2_HOME");
@@ -253,5 +258,55 @@ public class SystemUtil {
             return version.feature() + "";
         }
         return version.feature() + "." + version.interim() + "." + version.update();
+    }
+
+    /**
+     * 是否运行在生产中的缓存结果
+     */
+    private static Boolean isProd;
+
+    /**
+     * 判断是否生产环境
+     *
+     * @return 结果
+     */
+    public static boolean isProd() {
+        if (isProd == null) {
+            synchronized (SystemUtil.class) {
+                Env env = Env.current();
+                if (env == Env.PROD) {
+                    isProd = true;
+                } else if (env == Env.DEV) {
+                    isProd = false;
+                }
+                if (isProd == null) {
+                    // 1. 有 IDE 或构建工具特征
+                    String classPath = System.getProperty("java.class.path");
+                    if (classPath != null && (
+                            classPath.contains("target/classes") ||
+                                    classPath.contains("build/classes") ||
+                                    classPath.contains("idea_rt.jar"))) {
+                        isProd = false;
+                    }
+                }
+                if (isProd == null) {
+                    // 2. 常见 IDE 启动器
+                    StackTraceElement[] st = Thread.currentThread().getStackTrace();
+                    for (StackTraceElement e : st) {
+                        String cn = e.getClassName();
+                        if (cn.startsWith("com.intellij.") ||
+                                cn.startsWith("org.eclipse.") ||
+                                cn.startsWith("org.gradle.")) {
+                            isProd = false;
+                            break;
+                        }
+                    }
+                }
+                if (isProd == null) {
+                    isProd = JarUtil.isInJar();
+                }
+            }
+        }
+        return isProd;
     }
 }

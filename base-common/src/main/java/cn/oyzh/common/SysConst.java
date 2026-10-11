@@ -1,5 +1,7 @@
 package cn.oyzh.common;
 
+import java.nio.file.Path;
+
 /**
  * 系统常量
  *
@@ -43,7 +45,7 @@ public class SysConst {
      * @param tempDir 临时目录
      */
     public static void tempDir(String tempDir) {
-        System.setProperty(TEMP_DIR, tempDir);
+        System.setProperty(TEMP_DIR, Path.of(tempDir).toString());
     }
 
     /**
@@ -61,7 +63,7 @@ public class SysConst {
      * @param storeDir 存储目录
      */
     public static void storeDir(String storeDir) {
-        System.setProperty(STORE_DIR, storeDir);
+        System.setProperty(STORE_DIR, Path.of(storeDir).toString());
     }
 
     /**
@@ -79,7 +81,7 @@ public class SysConst {
      * @param cacheDir 缓存目录
      */
     public static void cacheDir(String cacheDir) {
-        System.setProperty(CACHE_DIR, cacheDir);
+        System.setProperty(CACHE_DIR, Path.of(cacheDir).toString());
     }
 
     /**
