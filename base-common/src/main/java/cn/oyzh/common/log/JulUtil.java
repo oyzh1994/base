@@ -72,9 +72,10 @@ public class JulUtil {
     public static String getLogsDir() {
         String filePath;
         String baseDir;
-        if (StringUtil.isNotBlank(SysConst.tempDir())) {
-            baseDir = SysConst.tempDir();
-        } else if (StringUtil.isNotBlank(SysConst.storeDir())) {
+//        if (StringUtil.isNotBlank(SysConst.tempDir())) {
+//            baseDir = SysConst.tempDir();
+//        }
+        if (StringUtil.isNotBlank(SysConst.storeDir())) {
             baseDir = SysConst.storeDir();
         } else {
             baseDir = SystemUtil.userDir();

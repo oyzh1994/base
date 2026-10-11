@@ -10,10 +10,10 @@ import java.nio.file.Path;
  */
 public class SysConst {
 
-    /**
-     * 临时目录的系统属性名
-     */
-    public static String TEMP_DIR = "temp.dir";
+//    /**
+//     * 临时目录的系统属性名
+//     */
+//    public static String TEMP_DIR = "temp.dir";
 
     /**
      * 缓存目录的系统属性名
@@ -30,23 +30,23 @@ public class SysConst {
      */
     public static String PROJECT_NAME = "project.name";
 
-    /**
-     * 获取临时目录
-     *
-     * @return 临时目录
-     */
-    public static String tempDir() {
-        return System.getProperty(TEMP_DIR);
-    }
-
-    /**
-     * 设置临时目录
-     *
-     * @param tempDir 临时目录
-     */
-    public static void tempDir(String tempDir) {
-        System.setProperty(TEMP_DIR, Path.of(tempDir).toString());
-    }
+//    /**
+//     * 获取临时目录
+//     *
+//     * @return 临时目录
+//     */
+//    public static String tempDir() {
+//        return System.getProperty(TEMP_DIR);
+//    }
+//
+//    /**
+//     * 设置临时目录
+//     *
+//     * @param tempDir 临时目录
+//     */
+//    public static void tempDir(String tempDir) {
+//        System.setProperty(TEMP_DIR, Path.of(tempDir).toString());
+//    }
 
     /**
      * 获取存储目录
