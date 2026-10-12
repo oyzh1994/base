@@ -74,6 +74,10 @@ public class JarHandler implements PreHandler {
 
     @Override
     public void handle(PackConfig packConfig) throws Exception {
+        // 检查dest目录
+        if (FileUtil.exists(packConfig.getDest()) && !FileUtil.del(packConfig.getDest(), true)) {
+            throw new RuntimeException("Dest dir can not delete!");
+        }
         JarConfig jarConfig = packConfig.getJarConfig();
         if (jarConfig == null) {
             return;

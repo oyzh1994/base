@@ -274,12 +274,17 @@ public class FileUtil {
         if (!success && force) {
             try {
                 if (OSUtil.isWindows()) {
-                    String[] cmdArr = {"rmdir", "/s", "/q", file.getPath()};
-                    RuntimeUtil.execForStr(cmdArr);
+                    if (file.isDirectory()) {
+                        String[] cmdArr = {"rmdir", "/s", "/q", file.getPath()};
+                        RuntimeUtil.execForStr(cmdArr);
+                    } else {
+                        String[] cmdArr = {"del", "/f", "/q", file.getPath()};
+                        RuntimeUtil.execForStr(cmdArr);
+                    }
                 } else {
                     RuntimeUtil.exec("rm -rf \"" + file + "\"", null, file.getParentFile());
                 }
-                success = true;
+                success = !FileUtil.exists(file);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
