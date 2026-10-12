@@ -290,19 +290,24 @@ public class ProcessUtil {
             if (isCompact) {
                 JulLog.info("handle with compact.");
                 Path p = Path.of(FileUtil.parent(javaPath), "lib", "app");
-                File[] files = Files.exists(p) ? FileUtil.ls(p) : null;
-                if (files != null) {
-                    JulLog.info("files={}", Arrays.toString(files));
-                    for (File file : files) {
-                        JulLog.info("file={}", file);
-                        if (FileNameUtil.isJarType(FileNameUtil.extName(file))) {
-                            classPath = file.getPath();
-                            JulLog.info("classPath2:{}", classPath);
-                            break;
+                if (Files.exists(p)) {
+                    JulLog.info("p={}", p);
+                    File[] files = FileUtil.ls(p);
+                    if (files != null) {
+                        JulLog.info("files={}", Arrays.toString(files));
+                        for (File file : files) {
+                            JulLog.info("file={}", file);
+                            if (FileNameUtil.isJarType(FileNameUtil.extName(file))) {
+                                classPath = file.getPath();
+                                JulLog.info("classPath2:{}", classPath);
+                                break;
+                            }
                         }
+                    } else {
+                        JulLog.warn("files is null", p);
                     }
                 } else {
-                    JulLog.warn("files is null", p);
+                    JulLog.warn("p:{} not exists", p);
                 }
             }
             // 寻找app主目录
