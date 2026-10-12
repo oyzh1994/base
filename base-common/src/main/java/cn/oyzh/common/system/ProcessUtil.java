@@ -289,7 +289,7 @@ public class ProcessUtil {
             //}
             if (isCompact) {
                 JulLog.info("handle with compact.");
-                Path p = Path.of(FileUtil.parent(javaPath), "lib", "app");
+                Path p = Path.of(FileUtil.parent(javaPath), "app");
                 if (Files.exists(p)) {
                     JulLog.info("p={}", p);
                     File[] files = FileUtil.ls(p);
