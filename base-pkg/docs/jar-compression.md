@@ -177,15 +177,19 @@ java -Dcompact.jar.cache.mode=deflate -jar target/application-compressed.jar
 
 # STORED 模式：跳过 ZIP 重建压缩，换取更快的首次缓存创建
 java -Dcompact.jar.cache.mode=stored -jar target/application-compressed.jar
+
+# 混合模式：压缩资源直接存储，类文件和普通资源继续 DEFLATE
+java -Dcompact.jar.cache.mode=hybrid -jar target/application-compressed.jar
 ```
 
 - `deflate`：默认值。使用 `Deflater.BEST_SPEED` 重建 `application.jar` 和 `lib/*.jar`。
 - `stored`：所有缓存 JAR 条目使用 ZIP `STORED`，不再执行 DEFLATE。
-- 模式写入 `cache.ok`。从 `deflate` 切换到 `stored`，或反向切换时，会自动清除旧缓存并按新模式重建。
+- `hybrid`：图片、音视频、压缩包、PDF 和常见 Office/字体资源使用 `STORED`；`.class`、文本、XML、JSON、配置文件和未知扩展名继续使用 `DEFLATE`。
+- 模式写入 `cache.ok`。任意模式之间切换时，都会自动清除旧缓存并按新模式重建。
 - `CompressedJarLauncher.warmCache()` 同样读取该属性，打包工具或安装程序可以按目标模式预热。
 - 非法模式会立即报错，不会静默退回默认值。
 
-EasyShell 当前约 103 MB 的实际输入实测：`deflate` 缓存约 99 MiB，`stored` 缓存约 226 MiB，即增加约 127 MiB。`stored` 模式会减少 DEFLATE CPU，但磁盘写入量明显增加；最终首次启动耗时取决于 CPU、磁盘速度和缓存目录位置，应以目标机器实测为准。
+EasyShell 当前输入同批次实测缓存大小约为：`deflate` 96.8 MiB、`hybrid` 91.6 MiB、`stored` 221.6 MiB。`stored` 会明显减少 DEFLATE CPU，但磁盘写入量增加约 1.3 倍；`hybrid` 的收益取决于应用中媒体和压缩资源的实际占比。最终首次启动耗时取决于 CPU、磁盘速度和缓存目录位置，应以目标机器实测为准。
 
 ## 启动转发
 

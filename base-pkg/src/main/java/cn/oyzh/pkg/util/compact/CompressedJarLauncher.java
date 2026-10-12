@@ -25,6 +25,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -57,21 +58,40 @@ public final class CompressedJarLauncher {
     private static final String CACHE_DIRECTORY_PROPERTY = "compact.jar.cache.dir";
     private static final String UNPACK_THREADS_PROPERTY = "compact.jar.unpack.threads";
     private static final String CACHE_MODE_PROPERTY = "compact.jar.cache.mode";
-//    private static final String RESTART_CLASSPATH_PROPERTY = "compact.jar.restart.classpath";
-//    private static final String RESTART_START_CLASS_PROPERTY = "compact.jar.restart.start.class";
+    //    private static final String RESTART_CLASSPATH_PROPERTY = "compact.jar.restart.classpath";
+    //    private static final String RESTART_START_CLASS_PROPERTY = "compact.jar.restart.start.class";
 
     /**
      * 缓存 JAR 条目写入模式；默认压缩缓存以节省磁盘。
      */
     private enum CacheMode {
         DEFLATE("deflate"),
-        STORED("stored");
+        STORED("stored"),
+        HYBRID("hybrid");
 
         private final String value;
 
         CacheMode(String value) {
             this.value = value;
         }
+    }
+
+    /**
+     * HYBRID 模式下直接存储通常已经压缩、再次 DEFLATE 收益有限的资源。
+     */
+    private static Set<String> hybridStoredExtensions;
+
+    private static synchronized Set<String> hybridStoredExtensions() {
+        if (hybridStoredExtensions == null) {
+            hybridStoredExtensions = Set.of(
+                    "7z", "aac", "apk", "appimage", "avi", "bz2", "deb", "dmg", "docx", "ear", "epub",
+                    "flac", "gif", "gz", "ico", "ipa", "jpeg", "jpg", "lz4", "m4a", "m4v",
+                    "jar", "mkv", "mov", "mp3", "mp4", "mpeg", "mpg", "ods", "odt", "ogg",
+                    "opus", "pdf", "png", "pptx", "rar", "rpm", "svgz", "tgz", "tif", "tiff",
+                    "war", "wav", "webm", "webp", "whl", "woff", "woff2", "xlsx", "xz",
+                    "zip", "zst");
+        }
+        return hybridStoredExtensions;
     }
 
     private CompressedJarLauncher() {
@@ -226,13 +246,26 @@ public final class CompressedJarLauncher {
         if (value == null || value.isBlank()) {
             return CacheMode.DEFLATE;
         }
-        if (CacheMode.DEFLATE.value.equalsIgnoreCase(value.trim())) {
-            return CacheMode.DEFLATE;
+        for (CacheMode mode : CacheMode.values()) {
+            if (mode.value.equalsIgnoreCase(value.trim())) {
+                return mode;
+            }
         }
-        if (CacheMode.STORED.value.equalsIgnoreCase(value.trim())) {
-            return CacheMode.STORED;
+        throw new IllegalArgumentException(
+                CACHE_MODE_PROPERTY + " must be 'deflate', 'stored' or 'hybrid': " + value);
+    }
+
+    /**
+     * 判断条目是否属于 HYBRID 模式的直接存储扩展名；未知、类文件和普通文本仍使用 DEFLATE。
+     */
+    private static boolean isHybridStoredEntry(String name) {
+        int separator = Math.max(name.lastIndexOf('/'), name.lastIndexOf('\\'));
+        int dot = name.lastIndexOf('.');
+        if (dot <= separator || dot == name.length() - 1) {
+            return false;
         }
-        throw new IllegalArgumentException(CACHE_MODE_PROPERTY + " must be 'deflate' or 'stored': " + value);
+        String extension = name.substring(dot + 1).toLowerCase(Locale.ROOT);
+        return hybridStoredExtensions().contains(extension);
     }
 
     /**
@@ -556,7 +589,8 @@ public final class CompressedJarLauncher {
         }
 
         private void add(String name, ZipEntry sourceEntry, InputStream input) throws IOException {
-            if (cacheMode == CacheMode.STORED) {
+            if (cacheMode == CacheMode.STORED
+                    || (cacheMode == CacheMode.HYBRID && isHybridStoredEntry(name))) {
                 addStored(name, sourceEntry, input);
                 return;
             }
@@ -689,8 +723,8 @@ public final class CompressedJarLauncher {
         List<String> command = new ArrayList<>();
         command.add(javaExecutable());
         command.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
-//        command.add("-D" + RESTART_CLASSPATH_PROPERTY + "=" + classPath(cache));
-//        command.add("-D" + RESTART_START_CLASS_PROPERTY + "=" + startClass);
+        //        command.add("-D" + RESTART_CLASSPATH_PROPERTY + "=" + classPath(cache));
+        //        command.add("-D" + RESTART_START_CLASS_PROPERTY + "=" + startClass);
         command.add("-cp");
         command.add(classPath(cache));
         command.add(startClass);
