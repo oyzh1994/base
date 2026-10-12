@@ -54,6 +54,6 @@ public final class CompactJarTool {
      */
     public static void compact(Path executableJar, Path applicationJar, Path outputJar, int xzPreset) throws Exception {
         CompactJarBuilder.build(executableJar, applicationJar, outputJar, xzPreset);
-        CompressedJarLauncher.warmCache(outputJar);
+//        CompressedJarLauncher.warmCache(outputJar);
     }
 }

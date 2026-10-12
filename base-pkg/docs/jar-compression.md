@@ -167,6 +167,26 @@ java -Dcompact.jar.cache.dir=/path/to/cache \
 
 缓存不会自动清理。删除对应 `<user-cache-id>/<jar-sha256>` 目录即可释放展开后的空间。
 
+## 缓存写入模式
+
+缓存 JAR 可以选择压缩写入或直接存储，通过 JVM 系统属性切换：
+
+```bash
+# 默认模式：节省缓存磁盘空间
+java -Dcompact.jar.cache.mode=deflate -jar target/application-compressed.jar
+
+# STORED 模式：跳过 ZIP 重建压缩，换取更快的首次缓存创建
+java -Dcompact.jar.cache.mode=stored -jar target/application-compressed.jar
+```
+
+- `deflate`：默认值。使用 `Deflater.BEST_SPEED` 重建 `application.jar` 和 `lib/*.jar`。
+- `stored`：所有缓存 JAR 条目使用 ZIP `STORED`，不再执行 DEFLATE。
+- 模式写入 `cache.ok`。从 `deflate` 切换到 `stored`，或反向切换时，会自动清除旧缓存并按新模式重建。
+- `CompressedJarLauncher.warmCache()` 同样读取该属性，打包工具或安装程序可以按目标模式预热。
+- 非法模式会立即报错，不会静默退回默认值。
+
+EasyShell 当前约 103 MB 的实际输入实测：`deflate` 缓存约 99 MiB，`stored` 缓存约 226 MiB，即增加约 127 MiB。`stored` 模式会减少 DEFLATE CPU，但磁盘写入量明显增加；最终首次启动耗时取决于 CPU、磁盘速度和缓存目录位置，应以目标机器实测为准。
+
 ## 启动转发
 
 启动器把收到的 JVM 参数原样转发给实际应用 JVM：

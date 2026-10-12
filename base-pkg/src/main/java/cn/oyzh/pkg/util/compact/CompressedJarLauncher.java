@@ -6,7 +6,7 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,6 +38,7 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.stream.Stream;
+import java.util.zip.CRC32;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -55,8 +56,23 @@ public final class CompressedJarLauncher {
     private static final String APPLICATION_JAR = "application.jar";
     private static final String CACHE_DIRECTORY_PROPERTY = "compact.jar.cache.dir";
     private static final String UNPACK_THREADS_PROPERTY = "compact.jar.unpack.threads";
-    private static final String RESTART_CLASSPATH_PROPERTY = "compact.jar.restart.classpath";
-    private static final String RESTART_START_CLASS_PROPERTY = "compact.jar.restart.start.class";
+    private static final String CACHE_MODE_PROPERTY = "compact.jar.cache.mode";
+//    private static final String RESTART_CLASSPATH_PROPERTY = "compact.jar.restart.classpath";
+//    private static final String RESTART_START_CLASS_PROPERTY = "compact.jar.restart.start.class";
+
+    /**
+     * 缓存 JAR 条目写入模式；默认压缩缓存以节省磁盘。
+     */
+    private enum CacheMode {
+        DEFLATE("deflate"),
+        STORED("stored");
+
+        private final String value;
+
+        CacheMode(String value) {
+            this.value = value;
+        }
+    }
 
     private CompressedJarLauncher() {
     }
@@ -78,7 +94,8 @@ public final class CompressedJarLauncher {
         int dependencyCount = parseDependencyCount(manifest);
         String launcherSha256 = sha256(launcherJar);
         Path cache = cacheDirectory(launcherSha256);
-        prepareCache(launcherJar, cache, payloadEntry, launcherSha256, payloadSha256, applicationSha256, payloadChunkSizes, dependencyCount);
+        prepareCache(launcherJar, cache, payloadEntry, launcherSha256, payloadSha256,
+                applicationSha256, payloadChunkSizes, dependencyCount, resolveCacheMode());
         int status = launch(cache, startClass, args);
         System.exit(status);
     }
@@ -117,7 +134,8 @@ public final class CompressedJarLauncher {
         int dependencyCount = parseDependencyCount(manifest);
         String launcherSha256 = sha256(absoluteLauncherJar);
         Path cache = cacheDirectory(launcherSha256);
-        prepareCache(absoluteLauncherJar, cache, payloadEntry, launcherSha256, payloadSha256, applicationSha256, payloadChunkSizes, dependencyCount);
+        prepareCache(absoluteLauncherJar, cache, payloadEntry, launcherSha256, payloadSha256,
+                applicationSha256, payloadChunkSizes, dependencyCount, resolveCacheMode());
     }
 
     private static String required(Manifest manifest, String name) {
@@ -201,24 +219,44 @@ public final class CompressedJarLauncher {
     }
 
     /**
+     * 解析缓存 JAR 写入模式；默认使用 DEFLATE 节省磁盘，STORED 用空间换取首次启动速度。
+     */
+    private static CacheMode resolveCacheMode() {
+        String value = System.getProperty(CACHE_MODE_PROPERTY);
+        if (value == null || value.isBlank()) {
+            return CacheMode.DEFLATE;
+        }
+        if (CacheMode.DEFLATE.value.equalsIgnoreCase(value.trim())) {
+            return CacheMode.DEFLATE;
+        }
+        if (CacheMode.STORED.value.equalsIgnoreCase(value.trim())) {
+            return CacheMode.STORED;
+        }
+        throw new IllegalArgumentException(CACHE_MODE_PROPERTY + " must be 'deflate' or 'stored': " + value);
+    }
+
+    /**
      * 使用文件锁准备缓存；只有完整重建成功后才写入校验标记。
      */
-    private static void prepareCache(Path launcherJar, Path cache, String payloadEntry, String launcherSha256, String payloadSha256, String applicationSha256, List<Long> payloadChunkSizes, int dependencyCount) throws Exception {
+    private static void prepareCache(Path launcherJar, Path cache, String payloadEntry, String launcherSha256,
+                                     String payloadSha256, String applicationSha256,
+                                     List<Long> payloadChunkSizes, int dependencyCount, CacheMode cacheMode) throws Exception {
         createPrivateDirectories(cache.getParent());
         createPrivateDirectories(cache);
         Path lockPath = cache.resolve("cache.lock");
         try (FileChannel channel = FileChannel.open(lockPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
              FileLock ignored = channel.lock()) {
-            if (isCacheValid(cache, launcherSha256, payloadSha256, applicationSha256)) {
+            if (isCacheValid(cache, launcherSha256, payloadSha256, applicationSha256, cacheMode)) {
                 return;
             }
             clearCache(cache, lockPath);
             try (JarFile launcher = new JarFile(launcherJar.toFile())) {
-                unpackPayload(launcher, payloadEntry, payloadChunkSizes, dependencyCount, cache);
+                unpackPayload(launcher, payloadEntry, payloadChunkSizes, dependencyCount, cache, cacheMode);
             }
             String marker = "launcher=" + launcherSha256 + "\n"
                     + "payload=" + payloadSha256 + "\n"
                     + "application=" + applicationSha256 + "\n"
+                    + "cache-mode=" + cacheMode.value + "\n"
                     + "classpath-order=" + sha256(cache.resolve("classpath.order")) + "\n";
             Files.writeString(cache.resolve("cache.ok"), marker, StandardCharsets.UTF_8);
         }
@@ -241,7 +279,8 @@ public final class CompressedJarLauncher {
     /**
      * 检查缓存标记和必要文件，防止使用不完整或旧版本缓存。
      */
-    private static boolean isCacheValid(Path cache, String launcherSha256, String payloadSha256, String applicationSha256) throws Exception {
+    private static boolean isCacheValid(Path cache, String launcherSha256, String payloadSha256,
+                                        String applicationSha256, CacheMode cacheMode) throws Exception {
         Path marker = cache.resolve("cache.ok");
         if (!Files.isRegularFile(marker) || !Files.isRegularFile(cache.resolve(APPLICATION_JAR))
                 || !Files.isRegularFile(cache.resolve("classpath.order")) || !Files.isRegularFile(cache.resolve("classpath.jar"))) {
@@ -251,6 +290,7 @@ public final class CompressedJarLauncher {
         if (!value.contains("launcher=" + launcherSha256)
                 || !value.contains("payload=" + payloadSha256)
                 || !value.contains("application=" + applicationSha256)
+                || !value.contains("cache-mode=" + cacheMode.value)
                 || !value.contains("classpath-order=" + sha256(cache.resolve("classpath.order")))) {
             return false;
         }
@@ -302,7 +342,8 @@ public final class CompressedJarLauncher {
      * 每段都是独立 XZ 流。读取线程只保留尚未处理的压缩分块，
      * 解压线程每完成一个依赖 JAR 就立即交给重建线程，避免累计完整解压数据。
      */
-    private static void unpackPayload(JarFile launcher, String payloadEntryName, List<Long> payloadChunkSizes, int dependencyCount, Path cache) throws Exception {
+    private static void unpackPayload(JarFile launcher, String payloadEntryName, List<Long> payloadChunkSizes,
+                                      int dependencyCount, Path cache, CacheMode cacheMode) throws Exception {
         JarEntry payloadEntry = launcher.getJarEntry(payloadEntryName);
         if (payloadEntry == null) {
             throw new IOException("Missing launcher payload: " + payloadEntryName);
@@ -328,7 +369,7 @@ public final class CompressedJarLauncher {
                 for (long chunkSize : payloadChunkSizes) {
                     byte[] compressedChunk = readChunk(payload, chunkSize, payloadEntry.getSize());
                     decodeJobs.add(decodeExecutor.submit(() -> {
-                        unpackChunk(compressedChunk, cache, dependencies, applicationPayloadSeen);
+                        unpackChunk(compressedChunk, cache, dependencies, applicationPayloadSeen, cacheMode);
                         return null;
                     }));
                 }
@@ -407,7 +448,7 @@ public final class CompressedJarLauncher {
      * 不再把整个 JAR 的条目收集到内存队列中，单个超大资源也只使用固定大小的复制缓冲区。
      */
     private static void unpackChunk(byte[] compressedChunk, Path cache, Map<Integer, String> dependencies,
-                                    AtomicBoolean applicationPayloadSeen) throws Exception {
+                                    AtomicBoolean applicationPayloadSeen, CacheMode cacheMode) throws Exception {
         Path lib = cache.resolve("lib");
         Path applicationTarget = cache.resolve(APPLICATION_JAR);
         JarTarget application = null;
@@ -428,7 +469,7 @@ public final class CompressedJarLauncher {
                         if (!applicationPayloadSeen.compareAndSet(false, true)) {
                             throw new IOException("Duplicate application payload");
                         }
-                        application = new JarTarget(applicationTarget);
+                        application = new JarTarget(applicationTarget, cacheMode);
                     }
                     application.add(entry.getName().substring(APPLICATION_PREFIX.length()), entry, zip);
                     continue;
@@ -454,7 +495,7 @@ public final class CompressedJarLauncher {
                     if (dependency != null) {
                         dependency.commit();
                     }
-                    dependency = new JarTarget(lib.resolve(dependencyName));
+                    dependency = new JarTarget(lib.resolve(dependencyName), cacheMode);
                     currentId = id;
                 }
                 dependency.add(originalName, entry, zip);
@@ -501,19 +542,73 @@ public final class CompressedJarLauncher {
         private final Path target;
         private final Path temporary;
         private final JarOutputStream output;
+        private final CacheMode cacheMode;
         private boolean committed;
 
-        private JarTarget(Path target) throws IOException {
+        private JarTarget(Path target, CacheMode cacheMode) throws IOException {
             this.target = target;
             this.temporary = target.resolveSibling(target.getFileName() + ".tmp");
             this.output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)));
-            this.output.setLevel(java.util.zip.Deflater.BEST_SPEED);
+            this.cacheMode = cacheMode;
+            if (cacheMode == CacheMode.DEFLATE) {
+                this.output.setLevel(java.util.zip.Deflater.BEST_SPEED);
+            }
         }
 
         private void add(String name, ZipEntry sourceEntry, InputStream input) throws IOException {
+            if (cacheMode == CacheMode.STORED) {
+                addStored(name, sourceEntry, input);
+                return;
+            }
             ZipEntry outputEntry = new ZipEntry(name);
             if (sourceEntry.getTime() >= 0) {
                 outputEntry.setTime(sourceEntry.getTime());
+            }
+            output.putNextEntry(outputEntry);
+            input.transferTo(output);
+            output.closeEntry();
+        }
+
+        /**
+         * STORED 条目必须在写入前提供长度和 CRC。正常 payload 已保存元数据；
+         * 旧格式元数据不完整时先流式写入临时文件，避免占用大块堆内存。
+         */
+        private void addStored(String name, ZipEntry sourceEntry, InputStream input) throws IOException {
+            long size = sourceEntry.getSize();
+            long crc = sourceEntry.getCrc();
+            if (size >= 0 && crc >= 0) {
+                writeStoredEntry(name, input, size, crc, sourceEntry.getTime());
+                return;
+            }
+            Path entryTemporary = Files.createTempFile(temporary.getParent(), "compact-entry-", ".tmp");
+            try {
+                CRC32 checksum = new CRC32();
+                long total = 0;
+                try (OutputStream fileOutput = Files.newOutputStream(entryTemporary)) {
+                    byte[] buffer = new byte[64 * 1024];
+                    int length;
+                    while ((length = input.read(buffer)) >= 0) {
+                        fileOutput.write(buffer, 0, length);
+                        checksum.update(buffer, 0, length);
+                        total += length;
+                    }
+                }
+                try (InputStream fileInput = Files.newInputStream(entryTemporary)) {
+                    writeStoredEntry(name, fileInput, total, checksum.getValue(), sourceEntry.getTime());
+                }
+            } finally {
+                Files.deleteIfExists(entryTemporary);
+            }
+        }
+
+        private void writeStoredEntry(String name, InputStream input, long size, long crc, long time) throws IOException {
+            ZipEntry outputEntry = new ZipEntry(name);
+            outputEntry.setMethod(ZipEntry.STORED);
+            outputEntry.setSize(size);
+            outputEntry.setCompressedSize(size);
+            outputEntry.setCrc(crc);
+            if (time >= 0) {
+                outputEntry.setTime(time);
             }
             output.putNextEntry(outputEntry);
             input.transferTo(output);
@@ -594,8 +689,8 @@ public final class CompressedJarLauncher {
         List<String> command = new ArrayList<>();
         command.add(javaExecutable());
         command.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
-        command.add("-D" + RESTART_CLASSPATH_PROPERTY + "=" + classPath(cache));
-        command.add("-D" + RESTART_START_CLASS_PROPERTY + "=" + startClass);
+//        command.add("-D" + RESTART_CLASSPATH_PROPERTY + "=" + classPath(cache));
+//        command.add("-D" + RESTART_START_CLASS_PROPERTY + "=" + startClass);
         command.add("-cp");
         command.add(classPath(cache));
         command.add(startClass);
