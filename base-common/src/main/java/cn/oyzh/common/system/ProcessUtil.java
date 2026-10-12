@@ -253,12 +253,6 @@ public class ProcessUtil {
             // 类路径
             String classPath = System.getProperty("java.class.path");
             JulLog.info("classPath:{}", classPath);
-            // 打印appImagePath路径
-            String appImagePath = System.getProperty("APPDIR");
-            if (appImagePath == null) {
-                appImagePath = System.getenv("APPDIR");
-            }
-            JulLog.info("appImagePath:{}", appImagePath);
             boolean isCompact = classPath.contains("compact-jar-cache");
             // 紧凑jar
             //if (isCompact) {
@@ -297,16 +291,18 @@ public class ProcessUtil {
                 JulLog.info("handle with compact.");
                 Path p = Path.of(FileUtil.parent(javaPath), "lib", "app");
                 File[] files = Files.exists(p) ? FileUtil.ls(p) : null;
-                if (files == null) {
-                    JulLog.warn("files1 is null", p);
-                } else {
-                    for (File file1 : files) {
-                        if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
-                            classPath = file1.getPath();
+                if (files != null) {
+                    JulLog.info("files={}", Arrays.toString(files));
+                    for (File file : files) {
+                        JulLog.info("file={}", file);
+                        if (FileNameUtil.isJarType(FileNameUtil.extName(file))) {
+                            classPath = file.getPath();
                             JulLog.info("classPath2:{}", classPath);
                             break;
                         }
                     }
+                } else {
+                    JulLog.warn("files is null", p);
                 }
             }
             // 寻找app主目录
@@ -316,7 +312,12 @@ public class ProcessUtil {
                 String appDir = "";
                 // 重新处理路径
                 if (isCompact) {
-                    appDir = appImagePath;
+                    // 打印appImagePath路径
+                    appDir = System.getProperty("APPDIR");
+                    if (appDir == null) {
+                        appDir = System.getenv("APPDIR");
+                    }
+                    JulLog.info("appDir:{}", appDir);
                     appDirBak = appDir + "_bak";
                 } else {
                     for (String s : classPath.split("/")) {
