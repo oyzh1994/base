@@ -1362,4 +1362,14 @@ public class FileUtil {
             }
         }
     }
+
+    /**
+     * 获取父目录
+     *
+     * @param path 路径
+     * @return 结果
+     */
+    public static String parent(String path) {
+        return Path.of(path).getParent().toString();
+    }
 }

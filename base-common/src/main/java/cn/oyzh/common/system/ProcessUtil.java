@@ -259,47 +259,66 @@ public class ProcessUtil {
                 appImagePath = System.getenv("APPDIR");
             }
             JulLog.info("appImagePath:{}", appImagePath);
-            // 寻找app主目录
-            String appDir = "";
-            String appDirBak = "";
             boolean isCompact = classPath.contains("compact-jar-cache");
             // 紧凑jar
+            //if (isCompact) {
+            //    appDir = appImagePath;
+            //    appDirBak = appDir + "_bak";
+            //    JulLog.info("handle with compact.");
+            //    File[] files = FileUtil.ls(appDir);
+            //    if (files != null) {
+            //        f1:
+            //        for (File file : files) {
+            //            if (!file.isDirectory()) {
+            //                continue;
+            //            }
+            //            JulLog.info("file:{} is dir", file);
+            //            Path p = Path.of(file.getPath(), "lib", "app");
+            //            if (!Files.exists(p)) {
+            //                JulLog.warn("path:{} is not exists", p);
+            //                continue;
+            //            }
+            //            File[] files1 = FileUtil.ls(p);
+            //            if (files1 == null) {
+            //                JulLog.warn("files1 is null", p);
+            //                continue;
+            //            }
+            //            for (File file1 : files1) {
+            //                if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
+            //                    classPath = file1.getPath();
+            //                    JulLog.info("classPath2:{}", classPath);
+            //                    break f1;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
             if (isCompact) {
-                appDir = appImagePath;
-                appDirBak = appDir + "_bak";
                 JulLog.info("handle with compact.");
-                File[] files = FileUtil.ls(appDir);
-                if (files != null) {
-                    f1:
-                    for (File file : files) {
-                        if (!file.isDirectory()) {
-                            continue;
-                        }
-                        JulLog.info("file:{} is dir", file);
-                        Path p = Path.of(file.getPath(), "lib", "app");
-                        if (!Files.exists(p)) {
-                            JulLog.warn("path:{} is not exists", p);
-                            continue;
-                        }
-                        File[] files1 = FileUtil.ls(p);
-                        if (files1 == null) {
-                            JulLog.warn("files1 is null", p);
-                            continue;
-                        }
-                        for (File file1 : files1) {
-                            if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
-                                classPath = file1.getPath();
-                                JulLog.info("classPath2:{}", classPath);
-                                break f1;
-                            }
+                Path p = Path.of(FileUtil.parent(javaPath), "lib", "app");
+                File[] files = Files.exists(p) ? FileUtil.ls(p) : null;
+                if (files == null) {
+                    JulLog.warn("files1 is null", p);
+                } else {
+                    for (File file1 : files) {
+                        if (FileNameUtil.isJarType(FileNameUtil.extName(file1))) {
+                            classPath = file1.getPath();
+                            JulLog.info("classPath2:{}", classPath);
+                            break;
                         }
                     }
                 }
             }
+            // 寻找app主目录
+            String appDirBak = "";
             // 在AppImage，要把临时目录复制出来，不然直接无法正常重启
             if (ProcessUtil.isRunningInAppImage()) {
+                String appDir = "";
                 // 重新处理路径
-                if (!isCompact) {
+                if (isCompact) {
+                    appDir = appImagePath;
+                    appDirBak = appDir + "_bak";
+                } else {
                     for (String s : classPath.split("/")) {
                         if (StringUtil.isNotBlank(s)) {
                             appDir = appDir + "/" + s;
@@ -337,7 +356,9 @@ public class ProcessUtil {
                 // 添加参数
                 commands.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
                 commands.add("-DcompactRestart=true");
-                commands.add("-DAPPDIR=" + appDirBak);
+                if (StringUtil.isNotBlank(appDirBak)) {
+                    commands.add("-DAPPDIR=" + appDirBak);
+                }
             } else {
                 JulLog.info("restart with normal.");
             }
