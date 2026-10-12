@@ -304,7 +304,7 @@ public class ProcessUtil {
                             }
                         }
                     } else {
-                        JulLog.warn("files is null", p);
+                        JulLog.warn("files is null");
                     }
                 } else {
                     JulLog.warn("p:{} not exists", p);
