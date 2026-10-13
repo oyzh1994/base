@@ -357,6 +357,10 @@ public class I18nHelper {
 
     public static final String restartTip1 = "base.restartTip1";
 
+    public static final String xserver = "base.xserver";
+
+    public static final String notStarted = "base.notStarted";
+
     public static final String TOUCH_FILE = "base.touchFile";
 
     public static final String MKDIR = "base.mkdir";
@@ -7656,6 +7660,15 @@ public class I18nHelper {
     }
 
     /**
+     * 获取国际化文本：客户端数量
+     *
+     * @return 客户端数量
+     */
+    public static String clientNum() {
+        return I18nResourceBundle.i18nString(CLIENT_NUM);
+    }
+
+    /**
      * 获取国际化文本：序号
      *
      * @return 序号
@@ -10048,6 +10061,22 @@ public class I18nHelper {
 
     public static String restartTip1() {
         return I18nResourceBundle.i18nString(restartTip1);
+    }
+
+    public static String xserver() {
+        return I18nResourceBundle.i18nString(xserver);
+    }
+
+    public static String notStarted() {
+        return I18nResourceBundle.i18nString(notStarted);
+    }
+
+    public static String start1() {
+        return I18nResourceBundle.i18nString(START1);
+    }
+
+    public static String stop1() {
+        return I18nResourceBundle.i18nString(STOP1);
     }
 
     /**
