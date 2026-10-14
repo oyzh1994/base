@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -189,9 +190,7 @@ public class CollectionUtil {
             throw new IllegalArgumentException("子集合大小必须为正整数");
         }
 
-        return IntStream.range(0, (originalList.size() + size - 1) / size)
-                .mapToObj(i -> originalList.subList(i * size, Math.min((i + 1) * size, originalList.size())))
-                .collect(Collectors.toList());
+        return IntStream.range(0, (originalList.size() + size - 1) / size).mapToObj(i -> originalList.subList(i * size, Math.min((i + 1) * size, originalList.size()))).collect(Collectors.toList());
     }
 
     /**
@@ -361,5 +360,15 @@ public class CollectionUtil {
         List<T> list = new ArrayList<>(collection);
         list.sort(comparator);
         return list;
+    }
+
+    /**
+     * 从数组创建集合
+     *
+     * @param objects 对象集合
+     * @return 结果
+     */
+    public static List<?> of(Object[] objects) {
+        return new ArrayList<>(Arrays.asList(objects));
     }
 }
