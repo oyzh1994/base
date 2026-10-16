@@ -73,11 +73,6 @@ public class JarHandler implements PreHandler {
      */
     private PackConfig config;
 
-    /**
-     * 压缩类型，默认zstd
-     */
-    private int compactType = 0;
-
     @Override
     public void handle(PackConfig packConfig) throws Exception {
         // 检查dest目录
@@ -131,7 +126,7 @@ public class JarHandler implements PreHandler {
         // 紧凑主jar
         this.compactMainJar();
         // 设置为临时文件路径
-        //        packConfig.addTempFile(dest);
+        packConfig.addTempFile(dest);
         packConfig.addTempFile(jarUnDir);
     }
 
@@ -174,7 +169,7 @@ public class JarHandler implements PreHandler {
             if (FileUtil.exists(compactPath)) {
                 String compactFile = compactPath.toString();
                 this.config.setCompactMainJar(compactFile);
-                //                this.config.addTempFile(compactFile);
+                this.config.addTempFile(compactFile);
                 JulLog.info("compactMainJar success, before:{} after{}.", NumberUtil.formatSize(Files.size(mainJarPath)), NumberUtil.formatSize(Files.size(compactPath)));
             } else {
                 JulLog.warn("compactMainJar fail!");

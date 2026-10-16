@@ -244,7 +244,7 @@ public final class CompressedJarLauncher {
     private static CacheMode resolveCacheMode() {
         String value = System.getProperty(CACHE_MODE_PROPERTY);
         if (value == null || value.isBlank()) {
-            return CacheMode.DEFLATE;
+            return CacheMode.STORED;
         }
         for (CacheMode mode : CacheMode.values()) {
             if (mode.value.equalsIgnoreCase(value.trim())) {

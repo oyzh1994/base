@@ -18,9 +18,9 @@
 
     <properties>
         <xz.version>1.12</xz.version>
-        <zstd-jni.version>1.5.7-6</zstd-jni.version>
         <dom4j.version>2.2.0</dom4j.version>
         <snakeyaml.version>2.5</snakeyaml.version>
+        <zstd-jni.version>1.5.7-23</zstd-jni.version>
         <maven-core.version>3.10.0</maven-core.version>
     </properties>
 
