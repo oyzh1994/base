@@ -24,6 +24,7 @@ import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.filter.RegFilter;
 import cn.oyzh.pkg.util.PkgUtil;
 import cn.oyzh.pkg.util.compact.CompactJarTool;
+import cn.oyzh.pkg.util.compact.CompactJarToolV2;
 import cn.oyzh.pkg.woa.WoaUtil;
 
 import java.io.BufferedInputStream;
@@ -71,6 +72,11 @@ public class JarHandler implements PreHandler {
      * 打包配置
      */
     private PackConfig config;
+
+    /**
+     * 压缩类型，默认zstd
+     */
+    private int compactType = 0;
 
     @Override
     public void handle(PackConfig packConfig) throws Exception {
@@ -135,7 +141,8 @@ public class JarHandler implements PreHandler {
     private void compactMainJar() {
         try {
             // 未开启
-            if (!this.config.getJarConfig().isCompact()) {
+            JarConfig jarConfig = this.config.getJarConfig();
+            if (!jarConfig.isCompact()) {
                 JulLog.info("compactMainJar compact not enable.");
                 return;
             }
@@ -155,17 +162,20 @@ public class JarHandler implements PreHandler {
             String fName = mainJarPath.toFile().getName();
             String name = fName.substring(0, fName.lastIndexOf("."));
             Path compactPath = Path.of(mainJarPath.getParent().toString(), name + "_compact.jar");
-            JulLog.info("compactMainJar start...");
-            CompactJarTool.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
+            int compactType = jarConfig.getCompactType();
+            if (compactType == 2) {
+                JulLog.info("compactMainJar with zstd start...");
+                CompactJarToolV2.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
+            } else {
+                JulLog.info("compactMainJar with xz start...");
+                CompactJarTool.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
+            }
             // 压缩成功
             if (FileUtil.exists(compactPath)) {
                 String compactFile = compactPath.toString();
                 this.config.setCompactMainJar(compactFile);
                 //                this.config.addTempFile(compactFile);
-                JulLog.info("compactMainJar success, before:{} after{}.",
-                        NumberUtil.formatSize(Files.size(mainJarPath)),
-                        NumberUtil.formatSize(Files.size(compactPath))
-                );
+                JulLog.info("compactMainJar success, before:{} after{}.", NumberUtil.formatSize(Files.size(mainJarPath)), NumberUtil.formatSize(Files.size(compactPath)));
             } else {
                 JulLog.warn("compactMainJar fail!");
             }
@@ -331,10 +341,7 @@ public class JarHandler implements PreHandler {
         JarConfig jarConfig = this.config.getJarConfig();
         if (jarConfig != null && jarConfig.isEnable()) {
             // jfx优化
-            if (jarConfig.isJavafxOptimize()
-                    && src.endsWith(".jar")
-                    && StringUtil.containsAny(src, "javafx-media-", "javafx-graphics-", "javafx-web-")
-                    && NativeLibUtil.isNativeLibName(name)) {
+            if (jarConfig.isJavafxOptimize() && src.endsWith(".jar") && StringUtil.containsAny(src, "javafx-media-", "javafx-graphics-", "javafx-web-") && NativeLibUtil.isNativeLibName(name)) {
                 this.handleJfxLib(src, name);
                 JulLog.info("javafx模块，文件:{}被过滤.", name);
                 return false;

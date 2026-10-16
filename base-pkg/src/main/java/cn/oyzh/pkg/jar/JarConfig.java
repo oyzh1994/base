@@ -25,6 +25,13 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
     private Boolean compact;
 
     /**
+     * 紧凑文件类型
+     * null,1 xz
+     * 2 zstd
+     */
+    private Integer compactType;
+
+    /**
      * 是否移除空jar
      */
     private Boolean removeEmpty;
@@ -150,6 +157,24 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
     }
 
     /**
+     * 获取紧凑类型
+     *
+     * @return 结果
+     */
+    public int getCompactType() {
+        return this.compactType == null ? 1 : this.compactType;
+    }
+
+    /**
+     * 设置紧凑类型
+     *
+     * @param compactType 紧凑类型
+     */
+    public void setCompactType(int compactType) {
+        this.compactType = compactType;
+    }
+
+    /**
      * 是否启用javafx优化
      *
      * @return 是否启用javafx优化
@@ -231,6 +256,9 @@ public class JarConfig implements ConfigMargeAble<JarConfig> {
         }
         if (config.compact != null) {
             this.compact = config.compact;
+        }
+        if (config.compactType != null) {
+            this.compactType = config.compactType;
         }
         if (config.removeEmpty != null) {
             this.removeEmpty = config.removeEmpty;
