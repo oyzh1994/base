@@ -1,34 +1,47 @@
 # base
 
-A Java integration library providing i18n, SSH, event bus, storage, and various utilities such as string processing — reducing dependency on third-party libraries.
+English | [简体中文](README.md)
 
----
+`base` is a Java foundation library providing shared utilities, internationalization, eventing, storage, SSH, packaging, and integration foundations for MongoDB, Mosh, and ZooKeeper. It reduces the need for business projects to depend directly on scattered third-party components.
 
-## Dependencies
+## Requirements
 
-1. **JDK Version**: 25 is required
-
----
+- JDK 25
+- Maven 3.9 or newer
 
 ## Module Structure
 
-| Module        | Description                                                     |
-|---------------|-----------------------------------------------------------------|
-| `base-common` | Core module — various utility implementations                   |
-| `base-event`  | Event module — event bus implementation                         |
-| `base-i18n`   | i18n module — internationalization resources and implementation |
-| `base-pkg`    | packaging implementation, cross-platform packaging features     |
-| `base-ssh`    | SSH module — SSH client implementation                          |
-| `base-store`  | Store module — data storage implementation                      |
-
----
+| Module | Description |
+|---|---|
+| `base-common` | Core utilities for files, logging, networking, security, JSON, XML, Excel, threading, and common operations |
+| `base-event` | Eventing module with a general-purpose event bus |
+| `base-i18n` | Internationalization resources, locale management, and translation integration |
+| `base-mongodb` | MongoDB support and driver-related components |
+| `base-mosh` | Mosh protocol, transport, and terminal support |
+| `base-pkg` | Cross-platform packaging for JAR, JLink, JPackage, AppImage, and related workflows |
+| `base-ssh` | SSH clients, jump hosts, and port forwarding |
+| `base-store` | File, JDBC, and embedded-database storage support |
+| `base-zookeeper` | ZooKeeper client, protocol, and command-line support |
 
 ## Maven
 
-### Build
+Install all modules:
+
 ```bash
-mvn -X clean install -DskipTests
+mvn clean install -DskipTests
 ```
 
-### Notes
-- Ensure that `java -version` in your terminal matches the project's JDK version. Mismatches cause errors like "invalid target release: 25".
+Run tests:
+
+```bash
+mvn test
+```
+
+## Notes
+
+- Make sure `java -version` matches the project requirement; otherwise Maven may report `invalid target release: 25`.
+- The modules depend on one another. Run Maven from the repository root so they are built in the correct order.
+
+## License
+
+The project includes `APACHE-LICENSE-2.0.txt` and `MIT-LICENSE.txt`. Review the applicable terms before use.
