@@ -15,7 +15,9 @@ import java.nio.file.Paths;
  */
 public final class CompactJarToolV2 {
 
-    /** 默认采用 Zstd 当前版本支持的最高压缩级别。 */
+    /**
+     * 默认采用 Zstd 当前版本支持的最高压缩级别。
+     */
     private static final int DEFAULT_ZSTD_LEVEL = Zstd.maxCompressionLevel();
 
     private CompactJarToolV2() {
@@ -29,8 +31,7 @@ public final class CompactJarToolV2 {
      */
     public static void main(String[] args) throws Exception {
         if (args.length < 3 || args.length > 4) {
-            throw new IllegalArgumentException(
-                    "Usage: CompactJarToolV2 <executable.jar> <application.jar> <output.jar> [zstd-level]");
+            throw new IllegalArgumentException("Usage: CompactJarToolV2 <executable.jar> <application.jar> <output.jar> [zstd-level]");
         }
         int level = args.length == 4 ? Integer.parseInt(args[3]) : DEFAULT_ZSTD_LEVEL;
         compact(Paths.get(args[0]), Paths.get(args[1]), Paths.get(args[2]), level);
@@ -59,5 +60,6 @@ public final class CompactJarToolV2 {
      */
     public static void compact(Path executableJar, Path applicationJar, Path outputJar, int level) throws Exception {
         CompactJarBuilderV2.build(executableJar, applicationJar, outputJar, level);
+        //        CompressedJarLauncherV2.warmCache(outputJar);
     }
 }

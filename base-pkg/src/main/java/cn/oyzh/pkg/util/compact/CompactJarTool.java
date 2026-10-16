@@ -11,7 +11,9 @@ import java.nio.file.Paths;
  */
 public final class CompactJarTool {
 
-    /** 默认 XZ 压缩级别，优先保证产物体积。 */
+    /**
+     * 默认 XZ 压缩级别，优先保证产物体积。
+     */
     private static final int DEFAULT_XZ_PRESET = 9;
 
     private CompactJarTool() {
@@ -54,6 +56,6 @@ public final class CompactJarTool {
      */
     public static void compact(Path executableJar, Path applicationJar, Path outputJar, int xzPreset) throws Exception {
         CompactJarBuilder.build(executableJar, applicationJar, outputJar, xzPreset);
-//        CompressedJarLauncher.warmCache(outputJar);
+        //        CompressedJarLauncher.warmCache(outputJar);
     }
 }

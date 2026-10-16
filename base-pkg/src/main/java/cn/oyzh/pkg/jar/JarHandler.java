@@ -163,12 +163,12 @@ public class JarHandler implements PreHandler {
             String name = fName.substring(0, fName.lastIndexOf("."));
             Path compactPath = Path.of(mainJarPath.getParent().toString(), name + "_compact.jar");
             int compactType = jarConfig.getCompactType();
-            if (compactType == 2) {
-                JulLog.info("compactMainJar with zstd start...");
-                CompactJarToolV2.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
-            } else {
+            if (compactType == 1) {
                 JulLog.info("compactMainJar with xz start...");
                 CompactJarTool.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
+            } else {
+                JulLog.info("compactMainJar with zstd start...");
+                CompactJarToolV2.compact(mainJarPath, Path.of(mainTinyJar), compactPath);
             }
             // 压缩成功
             if (FileUtil.exists(compactPath)) {
