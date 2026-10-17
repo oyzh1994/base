@@ -64,17 +64,19 @@ java -cp "$BASE_PKG_CLASSES:$BASE_COMMON_JAR:$XZ_JAR" \
   9
 ```
 
-`CompactJarTool.compact()` 完成构建后会调用 `CompressedJarLauncher.warmCache(outputJar)`。因此同一台构建机随后测试时，通常可以直接命中已经生成的运行缓存。
+`CompactJarTool.compact()` 当前只负责生成压缩 JAR；安装器或构建流程需要预热时，可显式调用
+`CompressedJarLauncher.warmCache(outputJar)`。没有预热脚本的分发包仍会在首次运行时创建缓存。
 
 ## 压缩结构
 
 payload 不再使用一个全局 XZ 流，而是拆成三个大块：
 
 1. 应用 JAR 一个块。
-2. classpath 前半部分依赖一个块。
-3. classpath 后半部分依赖一个块。
+2. classpath 前一段依赖一个块。
+3. classpath 后一段依赖一个块。
 
-每个块都是独立 XZ 流，并包含一个原始 ZIP 形式的数据区：
+依赖切分点按嵌套 JAR 的存储大小选择，使两个依赖块的负载尽量接近。每个块都是独立 XZ 流，
+并包含一个原始 ZIP 形式的数据区：
 
 ```text
 META-INF/compact-index.tsv
@@ -115,7 +117,9 @@ java -Dcompact.jar.xz.dict.size=50331648 \
 
 - `compact.jar.xz.dict.size`：LZMA2 字典大小上限，单位为字节，默认 `33554432`（32 MiB）。
 - `compact.jar.xz.compress.threads`：XZ 压缩线程上限，默认 `2`，允许范围为 1 到 16。
-- 两个参数都是上限而不是无条件值。构建器会读取 `Runtime` 当前空闲堆，只使用其中约 75% 作为编码器预算；必要时减少并发并逐级降低字典。
+- `compact.jar.xz.nice.length`：preset 9 的 LZMA2 匹配长度上限，默认 `128`，允许范围为
+  `4` 到 `273`。更大的值通常能略微改善压缩率，但会增加打包时间和 CPU。
+- 字典和线程参数是上限而不是无条件值。构建器会读取 `Runtime` 当前空闲堆，只使用其中约 75% 作为编码器预算；必要时减少并发并逐级降低字典。
 - preset 9 的原始默认字典是 64 MiB。它会让三个编码器同时产生较大数组分配，也是旧版 Linux 构建 OOM 的主要来源。32 MiB 默认值相当于更保守的 preset 8 字典，但其他 preset 9 匹配参数保持不变。
 - 机器内存充足且更看重体积时，可显式把字典上限设为 48 MiB 或 64 MiB；系统属性写错或越界会直接报错，不会静默忽略。
 
@@ -222,6 +226,12 @@ Linux 重启进程优先通过 `setsid` 放入独立会话，确保应用退出�
 
 以下数据来自同一个约 103 MB 的实际 Spring Boot 应用、macOS、XZ preset 9。不同应用和硬件会变化；不同字典和并发组合的耗时、峰值 RSS 不应直接横向等价比较。
 
+针对 EasyShell 1.2.2 的 XZ 分块与缓冲区优化回归如下：均衡切分让两个依赖块从约
+24.9/18.9 MB 变为 21.8/21.7 MB，空缓存 `warmCache()` 从 3.11 秒降至 2.77 秒，
+约改善 11%；产物从 45,480,131 bytes 降至 45,182,263 bytes，减少约 0.65%。
+代价是构建时间从 45.5 秒增至 48.1 秒，峰值 RSS 基本不变，适合以打包 CPU 换取
+更小产物和更快首次缓存创建。
+
 | 方案 | 产物大小 | 相对旧方案 | 构建及预热时间 | 峰值 RSS |
 | --- | ---: | ---: | ---: | ---: |
 | 旧方案：64 MiB 字典、三个压缩线程 | 39,200,773 bytes | 基线 | 约 45 秒 | 未记录 |
@@ -236,7 +246,9 @@ XZ preset 主要影响打包时间与最终体积：
 - preset 6：构建更快，产物通常明显变大。
 - preset 0 到 3：适合频繁打包的开发环境，不建议用于正式分发。
 
-当前默认使用 preset 9 和 32 MiB 字典上限。若要继续优先压缩率，可提高 `compact.jar.xz.dict.size`，但不建议增加分块数量；8 个以上独立 XZ 流会明显损失跨文件字典收益。三块是压缩率、并行度和首次缓存创建时间之间的平衡点。
+当前默认使用 preset 9、32 MiB 字典上限和 nice length 128。若要继续优先压缩率，可提高
+`compact.jar.xz.dict.size` 或 `compact.jar.xz.nice.length`，但不建议增加分块数量；8 个以上
+独立 XZ 流会明显损失跨文件字典收益。三块是压缩率、并行度和首次缓存创建时间之间的平衡点。
 
 ## 正确性保障
 

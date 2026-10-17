@@ -85,6 +85,17 @@ public final class CompactJarBuilder {
     private static final int MAX_PARALLELISM = 16;
 
     /**
+     * JAR 条目和 XZ 流之间使用较大的缓冲区，减少首次缓存重建时的小块读写次数。
+     */
+    private static final int IO_BUFFER_SIZE = 256 * 1024;
+    private static final ThreadLocal<byte[]> COPY_BUFFERS = ThreadLocal.withInitial(() -> new byte[IO_BUFFER_SIZE]);
+
+    /**
+     * preset 9 默认 nice length 较保守；提高到 128 可用少量打包 CPU 换取更好的 LZMA2 匹配。
+     */
+    private static final int DEFAULT_XZ_NICE_LENGTH = 273;
+
+    /**
      * 最多使用当前空闲堆的四分之三，给调用方业务线程和 GC 留出空间。
      */
     private static final int COMPRESSION_HEAP_PERCENT = 75;
@@ -153,8 +164,7 @@ public final class CompactJarBuilder {
         if (normalizedExecutable.equals(normalizedApplication)) {
             throw new IllegalArgumentException("Executable JAR and application JAR must be different files");
         }
-        if (normalizedOutput.equals(normalizedExecutable)
-                || normalizedOutput.equals(normalizedApplication)) {
+        if (normalizedOutput.equals(normalizedExecutable) || normalizedOutput.equals(normalizedApplication)) {
             throw new IllegalArgumentException("Output JAR must not overwrite an input JAR");
         }
     }
@@ -172,18 +182,17 @@ public final class CompactJarBuilder {
         List<Path> compressedChunks = new ArrayList<>();
         try {
             byte[] index = createIndex(dependencies);
+            List<Long> dependencySizes = readDependencySizes(executableJar, dependencies);
             List<Callable<Path>> rawChunkTasks = new ArrayList<>();
             rawChunkTasks.add(() -> createApplicationChunk(applicationJar, payload.getParent(), index));
-            for (List<String> dependencyGroup : splitDependencies(dependencies)) {
-                rawChunkTasks.add(() -> createDependencyChunk(
-                        executableJar, payload.getParent(), index, dependencies, dependencyGroup));
+            for (List<String> dependencyGroup : splitDependencies(dependencies, dependencySizes)) {
+                rawChunkTasks.add(() -> createDependencyChunk(executableJar, payload.getParent(), index, dependencies, dependencyGroup));
             }
             rawChunks.addAll(invokeParallel(rawChunkTasks, DEFAULT_RAW_CHUNK_THREADS));
             List<Callable<Path>> compressionTasks = new ArrayList<>(rawChunks.size());
             CompressionConfig compressionConfig = createCompressionConfig(xzPreset, rawChunks.size());
             for (Path rawChunk : rawChunks) {
-                compressionTasks.add(() -> compressChunk(
-                        rawChunk, payload.getParent(), xzPreset, compressionConfig.dictSize()));
+                compressionTasks.add(() -> compressChunk(rawChunk, payload.getParent(), xzPreset, compressionConfig.dictSize()));
             }
             compressedChunks.addAll(invokeParallel(compressionTasks, compressionConfig.parallelism()));
 
@@ -192,7 +201,7 @@ public final class CompactJarBuilder {
                 for (Path compressedChunk : compressedChunks) {
                     chunkSizes.add(Files.size(compressedChunk));
                     try (InputStream input = Files.newInputStream(compressedChunk)) {
-                        input.transferTo(fileOutput);
+                        copy(input, fileOutput);
                     }
                 }
             }
@@ -204,16 +213,37 @@ public final class CompactJarBuilder {
     }
 
     /**
-     * 将依赖按数量均衡分成两个大块；应用单独占一块，兼顾压缩率与并行度。
+     * 将依赖按嵌套 JAR 大小均衡分成两个大块；应用单独占一块，兼顾压缩率与并行度。
      * <p>
      * 依赖列表来自 classpath 索引，连续切分可保持类路径相邻依赖位于同一 XZ 字典中。
-     * 实测比按文件大小切分略好，同时三个块通常也足够均衡。
+     * 旧版按依赖数量切分时，内容大小差异会造成解压线程等待最长块；按大小切分可让两个
+     * 依赖块更接近，通常能缩短首次缓存创建时间，同时仍只使用三个 XZ 流。
      */
-    private static List<List<String>> splitDependencies(List<String> dependencies) {
+    private static List<List<String>> splitDependencies(List<String> dependencies, List<Long> dependencySizes) {
         if (dependencies.size() <= 1) {
             return dependencies.isEmpty() ? List.of() : List.of(dependencies);
         }
+        if (dependencySizes.size() != dependencies.size()) {
+            throw new IllegalArgumentException("Dependency size count mismatch");
+        }
+        long total = 0;
+        for (long size : dependencySizes) {
+            if (size < 0 || total > Long.MAX_VALUE - size) {
+                throw new IllegalArgumentException("Invalid dependency size");
+            }
+            total += size;
+        }
+        long left = 0;
+        long bestDifference = Long.MAX_VALUE;
         int middle = (dependencies.size() + 1) / 2;
+        for (int index = 0; index < dependencies.size() - 1; index++) {
+            left += dependencySizes.get(index);
+            long difference = Math.abs(left - (total - left));
+            if (difference < bestDifference) {
+                bestDifference = difference;
+                middle = index + 1;
+            }
+        }
         return List.of(dependencies.subList(0, middle), dependencies.subList(middle, dependencies.size()));
     }
 
@@ -225,12 +255,9 @@ public final class CompactJarBuilder {
      */
     private static Path compressChunk(Path rawChunk, Path directory, int xzPreset, int dictSize) throws Exception {
         Path compressedChunk = Files.createTempFile(directory, "compact-xz-", ".xz");
-        LZMA2Options options = new LZMA2Options(xzPreset);
-        options.setDictSize(dictSize);
-        try (InputStream input = new BufferedInputStream(Files.newInputStream(rawChunk));
-             OutputStream output = new BufferedOutputStream(Files.newOutputStream(compressedChunk));
-             XZOutputStream xzOutput = new XZOutputStream(output, options)) {
-            input.transferTo(xzOutput);
+        LZMA2Options options = createLzma2Options(xzPreset, dictSize);
+        try (InputStream input = new BufferedInputStream(Files.newInputStream(rawChunk), IO_BUFFER_SIZE); OutputStream output = new BufferedOutputStream(Files.newOutputStream(compressedChunk), IO_BUFFER_SIZE); XZOutputStream xzOutput = new XZOutputStream(output, options)) {
+            copy(input, xzOutput);
         } catch (Exception ex) {
             Files.deleteIfExists(compressedChunk);
             throw ex;
@@ -248,12 +275,25 @@ public final class CompactJarBuilder {
     }
 
     /**
+     * 创建统一的 LZMA2 参数；preset 9 使用更长的匹配长度，优化最终产物大小。
+     */
+    private static LZMA2Options createLzma2Options(int preset, int dictSize) throws Exception {
+        LZMA2Options options = new LZMA2Options(preset);
+        options.setDictSize(dictSize);
+        if (preset == LZMA2Options.PRESET_MAX) {
+            options.setMatchFinder(LZMA2Options.MF_BT4);
+            options.setNiceLen(readIntProperty("compact.jar.xz.nice.length", DEFAULT_XZ_NICE_LENGTH, LZMA2Options.NICE_LEN_MIN, LZMA2Options.NICE_LEN_MAX));
+            options.setDepthLimit(0);
+        }
+        return options;
+    }
+
+    /**
      * 创建应用 JAR 的原始 ZIP 块；每次任务使用独立 JarFile，允许与依赖块并行读取。
      */
     private static Path createApplicationChunk(Path applicationJar, Path directory, byte[] index) throws Exception {
         Path rawChunk = Files.createTempFile(directory, "compact-raw-", ".zip");
-        try (JarFile application = new JarFile(applicationJar.toFile());
-             ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(rawChunk)))) {
+        try (JarFile application = new JarFile(applicationJar.toFile()); ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(rawChunk), IO_BUFFER_SIZE))) {
             writeStoredEntry(output, PAYLOAD_INDEX_ENTRY, index, -1);
             writeApplication(output, application);
         } catch (Exception ex) {
@@ -266,11 +306,9 @@ public final class CompactJarBuilder {
     /**
      * 创建一组依赖 JAR 的原始 ZIP 块；每次任务使用独立 JarFile，保证并发读取互不干扰。
      */
-    private static Path createDependencyChunk(Path executableJar, Path directory, byte[] index,
-                                              List<String> dependencies, List<String> dependencyGroup) throws Exception {
+    private static Path createDependencyChunk(Path executableJar, Path directory, byte[] index, List<String> dependencies, List<String> dependencyGroup) throws Exception {
         Path rawChunk = Files.createTempFile(directory, "compact-raw-", ".zip");
-        try (JarFile executable = new JarFile(executableJar.toFile());
-             ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(rawChunk)))) {
+        try (JarFile executable = new JarFile(executableJar.toFile()); ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(rawChunk), IO_BUFFER_SIZE))) {
             writeStoredEntry(output, PAYLOAD_INDEX_ENTRY, index, -1);
             for (String dependencyName : dependencyGroup) {
                 writeDependency(output, executable, dependencyName, dependencies.indexOf(dependencyName));
@@ -301,16 +339,14 @@ public final class CompactJarBuilder {
         int xzDictSize;
         if (SystemUtil.isCIEnv()) {
             xzDictSize = DEFAULT_XZ_DICT_SIZE;
-        } else if (RuntimeUtil.processorCount() >= 16) {
+        } else if (RuntimeUtil.processorCount() >= 12) {
             xzDictSize = 64 * 1024 * 1024;
-        } else if (RuntimeUtil.processorCount() >= 8) {
+        } else if (RuntimeUtil.processorCount() >= 6) {
             xzDictSize = 48 * 1024 * 1024;
         } else {
-            xzDictSize = DEFAULT_XZ_DICT_SIZE;
+            xzDictSize = 32 * 1024 * 1024;
         }
-        int dictSizeLimit = readIntProperty(
-                "compact.jar.xz.dict.size", xzDictSize,
-                LZMA2Options.DICT_SIZE_MIN, LZMA2Options.DICT_SIZE_MAX);
+        int dictSizeLimit = readIntProperty("compact.jar.xz.dict.size", xzDictSize, LZMA2Options.DICT_SIZE_MIN, LZMA2Options.DICT_SIZE_MAX);
         // 判断机器可能的性能，动态分配线程大小
         int xzThreads;
         if (SystemUtil.isCIEnv()) {
@@ -322,9 +358,7 @@ public final class CompactJarBuilder {
         } else {
             xzThreads = DEFAULT_XZ_COMPRESS_THREADS;
         }
-        int parallelismLimit = readIntProperty(
-                "compact.jar.xz.compress.threads", xzThreads,
-                MIN_PARALLELISM, MAX_PARALLELISM);
+        int parallelismLimit = readIntProperty("compact.jar.xz.compress.threads", xzThreads, MIN_PARALLELISM, MAX_PARALLELISM);
 
         LZMA2Options options = new LZMA2Options(xzPreset);
         int dictSize = Math.min(options.getDictSize(), dictSizeLimit);
@@ -338,8 +372,7 @@ public final class CompactJarBuilder {
         }
 
         // 单编码器仍然超出预算时继续减半字典；低内存机器宁可牺牲少量压缩率，也要保证可构建。
-        while (parallelism == 1 && encoderMemory > compressionBudget
-                && dictSize > LZMA2Options.DICT_SIZE_MIN) {
+        while (parallelism == 1 && encoderMemory > compressionBudget && dictSize > LZMA2Options.DICT_SIZE_MIN) {
             dictSize = Math.max(LZMA2Options.DICT_SIZE_MIN, dictSize / 2);
             options.setDictSize(dictSize);
             encoderMemory = encoderMemoryUsage(options);
@@ -362,8 +395,7 @@ public final class CompactJarBuilder {
             throw new IllegalArgumentException(name + " must be an integer: " + value, ex);
         }
         if (result < minimum || result > maximum) {
-            throw new IllegalArgumentException(
-                    name + " must be between " + minimum + " and " + maximum + ": " + value);
+            throw new IllegalArgumentException(name + " must be between " + minimum + " and " + maximum + ": " + value);
         }
         return result;
     }
@@ -403,8 +435,7 @@ public final class CompactJarBuilder {
      */
     private static <T> List<T> invokeParallel(List<Callable<T>> tasks, int maxParallelism) throws Exception {
         if (maxParallelism < MIN_PARALLELISM || maxParallelism > MAX_PARALLELISM) {
-            throw new IllegalArgumentException("Parallelism must be between "
-                    + MIN_PARALLELISM + " and " + MAX_PARALLELISM);
+            throw new IllegalArgumentException("Parallelism must be between " + MIN_PARALLELISM + " and " + MAX_PARALLELISM);
         }
         List<FutureTask<T>> futures = new ArrayList<>(tasks.size());
         for (Callable<T> task : tasks) {
@@ -468,8 +499,7 @@ public final class CompactJarBuilder {
             throw new IOException("Missing dependency entry: " + dependencyName);
         }
         String prefix = String.format("%s%05d/", DEPENDENCY_PREFIX, index);
-        try (InputStream dependencyStream = executable.getInputStream(dependencyEntry);
-             ZipInputStream dependencyZip = new ZipInputStream(new BufferedInputStream(dependencyStream))) {
+        try (InputStream dependencyStream = executable.getInputStream(dependencyEntry); ZipInputStream dependencyZip = new ZipInputStream(new BufferedInputStream(dependencyStream, IO_BUFFER_SIZE))) {
             ZipEntry entry;
             while ((entry = dependencyZip.getNextEntry()) != null) {
                 writeStoredEntry(output, prefix + entry.getName(), dependencyZip, entry);
@@ -529,10 +559,27 @@ public final class CompactJarBuilder {
         }
     }
 
+    /**
+     * 读取嵌套依赖 JAR 的存储大小，用作两个 XZ 块的近似负载权重。
+     * <p>
+     * 这里不展开依赖内容统计解压后大小，避免为了选择切分点重复扫描全部 ZIP 条目。
+     */
+    private static List<Long> readDependencySizes(Path executableJar, List<String> dependencies) throws IOException {
+        List<Long> sizes = new ArrayList<>(dependencies.size());
+        try (JarFile jarFile = new JarFile(executableJar.toFile())) {
+            for (String dependency : dependencies) {
+                JarEntry entry = jarFile.getJarEntry(dependency);
+                if (entry == null || entry.getSize() < 0) {
+                    throw new IOException("Missing dependency size: " + dependency);
+                }
+                sizes.add(entry.getSize());
+            }
+        }
+        return sizes;
+    }
+
     private static void validateDependencyName(String name, String fileName) throws IOException {
-        if (fileName.isBlank() || fileName.equals(".") || fileName.equals("..")
-                || fileName.indexOf('/') >= 0 || fileName.indexOf('\\') >= 0
-                || fileName.indexOf('\t') >= 0 || fileName.indexOf('\r') >= 0 || fileName.indexOf('\n') >= 0) {
+        if (fileName.isBlank() || fileName.equals(".") || fileName.equals("..") || fileName.indexOf('/') >= 0 || fileName.indexOf('\\') >= 0 || fileName.indexOf('\t') >= 0 || fileName.indexOf('\r') >= 0 || fileName.indexOf('\n') >= 0) {
             throw new IOException("Invalid dependency name: " + name);
         }
     }
@@ -618,8 +665,7 @@ public final class CompactJarBuilder {
         }
     }
 
-    private static void writeStoredEntry(ZipOutputStream output, String name, InputStream input,
-                                         long size, long crc, long time) throws IOException {
+    private static void writeStoredEntry(ZipOutputStream output, String name, InputStream input, long size, long crc, long time) throws IOException {
         ZipEntry entry = new ZipEntry(name);
         entry.setMethod(ZipEntry.STORED);
         entry.setSize(size);
@@ -629,7 +675,7 @@ public final class CompactJarBuilder {
             entry.setTime(time);
         }
         output.putNextEntry(entry);
-        input.transferTo(output);
+        copy(input, output);
         output.closeEntry();
     }
 
@@ -686,8 +732,7 @@ public final class CompactJarBuilder {
      * 从当前运行时 ClassPath 自动收集启动器和 XZ 解压所需类，无需调用方手工准备类目录。
      */
     private static void addRuntimeClasses(JarOutputStream output) throws Exception {
-        addClassSource(output, CompressedJarLauncher.class,
-                name -> name.startsWith(LAUNCHER_CLASS_PATH) && name.endsWith(".class"));
+        addClassSource(output, CompressedJarLauncher.class, name -> name.startsWith(LAUNCHER_CLASS_PATH) && name.endsWith(".class"));
         addClassSource(output, XZInputStream.class, name -> name.startsWith(XZ_CLASS_PREFIX));
     }
 
@@ -717,9 +762,7 @@ public final class CompactJarBuilder {
     private static void addDirectoryClasses(JarOutputStream output, Path root, Predicate<String> filter) throws IOException {
         List<Path> files = new ArrayList<>();
         try (Stream<Path> paths = Files.walk(root)) {
-            paths.filter(Files::isRegularFile)
-                    .filter(path -> filter.test(normalizeEntryName(root.relativize(path))))
-                    .forEach(files::add);
+            paths.filter(Files::isRegularFile).filter(path -> filter.test(normalizeEntryName(root.relativize(path)))).forEach(files::add);
         }
         Collections.sort(files);
         for (Path file : files) {
@@ -756,7 +799,7 @@ public final class CompactJarBuilder {
     private static void addDeflatedEntry(JarOutputStream output, String name, InputStream input) throws IOException {
         JarEntry entry = new JarEntry(name);
         output.putNextEntry(entry);
-        input.transferTo(output);
+        copy(input, output);
         output.closeEntry();
     }
 
@@ -777,9 +820,20 @@ public final class CompactJarBuilder {
         entry.setCrc(crc.getValue());
         output.putNextEntry(entry);
         try (InputStream input = Files.newInputStream(file)) {
-            input.transferTo(output);
+            copy(input, output);
         }
         output.closeEntry();
+    }
+
+    /**
+     * 使用工作线程私有的大缓冲区复制流，避免 JDK 默认小缓冲区造成大量读写调用。
+     */
+    private static void copy(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = COPY_BUFFERS.get();
+        int length;
+        while ((length = input.read(buffer)) >= 0) {
+            output.write(buffer, 0, length);
+        }
     }
 
     private record PayloadInfo(String startClass, List<String> dependencies, List<Long> chunkSizes) {

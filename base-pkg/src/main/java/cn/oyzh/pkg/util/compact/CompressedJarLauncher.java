@@ -58,6 +58,9 @@ public final class CompressedJarLauncher {
     private static final String CACHE_DIRECTORY_PROPERTY = "compact.jar.cache.dir";
     private static final String UNPACK_THREADS_PROPERTY = "compact.jar.unpack.threads";
     private static final String CACHE_MODE_PROPERTY = "compact.jar.cache.mode";
+    private static final int IO_BUFFER_SIZE = 256 * 1024;
+    private static final ThreadLocal<byte[]> COPY_BUFFERS =
+            ThreadLocal.withInitial(() -> new byte[IO_BUFFER_SIZE]);
     //    private static final String RESTART_CLASSPATH_PROPERTY = "compact.jar.restart.classpath";
     //    private static final String RESTART_START_CLASS_PROPERTY = "compact.jar.restart.start.class";
 
@@ -209,11 +212,9 @@ public final class CompressedJarLauncher {
     private static Path cacheDirectory(String launcherSha256) throws Exception {
         String configured = System.getProperty(CACHE_DIRECTORY_PROPERTY);
         Path root = configured == null || configured.isBlank() ? defaultCacheRoot() : Paths.get(configured);
-        Path path = root.toAbsolutePath().normalize()
+        return root.toAbsolutePath().normalize()
                 .resolve(userCacheId())
                 .resolve(launcherSha256);
-        System.out.println("compact path=" + path);
-        return path;
     }
 
     /**
@@ -569,6 +570,17 @@ public final class CompressedJarLauncher {
     }
 
     /**
+     * 使用工作线程私有的大缓冲区复制 ZIP 条目，减少首次缓存重建时的系统调用。
+     */
+    private static void copy(InputStream input, OutputStream output) throws IOException {
+        byte[] buffer = COPY_BUFFERS.get();
+        int length;
+        while ((length = input.read(buffer)) >= 0) {
+            output.write(buffer, 0, length);
+        }
+    }
+
+    /**
      * 目标 JAR 的流式写入器；提交前只保留临时文件，不保留条目内容。
      */
     private static final class JarTarget implements AutoCloseable {
@@ -581,7 +593,8 @@ public final class CompressedJarLauncher {
         private JarTarget(Path target, CacheMode cacheMode) throws IOException {
             this.target = target;
             this.temporary = target.resolveSibling(target.getFileName() + ".tmp");
-            this.output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)));
+            this.output = new JarOutputStream(
+                    new BufferedOutputStream(Files.newOutputStream(temporary), IO_BUFFER_SIZE));
             this.cacheMode = cacheMode;
             if (cacheMode == CacheMode.DEFLATE) {
                 this.output.setLevel(java.util.zip.Deflater.BEST_SPEED);
@@ -599,7 +612,7 @@ public final class CompressedJarLauncher {
                 outputEntry.setTime(sourceEntry.getTime());
             }
             output.putNextEntry(outputEntry);
-            input.transferTo(output);
+            copy(input, output);
             output.closeEntry();
         }
 
@@ -619,7 +632,7 @@ public final class CompressedJarLauncher {
                 CRC32 checksum = new CRC32();
                 long total = 0;
                 try (OutputStream fileOutput = Files.newOutputStream(entryTemporary)) {
-                    byte[] buffer = new byte[64 * 1024];
+                    byte[] buffer = new byte[IO_BUFFER_SIZE];
                     int length;
                     while ((length = input.read(buffer)) >= 0) {
                         fileOutput.write(buffer, 0, length);
@@ -645,7 +658,7 @@ public final class CompressedJarLauncher {
                 outputEntry.setTime(time);
             }
             output.putNextEntry(outputEntry);
-            input.transferTo(output);
+            copy(input, output);
             output.closeEntry();
         }
 

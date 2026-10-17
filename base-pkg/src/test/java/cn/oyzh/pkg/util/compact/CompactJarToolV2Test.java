@@ -74,6 +74,20 @@ public class CompactJarToolV2Test {
     }
 
     @Test
+    public void compactAndLaunchXzRealProcess() throws Exception {
+        TestFixture fixture = createFixture(2);
+        CompactJarTool.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+
+        assertEquals("V2_OK:--message=hello world|dependency-one|resource, \"quoted\"\nline",
+                runJar(fixture.outputJar(), "--message=hello world"));
+        try (JarFile jar = new JarFile(fixture.outputJar().toFile())) {
+            assertTrue(jar.getJarEntry("compact-payload.xz") != null);
+            assertEquals(CompressedJarLauncher.class.getName(),
+                    jar.getManifest().getMainAttributes().getValue("Main-Class"));
+        }
+    }
+
+    @Test
     public void warmCacheReusesAndRefreshesShaCache() throws Exception {
         TestFixture fixture = createFixture(2);
         CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
@@ -256,9 +270,12 @@ public class CompactJarToolV2Test {
             assertTrue(jar.getJarEntry("compact-payload.zst") != null);
             assertTrue(jar.getJarEntry("META-INF/compact-index.tsv") == null);
             assertTrue(jar.getJarEntry("com/github/luben/zstd/ZstdInputStream.class") != null);
-            assertTrue(jar.getJarEntry("linux/amd64/libzstd-jni-1.5.7-6.so") != null);
-            assertTrue(jar.getJarEntry("darwin/aarch64/libzstd-jni-1.5.7-6.dylib") != null);
-            assertTrue(jar.getJarEntry("win/amd64/libzstd-jni-1.5.7-6.dll") != null);
+            assertTrue(jar.stream().anyMatch(entry -> entry.getName().startsWith("linux/amd64/libzstd-jni-")
+                    && entry.getName().endsWith(".so")));
+            assertTrue(jar.stream().anyMatch(entry -> entry.getName().startsWith("darwin/aarch64/libzstd-jni-")
+                    && entry.getName().endsWith(".dylib")));
+            assertTrue(jar.stream().anyMatch(entry -> entry.getName().startsWith("win/amd64/libzstd-jni-")
+                    && entry.getName().endsWith(".dll")));
         }
     }
 
