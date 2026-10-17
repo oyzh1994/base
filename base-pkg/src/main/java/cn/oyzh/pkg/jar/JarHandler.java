@@ -22,6 +22,7 @@ import cn.oyzh.pkg.PackOrder;
 import cn.oyzh.pkg.PreHandler;
 import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.filter.RegFilter;
+import cn.oyzh.pkg.macos.MacosUtil;
 import cn.oyzh.pkg.util.PkgUtil;
 import cn.oyzh.pkg.util.compact.CompactJarTool;
 import cn.oyzh.pkg.util.compact.CompactJarToolV2;
@@ -207,11 +208,16 @@ public class JarHandler implements PreHandler {
             } else if (src.contains("javafx-web-")) {
                 modName = "javafx.web.jmod";
             }
-            // jmods处理
             if (modName != null) {
-                String jdkPath = this.config.getJdkPath();
-                // 获取lib目录
-                Path libPath = WoaUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")), jdkPath);
+                Path libPath;
+                // macos x64兼容性处理
+                if (MacosUtil.isMacos_x64()) {
+                    libPath = MacosUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")));
+                } else { // jmods处理
+                    String jdkPath = this.config.getJdkPath();
+                    // 获取lib目录
+                    libPath = WoaUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")), jdkPath);
+                }
                 // 检查lib文件是否存在
                 if (libPath != null) {
                     String finalJavafxPath = javafxPath;
@@ -238,8 +244,8 @@ public class JarHandler implements PreHandler {
                 }
             }
 
-            // ci环境下，windows on arm默认不会复制lib
-            if (SystemUtil.isCIEnv() && WoaUtil.isWoa()) {
+            // ci环境下，windows arm64、macos x64默认不会复制lib
+            if (SystemUtil.isCIEnv() && (WoaUtil.isWoa() || MacosUtil.isMacos_x64())) {
                 return;
             }
 

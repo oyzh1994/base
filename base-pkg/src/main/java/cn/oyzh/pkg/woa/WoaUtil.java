@@ -36,21 +36,19 @@ public class WoaUtil {
         String modDir = JModUtil.extract(mod + ".jmod", jdkPath);
         Path lib = modDir == null ? null : Path.of(modDir, "lib");
         // 不存在模块路径，则从资源目录获取
-        if (lib == null || !Files.exists(lib)) {
-            if (isWoa()) {
-                JulLog.warn("mod:{} lib is null, find resources lib....", mod);
-                String libDir = "/jfx/libs/" + name;
-                List<String> list = ResourceUtil.listFiles(libDir);
-                if (CollectionUtil.isEmpty(list)) {
-                    return null;
-                }
-                lib = Path.of(SystemUtil.tmpdir(), "_jfx_win_arm_libs");
-                // 复制文件
-                for (String s : list) {
-                    InputStream stream = ResourceUtil.getResourceAsStream(libDir + "/" + s);
-                    IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s));
-                    IOUtil.close(stream);
-                }
+        if ((lib == null || !Files.exists(lib)) && isWoa()) {
+            JulLog.warn("mod:{} lib is null, find resources lib....", mod);
+            String libDir = "/jfx/libs/windows_arm64/" + name;
+            List<String> list = ResourceUtil.listFiles(libDir);
+            if (CollectionUtil.isEmpty(list)) {
+                return null;
+            }
+            lib = Path.of(SystemUtil.tmpdir(), "_jfx_libs");
+            // 复制文件
+            for (String s : list) {
+                InputStream stream = ResourceUtil.getResourceAsStream(libDir + "/" + s);
+                IOUtil.saveToFile(stream, FileNameUtil.concat(lib.toString(), s));
+                IOUtil.close(stream);
             }
         }
         return lib;
