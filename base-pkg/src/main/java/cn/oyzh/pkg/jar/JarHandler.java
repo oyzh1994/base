@@ -210,14 +210,15 @@ public class JarHandler implements PreHandler {
             }
             if (modName != null) {
                 Path libPath;
-                // macos x64兼容性处理
-                if (MacosUtil.isMacos_x64()) {
-                    libPath = MacosUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")));
-                } else { // jmods处理
-                    String jdkPath = this.config.getJdkPath();
-                    // 获取lib目录
-                    libPath = WoaUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")), jdkPath);
-                }
+                //// macos x64兼容性处理
+                //if (MacosUtil.isMacos_x64()) {
+                //    libPath = MacosUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")));
+                //} else {
+                // jmods处理
+                String jdkPath = this.config.getJdkPath();
+                // 获取lib目录
+                libPath = WoaUtil.getJfxLibPath(modName.substring(0, modName.lastIndexOf(".")), jdkPath);
+                //}
                 // 检查lib文件是否存在
                 if (libPath != null) {
                     String finalJavafxPath = javafxPath;
