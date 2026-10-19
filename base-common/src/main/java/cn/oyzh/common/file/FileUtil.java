@@ -158,6 +158,16 @@ public class FileUtil {
      * @param content 内容
      * @param file    目标文件
      */
+    public static void writeUtf8String(String content, Path file) {
+        writeString(content, file.toFile(), StandardCharsets.UTF_8, false);
+    }
+
+    /**
+     * 将字符串以 UTF-8 编码覆盖写入文件
+     *
+     * @param content 内容
+     * @param file    目标文件
+     */
     public static void writeUtf8String(String content, File file) {
         writeString(content, file, StandardCharsets.UTF_8, false);
     }
