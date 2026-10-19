@@ -54,7 +54,7 @@ public class CsvTypeFileWriter extends TypeFileWriter {
                 cols.add(fileColumn.getDesc());
             }
             // 写入列名
-            this.writer.write(this.formatLine(cols, null, ',', this.config.txtIdentifier(), "\n"));
+            this.writer.write(this.formatLine(cols, null, ",", this.config.getTxtIdentifier(), "\n"));
         }
     }
 
@@ -66,7 +66,7 @@ public class CsvTypeFileWriter extends TypeFileWriter {
             Object val = this.parameterized(entry.getValue());
             values[index] = val;
         }
-        this.writer.write(this.formatLine(values, null, ',', this.config.txtIdentifier(), "\n"));
+        this.writer.write(this.formatLine(values, null, ",", this.config.getTxtIdentifier(), "\n"));
     }
 
     @Override

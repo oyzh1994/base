@@ -82,7 +82,7 @@ public abstract class TypeFileWriter implements Closeable {
      * @param recordSeparator 记录分隔符号
      * @return 格式化后的文本行
      */
-    protected String formatLine(Object[] objects, String prefix, Character fieldSeparator, Character txtIdentifier, String recordSeparator) {
+    protected String formatLine(Object[] objects, String prefix, String fieldSeparator, String txtIdentifier, String recordSeparator) {
         return this.formatLine(List.of(objects), prefix, fieldSeparator, txtIdentifier, recordSeparator);
     }
 
@@ -96,7 +96,7 @@ public abstract class TypeFileWriter implements Closeable {
      * @param recordSeparator 记录分隔符号
      * @return 格式化后的文本行
      */
-    protected String formatLine(List<?> list, String prefix, Character fieldSeparator, Character txtIdentifier, String recordSeparator) {
+    protected String formatLine(List<?> list, String prefix, String fieldSeparator, String txtIdentifier, String recordSeparator) {
         StringBuilder sb = new StringBuilder();
         for (Object val : list) {
             if (fieldSeparator != null) {

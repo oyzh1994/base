@@ -55,7 +55,7 @@ public class CsvTypeFileReader extends TypeFileReader {
     public FileRecord readRecord() throws IOException {
         String line = this.reader.readLine();
         if (line != null) {
-            List<String> arr = this.parseLine(line, this.config.txtIdentifier(), ',');
+            List<String> arr = this.parseLine(line, this.config.getTxtIdentifier(), ",");
             FileRecord record = new FileRecord();
             for (int i = 0; i < arr.size(); i++) {
                 record.put(i, arr.get(i));

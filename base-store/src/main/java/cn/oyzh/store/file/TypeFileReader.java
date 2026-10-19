@@ -61,7 +61,7 @@ public abstract class TypeFileReader implements Closeable {
      * @return 字段值列表
      * @throws IOException 异常
      */
-    protected List<String> parseLine(String line, Character txtIdentifier, Character fieldSeparator) throws IOException {
+    protected List<String> parseLine(String line, String txtIdentifier, String fieldSeparator) throws IOException {
         List<String> list = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
         boolean txtStart = false;
@@ -74,7 +74,7 @@ public abstract class TypeFileReader implements Closeable {
                 }
                 char c = (char) i;
                 if (txtIdentifier != null) {
-                    if (c == txtIdentifier) {
+                    if (c == txtIdentifier.charAt(0)) {
                         if (lastChar != null && lastChar == '\\') {
                             sb.append(c);
                             continue;
@@ -93,7 +93,7 @@ public abstract class TypeFileReader implements Closeable {
                 }
 
                 if (fieldSeparator != null) {
-                    if (txtStart && c == fieldSeparator) {
+                    if (txtStart && c == fieldSeparator.charAt(0)) {
                         txtStart = false;
                         list.add(sb.toString());
                         sb.delete(0, sb.length());

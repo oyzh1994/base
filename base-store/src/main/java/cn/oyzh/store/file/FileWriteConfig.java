@@ -19,7 +19,7 @@ public class FileWriteConfig {
     /**
      * 文本识别符号
      */
-    private Character txtIdentifier = '"';
+    private String txtIdentifier = "\"";
 
     /**
      * 包含标题
@@ -221,25 +221,25 @@ public class FileWriteConfig {
         return this;
     }
 
-    /**
-     * 获取文本识别符号
-     *
-     * @return 文本识别符号
-     */
-    public Character txtIdentifier() {
-        return this.txtIdentifier;
-    }
-
-    /**
-     * 设置文本识别符号
-     *
-     * @param txtIdentifier 文本识别符号
-     * @return 当前对象
-     */
-    public FileWriteConfig txtIdentifier(Character txtIdentifier) {
-        this.txtIdentifier = txtIdentifier;
-        return this;
-    }
+//    /**
+//     * 获取文本识别符号
+//     *
+//     * @return 文本识别符号
+//     */
+//    public Character txtIdentifier() {
+//        return this.txtIdentifier;
+//    }
+//
+//    /**
+//     * 设置文本识别符号
+//     *
+//     * @param txtIdentifier 文本识别符号
+//     * @return 当前对象
+//     */
+//    public FileWriteConfig txtIdentifier(Character txtIdentifier) {
+//        this.txtIdentifier = txtIdentifier;
+//        return this;
+//    }
 
     /**
      * 获取记录分割符号
@@ -260,4 +260,58 @@ public class FileWriteConfig {
         this.recordSeparator = recordSeparator;
         return this;
     }
+    /**
+     * 获取记录分隔符。
+     *
+     * @return 记录分隔符
+     */
+    public String getRecordSeparator() {
+        return recordSeparator;
+    }
+
+    /**
+     * 设置记录分隔符。
+     *
+     * @param recordSeparator 记录分隔符
+     */
+    public void setRecordSeparator(String recordSeparator) {
+        this.recordSeparator = recordSeparator;
+    }
+
+    /**
+     * 获取文本标识符。
+     *
+     * @return 文本标识符
+     */
+    public String getTxtIdentifier() {
+        return txtIdentifier;
+    }
+
+    /**
+     * 设置文本标识符。
+     *
+     * @param txtIdentifier 文本标识符
+     */
+    public void setTxtIdentifier(String txtIdentifier) {
+        this.txtIdentifier = txtIdentifier;
+    }
+
+    /**
+     * 获取字符集。
+     *
+     * @return 字符集
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
+     * 设置字符集。
+     *
+     * @param charset 字符集
+     */
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
+
 }

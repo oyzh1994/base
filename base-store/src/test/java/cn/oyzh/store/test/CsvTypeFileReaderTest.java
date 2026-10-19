@@ -22,7 +22,7 @@ public class CsvTypeFileReaderTest {
         config.setFilePath(ResourceUtil.getPath(file));
         config.setDataRowStarts(2);
         config.setTxtIdentifier(null);
-        config.setFieldSeparator(',');
+        config.setFieldSeparator(",");
         FileColumns columns = new FileColumns();
         columns.addColumn("Num");
         columns.addColumn("ID_num");
@@ -63,7 +63,7 @@ public class CsvTypeFileReaderTest {
         FileReadConfig config = new FileReadConfig();
         config.setFilePath(ResourceUtil.getPath(file));
         config.setDataRowStarts(2);
-        config.setFieldSeparator(',');
+        config.setFieldSeparator(",");
         FileColumns columns = new FileColumns();
         columns.addColumn("name");
         columns.addColumn("age");

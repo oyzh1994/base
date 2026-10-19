@@ -19,12 +19,12 @@ public class FileReadConfig {
     /**
      * 字段分割符号
      */
-    private Character fieldSeparator = ' ';
+    private String fieldSeparator = " ";
 
     /**
      * 文本识别符号
      */
-    private Character txtIdentifier = '"';
+    private String txtIdentifier = "\"";
 
     /**
      * 字符集
@@ -81,44 +81,44 @@ public class FileReadConfig {
         this.charset = charset;
         return this;
     }
-
-    /**
-     * 获取记录分割符号
-     *
-     * @return 记录分割符号
-     */
-    public String recordSeparator() {
-        return this.recordSeparator;
-    }
-
-    /**
-     * 获取文本识别符号
-     *
-     * @return 文本识别符号
-     */
-    public Character txtIdentifier() {
-        return this.txtIdentifier;
-    }
-
-    /**
-     * 设置文本识别符号
-     *
-     * @param txtIdentifier 文本识别符号
-     * @return 当前对象
-     */
-    public FileReadConfig txtIdentifier(Character txtIdentifier) {
-        this.txtIdentifier = txtIdentifier;
-        return this;
-    }
-
-    /**
-     * 获取字段分割符号
-     *
-     * @return 字段分割符号
-     */
-    public Character fieldSeparator() {
-        return this.fieldSeparator;
-    }
+//
+//    /**
+//     * 获取记录分割符号
+//     *
+//     * @return 记录分割符号
+//     */
+//    public String recordSeparator() {
+//        return this.recordSeparator;
+//    }
+//
+//    /**
+//     * 获取文本识别符号
+//     *
+//     * @return 文本识别符号
+//     */
+//    public Character txtIdentifier() {
+//        return this.txtIdentifier;
+//    }
+//
+//    /**
+//     * 设置文本识别符号
+//     *
+//     * @param txtIdentifier 文本识别符号
+//     * @return 当前对象
+//     */
+//    public FileReadConfig txtIdentifier(Character txtIdentifier) {
+//        this.txtIdentifier = txtIdentifier;
+//        return this;
+//    }
+//
+//    /**
+//     * 获取字段分割符号
+//     *
+//     * @return 字段分割符号
+//     */
+//    public Character fieldSeparator() {
+//        return this.fieldSeparator;
+//    }
 
     /**
      * 获取数据行开始索引
@@ -163,7 +163,7 @@ public class FileReadConfig {
      *
      * @return 字段分割符号
      */
-    public Character getFieldSeparator() {
+    public String getFieldSeparator() {
         return fieldSeparator;
     }
 
@@ -172,7 +172,7 @@ public class FileReadConfig {
      *
      * @param fieldSeparator 字段分割符号
      */
-    public void setFieldSeparator(Character fieldSeparator) {
+    public void setFieldSeparator(String fieldSeparator) {
         this.fieldSeparator = fieldSeparator;
     }
 
@@ -181,7 +181,7 @@ public class FileReadConfig {
      *
      * @return 文本识别符号
      */
-    public Character getTxtIdentifier() {
+    public String getTxtIdentifier() {
         return txtIdentifier;
     }
 
@@ -190,7 +190,7 @@ public class FileReadConfig {
      *
      * @param txtIdentifier 文本识别符号
      */
-    public void setTxtIdentifier(Character txtIdentifier) {
+    public void setTxtIdentifier(String txtIdentifier) {
         this.txtIdentifier = txtIdentifier;
     }
 

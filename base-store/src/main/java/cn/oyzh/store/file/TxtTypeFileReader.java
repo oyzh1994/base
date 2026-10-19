@@ -43,8 +43,8 @@ public class TxtTypeFileReader extends TypeFileReader {
         this.columns = columns;
         this.reader = new SkipAbleFileReader(config.filePath(), Charset.forName(config.charset()));
         // 设置换行符
-        if (!Objects.equals(config.recordSeparator(), System.lineSeparator())) {
-            this.reader.lineBreak(config.recordSeparator());
+        if (!Objects.equals(config.getRecordSeparator(), System.lineSeparator())) {
+            this.reader.lineBreak(config.getRecordSeparator());
         }
     }
 
@@ -52,7 +52,7 @@ public class TxtTypeFileReader extends TypeFileReader {
     public FileRecord readRecord() throws IOException {
         String line = this.reader.readLine();
         if (line != null) {
-            List<String> arr = this.parseLine(line, this.config.txtIdentifier(), this.config.fieldSeparator());
+            List<String> arr = this.parseLine(line, this.config.getTxtIdentifier(), this.config.getFieldSeparator());
             FileRecord record = new FileRecord();
             for (int i = 0; i < arr.size(); i++) {
                 record.put(i, arr.get(i));
