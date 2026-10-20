@@ -865,4 +865,18 @@ public class TextUtil {
         }
         return text.replaceAll("\\s+", " ");
     }
+
+    /**
+     * 格式美化
+     *
+     * @param list 字符串列表
+     * @return 美化后的字符
+     */
+    public static String format(Collection<String> list) {
+        if (list == null) {
+            return "";
+        }
+        return StringUtil.join(System.lineSeparator(), list);
+
+    }
 }

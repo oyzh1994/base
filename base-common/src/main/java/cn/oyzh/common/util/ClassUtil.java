@@ -49,6 +49,11 @@ public class ClassUtil {
                         return (T) constructor.newInstance();
                     }
                 }
+                Constructor<T> constructor = clazz.getDeclaredConstructor();
+                constructor.setAccessible(true);
+                return constructor.newInstance();
+            } catch (NoSuchMethodException ignore) {
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -192,7 +197,6 @@ public class ClassUtil {
         if (clazz == null) {
             return false;
         }
-        return clazz == boolean.class || clazz == int.class || clazz == byte.class || clazz == short.class
-                || clazz == char.class || clazz == double.class || clazz == float.class || clazz == long.class;
+        return clazz == boolean.class || clazz == int.class || clazz == byte.class || clazz == short.class || clazz == char.class || clazz == double.class || clazz == float.class || clazz == long.class;
     }
 }

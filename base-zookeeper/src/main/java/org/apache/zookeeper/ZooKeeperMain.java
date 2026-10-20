@@ -68,7 +68,7 @@ import java.util.regex.Pattern;
  */
 public class ZooKeeperMain {
     protected static final Map<String,String> commandMap = new HashMap<String,String>( );
-    protected static final Map<String,CliCommand> commandMapCli =
+    public static final Map<String,CliCommand> commandMapCli =
             new HashMap<String,CliCommand>( );
 
     protected MyCommandOptions cl = new MyCommandOptions();
