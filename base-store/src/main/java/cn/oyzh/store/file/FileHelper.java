@@ -19,7 +19,7 @@ public class FileHelper {
      * @return 文件写入器
      * @throws Exception 异常
      */
-    public static TypeFileWriter initWriter(String fileType, FileWriteConfig config, FileColumns columns) throws Exception {
+    public static TypeFileWriter<FileRecord> initWriter(String fileType, FileWriteConfig config, FileColumns columns) throws Exception {
         if (FileNameUtil.isExcelType(fileType)) {
             return new ExcelTypeFileWriter(config, columns);
         }
@@ -50,7 +50,7 @@ public class FileHelper {
      * @return 文件读取器
      * @throws Exception 异常
      */
-    public static TypeFileReader initReader(String fileType, FileReadConfig config, FileColumns columns) throws Exception {
+    public static TypeFileReader<FileRecord> initReader(String fileType, FileReadConfig config, FileColumns columns) throws Exception {
         if (FileNameUtil.isExcelType(fileType)) {
             return new ExcelTypeFileReader(config, columns);
         }

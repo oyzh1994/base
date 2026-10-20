@@ -4,9 +4,9 @@ import cn.oyzh.common.xml.XMLHelper;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.FileInputStream;
+import java.util.Map;
 
 /**
  * xml类型文件读取器
@@ -14,7 +14,7 @@ import java.io.FileInputStream;
  * @author oyzh
  * @since 2024-11-28
  */
-public class XmlTypeFileReader extends TypeFileReader {
+public class XmlTypeFileReader extends TypeFileReader<FileRecord> {
 
     /**
      * xml读取器
@@ -58,47 +58,58 @@ public class XmlTypeFileReader extends TypeFileReader {
 
     @Override
     public FileRecord readRecord() throws Exception {
-        String name = null;
-        String value = null;
-        FileRecord record = null;
-        boolean rootStart = false;
-        boolean childStart = false;
-        while (this.reader.hasNext()) {
-            XMLEvent event = this.reader.nextEvent();
-            // 根节点结束
-            if (event.isEndElement() && rootStart && !childStart) {
-                break;
-            }
-            // 根节点开始
-            if (event.isStartElement() && !rootStart) {
-                rootStart = true;
-                continue;
-            }
-            // 子节点开始
-            if (event.isStartElement() && !childStart) {
-                childStart = true;
-                StartElement element = event.asStartElement();
-                name = element.getName().getLocalPart();
-                continue;
-            }
-            // 子节点结束
-            if (event.isEndElement() && childStart) {
-                childStart = false;
-                if (record == null) {
-                    record = new FileRecord();
-                }
-                FileColumn column = this.columns.column(name);
-                record.put(column.getPosition(), value);
-                name = null;
-                value = null;
-                continue;
-            }
-            // 子节点数据
-            if (event.isCharacters() && name != null) {
-                value = event.asCharacters().getData();
+        Map<String, Object> map = FileXmlUtil.readRecord(this.reader);
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+        FileRecord record = new FileRecord();
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            FileColumn column = this.columns.column(entry.getKey());
+            if (column != null) {
+                record.put(column.getPosition(), entry.getValue());
             }
         }
         return record;
+//        String value = null;
+//        FileRecord record = null;
+//        boolean rootStart = false;
+//        boolean childStart = false;
+//        while (this.reader.hasNext()) {
+//            XMLEvent event = this.reader.nextEvent();
+//            // 根节点结束
+//            if (event.isEndElement() && rootStart && !childStart) {
+//                break;
+//            }
+//            // 根节点开始
+//            if (event.isStartElement() && !rootStart) {
+//                rootStart = true;
+//                continue;
+//            }
+//            // 子节点开始
+//            if (event.isStartElement() && !childStart) {
+//                childStart = true;
+//                StartElement element = event.asStartElement();
+//                name = element.getName().getLocalPart();
+//                continue;
+//            }
+//            // 子节点结束
+//            if (event.isEndElement() && childStart) {
+//                childStart = false;
+//                if (record == null) {
+//                    record = new FileRecord();
+//                }
+//                FileColumn column = this.columns.column(name);
+//                record.put(column.getPosition(), value);
+//                name = null;
+//                value = null;
+//                continue;
+//            }
+//            // 子节点数据
+//            if (event.isCharacters() && name != null) {
+//                value = event.asCharacters().getData();
+//            }
+//        }
+//        return record;
     }
 
     @Override

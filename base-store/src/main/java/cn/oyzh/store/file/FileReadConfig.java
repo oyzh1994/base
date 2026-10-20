@@ -77,48 +77,10 @@ public class FileReadConfig {
      * @param charset 字符集
      * @return 当前对象
      */
-    public final FileReadConfig charset(String charset) {
+    public FileReadConfig charset(String charset) {
         this.charset = charset;
         return this;
     }
-//
-//    /**
-//     * 获取记录分割符号
-//     *
-//     * @return 记录分割符号
-//     */
-//    public String recordSeparator() {
-//        return this.recordSeparator;
-//    }
-//
-//    /**
-//     * 获取文本识别符号
-//     *
-//     * @return 文本识别符号
-//     */
-//    public Character txtIdentifier() {
-//        return this.txtIdentifier;
-//    }
-//
-//    /**
-//     * 设置文本识别符号
-//     *
-//     * @param txtIdentifier 文本识别符号
-//     * @return 当前对象
-//     */
-//    public FileReadConfig txtIdentifier(Character txtIdentifier) {
-//        this.txtIdentifier = txtIdentifier;
-//        return this;
-//    }
-//
-//    /**
-//     * 获取字段分割符号
-//     *
-//     * @return 字段分割符号
-//     */
-//    public Character fieldSeparator() {
-//        return this.fieldSeparator;
-//    }
 
     /**
      * 获取数据行开始索引
@@ -146,7 +108,7 @@ public class FileReadConfig {
      * @return 记录分割符号
      */
     public String getRecordSeparator() {
-        return recordSeparator;
+        return this.recordSeparator;
     }
 
     /**
@@ -164,7 +126,7 @@ public class FileReadConfig {
      * @return 字段分割符号
      */
     public String getFieldSeparator() {
-        return fieldSeparator;
+        return this.fieldSeparator;
     }
 
     /**
@@ -182,7 +144,7 @@ public class FileReadConfig {
      * @return 文本识别符号
      */
     public String getTxtIdentifier() {
-        return txtIdentifier;
+        return this.txtIdentifier;
     }
 
     /**
@@ -200,7 +162,7 @@ public class FileReadConfig {
      * @return 字符集
      */
     public String getCharset() {
-        return charset;
+        return this.charset;
     }
 
     /**
@@ -218,7 +180,7 @@ public class FileReadConfig {
      * @return 文件路径
      */
     public String getFilePath() {
-        return filePath;
+        return this.filePath;
     }
 
     /**
@@ -236,7 +198,7 @@ public class FileReadConfig {
      * @return 数据行开始索引
      */
     public Integer getDataRowStarts() {
-        return dataRowStarts;
+        return this.dataRowStarts;
     }
 
     /**

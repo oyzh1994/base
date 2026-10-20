@@ -11,10 +11,17 @@ import java.util.Map;
 /**
  * csv类型文件写入器
  *
+ * <p>基于Apache Commons CSV实现，字段分割符号默认为逗号，可通过构造参数覆盖。</p>
+ *
  * @author oyzh
  * @since 2024-11-28
  */
-public class CsvTypeFileWriter extends TypeFileWriter {
+public class CsvTypeFileWriter extends TypeFileWriter<FileRecord> {
+
+    /**
+     * csv分割符号
+     */
+    private static final String CSV_DELIMITER = ",";
 
     /**
      * 字段列表
@@ -29,7 +36,8 @@ public class CsvTypeFileWriter extends TypeFileWriter {
     /**
      * 文件写入器
      */
-    private LineFileWriter writer;
+    private CsvFileWriter writer;
+//    private LineFileWriter writer;
 
     /**
      * 构造csv类型文件写入器
@@ -39,10 +47,22 @@ public class CsvTypeFileWriter extends TypeFileWriter {
      * @throws Exception 异常
      */
     public CsvTypeFileWriter(FileWriteConfig config, FileColumns columns) throws Exception {
+        this(config, columns, CSV_DELIMITER);
+    }
+
+    /**
+     * 构造定界文本类型文件写入器
+     *
+     * @param config         导出配置
+     * @param columns        字段列表
+     * @param fieldSeparator 字段分割符号
+     * @throws Exception 异常
+     */
+    public CsvTypeFileWriter(FileWriteConfig config, FileColumns columns, String fieldSeparator) throws Exception {
         this.columns = columns;
         this.config = config;
-        this.writer = LineFileWriter.create(config.filePath(), config.charset());
-        this.init();
+//        this.writer = LineFileWriter.create(config.filePath(), config.charset());
+        this.writer = new CsvFileWriter(config.filePath(), config, fieldSeparator);
     }
 
     @Override
@@ -54,7 +74,8 @@ public class CsvTypeFileWriter extends TypeFileWriter {
                 cols.add(fileColumn.getDesc());
             }
             // 写入列名
-            this.writer.write(this.formatLine(cols, null, ",", this.config.getTxtIdentifier(), "\n"));
+//            this.writer.write(this.formatLine(cols, null, ",", this.config.getTxtIdentifier(), "\n"));
+            this.writer.write(cols);
         }
     }
 
@@ -66,18 +87,21 @@ public class CsvTypeFileWriter extends TypeFileWriter {
             Object val = this.parameterized(entry.getValue());
             values[index] = val;
         }
-        this.writer.write(this.formatLine(values, null, ",", this.config.getTxtIdentifier(), "\n"));
+//        this.writer.write(this.formatLine(values, null, ",", this.config.getTxtIdentifier(), "\n"));
+        this.writer.write(values);
     }
 
     @Override
-    public Object parameterized(Object value) {
-        if (value == null) {
-            return "";
-        }
-        if (value instanceof Number) {
-            return value;
-        }
-        return TextUtil.escape(value.toString());
+    public void writeRecords(List<FileRecord> records) throws Exception {
+//        if (value == null) {
+//            return "";
+//        }
+//        if (value instanceof Number) {
+//            return value;
+//        }
+//        return TextUtil.escape(value.toString());
+        super.writeRecords(records);
+        this.writer.flush();
     }
 
     @Override

@@ -17,6 +17,11 @@ public class FileWriteConfig {
     private String recordSeparator = System.lineSeparator();
 
     /**
+     * 字段分割符号
+     */
+    private String fieldSeparator = " ";
+
+    /**
      * 文本识别符号
      */
     private String txtIdentifier = "\"";
@@ -247,7 +252,7 @@ public class FileWriteConfig {
      * @return 记录分割符号
      */
     public String recordSeparator() {
-        return recordSeparator;
+        return this.recordSeparator;
     }
 
     /**
@@ -260,13 +265,14 @@ public class FileWriteConfig {
         this.recordSeparator = recordSeparator;
         return this;
     }
+
     /**
      * 获取记录分隔符。
      *
      * @return 记录分隔符
      */
     public String getRecordSeparator() {
-        return recordSeparator;
+        return this.recordSeparator;
     }
 
     /**
@@ -279,12 +285,30 @@ public class FileWriteConfig {
     }
 
     /**
+     * 获取字段分割符号
+     *
+     * @return 字段分割符号
+     */
+    public String getFieldSeparator() {
+        return this.fieldSeparator;
+    }
+
+    /**
+     * 设置字段分割符号
+     *
+     * @param fieldSeparator 字段分割符号
+     */
+    public void setFieldSeparator(String fieldSeparator) {
+        this.fieldSeparator = fieldSeparator;
+    }
+
+    /**
      * 获取文本标识符。
      *
      * @return 文本标识符
      */
     public String getTxtIdentifier() {
-        return txtIdentifier;
+        return this.txtIdentifier;
     }
 
     /**
@@ -302,7 +326,7 @@ public class FileWriteConfig {
      * @return 字符集
      */
     public String getCharset() {
-        return charset;
+        return this.charset;
     }
 
     /**
@@ -314,4 +338,57 @@ public class FileWriteConfig {
         this.charset = charset;
     }
 
+    /**
+     * 获取文件路径
+     *
+     * @return 文件路径
+     */
+    public String getFilePath() {
+        return this.filePath;
+    }
+
+    /**
+     * 设置文件路径
+     *
+     * @param filePath 文件路径
+     */
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    /**
+     * 获取是否包含标题
+     *
+     * @return 是否包含标题
+     */
+    public boolean isIncludeTitle() {
+        return this.includeTitle;
+    }
+
+    /**
+     * 设置是否包含标题
+     *
+     * @param includeTitle 是否包含标题
+     */
+    public void setIncludeTitle(boolean includeTitle) {
+        this.includeTitle = includeTitle;
+    }
+
+    /**
+     * 获取是否压缩
+     *
+     * @return 是否压缩
+     */
+    public boolean isCompress() {
+        return this.compress;
+    }
+
+    /**
+     * 设置是否压缩
+     *
+     * @param compress 是否压缩
+     */
+    public void setCompress(boolean compress) {
+        this.compress = compress;
+    }
 }

@@ -23,7 +23,7 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-11-28
  */
-public class ExcelTypeFileWriter extends TypeFileWriter {
+public class ExcelTypeFileWriter extends TypeFileWriter<FileRecord> {
 
     /**
      * 字段列表
@@ -115,21 +115,22 @@ public class ExcelTypeFileWriter extends TypeFileWriter {
         Row row = sheet.createRow(this.xlsRowIndex++);
         // 填充数据列
         for (int i = 0; i < values.length; i++) {
-            Cell cell = row.createCell(i);
-            Object val = values[i];
-            switch (val) {
-                case null -> {
-                }
-                case Date v -> cell.setCellValue(v);
-                case Double v -> cell.setCellValue(v);
-                case String v -> cell.setCellValue(v);
-                case Boolean v -> cell.setCellValue(v);
-                case Calendar v -> cell.setCellValue(v);
-                case LocalDate v -> cell.setCellValue(v);
-                case LocalDateTime v -> cell.setCellValue(v);
-                case Number v -> cell.setCellValue(v.doubleValue());
-                default -> cell.setCellValue(val.toString());
-            }
+//            Cell cell = row.createCell(i);
+//            Object val = values[i];
+//            switch (val) {
+//                case null -> {
+//                }
+//                case Date v -> cell.setCellValue(v);
+//                case Double v -> cell.setCellValue(v);
+//                case String v -> cell.setCellValue(v);
+//                case Boolean v -> cell.setCellValue(v);
+//                case Calendar v -> cell.setCellValue(v);
+//                case LocalDate v -> cell.setCellValue(v);
+//                case LocalDateTime v -> cell.setCellValue(v);
+//                case Number v -> cell.setCellValue(v.doubleValue());
+//                default -> cell.setCellValue(val.toString());
+//            }
+            FileExcelUtil.setCellValue(row.createCell(i), values[i]);
         }
         if (flush) {
             this.flush();

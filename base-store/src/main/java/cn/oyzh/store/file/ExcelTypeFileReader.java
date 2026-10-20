@@ -16,7 +16,7 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author oyzh
  * @since 2024-11-28
  */
-public class ExcelTypeFileReader extends TypeFileReader {
+public class ExcelTypeFileReader extends TypeFileReader<FileRecord> {
 
     /**
      * excel工作薄
@@ -70,22 +70,23 @@ public class ExcelTypeFileReader extends TypeFileReader {
         if (row != null) {
             FileRecord record = new FileRecord();
             for (Cell cell : row) {
-                Object val;
-                CellType cellType = cell.getCellType();
-                if (cellType == CellType.BOOLEAN) {
-                    val = cell.getBooleanCellValue();
-                } else if (cellType == CellType.NUMERIC) {
-                    if (DateUtil.isCellDateFormatted(cell)) {
-                        val = cell.getDateCellValue();
-                    } else {
-                        val = cell.getNumericCellValue();
-                    }
-                } else if (cellType == CellType.STRING) {
-                    val = cell.getStringCellValue();
-                } else {
-                    val = cell.getStringCellValue();
-                }
-                record.put(cell.getColumnIndex(), val);
+//                Object val;
+//                CellType cellType = cell.getCellType();
+//                if (cellType == CellType.BOOLEAN) {
+//                    val = cell.getBooleanCellValue();
+//                } else if (cellType == CellType.NUMERIC) {
+//                    if (DateUtil.isCellDateFormatted(cell)) {
+//                        val = cell.getDateCellValue();
+//                    } else {
+//                        val = cell.getNumericCellValue();
+//                    }
+//                } else if (cellType == CellType.STRING) {
+//                    val = cell.getStringCellValue();
+//                } else {
+//                    val = cell.getStringCellValue();
+//                }
+//                record.put(cell.getColumnIndex(), val);
+                record.put(cell.getColumnIndex(), FileExcelUtil.cellValue(cell));
             }
             return record;
         }

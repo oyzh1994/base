@@ -11,67 +11,70 @@ import java.util.Objects;
 /**
  * txt类型文件读取器
  *
+ * <p>TXT与CSV都是定界文本，仅字段分割符号与文件扩展名不同，因此复用CSV读取实现。</p>
+ *
  * @author oyzh
  * @since 2024-11-28
  */
-public class TxtTypeFileReader extends TypeFileReader {
+public class TxtTypeFileReader extends CsvTypeFileReader {
 
-    /**
-     * 字段列表
-     */
-    private FileColumns columns;
-
-    /**
-     * 导入配置
-     */
-    private FileReadConfig config;
-
-    /**
-     * 文件读取器
-     */
-    private SkipAbleFileReader reader;
+//    /**
+//     * 字段列表
+//     */
+//    private FileColumns columns;
+//
+//    /**
+//     * 导入配置
+//     */
+//    private FileReadConfig config;
+//
+//    /**
+//     * 文件读取器
+//     */
+//    private SkipAbleFileReader reader;
 
     /**
      * 构造txt类型文件读取器
      *
      * @param config  导入配置
      * @param columns 字段列表
-     * @throws IOException 异常
+     * @throws Exception 异常
      */
-    public TxtTypeFileReader(FileReadConfig config, FileColumns columns) throws IOException {
-        this.config = config;
-        this.columns = columns;
-        this.reader = new SkipAbleFileReader(config.filePath(), Charset.forName(config.charset()));
-        // 设置换行符
-        if (!Objects.equals(config.getRecordSeparator(), System.lineSeparator())) {
-            this.reader.lineBreak(config.getRecordSeparator());
-        }
+    public TxtTypeFileReader(FileReadConfig config, FileColumns columns) throws Exception {
+//        this.config = config;
+//        this.columns = columns;
+//        this.reader = new SkipAbleFileReader(config.filePath(), Charset.forName(config.charset()));
+//        // 设置换行符
+//        if (!Objects.equals(config.getRecordSeparator(), System.lineSeparator())) {
+//            this.reader.lineBreak(config.getRecordSeparator());
+//        }
+        super(config, columns, config.getFieldSeparator());
     }
-
-    @Override
-    public FileRecord readRecord() throws IOException {
-        String line = this.reader.readLine();
-        if (line != null) {
-            List<String> arr = this.parseLine(line, this.config.getTxtIdentifier(), this.config.getFieldSeparator());
-            FileRecord record = new FileRecord();
-            for (int i = 0; i < arr.size(); i++) {
-                record.put(i, arr.get(i));
-            }
-            return record;
-        }
-        return null;
-    }
-
-    @Override
-    public void close() throws IOException {
-        try {
-            IOUtil.close(this.reader);
-            this.reader = null;
-            this.config = null;
-            this.columns.clear();
-            this.columns = null;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+//
+//    @Override
+//    public FileRecord readRecord() throws IOException {
+//        String line = this.reader.readLine();
+//        if (line != null) {
+//            List<String> arr = this.parseLine(line, this.config.getTxtIdentifier(), this.config.getFieldSeparator());
+//            FileRecord record = new FileRecord();
+//            for (int i = 0; i < arr.size(); i++) {
+//                record.put(i, arr.get(i));
+//            }
+//            return record;
+//        }
+//        return null;
+//    }
+//
+//    @Override
+//    public void close() throws IOException {
+//        try {
+//            IOUtil.close(this.reader);
+//            this.reader = null;
+//            this.config = null;
+//            this.columns.clear();
+//            this.columns = null;
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 }

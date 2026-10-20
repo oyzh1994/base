@@ -46,7 +46,8 @@ public class CsvTypeFileReaderTest {
         FileColumns columns = new FileColumns();
         columns.addColumn("name");
         columns.addColumn("age");
-        CsvTypeFileReader reader = new CsvTypeFileReader(config, columns);
+        // 2.csv.csv 为空格分割的定界文本，需显式指定字段分割符号
+        CsvTypeFileReader reader = new CsvTypeFileReader(config, columns, " ");
         while (true) {
             FileRecord fileRecord = reader.readRecord();
             if (fileRecord == null) {

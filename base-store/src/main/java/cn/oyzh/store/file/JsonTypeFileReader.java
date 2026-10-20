@@ -14,7 +14,7 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-11-28
  */
-public class JsonTypeFileReader extends TypeFileReader {
+public class JsonTypeFileReader extends TypeFileReader<FileRecord> {
 
     /**
      * json读取器

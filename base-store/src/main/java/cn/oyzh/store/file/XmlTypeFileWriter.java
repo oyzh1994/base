@@ -13,7 +13,7 @@ import java.util.Map;
  * @author oyzh
  * @since 2024-11-28
  */
-public class XmlTypeFileWriter extends TypeFileWriter {
+public class XmlTypeFileWriter extends TypeFileWriter<FileRecord> {
 
     /**
      * 字段列表
