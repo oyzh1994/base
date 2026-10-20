@@ -835,18 +835,18 @@ public class TextUtil {
             corr = 2.0;
         } else if (StringUtil.containsIgnoreCase(str, text) || StringUtil.containsIgnoreCase(text, str)) {
             corr = StringUtil.similarity(str.toUpperCase(), text.toUpperCase());
-            if (StringUtil.startWith(str, text)) {
+            if (StringUtil.startWith(str, text) || StringUtil.startWith(text, str)) {
                 corr += 0.40;
-            } else if (StringUtil.startWithIgnoreCase(str, text)) {
+            } else if (StringUtil.startWithIgnoreCase(str, text) || StringUtil.startWithIgnoreCase(text, str)) {
                 corr += 0.35;
-            } else if (StringUtil.contains(str, text)) {
+            } else if (StringUtil.contains(str, text) || StringUtil.contains(text, str)) {
                 corr += 0.25;
-            } else if (StringUtil.containsIgnoreCase(str, text)) {
+            } else if (StringUtil.containsIgnoreCase(str, text) || StringUtil.contains(text, str)) {
                 corr += 0.20;
             }
-            if (StringUtil.endsWith(str, text)) {
+            if (StringUtil.endsWith(str, text) || StringUtil.endsWith(text, str)) {
                 corr += 0.15;
-            } else if (StringUtil.endWithIgnoreCase(str, text)) {
+            } else if (StringUtil.endWithIgnoreCase(str, text) || StringUtil.endWithIgnoreCase(text, str)) {
                 corr += 0.10;
             }
         }
