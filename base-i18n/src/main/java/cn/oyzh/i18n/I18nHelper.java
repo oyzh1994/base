@@ -949,6 +949,8 @@ public class I18nHelper {
 
     public static final String STOP1 = "base.stop1";
 
+    public static final String sequence = "base.sequence";
+
     public static final String RESTART = "base.restart";
 
     public static final String RESTART1 = "base.restart1";
@@ -3462,6 +3464,10 @@ public class I18nHelper {
      */
     public static String pleaseInputProcedureName() {
         return I18nResourceBundle.i18nString(PLEASE, INPUT, PROCEDURE, NAME);
+    }
+
+    public static String pleaseInputSequenceName() {
+        return I18nResourceBundle.i18nString(PLEASE, INPUT, sequence, NAME);
     }
 
     /**
@@ -10077,6 +10083,34 @@ public class I18nHelper {
 
     public static String stop1() {
         return I18nResourceBundle.i18nString(STOP1);
+    }
+
+    public static String sequence() {
+        return I18nResourceBundle.i18nString(sequence);
+    }
+
+    public static String designSequence() {
+        return I18nResourceBundle.i18nString(DESIGN, sequence);
+    }
+
+    public static String deleteSequence() {
+        return I18nResourceBundle.i18nString(DELETE, sequence);
+    }
+
+    public static String renameSequence() {
+        return I18nResourceBundle.i18nString(RENAME, sequence);
+    }
+
+    public static String cloneSequence() {
+        return I18nResourceBundle.i18nString(CLONE, sequence);
+    }
+
+    public static String sequenceInfo() {
+        return I18nResourceBundle.i18nString(sequence, INFO);
+    }
+
+    public static String addSequence() {
+        return I18nResourceBundle.i18nString(ADD, sequence);
     }
 
     /**
