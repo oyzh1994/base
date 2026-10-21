@@ -1,7 +1,11 @@
 package cn.oyzh.store.jdbc.h2;
 
 import cn.oyzh.common.util.CollectionUtil;
+import org.h2.tools.Upgrade;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -112,5 +116,47 @@ public class H2Util {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 从 .mv.db 文件读取 MVStore 存储格式版本
+     * @param filePath .mv.db 文件的完整路径
+     * @return 格式版本号（例如 1, 2, 3），如果无法解析则返回 -1
+     */
+    public static int getStoreFormatVersion(String filePath) {
+        // 文件头是 4096 字节，两个头相同，读第一个即可
+        byte[] header = new byte[4096];
+        try (RandomAccessFile raf = new RandomAccessFile(filePath, "r")) {
+            int bytesRead = raf.read(header);
+            if (bytesRead < 100) { // 头信息太短，肯定异常
+                return -1;
+            }
+        } catch (IOException e) {
+            return -1;
+        }
+
+        // 文件头是文本格式，直接转为字符串查找 "format:"
+        String headerStr = new String(header, StandardCharsets.US_ASCII);
+        int formatIdx = headerStr.indexOf("format:");
+        if (formatIdx == -1) {
+            return -1; // 未找到 format 字段
+        }
+
+        // 从 "format:" 后开始解析数字
+        int start = formatIdx + "format:".length();
+        int end = start;
+        while (end < headerStr.length() && Character.isDigit(headerStr.charAt(end))) {
+            end++;
+        }
+
+        if (end == start) {
+            return -1; // 没有数字
+        }
+
+        try {
+            return Integer.parseInt(headerStr.substring(start, end));
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 }
