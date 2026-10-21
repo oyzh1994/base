@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -37,7 +38,7 @@ public class JdbcManager {
             if (StringUtil.isEmpty(dialect)) {
                 JdbcManager.dialect = JdbcDialect.H2;
             } else {
-                JdbcManager.dialect = JdbcDialect.valueOf(dialect);
+                JdbcManager.dialect = JdbcDialect.valueOf(dialect.trim().toUpperCase(Locale.ROOT));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -54,9 +55,14 @@ public class JdbcManager {
         return JdbcDialect.H2 == dialect;
     }
 
-//    public static boolean isSqliteDialect() {
-//        return JdbcDialect.SQLITE == dialect;
-//    }
+    /**
+     * 是否SQLite方言
+     *
+     * @return 结果
+     */
+    public static boolean isSqliteDialect() {
+        return JdbcDialect.SQLITE == dialect;
+    }
 
     /**
      * 获取连接
@@ -66,7 +72,7 @@ public class JdbcManager {
      */
     public static JdbcConn takeoff() throws SQLException {
         for (JdbcConn connection : CONNECTIONS) {
-            if (connection.isUsable()) {
+            if (connection.isUsable() && connection.takeoff() != null) {
                 return connection;
             }
         }
@@ -99,6 +105,7 @@ public class JdbcManager {
         connection = DriverManager.getConnection(url);
         JdbcConn jdbcConn = new JdbcConn(connection);
         CONNECTIONS.add(jdbcConn);
+        jdbcConn.takeoff();
         return jdbcConn;
     }
 
@@ -156,17 +163,20 @@ public class JdbcManager {
      */
     public static void destroy() {
         try {
-            if (JdbcManager.dialect == JdbcDialect.H2) {
-                JdbcConn conn = JdbcManager.takeoff();
-                Statement statement = conn.createStatement();
-                statement.execute("SHUTDOWN");
-                IOUtil.close(statement);
-            }
-            for (JdbcConn jdbcConn : CONNECTIONS) {
-                IOUtil.close(jdbcConn);
+            if (JdbcManager.dialect == JdbcDialect.H2 && !CONNECTIONS.isEmpty()) {
+                JdbcConn connection = CONNECTIONS.get(0);
+                Statement statement = connection.createStatement();
+                try (statement) {
+                    statement.execute("SHUTDOWN");
+                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            for (JdbcConn jdbcConn : CONNECTIONS) {
+                IOUtil.close(jdbcConn);
+            }
+            CONNECTIONS.clear();
         }
     }
 }

@@ -110,7 +110,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         }
         sql.deleteCharAt(sql.length() - 1);
         sql.append(" WHERE ");
-        sql.append(primaryKey.getColumnName());
+        sql.append(JdbcUtil.wrap(primaryKey.getColumnName()));
         sql.append(" = ?");
         JdbcConn connection = JdbcManager.takeoff();
         try {
@@ -149,7 +149,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM ");
         sql.append(JdbcUtil.wrap(tableName));
         sql.append(" WHERE ");
-        sql.append(primaryKey.getColumnName());
+        sql.append(JdbcUtil.wrap(primaryKey.getColumnName()));
         sql.append(" = ?");
         JdbcConn connection = JdbcManager.takeoff();
         try {
@@ -186,8 +186,12 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
                     sql.append(" AND ");
                 }
                 sql.append(JdbcUtil.wrap(entry.getKey()));
-                sql.append(" = ");
-                sql.append(JdbcUtil.wrapData(entry.getValue()));
+                if (entry.getValue() == null) {
+                    sql.append(" IS NULL");
+                } else {
+                    sql.append(" = ");
+                    sql.append(JdbcUtil.wrapData(entry.getValue()));
+                }
             }
         }
         JdbcConn connection = JdbcManager.takeoff();
@@ -276,7 +280,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
             sql.append("*");
         } else {
             for (String queryColumn : selectParam.getQueryColumns()) {
-                sql.append(queryColumn).append(",");
+                sql.append(JdbcUtil.wrap(queryColumn)).append(",");
             }
             sql.deleteCharAt(sql.lastIndexOf(","));
         }
@@ -301,7 +305,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
             if (CollectionUtil.isNotEmpty(selectParam.getOrderByParams())) {
                 sql.append(" ORDER BY ");
                 for (OrderByParam orderByParam : selectParam.getOrderByParams()) {
-                    sql.append(orderByParam.getName());
+                    sql.append(JdbcUtil.wrap(orderByParam.getName()));
                     sql.append(" ");
                     sql.append(orderByParam.getType().toUpperCase()).append(",");
                 }
@@ -348,12 +352,12 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
             sql.append("*");
         } else {
             for (String queryColumn : selectParam.getQueryColumns()) {
-                sql.append(queryColumn).append(",");
+                sql.append(JdbcUtil.wrap(queryColumn)).append(",");
             }
             sql.deleteCharAt(sql.lastIndexOf(","));
         }
         sql.append(" FROM ");
-        sql.append(tableName);
+        sql.append(JdbcUtil.wrap(tableName));
         if (selectParam != null) {
             if (CollectionUtil.isNotEmpty(selectParam.getQueryParams())) {
                 boolean first = true;
@@ -373,7 +377,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
             if (CollectionUtil.isNotEmpty(selectParam.getOrderByParams())) {
                 sql.append(" ORDER BY ");
                 for (OrderByParam orderByParam : selectParam.getOrderByParams()) {
-                    sql.append(orderByParam.getName());
+                    sql.append(JdbcUtil.wrap(orderByParam.getName()));
                     sql.append(" ");
                     sql.append(orderByParam.getType().toUpperCase()).append(",");
                 }
@@ -467,7 +471,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
             for (String column : columns) {
                 if (first) {
                     first = false;
-                    sql.append(" WHERE ");
+                    sql.append(" WHERE (");
                 } else {
                     sql.append(" OR ");
                 }
@@ -475,15 +479,18 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
                 sql.append(" LIKE ");
                 sql.append(JdbcUtil.wrapData("%" + kw + "%"));
             }
+            sql.append(")");
         }
         if (CollectionUtil.isNotEmpty(queryParams)) {
             boolean first = true;
             for (QueryParam queryParam : queryParams) {
-                if (!kwHandle && first) {
+                if (first) {
                     first = false;
-                    sql.append(" WHERE ");
+                    sql.append(kwHandle ? " AND " : " WHERE ");
+                } else {
+                    sql.append(" AND ");
                 }
-                sql.append(queryParam.getName())
+                sql.append(JdbcUtil.wrap(queryParam.getName()))
                         .append(queryParam.getOperator())
                         .append(JdbcUtil.wrapData(queryParam.getData()));
             }
@@ -522,7 +529,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
             for (String column : columns) {
                 if (first) {
                     first = false;
-                    sql.append(" WHERE ");
+                    sql.append(" WHERE (");
                 } else {
                     sql.append(" OR ");
                 }
@@ -530,15 +537,18 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
                 sql.append(" LIKE ");
                 sql.append(JdbcUtil.wrapData("%" + kw + "%"));
             }
+            sql.append(")");
         }
         if (!pageParam.getQueryParams().isEmpty()) {
             boolean first = true;
             for (QueryParam queryParam : pageParam.getQueryParams()) {
-                if (!kwHandle && first) {
+                if (first) {
                     first = false;
-                    sql.append(" WHERE ");
+                    sql.append(kwHandle ? " AND " : " WHERE ");
+                } else {
+                    sql.append(" AND ");
                 }
-                sql.append(queryParam.getName())
+                sql.append(JdbcUtil.wrap(queryParam.getName()))
                         .append(queryParam.getOperator())
                         .append(JdbcUtil.wrapData(queryParam.getData()));
             }
@@ -592,7 +602,7 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
         StringBuilder sql = new StringBuilder("DELETE FROM ");
         sql.append(JdbcUtil.wrap(tableName));
         sql.append(" WHERE ");
-        sql.append(primaryKey.getColumnName());
+        sql.append(JdbcUtil.wrap(primaryKey.getColumnName()));
         sql.append(" = ?");
         JdbcConn connection = JdbcManager.takeoff();
         try {

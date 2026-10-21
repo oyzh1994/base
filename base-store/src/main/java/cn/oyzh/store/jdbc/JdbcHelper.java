@@ -61,7 +61,9 @@ public class JdbcHelper {
         setParams(statement, params);
         int update = statement.executeUpdate();
         statement.close();
-        connection.commit();
+        if (!connection.getAutoCommit()) {
+            connection.commit();
+        }
         return update;
     }
 
@@ -114,7 +116,7 @@ public class JdbcHelper {
                 if (param == null) {
                     statement.setNull(index++, Types.NULL);
                 } else {
-                    statement.setObject(index++, param);
+                    statement.setObject(index++, JdbcUtil.toSqlValue(param));
                 }
             }
         }

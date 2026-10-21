@@ -42,7 +42,12 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
             clearStatement.executeUpdate("DELETE FROM " + JdbcUtil.wrap(tableName));
             clearStatement.close();
             StringBuilder sql = new StringBuilder("INSERT INTO ");
-            sql.append(JdbcUtil.wrap(tableName)).append("(`KEY`, `VALUE`) VALUES( ?, ?)");
+            sql.append(JdbcUtil.wrap(tableName))
+                    .append("(")
+                    .append(JdbcUtil.wrap("KEY"))
+                    .append(", ")
+                    .append(JdbcUtil.wrap("VALUE"))
+                    .append(") VALUES(?, ?)");
             PreparedStatement statement = connection.prepareStatement(sql.toString());
             for (Map.Entry<String, Object> entry : record.entrySet()) {
                 JulLog.debug("{}={}", entry.getKey(), entry.getValue());

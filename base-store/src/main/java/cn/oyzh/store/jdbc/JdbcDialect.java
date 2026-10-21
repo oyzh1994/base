@@ -11,5 +11,8 @@ public enum JdbcDialect {
      * H2
      */
     H2,
-//    SQLITE
+    /**
+     * SQLite
+     */
+    SQLITE
 }

@@ -234,6 +234,14 @@ public class JdbcConn implements AutoCloseable {
         return this.connection;
     }
 
+    public boolean isAutoCommit() throws SQLException {
+        return this.connection.getAutoCommit();
+    }
+
+    public boolean getAutoCommit() throws SQLException {
+        return this.connection.getAutoCommit();
+    }
+
     @Override
     public void close() throws Exception {
         this.connection.close();

@@ -8,14 +8,19 @@ import cn.oyzh.common.date.ZonedDateTimeUtil;
 import cn.oyzh.common.util.IOUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.h2.H2Util;
+import cn.oyzh.store.jdbc.sqlite.SqliteUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -335,6 +340,9 @@ public class JdbcUtil {
         if (sqlData instanceof Number n) {
             return DateUtil.of(n);
         }
+        if (sqlData instanceof CharSequence sequence) {
+            return Date.from(parseInstant(sequence.toString()));
+        }
         return null;
     }
 
@@ -345,8 +353,19 @@ public class JdbcUtil {
      * @return LocalTime对象
      */
     public static LocalTime toLocalTime(Object sqlData) {
+        if (sqlData instanceof LocalTime localTime) {
+            return localTime;
+        }
         if (sqlData instanceof Date date) {
             return LocalTimeUtil.of(date);
+        }
+        if (sqlData instanceof CharSequence sequence) {
+            String value = sequence.toString();
+            try {
+                return LocalTime.parse(value);
+            } catch (Exception ignored) {
+                return parseInstant(value).atZone(ZoneId.systemDefault()).toLocalTime();
+            }
         }
         return null;
     }
@@ -358,8 +377,19 @@ public class JdbcUtil {
      * @return LocalDate对象
      */
     public static LocalDate toLocalDate(Object sqlData) {
+        if (sqlData instanceof LocalDate localDate) {
+            return localDate;
+        }
         if (sqlData instanceof Date date) {
             return LocalDateUtil.of(date);
+        }
+        if (sqlData instanceof CharSequence sequence) {
+            String value = sequence.toString();
+            try {
+                return LocalDate.parse(value);
+            } catch (Exception ignored) {
+                return parseInstant(value).atZone(ZoneId.systemDefault()).toLocalDate();
+            }
         }
         return null;
     }
@@ -371,8 +401,19 @@ public class JdbcUtil {
      * @return LocalDateTime对象
      */
     public static LocalDateTime toLocalDateTime(Object sqlData) {
+        if (sqlData instanceof LocalDateTime localDateTime) {
+            return localDateTime;
+        }
         if (sqlData instanceof Date date) {
             return LocalDateTimeUtil.of(date);
+        }
+        if (sqlData instanceof CharSequence sequence) {
+            String value = sequence.toString();
+            try {
+                return LocalDateTime.parse(value);
+            } catch (Exception ignored) {
+                return parseInstant(value).atZone(ZoneId.systemDefault()).toLocalDateTime();
+            }
         }
         return null;
     }
@@ -384,10 +425,49 @@ public class JdbcUtil {
      * @return ZonedDateTime对象
      */
     public static ZonedDateTime toZonedDateTime(Object sqlData) {
+        if (sqlData instanceof ZonedDateTime zonedDateTime) {
+            return zonedDateTime;
+        }
         if (sqlData instanceof Date date) {
             return ZonedDateTimeUtil.of(date);
         }
+        if (sqlData instanceof CharSequence sequence) {
+            String value = sequence.toString();
+            try {
+                return ZonedDateTime.parse(value);
+            } catch (Exception ignored) {
+                return parseInstant(value).atZone(ZoneId.systemDefault());
+            }
+        }
         return null;
+    }
+
+    private static Instant parseInstant(String value) {
+        try {
+            return Instant.parse(value);
+        } catch (Exception ignored) {
+        }
+        try {
+            return ZonedDateTime.parse(value).toInstant();
+        } catch (Exception ignored) {
+        }
+        try {
+            return OffsetDateTime.parse(value).toInstant();
+        } catch (Exception ignored) {
+        }
+        try {
+            return Timestamp.valueOf(value).toInstant();
+        } catch (Exception ignored) {
+        }
+        try {
+            return LocalDateTime.parse(value).atZone(ZoneId.systemDefault()).toInstant();
+        } catch (Exception ignored) {
+        }
+        try {
+            return LocalDate.parse(value).atStartOfDay(ZoneId.systemDefault()).toInstant();
+        } catch (Exception ignored) {
+        }
+        return DateUtil.of(Long.parseLong(value)).toInstant();
     }
 
     /**
@@ -499,8 +579,7 @@ public class JdbcUtil {
         if (JdbcManager.dialect == JdbcDialect.H2) {
             return H2Util.wrap(data);
         }
-        return data;
-//        return SqlLiteUtil.wrap(data);
+        return SqliteUtil.wrap(data);
     }
 
     /**
@@ -513,7 +592,46 @@ public class JdbcUtil {
         if (JdbcManager.dialect == JdbcDialect.H2) {
             return H2Util.wrapData(data);
         }
+        return SqliteUtil.wrapData(data);
+    }
+
+    /**
+     * 转换为当前方言驱动可写入的数据
+     *
+     * @param data Java数据
+     * @return 驱动数据
+     */
+    public static Object toSqlValue(Object data) {
+        if (JdbcManager.isSqliteDialect()) {
+            return SqliteUtil.toSqlValue(data);
+        }
         return data;
-//        return SqlLiteUtil.wrapData(data);
+    }
+
+    /**
+     * 将Java类型映射为当前方言的sql类型
+     *
+     * @param javaType Java类型
+     * @return sql类型
+     */
+    public static String toSqlType(Class<?> javaType) {
+        if (JdbcManager.dialect == JdbcDialect.H2) {
+            return H2Util.toSqlType(javaType);
+        }
+        return SqliteUtil.toSqlType(javaType);
+    }
+
+    /**
+     * 校验sql类型是否匹配当前方言类型
+     *
+     * @param sqlType  sql类型
+     * @param typeName 数据库中的类型名称
+     * @return 结果
+     */
+    public static boolean checkSqlType(String sqlType, String typeName) {
+        if (JdbcManager.dialect == JdbcDialect.H2) {
+            return H2Util.checkSqlType(sqlType, typeName);
+        }
+        return SqliteUtil.checkSqlType(sqlType, typeName);
     }
 }

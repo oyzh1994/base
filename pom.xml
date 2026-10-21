@@ -65,7 +65,7 @@
         <mongodb.version>4.7.2</mongodb.version>
         <guava.version>33.7.2-jre</guava.version>
         <protobuf.version>4.35.1</protobuf.version>
-        <!-- <sqlite.version>3.47.1.0</sqlite.version> -->
+        <sqlite.version>3.53.4.0</sqlite.version>
         <netty.version>4.2.19.Final</netty.version>
         <fastjson2.version>2.0.66</fastjson2.version>
         <!-- <fastjson.version>1.2.83</fastjson.version> -->

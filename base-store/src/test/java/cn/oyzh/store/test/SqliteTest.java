@@ -1,15 +1,17 @@
 package cn.oyzh.store.test;
 
+import cn.oyzh.store.jdbc.sqlite.SqliteUtil;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
- * 测试通过 JDBC 连接 SQLite 数据库进行建表、写入与查询。
+ * 测试sqlite方言工具映射。
  *
  * @author oyzh
  * @since 2024-10-18
@@ -17,50 +19,29 @@ import java.sql.Statement;
 public class SqliteTest {
 
     @Test
-    public void test1() throws SQLException {
-        Connection connection = null;
-        try {
-            String file = "d://test.db";
-            // 连接SQLite数据库文件，如果文件不存在，会自动创建
-            connection = DriverManager.getConnection("jdbc:sqlite:" + file);
-            Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)");
-            statement.executeUpdate("INSERT INTO users (name, email) VALUES ('Alice', 'alice@example.com')");
-        } finally {
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    // 关闭连接
-                    connection.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
+    public void mapsJavaTypesToSqliteAffinity() {
+        assertEquals("integer", SqliteUtil.toSqlType(long.class));
+        assertEquals("integer", SqliteUtil.toSqlType(Boolean.class));
+        assertEquals("real", SqliteUtil.toSqlType(double.class));
+        assertEquals("text", SqliteUtil.toSqlType(String.class));
+        assertEquals("text", SqliteUtil.toSqlType(LocalDateTime.class));
+        assertEquals("text", SqliteUtil.toSqlType(LocalDate.class));
+        assertEquals("text", SqliteUtil.toSqlType(LocalTime.class));
+        assertEquals("blob", SqliteUtil.toSqlType(byte[].class));
     }
 
     @Test
-    public void test2() throws SQLException {
-        Connection connection = null;
-        try {
-            String file = "d://test.db";
-            // 连接SQLite数据库文件，如果文件不存在，会自动创建
-            connection = DriverManager.getConnection("jdbc:sqlite:" + file);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
-            while (resultSet.next()) {
-                System.out.println(resultSet.getObject(1));
-                System.out.println(resultSet.getObject(2));
-            }
-            resultSet.close();
-        } finally {
-            try {
-                if (connection != null && !connection.isClosed()) {
-                    // 关闭连接
-                    connection.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
+    public void normalizesSqliteTypeAliases() {
+        assertTrue(SqliteUtil.checkSqlType("text", "VARCHAR(255)"));
+        assertTrue(SqliteUtil.checkSqlType("integer", "BIGINT"));
+        assertTrue(SqliteUtil.checkSqlType("real", "DOUBLE PRECISION"));
+        assertTrue(SqliteUtil.checkSqlType("blob", "BINARY LARGE OBJECT"));
+    }
+
+    @Test
+    public void wrapsIdentifiersAndEscapesData() {
+        assertEquals("\"select\"\"table\"", SqliteUtil.wrap("select\"table"));
+        assertEquals("'O''Brien'", SqliteUtil.wrapData("O'Brien"));
+        assertEquals("X'0102'", SqliteUtil.wrapData(new byte[]{1, 2}));
     }
 }

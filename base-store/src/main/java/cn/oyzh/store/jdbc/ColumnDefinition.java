@@ -1,7 +1,5 @@
 package cn.oyzh.store.jdbc;
 
-import cn.oyzh.store.jdbc.h2.H2Util;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
@@ -61,13 +59,7 @@ public class ColumnDefinition {
                 columnDefinition.setColumnName(column.value());
             }
             if (column.type().isEmpty()) {
-                String columnType = "";
-                if (JdbcManager.dialect == JdbcDialect.H2) {
-                    columnType = H2Util.toSqlType(field.getType());
-//                } else if (JdbcManager.dialect == JdbcDialect.SQLITE) {
-//                    columnType = SqlLiteUtil.toSqlType(field.getType());
-                }
-                columnDefinition.setColumnType(columnType);
+                columnDefinition.setColumnType(JdbcUtil.toSqlType(field.getType()));
             } else {
                 columnDefinition.setColumnType(column.type());
             }

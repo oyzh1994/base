@@ -7,7 +7,7 @@ import cn.oyzh.store.jdbc.param.QueryParam;
 import cn.oyzh.store.jdbc.param.QueryParams;
 import cn.oyzh.store.jdbc.param.SelectParam;
 import cn.oyzh.store.jdbc.param.DeleteParam;
-//import cn.oyzh.store.jdbc.sqlite.SqliteStandardOperator;
+import cn.oyzh.store.jdbc.sqlite.SqliteStandardOperator;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -35,11 +35,11 @@ public abstract class JdbcStandardStore<M extends Serializable> extends JdbcStor
     public JdbcStandardStore() {
         try {
             TableDefinition tableDefinition = this.tableDefinition();
-//            if (JdbcManager.dialect == JdbcDialect.H2) {
+            if (JdbcManager.dialect == JdbcDialect.H2) {
                 this.operator = new H2StandardOperator(tableDefinition);
-//            } else {
-//                this.operator = new SqliteStandardOperator(tableDefinition);
-//            }
+            } else {
+                this.operator = new SqliteStandardOperator(tableDefinition);
+            }
             this.operator.initTable();
             this.init();
         } catch (Exception ex) {
