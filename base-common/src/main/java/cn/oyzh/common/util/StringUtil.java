@@ -23,6 +23,19 @@ public class StringUtil {
     }
 
     /**
+     * 字符串转byte数组
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static byte[] toBytes(String str) {
+        if (str == null) {
+            return new byte[]{};
+        }
+        return str.getBytes();
+    }
+
+    /**
      * 字符串转二进制
      *
      * @param str 字符串

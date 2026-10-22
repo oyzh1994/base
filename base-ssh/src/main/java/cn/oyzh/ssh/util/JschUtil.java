@@ -9,11 +9,13 @@ import com.jcraft.jsch.Proxy;
 import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.ProxySOCKS4;
 import com.jcraft.jsch.ProxySOCKS5;
+import com.jcraft.jsch.Session;
 import com.jcraft.jsch.PageantConnector;
 import com.jcraft.jsch.SSHAgentConnector;
 import com.jcraft.jsch.WindowsSSHAgentConnector;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 
 /**
  * @author oyzh
@@ -93,5 +95,35 @@ public class JschUtil {
             proxy = socks5;
         }
         return proxy;
+    }
+
+    /**
+     * 追加旧服务端兼容算法。仅在正常算法协商失败后调用，现代算法仍保持最高优先级。
+     *
+     * @param session ssh会话
+     */
+    public static void applyLegacyAlgorithms(Session session) {
+        if (session == null) {
+            return;
+        }
+        appendConfig(session, "kex", "diffie-hellman-group14-sha1",
+                "diffie-hellman-group-exchange-sha1", "diffie-hellman-group1-sha1");
+        appendConfig(session, "server_host_key", "ssh-rsa", "ssh-dss");
+        appendConfig(session, "PubkeyAcceptedAlgorithms", "ssh-rsa", "ssh-dss");
+    }
+
+    private static void appendConfig(Session session, String key, String... algorithms) {
+        String current = session.getConfig(key);
+        StringBuilder value = new StringBuilder(current == null ? "" : current);
+        for (String algorithm : algorithms) {
+            if (current != null && Arrays.asList(current.split(",")).contains(algorithm)) {
+                continue;
+            }
+            if (value.length() > 0) {
+                value.append(',');
+            }
+            value.append(algorithm);
+        }
+        session.setConfig(key, value.toString());
     }
 }

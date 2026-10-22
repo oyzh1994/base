@@ -3,6 +3,7 @@ package cn.oyzh.ssh.domain;
 import cn.oyzh.common.object.ObjectCopier;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.Column;
+import com.alibaba.fastjson2.annotation.JSONField;
 
 import java.nio.charset.StandardCharsets;
 
@@ -242,7 +243,7 @@ public class SSHConnect implements ObjectCopier<SSHConnect> {
      * @return 连接超时，单位毫秒
      */
     public int getTimeout() {
-        return timeout < 3000 ? 3000 : timeout;
+        return Math.max(timeout, 3000);
     }
 
     /**
