@@ -36,13 +36,13 @@ public class JdbcManager {
         try {
             String dialect = JdbcConst.dbDialect();
             if (StringUtil.isEmpty(dialect)) {
-                JdbcManager.dialect = JdbcDialect.H2;
+                JdbcManager.dialect = JdbcDialect.SQLITE;
             } else {
                 JdbcManager.dialect = JdbcDialect.valueOf(dialect.trim().toUpperCase(Locale.ROOT));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            JdbcManager.dialect = JdbcDialect.H2;
+            JdbcManager.dialect = JdbcDialect.SQLITE;
         }
     }
 
@@ -164,7 +164,7 @@ public class JdbcManager {
     public static void destroy() {
         try {
             if (JdbcManager.dialect == JdbcDialect.H2 && !CONNECTIONS.isEmpty()) {
-                JdbcConn connection = CONNECTIONS.get(0);
+                JdbcConn connection = CONNECTIONS.getFirst();
                 Statement statement = connection.createStatement();
                 try (statement) {
                     statement.execute("SHUTDOWN");

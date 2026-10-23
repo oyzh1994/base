@@ -1,8 +1,8 @@
 # base-store-jdbc
 
 > 模块：base-store　包：cn.oyzh.store.jdbc、.param、.h2
-> 说明：轻量 JDBC 存储层，基于注解（`@Table`/`@Column`/`@PrimaryKey`）将 Java 模型映射到表；提供「标准操作器」（普通表 CRUD）与「键值操作器」（KEY/VALUE 两列表）两套实现，连接由 `JdbcManager` 池化管理，目前仅 H2 方言启用。
-> 跳过：`cn.oyzh.store.jdbc.sqlite` 下 `SqlLiteUtil`、`SqliteStandardOperator`、`SqliteKeyValueOperator` 三个文件被整文件注释（死代码），未纳入。
+> 说明：轻量 JDBC 存储层，基于注解（`@Table`/`@Column`/`@PrimaryKey`）将 Java 模型映射到表；提供「标准操作器」（普通表 CRUD）与「键值操作器」（KEY/VALUE 两列表）两套实现，连接由 `JdbcManager` 池化管理，支持 H2 与 SQLite 两种方言。旧 H2 数据到 SQLite 的一次性迁移见 `docs/storage/h2-to-sqlite-migration.md`。
+> 跳过：本文聚焦 `.jdbc`、`.param`、`.h2`；`cn.oyzh.store.jdbc.sqlite` 方言和 `cn.oyzh.store.jdbc.migration` 迁移器由专项文档与测试覆盖。
 
 ## Column
 > 包：cn.oyzh.store.jdbc
@@ -156,12 +156,13 @@
 ## JdbcDialect
 > 包：cn.oyzh.store.jdbc
 
-- 职责：JDBC 方言枚举，目前仅启用 H2（SQLITE 已注释）。
+- 职责：JDBC 方言枚举，包含 `H2` 与 `SQLITE`；EasyShell 启动迁移后使用 `SQLITE`。
 - 字段：
 
   | 字段 | 类型 | 含义 |
   |---|---|---|
-  | H2 | JdbcDialect | H2 方言常量 |
+  | H2 | JdbcDialect | H2 方言常量（兼容旧库） |
+  | SQLITE | JdbcDialect | SQLite 方言常量（当前默认） |
 
 - 方法：无（枚举）——由 `JdbcManager.dialect` 持有并驱动 `JdbcUtil.wrap/wrapData` 等方言分支。
 
