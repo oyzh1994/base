@@ -201,6 +201,7 @@ EasyShell BUILD SUCCESS
 - 随后设置 `JdbcConst.dbDialect(JdbcDialect.SQLITE)`。
 - 同时显式设置 `JdbcManager.dialect = JdbcDialect.SQLITE`，避免 `JdbcManager` 提前类加载后仍使用 H2 静态默认值。
 - 再调用 `JdbcManager.takeoff()`，保证连接 URL 与操作器都使用 SQLite。
+- `EasyShellApp.main()` 在 `ShellStoreUtil.init()` 之前获取 `easyshell.lock`，保证迁移和存储初始化不会由两个实例并发执行；锁机制测试见 `base-common/docs/process-instance-lock.md`。
 
 ## 8. 本机 dev1 数据复测
 
@@ -291,10 +292,10 @@ cat ~/.easyshell_dev1/db.migration.properties
 
 ## 10. 未覆盖与后续建议
 
-本次自动化测试未做进程级崩溃注入、Windows 实机测试和两个实例并发启动测试。对应风险已在设计文档第 12 节记录：
+本次迁移测试未做迁移进程级崩溃注入和 Windows 实机测试。启动互斥已由 `ProcessInstanceLockTest` 单独覆盖，包含真实子进程重复启动、外部持锁和强杀恢复。对应风险已在设计文档第 12 节记录：
 
 - Windows 目录 fsync 已改为尽力而为，但仍建议在 Windows 实机执行一次真实迁移。
-- 当前没有跨进程迁移锁，依赖 EasyShell 单实例启动约束。
+- 迁移器自身不提供跨进程锁；EasyShell 已在迁移前获取实例锁，其他直接调用方仍需自行保证互斥。
 - 本项目仅面向 H2 2.x（2.4.240），不包含更早版本兼容。
 - 生产迁移器只做 SQLite 完整性和行数级校验；本报告的 dev1 全量逐行比对属于集成测试，不会在每次启动时执行。
 
