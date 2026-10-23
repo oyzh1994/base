@@ -67,4 +67,9 @@ public class JulLogTest {
             JulLog.error("error3", ex);
         }
     }
+
+    @Test
+    public void test3(){
+        JulLog.info("{}={}ms", "\"aa\"", 3L);
+    }
 }

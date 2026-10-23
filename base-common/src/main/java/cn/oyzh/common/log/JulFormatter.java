@@ -32,7 +32,7 @@ public abstract class JulFormatter extends Formatter {
                             throwable = t;
                             continue;
                         }
-                        arg = this.pretreatmentArg(arg, true);
+                        arg = this.pretreatmentArg(arg, false);
                         // 仅替换1次
                         message = StringUtil.replaceOneTime(message, "{}", arg.toString());
                         index++;
@@ -44,7 +44,7 @@ public abstract class JulFormatter extends Formatter {
                             throwable = t;
                             continue;
                         }
-                        arg = this.pretreatmentArg(arg, true);
+                        arg = this.pretreatmentArg(arg, false);
                         message = message.replace("{" + index + "}", arg.toString());
                         index++;
                     }
