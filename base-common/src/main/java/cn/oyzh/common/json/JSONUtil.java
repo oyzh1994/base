@@ -74,15 +74,22 @@ public class JSONUtil {
 
     /**
      * 压缩
+     * <p>
+     * 移除字符串外的空白字符（空格、制表符、换行、回车），字符串内的内容原样保留。
      *
-     * @param json 对象
+     * @param json json字符串
      * @return json压缩字符串
      */
     public static String toCompress(String json) {
-        StringBuilder result = new StringBuilder();
+        if (json == null || json.isEmpty()) {
+            return json;
+        }
+        StringBuilder result = new StringBuilder(json.length());
         boolean inString = false;
         boolean escaping = false;
-        for (int i = 0; i < json.length(); i++) {
+        // 跳过utf-8 bom
+        int start = !json.isEmpty() && json.codePointAt(0) == 0xFEFF ? 1 : 0;
+        for (int i = start; i < json.length(); i++) {
             char c = json.charAt(i);
             if (escaping) {
                 // 当前字符是转义序列的一部分
@@ -106,8 +113,7 @@ public class JSONUtil {
                 // 在字符串内，保留所有字符
                 result.append(c);
             } else {
-                // 在字符串外，保留所有非空白字符和必要的结构字符
-                // 只去除真正的格式空白（空格、制表符、换行、回车）
+                // 在字符串外，去除格式空白
                 if (c != ' ' && c != '\t' && c != '\n' && c != '\r') {
                     result.append(c);
                 }
