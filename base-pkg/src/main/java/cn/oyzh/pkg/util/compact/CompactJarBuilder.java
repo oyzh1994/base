@@ -61,6 +61,7 @@ public final class CompactJarBuilder {
 
     private static final String LAUNCHER_CLASS = CompressedJarLauncher.class.getName();
     private static final String LAUNCHER_CLASS_PATH = LAUNCHER_CLASS.replace('.', '/');
+    private static final String AOT_CLASS_PATH = AotCacheManager.class.getName().replace('.', '/');
     private static final String XZ_CLASS_PREFIX = "org/tukaani/xz/";
 
     /**
@@ -732,8 +733,14 @@ public final class CompactJarBuilder {
      * 从当前运行时 ClassPath 自动收集启动器和 XZ 解压所需类，无需调用方手工准备类目录。
      */
     private static void addRuntimeClasses(JarOutputStream output) throws Exception {
-        addClassSource(output, CompressedJarLauncher.class, name -> name.startsWith(LAUNCHER_CLASS_PATH) && name.endsWith(".class"));
+        addClassSource(output, CompressedJarLauncher.class,
+                name -> isRuntimeClass(name, LAUNCHER_CLASS_PATH) || isRuntimeClass(name, AOT_CLASS_PATH));
         addClassSource(output, XZInputStream.class, name -> name.startsWith(XZ_CLASS_PREFIX));
+    }
+
+    private static boolean isRuntimeClass(String name, String classPath) {
+        return name.endsWith(".class")
+                && (name.equals(classPath + ".class") || name.startsWith(classPath + "$"));
     }
 
     /**

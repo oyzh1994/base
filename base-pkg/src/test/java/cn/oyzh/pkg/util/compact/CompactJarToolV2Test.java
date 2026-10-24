@@ -26,8 +26,10 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -47,7 +49,7 @@ public class CompactJarToolV2Test {
 
     @Before
     public void setUp() throws IOException {
-        cacheDirectory = temporaryFolder.newFolder("cache").toPath();
+        cacheDirectory = temporaryFolder.newFolder("cache with spaces-中文").toPath();
         System.setProperty("compact.jar.cache.dir", cacheDirectory.toString());
         System.setProperty("compact.jar.cache.mode", "deflate");
     }
@@ -70,6 +72,7 @@ public class CompactJarToolV2Test {
         assertManifest(fixture.outputJar());
         assertEquals("V2_OK:--message=hello world|dependency-one|resource, \"quoted\"\nline",
                 runJar(fixture.outputJar(), "--message=hello world"));
+        assertAotCache(findSingleCache());
         assertApplicationRoundTrip(fixture.applicationJar());
     }
 
@@ -82,6 +85,8 @@ public class CompactJarToolV2Test {
                 runJar(fixture.outputJar(), "--message=hello world"));
         try (JarFile jar = new JarFile(fixture.outputJar().toFile())) {
             assertTrue(jar.getJarEntry("compact-payload.xz") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncherV2.class") == null);
             assertEquals(CompressedJarLauncher.class.getName(),
                     jar.getManifest().getMainAttributes().getValue("Main-Class"));
         }
@@ -149,6 +154,95 @@ public class CompactJarToolV2Test {
     }
 
     @Test
+    public void aotCacheReusesAndRetrainsAfterApplicationUpdate() throws Exception {
+        TestFixture firstFixture = createFixture(2, "version-one");
+        CompactJarToolV2.compact(firstFixture.executableJar(), firstFixture.applicationJar(), firstFixture.outputJar());
+        String trainingArguments = runJar(firstFixture.outputJar(), "--vm-args", "-Xshare:off");
+        assertTrue(trainingArguments.contains("-XX:AOTCacheOutput="));
+        assertFalse(trainingArguments.contains("-XX:AOTCache="));
+        assertFalse(trainingArguments.contains("-Xshare="));
+
+        Path firstCache = findSingleCache();
+        Path firstAotMarker = findSingleAotMarker(firstCache);
+        long markerTime = Files.getLastModifiedTime(firstAotMarker).toMillis() - 2000;
+        Files.setLastModifiedTime(firstAotMarker, FileTime.fromMillis(markerTime));
+        String reuseArguments = runJar(firstFixture.outputJar(), "--vm-args", "-Xshare:off");
+        assertTrue(reuseArguments.contains("-XX:AOTCache="));
+        assertFalse(reuseArguments.contains("-XX:AOTCacheOutput="));
+        assertFalse(reuseArguments.contains("-Xshare="));
+        assertEquals(markerTime, Files.getLastModifiedTime(firstAotMarker).toMillis());
+
+        TestFixture updatedFixture = createFixture(2, "version-two");
+        CompactJarToolV2.compact(updatedFixture.executableJar(), updatedFixture.applicationJar(),
+                updatedFixture.outputJar());
+        runJar(updatedFixture.outputJar(), "updated");
+
+        List<Path> caches = findCaches();
+        assertEquals(2, caches.size());
+        assertNotEquals(firstCache, caches.get(0).equals(firstCache) ? caches.get(1) : caches.get(0));
+        for (Path cache : caches) {
+            assertAotCache(cache);
+        }
+    }
+
+    @Test
+    public void aotCacheRecoversFromInvalidMarker() throws Exception {
+        TestFixture fixture = createFixture(1);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+        runJar(fixture.outputJar(), "--vm-args");
+
+        Path marker = findSingleAotMarker(findSingleCache());
+        Files.write(marker, new byte[] {(byte) 0xFF, 0, 1, 2});
+        String trainingArguments = runJar(fixture.outputJar(), "--vm-args");
+
+        assertTrue(trainingArguments.contains("-XX:AOTCacheOutput="));
+        assertFalse(trainingArguments.contains("-XX:AOTCache="));
+        assertAotCache(findSingleCache());
+    }
+
+    @Test
+    public void corruptedAotCacheDoesNotPreventLaunch() throws Exception {
+        TestFixture fixture = createFixture(1);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+        runJar(fixture.outputJar(), "trained");
+
+        Path cache = findSingleCache();
+        Path aotCache;
+        try (Stream<Path> paths = Files.list(cache.resolve("aot"))) {
+            aotCache = paths.filter(path -> path.getFileName().toString().endsWith(".aot"))
+                    .findFirst().orElseThrow();
+        }
+        byte[] data = Files.readAllBytes(aotCache);
+        java.util.Arrays.fill(data, 0, Math.min(64, data.length), (byte) 0);
+        Files.write(aotCache, data);
+
+        String output = runJar(fixture.outputJar(), "after-corruption");
+
+        assertTrue(output, output.contains("V2_OK:after-corruption"));
+    }
+
+    @Test
+    public void conflictingJavaToolOptionsDoNotBreakLaunch() throws Exception {
+        TestFixture fixture = createFixture(1);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+
+        String arguments = runJar(Map.of("JAVA_TOOL_OPTIONS", "-Xshare:off"),
+                fixture.outputJar(), "--vm-args");
+
+        assertTrue(arguments.contains("-Xshare:off"));
+        assertFalse(arguments.contains("-XX:AOT"));
+    }
+
+    @Test
+    public void selectsJavaExecutableForWindowsWithoutMatchingDarwin() {
+        assertEquals("java.exe", CompressedJarLauncher.javaExecutableName("Windows 11"));
+        assertEquals("java.exe", CompressedJarLauncherV2.javaExecutableName("Windows Server 2022"));
+        assertEquals("java", CompressedJarLauncher.javaExecutableName("Darwin"));
+        assertEquals("java", CompressedJarLauncherV2.javaExecutableName("Mac OS X"));
+        assertEquals("java", CompressedJarLauncher.javaExecutableName("Linux"));
+    }
+
+    @Test
     public void rejectsInvalidArguments() throws Exception {
         TestFixture fixture = createFixture(1);
         Path output = fixture.outputJar();
@@ -209,7 +303,11 @@ public class CompactJarToolV2Test {
     }
 
     private TestFixture createFixture(int dependencyCount) throws Exception {
-        Path root = temporaryFolder.newFolder("fixture-" + System.nanoTime()).toPath();
+        return createFixture(dependencyCount, "version-one");
+    }
+
+    private TestFixture createFixture(int dependencyCount, String applicationVersion) throws Exception {
+        Path root = temporaryFolder.newFolder("fixture with spaces-中文-" + System.nanoTime()).toPath();
         Path applicationJar = root.resolve("application.jar");
         Path executableJar = root.resolve("executable.jar");
         Path outputJar = root.resolve("compact-v2.jar");
@@ -222,6 +320,8 @@ public class CompactJarToolV2Test {
         applicationEntries.put("resource, \"quoted\"\nline.txt",
                 "resource, \"quoted\"\nline".getBytes(StandardCharsets.UTF_8));
         applicationEntries.put("empty.txt", new byte[0]);
+        applicationEntries.put("application-version.txt",
+                applicationVersion.getBytes(StandardCharsets.UTF_8));
         writeJar(applicationJar, manifest("Main-Class", TestMain.class.getName()), applicationEntries);
 
         List<String> dependencies = new ArrayList<>();
@@ -250,25 +350,52 @@ public class CompactJarToolV2Test {
     }
 
     private String runJar(Path jar, String argument) throws Exception {
+        return runJar(jar, argument, new String[0]);
+    }
+
+    private String runJar(Path jar, String argument, String... jvmArguments) throws Exception {
+        return runJar(Map.of(), jar, argument, jvmArguments);
+    }
+
+    private String runJar(Map<String, String> environment, Path jar, String argument,
+                          String... jvmArguments) throws Exception {
         List<String> command = new ArrayList<>();
-        command.add(Paths.get(System.getProperty("java.home"), "bin", "java").toString());
+        String executable = CompressedJarLauncherV2.javaExecutableName(System.getProperty("os.name", ""));
+        command.add(Paths.get(System.getProperty("java.home"), "bin", executable).toString());
         command.add("--enable-native-access=ALL-UNNAMED");
         command.add("-Dcompact.jar.cache.dir=" + cacheDirectory);
         command.add("-Dcompact.jar.cache.mode=" + System.getProperty("compact.jar.cache.mode", "deflate"));
+        command.addAll(List.of(jvmArguments));
         command.add("-jar");
         command.add(jar.toString());
         command.add(argument);
-        Process process = new ProcessBuilder(command).redirectErrorStream(true).start();
-        String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-        assertTrue("Process timed out", process.waitFor(30, TimeUnit.SECONDS));
-        assertEquals("Process failed: " + output, 0, process.exitValue());
-        return output.strip();
+        Path processOutput = temporaryFolder.newFile("process-output-" + System.nanoTime() + ".log").toPath();
+        try {
+            ProcessBuilder builder = new ProcessBuilder(command)
+                    .redirectErrorStream(true)
+                    .redirectOutput(processOutput.toFile());
+            builder.environment().putAll(environment);
+            Process process = builder.start();
+            if (!process.waitFor(30, TimeUnit.SECONDS)) {
+                process.destroyForcibly();
+                process.waitFor(5, TimeUnit.SECONDS);
+                fail("Process timed out");
+            }
+            String output = Files.readString(processOutput, StandardCharsets.UTF_8);
+            assertEquals("Process failed: " + output, 0, process.exitValue());
+            int aotLog = output.indexOf("\nTemporary AOTConfiguration recorded:");
+            return (aotLog < 0 ? output : output.substring(0, aotLog)).strip();
+        } finally {
+            Files.deleteIfExists(processOutput);
+        }
     }
 
     private void assertRuntimeResources(Path outputJar) throws IOException {
         try (JarFile jar = new JarFile(outputJar.toFile())) {
             assertTrue(jar.getJarEntry("compact-payload.zst") != null);
             assertTrue(jar.getJarEntry("META-INF/compact-index.tsv") == null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncher.class") == null);
             assertTrue(jar.getJarEntry("com/github/luben/zstd/ZstdInputStream.class") != null);
             assertTrue(jar.stream().anyMatch(entry -> entry.getName().startsWith("linux/amd64/libzstd-jni-")
                     && entry.getName().endsWith(".so")));
@@ -322,6 +449,24 @@ public class CompactJarToolV2Test {
                     .forEach(result::add);
         }
         return result;
+    }
+
+    private void assertAotCache(Path cache) throws IOException {
+        Path marker = findSingleAotMarker(cache);
+        assertTrue(Files.isRegularFile(marker));
+        try (Stream<Path> paths = Files.list(cache.resolve("aot"))) {
+            List<Path> caches = paths.filter(path -> path.getFileName().toString().endsWith(".aot")).toList();
+            assertEquals("Expected one AOT cache under " + cache + ": " + caches, 1, caches.size());
+            assertTrue(Files.size(caches.get(0)) > 0);
+        }
+    }
+
+    private Path findSingleAotMarker(Path cache) throws IOException {
+        try (Stream<Path> paths = Files.list(cache.resolve("aot"))) {
+            List<Path> markers = paths.filter(path -> path.getFileName().toString().endsWith(".ok")).toList();
+            assertEquals("Expected one AOT marker under " + cache + ": " + markers, 1, markers.size());
+            return markers.get(0);
+        }
     }
 
     private static Manifest manifest(String name, String value) {
@@ -404,6 +549,11 @@ public class CompactJarToolV2Test {
         }
 
         public static void main(String[] args) {
+            if (args.length == 1 && "--vm-args".equals(args[0])) {
+                System.out.println("V2_VM_ARGS:" + String.join("|",
+                        java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments()));
+                return;
+            }
             String message = args.length == 0 ? "" : args[0];
             System.out.println("V2_OK:" + message + "|" + DependencyMarker.message()
                     + "|resource, \"quoted\"\nline");

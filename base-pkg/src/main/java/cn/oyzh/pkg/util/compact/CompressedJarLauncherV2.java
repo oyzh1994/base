@@ -7,11 +7,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.management.ManagementFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -116,7 +116,7 @@ public final class CompressedJarLauncherV2 {
         Path cache = cacheDirectory(launcherSha256);
         prepareCache(launcherJar, cache, payloadEntry, launcherSha256, payloadSha256,
                 applicationSha256, payloadChunkSizes, dependencyCount, resolveCacheMode());
-        int status = launch(cache, startClass, args);
+        int status = launch(cache, startClass, args, launcherSha256);
         System.exit(status);
     }
 
@@ -365,6 +365,14 @@ public final class CompressedJarLauncherV2 {
             for (Path item : paths.sorted(Comparator.reverseOrder()).toList()) {
                 Files.deleteIfExists(item);
             }
+        }
+    }
+
+    private static void moveAtomically(Path source, Path target) throws IOException {
+        try {
+            Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
+        } catch (AtomicMoveNotSupportedException ex) {
+            Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
@@ -650,7 +658,7 @@ public final class CompressedJarLauncherV2 {
 
         private void commit() throws IOException {
             output.close();
-            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            moveAtomically(temporary, target);
             committed = true;
         }
 
@@ -679,7 +687,7 @@ public final class CompressedJarLauncherV2 {
         try {
             try (JarOutputStream output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)), manifest)) {
             }
-            Files.move(temporary, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            moveAtomically(temporary, target);
         } finally {
             Files.deleteIfExists(temporary);
         }
@@ -718,22 +726,45 @@ public final class CompressedJarLauncherV2 {
     /**
      * 启动实际应用 JVM，并转发启动器收到的 JVM 参数和应用参数。
      */
-    private static int launch(Path cache, String startClass, String[] args) throws Exception {
-        List<String> command = new ArrayList<>();
-        command.add(javaExecutable());
-        command.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
-        //        command.add("-D" + RESTART_CLASSPATH_PROPERTY + "=" + classPath(cache));
-        //        command.add("-D" + RESTART_START_CLASS_PROPERTY + "=" + startClass);
-        command.add("-cp");
-        command.add(classPath(cache));
-        command.add(startClass);
-        command.addAll(List.of(args));
-        return new ProcessBuilder(command).inheritIO().start().waitFor();
+    private static int launch(Path cache, String startClass, String[] args, String applicationIdentity) throws Exception {
+        try (AotCacheManager.Session aot = AotCacheManager.open(cache, applicationIdentity)) {
+            List<String> command = new ArrayList<>();
+            command.add(javaExecutable());
+            command.addAll(aot.jvmArguments());
+            command.add("-cp");
+            command.add(classPath(cache));
+            command.add(startClass);
+            command.addAll(List.of(args));
+            int status = waitFor(new ProcessBuilder(command).inheritIO().start());
+            aot.complete();
+            return status;
+        }
+    }
+
+    private static int waitFor(Process process) throws InterruptedException {
+        try {
+            return process.waitFor();
+        } catch (InterruptedException ex) {
+            process.destroyForcibly();
+            while (true) {
+                try {
+                    process.waitFor();
+                    break;
+                } catch (InterruptedException retry) {
+                }
+            }
+            Thread.currentThread().interrupt();
+            throw ex;
+        }
     }
 
     private static String javaExecutable() {
-        String executable = System.getProperty("os.name").toLowerCase().contains("win") ? "java.exe" : "java";
+        String executable = javaExecutableName(System.getProperty("os.name", ""));
         return Paths.get(System.getProperty("java.home"), "bin", executable).toString();
+    }
+
+    static String javaExecutableName(String osName) {
+        return osName.toLowerCase(Locale.ROOT).startsWith("windows") ? "java.exe" : "java";
     }
 
     private static String classPath(Path cache) throws IOException {

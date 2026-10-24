@@ -156,6 +156,10 @@ classpath.order
 classpath.jar
 cache.ok
 cache.lock
+aot/
+  cache.lock
+  <signature>.aot
+  <signature>.ok
 ```
 
 多进程并发启动使用 `cache.lock` 文件锁；只有完整重建成功后才写入 `cache.ok`。未完成或被中断的缓存不会被视为有效。
@@ -170,6 +174,34 @@ java -Dcompact.jar.cache.dir=/path/to/cache \
 即使配置了共享根目录，启动器也会继续加入 `<user-cache-id>` 用户隔离层。POSIX 系统会把用户目录权限设置为 `0700`；Windows 等非 POSIX 文件系统使用其默认访问控制。`CompactJarTool.compact()` 的预热缓存也只属于调用该工具的系统用户，其他用户首次运行时会创建自己的缓存。
 
 缓存不会自动清理。删除对应 `<user-cache-id>/<jar-sha256>` 目录即可释放展开后的空间。
+
+## AOT 缓存
+
+Java 24 及以上的 HotSpot 运行时会自动训练并复用 JEP 483 AOT 缓存；OpenJ9、Substrate VM
+等不支持这些参数的运行时会自动跳过 AOT。AOT 文件位于对应展开缓存的 `aot/` 目录中，与应用
+展开缓存一起按当前用户和压缩 JAR SHA-256 隔离：
+
+1. 缓存不存在时，应用 JVM 使用 `-XX:AOTCacheOutput=<cache>` 完成首次训练运行。
+2. 应用 JVM 退出且 AOT 装配文件非空时，启动器写入 `<signature>.ok`；只有该标记和 AOT 文件都有效时才视为可用。
+3. 后续启动使用 `-XX:AOTCache=<cache>` 加载缓存。
+4. 应用更新会生成新的压缩 JAR SHA-256 和缓存目录，因此下一次启动会重新训练新版本。
+
+`<signature>` 还包含 Java 运行时版本、JDK 路径、操作系统、CPU 架构、最大堆以及有效 JVM 参数。
+JDK、运行环境或 JVM 参数变化后也会重新训练，避免复用不兼容缓存。启动器会移除调用者传入的
+旧 AOT cache 参数和与 AOT 冲突的 `-Xshare:off`，并自动选择训练或复用模式。其他经典 CDS 参数
+（包括 `-Xshare:auto`、`-Xshare:on`、`-Xshare:dump`、`-XX:ArchiveClassesAtExit`、
+`-XX:SharedArchiveFile`、`-XX:DumpLoadedClassList` 等）与 AOT cache 不兼容时会自动跳过 AOT，
+保留原启动参数。若 `JAVA_TOOL_OPTIONS`、`JDK_JAVA_OPTIONS` 或 `_JAVA_OPTIONS` 中包含这些参数，
+启动器也会跳过 AOT，避免它们被继承到子 JVM 后与 AOT 参数冲突。缓存加载失败时 JVM 的默认
+`auto` 模式会继续运行，不会阻止应用启动。显式传入 `-XX:AOTMode=off` 或设置以下属性可关闭该功能：
+
+```bash
+java -Dcompact.jar.aot=false -jar target/application-compressed.jar
+```
+
+首次训练会在应用退出后由 JDK 启动内部装配进程，并向控制台输出 AOT cache 创建信息。AOT cache
+是启动优化，不替代展开缓存；程序更新后旧的 `<user-cache-id>/<jar-sha256>` 目录仍需要由安装器或
+清理任务按保留策略删除。
 
 ## 缓存写入模式
 
@@ -197,7 +229,7 @@ EasyShell 当前输入同批次实测缓存大小约为：`deflate` 96.8 MiB、`
 
 ## 启动转发
 
-启动器把收到的 JVM 参数原样转发给实际应用 JVM：
+启动器把收到的 JVM 参数转发给实际应用 JVM；AOT cache 相关参数由启动器接管并替换：
 
 ```bash
 java @resource/vmArgs.macos.txt -jar target/application-compressed.jar

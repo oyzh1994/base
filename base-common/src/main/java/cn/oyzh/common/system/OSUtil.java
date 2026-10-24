@@ -2,6 +2,8 @@ package cn.oyzh.common.system;
 
 import cn.oyzh.common.util.StringUtil;
 
+import java.util.Locale;
+
 /**
  * 系统工具类
  *
@@ -16,7 +18,7 @@ public class OSUtil {
      * @return 系统类型
      */
     public static String getOSType() {
-        return System.getProperty("os.name").toUpperCase();
+        return System.getProperty("os.name", "").toUpperCase(Locale.ROOT);
     }
 
     /** linux 判断结果缓存 */
