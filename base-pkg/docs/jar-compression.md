@@ -31,6 +31,7 @@ Spring-Boot-Lib: BOOT-INF/lib/
 
 - `CompactJarTool.java`：推荐的 Java 打包入口，构建后自动预热缓存。
 - `CompactJarBuilder.java`：展开嵌套 JAR、生成多段 XZ payload，并写出最终可执行 JAR。
+- `CompactJarSanitizer.java`：默认开启的打包时签名和逐条目摘要清理，避免 AOT 首训全量校验。
 - `CompressedJarLauncher.java`：按 SHA-256 管理缓存、并行恢复 JAR，并启动实际应用。
 
 ## 打包调用
@@ -231,6 +232,32 @@ java -Dcompact.jar.aot.assembly=one-step -jar target/application-compressed.jar
 误用半个缓存，只会暂时跳过 AOT；装配完成后的下一次启动自动复用缓存。装配失败会静默清理
 临时文件，下一次启动重新训练。详细耗时、退出码和 JDK 输出写入
 `aot/<signature>.aot.assembly.log`，可直接用于诊断 Windows 首训慢的问题。
+
+AOT 记录模式会在应用启动前校验完整 classpath。带 `META-INF/*.SF`、`*.RSA` 或大段逐条目
+摘要的依赖 JAR 会被整包校验，单个 BouncyCastle 或 Eclipse Collections JAR 就可能多出数秒。
+打包器的条目过滤可以删除签名文件，但不能改写 `MANIFEST.MF` 中已有的逐条目摘要；只删除
+`.SF/.RSA/.DSA/.EC` 时，Eclipse Collections 这类 JAR 仍会触发摘要校验。
+
+依赖元数据清理默认开启。打包器会在嵌入依赖时删除签名条目和 manifest 逐条目摘要，并保留
+manifest 主节；压缩包自身仍通过 payload SHA-256 校验完整性。实测 142 个依赖的首训 classpath
+校验从约 8 秒降到约 0.2 秒。即使条目过滤已经删除签名文件，manifest 摘要仍会由该清理统一处理。
+必须保留依赖 JAR 签名时，设置 `-Dcompact.jar.sanitize.dependencies=false` 关闭清理，代价是
+首次训练重新承担完整校验开销。
+
+仅使用条目过滤时，`jar.excludes` 至少应包含以下规则（正则模式，大小写不敏感）：
+
+```toml
+excludes = [
+    ".*.SF",
+    ".*.RSA",
+    ".*.DSA",
+    ".*.EC",
+    ".*SIG-.*"
+]
+```
+
+不要排除 `META-INF/MANIFEST.MF` 本身；需要移除的是其中的逐条目摘要段。被 `skipsJar` 跳过的
+JAR 不会经过条目过滤，但默认开启的依赖元数据清理仍会处理其中的签名条目和 manifest 摘要。
 
 首次训练仍要记录类加载、方法调用等训练数据，这部分启动开销无法完全消除；`async` 解决的是
 退出阶段创建大型 AOT 文件时的阻塞。Windows 上还建议把缓存放在本地可写 SSD，并在企业环境中

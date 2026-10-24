@@ -31,6 +31,8 @@ import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -60,6 +62,7 @@ public class CompactJarToolV2Test {
         System.clearProperty("compact.jar.cache.dir");
         System.clearProperty("compact.jar.cache.mode");
         System.clearProperty("compact.jar.aot.assembly");
+        System.clearProperty("compact.jar.sanitize.dependencies");
         System.clearProperty("compact.jar.zstd.window.log");
         System.clearProperty("compact.jar.zstd.compress.threads");
     }
@@ -352,11 +355,34 @@ public class CompactJarToolV2Test {
         assertTrue("Expected corrupted Zstd frame to fail", corruptedPayloadRejected);
     }
 
+    @Test
+    public void stripsDependencySignaturesAndManifestDigestsForAotTraining() throws Exception {
+        TestFixture fixture = createFixture(1, "version-one", true);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+        CompressedJarLauncherV2.warmCache(fixture.outputJar());
+
+        Path dependency = findSingleCache().resolve("lib/dependency-1.jar");
+        try (JarFile jar = new JarFile(dependency.toFile())) {
+            assertNull(jar.getJarEntry("META-INF/TEST.SF"));
+            assertNull(jar.getJarEntry("META-INF/TEST.RSA"));
+            assertNotNull(jar.getJarEntry(classEntryName(DependencyMarker.class)));
+            String manifest = new String(jar.getInputStream(
+                    jar.getJarEntry("META-INF/MANIFEST.MF")).readAllBytes(), StandardCharsets.UTF_8);
+            assertFalse(manifest.contains("Name:"));
+            assertFalse(manifest.contains("SHA-256-Digest"));
+        }
+    }
+
     private TestFixture createFixture(int dependencyCount) throws Exception {
-        return createFixture(dependencyCount, "version-one");
+        return createFixture(dependencyCount, "version-one", false);
     }
 
     private TestFixture createFixture(int dependencyCount, String applicationVersion) throws Exception {
+        return createFixture(dependencyCount, applicationVersion, false);
+    }
+
+    private TestFixture createFixture(int dependencyCount, String applicationVersion,
+                                      boolean digestDependency) throws Exception {
         Path root = temporaryFolder.newFolder("fixture with spaces-中文-" + System.nanoTime()).toPath();
         Path applicationJar = root.resolve("application.jar");
         Path executableJar = root.resolve("executable.jar");
@@ -379,6 +405,11 @@ public class CompactJarToolV2Test {
             String name = "dependency-" + (index + 1) + ".jar";
             Path dependency = root.resolve(name);
             Map<String, byte[]> entries = new LinkedHashMap<>();
+            if (digestDependency && index == 0) {
+                entries.put("META-INF/MANIFEST.MF", digestedDependencyManifest());
+                entries.put("META-INF/TEST.SF", "Signature-Version: 1.0\n".getBytes(StandardCharsets.UTF_8));
+                entries.put("META-INF/TEST.RSA", new byte[] {1, 2, 3});
+            }
             entries.put(classEntryName(DependencyMarker.class), classBytes(DependencyMarker.class));
             entries.put("dependency/resource.txt", ("dependency-" + (index + 1)).getBytes(StandardCharsets.UTF_8));
             writeJar(dependency, null, entries);
@@ -397,6 +428,14 @@ public class CompactJarToolV2Test {
                 classpathIndex.toString().getBytes(StandardCharsets.UTF_8));
         writeJar(executableJar, executableManifest, executableEntries);
         return new TestFixture(executableJar, applicationJar, outputJar);
+    }
+
+    private static byte[] digestedDependencyManifest() {
+        return ("Manifest-Version: 1.0\r\n"
+                + "Created-By: test\r\n"
+                + "\r\n"
+                + "Name: " + classEntryName(DependencyMarker.class) + "\r\n"
+                + "SHA-256-Digest: abc\r\n").getBytes(StandardCharsets.UTF_8);
     }
 
     private String runJar(Path jar, String argument) throws Exception {

@@ -425,9 +425,21 @@ public final class CompactJarBuilderV2 {
         String prefix = String.format("%s%05d/", DEPENDENCY_PREFIX, index);
         try (InputStream dependencyStream = executable.getInputStream(dependencyEntry);
              ZipInputStream dependencyZip = new ZipInputStream(new BufferedInputStream(dependencyStream))) {
+            boolean sanitize = CompactJarSanitizer.isEnabled();
             ZipEntry entry;
             while ((entry = dependencyZip.getNextEntry()) != null) {
-                writeStoredEntry(output, prefix + entry.getName(), dependencyZip, entry);
+                String name = entry.getName();
+                if (sanitize && CompactJarSanitizer.isSignatureEntry(name)) {
+                    continue;
+                }
+                String targetName = prefix + name;
+                if (sanitize && CompactJarSanitizer.isManifestEntry(name)) {
+                    byte[] data = CompactJarSanitizer.readManifest(dependencyZip);
+                    writeStoredEntry(output, targetName,
+                            CompactJarSanitizer.sanitizeManifest(data), entry.getTime());
+                    continue;
+                }
+                writeStoredEntry(output, targetName, dependencyZip, entry);
             }
         }
     }
