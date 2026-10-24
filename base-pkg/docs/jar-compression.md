@@ -139,28 +139,30 @@ java -Dcompact.jar.unpack.threads=3 -jar target/application-compressed.jar
 
 ## 缓存机制
 
-缓存目录由当前用户标识和最终压缩 JAR 的完整 SHA-256 共同决定：
+缓存目录由当前用户标识和最终压缩 JAR 的完整 SHA-256 共同决定。共享使用锁放在每个
+JAR 缓存目录之外，这样缓存目录可以被整体重命名和删除，而不会破坏正在运行的进程所持有的锁：
 
 ```text
-${user.home}/.cache/compact-jar-cache/<user-cache-id>/<jar-sha256>/
+${user.home}/.cache/compact-jar-cache/<user-cache-id>/
+  .locks/<jar-sha256>.lock
+  <jar-sha256>/
+    application.jar
+    lib/*.jar
+    classpath.order
+    classpath.jar
+    cache.ok
+    cache.lock
+    app-id
+    last-used
+    aot/
+      cache.lock
+      <signature>.aot
+      <signature>.ok
 ```
 
 `<user-cache-id>` 是由 `user.name` 和 `user.home` 计算出的 16 位 SHA-256 前缀，不包含用户名明文。不同系统用户即使运行 SHA-256 完全相同的 JAR，也会得到独立目录，不会访问、清理或覆盖其他用户的缓存。同一用户的多个进程仍使用相同目录并通过文件锁协调。
 
-压缩 JAR 中任意内容变化都会生成新的 SHA-256 和新缓存，不会误用旧应用或旧依赖。缓存内容包括：
-
-```text
-application.jar
-lib/*.jar
-classpath.order
-classpath.jar
-cache.ok
-cache.lock
-aot/
-  cache.lock
-  <signature>.aot
-  <signature>.ok
-```
+压缩 JAR 中任意内容变化都会生成新的 SHA-256 和新缓存，不会误用旧应用或旧依赖。
 
 多进程并发启动使用 `cache.lock` 文件锁；只有完整重建成功后才写入 `cache.ok`。未完成或被中断的缓存不会被视为有效。
 
@@ -173,7 +175,25 @@ java -Dcompact.jar.cache.dir=/path/to/cache \
 
 即使配置了共享根目录，启动器也会继续加入 `<user-cache-id>` 用户隔离层。POSIX 系统会把用户目录权限设置为 `0700`；Windows 等非 POSIX 文件系统使用其默认访问控制。`CompactJarTool.compact()` 的预热缓存也只属于调用该工具的系统用户，其他用户首次运行时会创建自己的缓存。
 
-缓存不会自动清理。删除对应 `<user-cache-id>/<jar-sha256>` 目录即可释放展开后的空间。
+### 历史缓存清理
+
+同一用户的多个应用共用 `<user-cache-id>`，因此清理任务只处理与当前应用身份匹配的缓存。
+启动器在缓存就绪后写入 `app-id`（Manifest `Start-Class` 的 SHA-256）和空的 `last-used` 时间标记。
+每次应用启动并且子 JVM 成功创建后，启动器会创建一个最低优先级的守护线程执行一次清理，
+不会阻塞应用启动或退出：
+
+1. 扫描当前用户目录下名称为 64 位小写 SHA-256 的缓存目录。
+2. 跳过当前使用的缓存，以及 `last-used`、`cache.ok`、缓存目录时间在最近 30 天内的缓存。
+3. 只删除 `app-id` 与当前应用一致的缓存；旧版缓存没有 `app-id` 时，从缓存内
+   `application.jar` 的 `Start-Class` 或 `Main-Class` 推断身份，无法确认身份时一律保留。
+4. 启动器在子进程运行期间持有 `.locks/<jar-sha256>.lock` 共享锁。清理任务只尝试非阻塞排他锁，
+   正在运行的其他版本不会被删除；即使锁文件位于不支持共享锁的文件系统，删除失败也只会静默跳过。
+5. 删除前先原子重命名成同目录下的 `.compact-stale-*` 目录，再递归删除；失败留下的临时目录会在
+   后续启动时重试。单条缓存删除失败不会抛出异常，也不会影响应用。
+
+仅当实际删除或清理失败时向控制台输出 `[compact-jar] ...` 消息。`.locks` 中的小锁文件不会随缓存
+一起删除，但不会占用可观的磁盘空间。需要立即释放空间时，仍可手动删除对应
+`<user-cache-id>/<jar-sha256>` 目录；正在运行的版本受共享锁保护，不会被清理任务误删。
 
 ## AOT 缓存
 
@@ -200,8 +220,8 @@ java -Dcompact.jar.aot=false -jar target/application-compressed.jar
 ```
 
 首次训练会在应用退出后由 JDK 启动内部装配进程，并向控制台输出 AOT cache 创建信息。AOT cache
-是启动优化，不替代展开缓存；程序更新后旧的 `<user-cache-id>/<jar-sha256>` 目录仍需要由安装器或
-清理任务按保留策略删除。
+是启动优化，不替代展开缓存；程序更新后会生成新的展开缓存和 AOT 缓存，旧版本超过 30 天未使用后
+由上述后台清理任务删除。
 
 ## 缓存写入模式
 

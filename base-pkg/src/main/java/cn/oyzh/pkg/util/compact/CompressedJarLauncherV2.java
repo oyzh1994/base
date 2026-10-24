@@ -114,9 +114,18 @@ public final class CompressedJarLauncherV2 {
         int dependencyCount = parseDependencyCount(manifest);
         String launcherSha256 = sha256(launcherJar);
         Path cache = cacheDirectory(launcherSha256);
-        prepareCache(launcherJar, cache, payloadEntry, launcherSha256, payloadSha256,
-                applicationSha256, payloadChunkSizes, dependencyCount, resolveCacheMode());
-        int status = launch(cache, startClass, args, launcherSha256);
+        String applicationId = CacheRetentionManager.applicationId(startClass);
+        int status;
+        try (CacheRetentionManager.UsageLock ignored = CacheRetentionManager.acquire(cache)) {
+            prepareCache(launcherJar, cache, payloadEntry, launcherSha256, payloadSha256,
+                    applicationSha256, payloadChunkSizes, dependencyCount, resolveCacheMode());
+            CacheRetentionManager.markUsed(cache, applicationId);
+            try {
+                status = launch(cache, startClass, args, launcherSha256, applicationId);
+            } finally {
+                CacheRetentionManager.markUsed(cache, applicationId);
+            }
+        }
         System.exit(status);
     }
 
@@ -154,8 +163,12 @@ public final class CompressedJarLauncherV2 {
         int dependencyCount = parseDependencyCount(manifest);
         String launcherSha256 = sha256(absoluteLauncherJar);
         Path cache = cacheDirectory(launcherSha256);
-        prepareCache(absoluteLauncherJar, cache, payloadEntry, launcherSha256, payloadSha256,
-                applicationSha256, payloadChunkSizes, dependencyCount, resolveCacheMode());
+        String applicationId = CacheRetentionManager.applicationId(required(manifest, "Start-Class"));
+        try (CacheRetentionManager.UsageLock ignored = CacheRetentionManager.acquire(cache)) {
+            prepareCache(absoluteLauncherJar, cache, payloadEntry, launcherSha256, payloadSha256,
+                    applicationSha256, payloadChunkSizes, dependencyCount, resolveCacheMode());
+            CacheRetentionManager.markUsed(cache, applicationId);
+        }
     }
 
     private static String required(Manifest manifest, String name) {
@@ -726,7 +739,8 @@ public final class CompressedJarLauncherV2 {
     /**
      * 启动实际应用 JVM，并转发启动器收到的 JVM 参数和应用参数。
      */
-    private static int launch(Path cache, String startClass, String[] args, String applicationIdentity) throws Exception {
+    private static int launch(Path cache, String startClass, String[] args, String applicationIdentity,
+                              String applicationId) throws Exception {
         try (AotCacheManager.Session aot = AotCacheManager.open(cache, applicationIdentity)) {
             List<String> command = new ArrayList<>();
             command.add(javaExecutable());
@@ -735,7 +749,9 @@ public final class CompressedJarLauncherV2 {
             command.add(classPath(cache));
             command.add(startClass);
             command.addAll(List.of(args));
-            int status = waitFor(new ProcessBuilder(command).inheritIO().start());
+            Process process = new ProcessBuilder(command).inheritIO().start();
+            CacheRetentionManager.cleanupAsync(cache, applicationId);
+            int status = waitFor(process);
             aot.complete();
             return status;
         }

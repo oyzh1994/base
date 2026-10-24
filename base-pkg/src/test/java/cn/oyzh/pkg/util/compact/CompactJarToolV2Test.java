@@ -72,7 +72,11 @@ public class CompactJarToolV2Test {
         assertManifest(fixture.outputJar());
         assertEquals("V2_OK:--message=hello world|dependency-one|resource, \"quoted\"\nline",
                 runJar(fixture.outputJar(), "--message=hello world"));
-        assertAotCache(findSingleCache());
+        Path cache = findSingleCache();
+        assertAotCache(cache);
+        assertTrue(Files.isRegularFile(cache.resolve("last-used")));
+        assertEquals(CacheRetentionManager.applicationId(TestMain.class.getName()),
+                Files.readString(cache.resolve("app-id"), StandardCharsets.UTF_8));
         assertApplicationRoundTrip(fixture.applicationJar());
     }
 
@@ -86,6 +90,8 @@ public class CompactJarToolV2Test {
         try (JarFile jar = new JarFile(fixture.outputJar().toFile())) {
             assertTrue(jar.getJarEntry("compact-payload.xz") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager$UsageLock.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncherV2.class") == null);
             assertEquals(CompressedJarLauncher.class.getName(),
                     jar.getManifest().getMainAttributes().getValue("Main-Class"));
@@ -395,6 +401,8 @@ public class CompactJarToolV2Test {
             assertTrue(jar.getJarEntry("compact-payload.zst") != null);
             assertTrue(jar.getJarEntry("META-INF/compact-index.tsv") == null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager$UsageLock.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncher.class") == null);
             assertTrue(jar.getJarEntry("com/github/luben/zstd/ZstdInputStream.class") != null);
             assertTrue(jar.stream().anyMatch(entry -> entry.getName().startsWith("linux/amd64/libzstd-jni-")
