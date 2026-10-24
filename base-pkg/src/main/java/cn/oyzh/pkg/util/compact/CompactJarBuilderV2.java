@@ -62,6 +62,7 @@ public final class CompactJarBuilderV2 {
     private static final String LAUNCHER_CLASS = CompressedJarLauncherV2.class.getName();
     private static final String LAUNCHER_CLASS_PATH = LAUNCHER_CLASS.replace('.', '/');
     private static final String AOT_CLASS_PATH = AotCacheManager.class.getName().replace('.', '/');
+    private static final String AOT_ASSEMBLY_CLASS_PATH = AotAssemblyMain.class.getName().replace('.', '/');
     private static final String CACHE_RETENTION_CLASS_PATH =
             CacheRetentionManager.class.getName().replace('.', '/');
     private static final String ZSTD_CLASS_PREFIX = "com/github/luben/zstd/";
@@ -645,6 +646,7 @@ public final class CompactJarBuilderV2 {
         addClassSource(output, CompressedJarLauncherV2.class,
                 name -> isRuntimeClass(name, LAUNCHER_CLASS_PATH)
                         || isRuntimeClass(name, AOT_CLASS_PATH)
+                        || isRuntimeClass(name, AOT_ASSEMBLY_CLASS_PATH)
                         || isRuntimeClass(name, CACHE_RETENTION_CLASS_PATH));
         addClassSource(output, ZstdInputStream.class,
                 name -> name.startsWith(ZSTD_CLASS_PREFIX) || isZstdNativeResource(name));

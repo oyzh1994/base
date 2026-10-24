@@ -52,12 +52,14 @@ public class CompactJarToolV2Test {
         cacheDirectory = temporaryFolder.newFolder("cache with spaces-中文").toPath();
         System.setProperty("compact.jar.cache.dir", cacheDirectory.toString());
         System.setProperty("compact.jar.cache.mode", "deflate");
+        System.setProperty("compact.jar.aot.assembly", "one-step");
     }
 
     @After
     public void tearDown() {
         System.clearProperty("compact.jar.cache.dir");
         System.clearProperty("compact.jar.cache.mode");
+        System.clearProperty("compact.jar.aot.assembly");
         System.clearProperty("compact.jar.zstd.window.log");
         System.clearProperty("compact.jar.zstd.compress.threads");
     }
@@ -90,6 +92,7 @@ public class CompactJarToolV2Test {
         try (JarFile jar = new JarFile(fixture.outputJar().toFile())) {
             assertTrue(jar.getJarEntry("compact-payload.xz") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotAssemblyMain.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager$UsageLock.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncherV2.class") == null);
@@ -206,6 +209,45 @@ public class CompactJarToolV2Test {
         assertTrue(trainingArguments.contains("-XX:AOTCacheOutput="));
         assertFalse(trainingArguments.contains("-XX:AOTCache="));
         assertAotCache(findSingleCache());
+    }
+
+    @Test
+    public void aotTwoStepTrainingUsesConfigurationAndReusesCache() throws Exception {
+        System.setProperty("compact.jar.aot.assembly", "two-step");
+        TestFixture fixture = createFixture(1);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+
+        String trainingArguments = runJar(fixture.outputJar(), "--vm-args", "-Xshare:off", "-Xlog:aot=info");
+        assertTrue(trainingArguments.contains("-XX:AOTMode=record"));
+        assertTrue(trainingArguments.contains("-XX:AOTConfiguration="));
+        assertFalse(trainingArguments.contains("-XX:AOTCacheOutput="));
+        assertAotCache(findSingleCache());
+
+        String reuseArguments = runJar(fixture.outputJar(), "--vm-args", "-Xshare:off", "-Xlog:aot=info");
+        assertTrue(reuseArguments.contains("-XX:AOTCache="));
+        assertFalse(reuseArguments.contains("-XX:AOTMode=record"));
+        assertTrue(reuseArguments.contains("Opened AOT cache"));
+        assertFalse(reuseArguments.contains("Unable to map shared spaces"));
+    }
+
+    @Test
+    public void aotAsyncAssemblyFinishesAfterLauncherExit() throws Exception {
+        System.setProperty("compact.jar.aot.assembly", "async");
+        TestFixture fixture = createFixture(1);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+
+        String trainingArguments = runJar(fixture.outputJar(), "--vm-args", "-Xshare:off", "-Xlog:aot=info");
+        assertTrue(trainingArguments.contains("-XX:AOTMode=record"));
+        assertFalse(trainingArguments.contains("-XX:AOTCacheOutput="));
+        Path cache = findSingleCache();
+        awaitAotCache(cache, 30);
+        assertAotCache(cache);
+
+        String reuseArguments = runJar(fixture.outputJar(), "--vm-args", "-Xshare:off", "-Xlog:aot=info");
+        assertTrue(reuseArguments.contains("-XX:AOTCache="));
+        assertFalse(reuseArguments.contains("-XX:AOTMode=record"));
+        assertTrue(reuseArguments.contains("Opened AOT cache"));
+        assertFalse(reuseArguments.contains("Unable to map shared spaces"));
     }
 
     @Test
@@ -373,6 +415,8 @@ public class CompactJarToolV2Test {
         command.add("--enable-native-access=ALL-UNNAMED");
         command.add("-Dcompact.jar.cache.dir=" + cacheDirectory);
         command.add("-Dcompact.jar.cache.mode=" + System.getProperty("compact.jar.cache.mode", "deflate"));
+        command.add("-Dcompact.jar.aot.assembly="
+                + System.getProperty("compact.jar.aot.assembly", "one-step"));
         command.addAll(List.of(jvmArguments));
         command.add("-jar");
         command.add(jar.toString());
@@ -403,6 +447,7 @@ public class CompactJarToolV2Test {
             assertTrue(jar.getJarEntry("compact-payload.zst") != null);
             assertTrue(jar.getJarEntry("META-INF/compact-index.tsv") == null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotAssemblyMain.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager$UsageLock.class") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncher.class") == null);
@@ -462,12 +507,55 @@ public class CompactJarToolV2Test {
     }
 
     private void assertAotCache(Path cache) throws IOException {
-        Path marker = findSingleAotMarker(cache);
+        Path marker;
+        try {
+            marker = findSingleAotMarker(cache);
+        } catch (AssertionError error) {
+            throw new AssertionError(error.getMessage() + diagnosticLog(cache), error);
+        }
         assertTrue(Files.isRegularFile(marker));
         try (Stream<Path> paths = Files.list(cache.resolve("aot"))) {
             List<Path> caches = paths.filter(path -> path.getFileName().toString().endsWith(".aot")).toList();
             assertEquals("Expected one AOT cache under " + cache + ": " + caches, 1, caches.size());
             assertTrue(Files.size(caches.get(0)) > 0);
+        }
+    }
+
+    private void awaitAotCache(Path cache, int timeoutSeconds) throws Exception {
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(timeoutSeconds);
+        Path aot = cache.resolve("aot");
+        Path marker = findAotMarker(aot);
+        while (marker == null && System.nanoTime() < deadline) {
+            Thread.sleep(50);
+            marker = findAotMarker(aot);
+        }
+        if (marker == null) {
+            Path log;
+            try (Stream<Path> paths = Files.list(aot)) {
+                log = paths.filter(path -> path.getFileName().toString().endsWith(".assembly.log"))
+                        .findFirst().orElse(null);
+            }
+            fail("AOT cache was not assembled in time. Log: "
+                    + (log == null ? "missing" : Files.readString(log)));
+        }
+    }
+
+    private Path findAotMarker(Path aot) throws IOException {
+        try (Stream<Path> paths = Files.list(aot)) {
+            return paths.filter(path -> path.getFileName().toString().endsWith(".ok"))
+                    .findFirst().orElse(null);
+        }
+    }
+
+    private String diagnosticLog(Path cache) throws IOException {
+        Path aot = cache.resolve("aot");
+        if (!Files.isDirectory(aot)) {
+            return "";
+        }
+        try (Stream<Path> paths = Files.list(aot)) {
+            Path log = paths.filter(path -> path.getFileName().toString().endsWith(".assembly.log"))
+                    .findFirst().orElse(null);
+            return log == null ? "" : "\nAssembly log:\n" + Files.readString(log);
         }
     }
 

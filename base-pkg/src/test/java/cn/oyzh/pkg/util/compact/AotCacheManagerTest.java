@@ -1,6 +1,8 @@
 package cn.oyzh.pkg.util.compact;
 
 import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
@@ -10,6 +12,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
@@ -21,6 +24,16 @@ public class AotCacheManagerTest {
 
     @Rule
     public final TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @Before
+    public void setUp() {
+        System.setProperty("compact.jar.aot.assembly", "one-step");
+    }
+
+    @After
+    public void tearDown() {
+        System.clearProperty("compact.jar.aot.assembly");
+    }
 
     @Test
     public void disabledSessionRemovesInheritedAotArguments() {
@@ -98,6 +111,36 @@ public class AotCacheManagerTest {
                         .map(argument -> argument.toLowerCase(Locale.ROOT))
                         .anyMatch(argument -> argument.startsWith("-xx:aot")));
             }
+        }
+    }
+
+    @Test
+    public void twoStepTrainingRecordsConfigurationAndCleansAbortedState() throws Exception {
+        assumeTrue(Runtime.version().feature() >= 24);
+        assumeTrue(AotCacheManager.isSupportedVm(System.getProperty("java.vm.name", "")));
+        assumeFalse(AotCacheManager.hasConflictingEnvironment(System.getenv()));
+        System.setProperty("compact.jar.aot.assembly", "two-step");
+        Path runtimeCache = temporaryFolder.newFolder("two step cache").toPath();
+        Path aot = runtimeCache.resolve("aot");
+
+        try (AotCacheManager.Session session = AotCacheManager.open(runtimeCache, "application")) {
+            List<String> arguments = session.jvmArguments();
+            assertTrue(arguments.contains("-XX:AOTMode=record"));
+            assertTrue(arguments.stream().anyMatch(argument -> argument.startsWith("-XX:AOTConfiguration=")));
+            assertTrue(arguments.contains("-XX:-AOTClassLinking"));
+            assertFalse(arguments.stream().anyMatch(argument -> argument.startsWith("-XX:AOTCacheOutput=")));
+            try (Stream<Path> paths = Files.list(aot)) {
+                List<String> names = paths.map(path -> path.getFileName().toString()).toList();
+                assertTrue(names.stream().anyMatch(name -> name.endsWith(".assembly")));
+                assertFalse(names.stream().anyMatch(name -> name.endsWith(".aotconfig")));
+            }
+        }
+
+        try (Stream<Path> paths = Files.list(aot)) {
+            List<String> names = paths.map(path -> path.getFileName().toString()).toList();
+            assertFalse(names.stream().anyMatch(name -> name.endsWith(".assembly")));
+            assertFalse(names.stream().anyMatch(name -> name.endsWith(".training")));
+            assertFalse(names.stream().anyMatch(name -> name.endsWith(".aot")));
         }
     }
 }
