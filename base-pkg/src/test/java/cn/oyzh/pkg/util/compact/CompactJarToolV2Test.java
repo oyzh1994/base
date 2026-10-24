@@ -107,11 +107,13 @@ public class CompactJarToolV2Test {
         Path cache = findSingleCache();
         Path marker = cache.resolve("cache.ok");
         assertTrue(Files.isRegularFile(marker));
+        String markerContent = Files.readString(marker, StandardCharsets.UTF_8);
         long expectedMarkerTime = Files.getLastModifiedTime(marker).toMillis() - 2000;
         Files.setLastModifiedTime(marker, FileTime.fromMillis(expectedMarkerTime));
 
         CompressedJarLauncherV2.warmCache(fixture.outputJar());
-        assertEquals(expectedMarkerTime, Files.getLastModifiedTime(marker).toMillis());
+        assertEquals(markerContent, Files.readString(marker, StandardCharsets.UTF_8));
+        assertTrue(Files.getLastModifiedTime(marker).toMillis() > expectedMarkerTime);
 
         Files.delete(marker);
         CompressedJarLauncherV2.warmCache(fixture.outputJar());

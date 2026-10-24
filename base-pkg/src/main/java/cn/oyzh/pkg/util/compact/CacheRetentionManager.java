@@ -7,12 +7,16 @@ import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.MessageDigest;
@@ -104,7 +108,8 @@ final class CacheRetentionManager {
     }
 
     /**
-     * 记录应用标识和最近使用时间。任何失败都不会影响应用启动。
+     * 记录应用标识和最近使用时间。cache.ok 同时作为 last-used 的冗余时间标记，
+     * 避免单个文件被手动删除后无法判断缓存是否仍在使用。任何失败都不会影响应用启动。
      */
     static void markUsed(Path runtimeCache, String applicationId) {
         if (applicationId != null && !applicationId.isBlank()) {
@@ -114,6 +119,7 @@ final class CacheRetentionManager {
             } catch (Exception ignored) {
             }
         }
+        touch(runtimeCache.resolve(CACHE_MARKER));
         try {
             Files.write(runtimeCache.resolve(LAST_USED), new byte[0], StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING);
@@ -284,10 +290,52 @@ final class CacheRetentionManager {
     }
 
     private static boolean isExpired(Path cache, long cutoff) {
-        long lastModified = Math.max(lastModified(cache.resolve(LAST_USED)),
-                lastModified(cache.resolve(CACHE_MARKER)));
-        lastModified = Math.max(lastModified, lastModified(cache));
-        return lastModified >= 0 && lastModified < cutoff;
+        long lastUsed = regularFileModified(cache.resolve(LAST_USED));
+        long metadataTime = Math.max(lastUsed, regularFileModified(cache.resolve(CACHE_MARKER)));
+        metadataTime = Math.max(metadataTime, lastModified(cache));
+        if (metadataTime >= 0 && metadataTime >= cutoff) {
+            return false;
+        }
+        if (lastUsed >= 0) {
+            return true;
+        }
+        long artifactTime = latestCacheTime(cache);
+        return artifactTime >= 0 && artifactTime < cutoff;
+    }
+
+    /**
+     * last-used 缺失时递归检查缓存内容，取普通文件的最新修改时间或访问时间。
+     * 应用启动时加载 JAR 通常会刷新访问时间，较新版本的 AOT 文件也会刷新修改时间。
+     * 任一文件属性读取失败时返回 -1，调用方会保守保留缓存。
+     */
+    static long latestCacheTime(Path cache) {
+        long[] latest = {-1};
+        try {
+            Files.walkFileTree(cache, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path directory, BasicFileAttributes attributes) {
+                    latest[0] = Math.max(latest[0], attributes.lastModifiedTime().toMillis());
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
+                    latest[0] = Math.max(latest[0], attributes.lastModifiedTime().toMillis());
+                    if (attributes.isRegularFile()) {
+                        latest[0] = Math.max(latest[0], attributes.lastAccessTime().toMillis());
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exception) throws IOException {
+                    throw exception;
+                }
+            });
+            return latest[0];
+        } catch (Exception ex) {
+            return -1;
+        }
     }
 
     private static long lastModified(Path path) {
@@ -295,6 +343,23 @@ final class CacheRetentionManager {
             return Files.getLastModifiedTime(path, LinkOption.NOFOLLOW_LINKS).toMillis();
         } catch (Exception ex) {
             return -1;
+        }
+    }
+
+    private static long regularFileModified(Path path) {
+        try {
+            return Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS) ? lastModified(path) : -1;
+        } catch (Exception ex) {
+            return -1;
+        }
+    }
+
+    private static void touch(Path path) {
+        try {
+            if (Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {
+                Files.setLastModifiedTime(path, FileTime.from(Instant.now()));
+            }
+        } catch (Exception ignored) {
         }
     }
 

@@ -178,12 +178,16 @@ java -Dcompact.jar.cache.dir=/path/to/cache \
 ### 历史缓存清理
 
 同一用户的多个应用共用 `<user-cache-id>`，因此清理任务只处理与当前应用身份匹配的缓存。
-启动器在缓存就绪后写入 `app-id`（Manifest `Start-Class` 的 SHA-256）和空的 `last-used` 时间标记。
+启动器在缓存就绪后写入 `app-id`（Manifest `Start-Class` 的 SHA-256）和空的 `last-used` 时间标记，
+并同步刷新 `cache.ok` 的修改时间。`cache.ok` 作为 `last-used` 的冗余时间信号，两者任意一个存在即可判断
+最近使用时间；即使手动删除 `last-used`，已有缓存也不会因此被误判为过期。
 每次应用启动并且子 JVM 成功创建后，启动器会创建一个最低优先级的守护线程执行一次清理，
 不会阻塞应用启动或退出：
 
 1. 扫描当前用户目录下名称为 64 位小写 SHA-256 的缓存目录。
-2. 跳过当前使用的缓存，以及 `last-used`、`cache.ok`、缓存目录时间在最近 30 天内的缓存。
+2. 取 `last-used`、`cache.ok` 和缓存目录时间中的最大值。若 `last-used` 不存在或无法读取，
+   还会递归检查缓存内的应用 JAR、依赖 JAR、AOT 文件等，使用普通文件的最新修改时间或访问时间。
+   任一可靠时间在最近 30 天内，或时间信息无法读取时，均保留缓存。
 3. 只删除 `app-id` 与当前应用一致的缓存；旧版缓存没有 `app-id` 时，从缓存内
    `application.jar` 的 `Start-Class` 或 `Main-Class` 推断身份，无法确认身份时一律保留。
 4. 启动器在子进程运行期间持有 `.locks/<jar-sha256>.lock` 共享锁。清理任务只尝试非阻塞排他锁，

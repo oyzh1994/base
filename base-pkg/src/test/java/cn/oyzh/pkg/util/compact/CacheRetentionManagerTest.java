@@ -8,15 +8,19 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -92,6 +96,19 @@ public class CacheRetentionManagerTest {
     }
 
     @Test
+    public void removesExpiredLegacyCacheWithoutAppIdOrLastUsed() throws Exception {
+        Path root = temporaryFolder.newFolder("legacy-without-markers-root").toPath();
+        Path current = createCache(root, 1, APPLICATION, NOW.minus(Duration.ofDays(1)));
+        Path legacy = createLegacyCache(root, 2, NOW.minus(Duration.ofDays(60)),
+                "Start-Class", APPLICATION);
+        Files.delete(legacy.resolve("last-used"));
+        setCacheTreeTimes(legacy, NOW.minus(Duration.ofDays(60)));
+
+        assertEquals(1, CacheRetentionManager.cleanupExpired(current, applicationId(APPLICATION), NOW));
+        assertFalse(Files.exists(legacy));
+    }
+
+    @Test
     public void removesTombstonesAndDoesNotFollowSymbolicLinks() throws Exception {
         Path root = temporaryFolder.newFolder("special-cache-root").toPath();
         Path current = createCache(root, 1, APPLICATION, NOW);
@@ -143,6 +160,78 @@ public class CacheRetentionManagerTest {
     }
 
     @Test
+    public void retainsCacheWhenLastUsedIsMissingButCacheMarkerIsRecent() throws Exception {
+        Path root = temporaryFolder.newFolder("missing-last-used-root").toPath();
+        Path current = createCache(root, 1, APPLICATION, NOW);
+        Path old = createCache(root, 2, APPLICATION, NOW.minus(Duration.ofDays(60)));
+        Files.delete(old.resolve("last-used"));
+        setTimes(old.resolve("cache.ok"), NOW.minus(Duration.ofDays(1)), NOW.minus(Duration.ofDays(60)));
+
+        assertEquals(0, CacheRetentionManager.cleanupExpired(current, applicationId(APPLICATION), NOW));
+        assertTrue(Files.isDirectory(old));
+    }
+
+    @Test
+    public void retainsCacheWhenLastUsedIsMissingButNestedArtifactIsRecent() throws Exception {
+        Path root = temporaryFolder.newFolder("nested-artifact-root").toPath();
+        Path current = createCache(root, 1, APPLICATION, NOW);
+        Path old = createCache(root, 2, APPLICATION, NOW.minus(Duration.ofDays(60)));
+        Files.delete(old.resolve("last-used"));
+        Path aot = Files.createDirectories(old.resolve("aot"));
+        Path artifact = Files.writeString(aot.resolve("recent.aot"), "aot", StandardCharsets.UTF_8);
+        setCacheTreeTimes(old, NOW.minus(Duration.ofDays(60)));
+        setTimes(artifact, NOW.minus(Duration.ofDays(1)), NOW.minus(Duration.ofDays(60)));
+
+        assertTrue(CacheRetentionManager.latestCacheTime(old) >= NOW.minus(Duration.ofDays(1)).toEpochMilli());
+        assertEquals(0, CacheRetentionManager.cleanupExpired(current, applicationId(APPLICATION), NOW));
+        assertTrue(Files.isDirectory(old));
+    }
+
+    @Test
+    public void usesRecentFileAccessWhenLastUsedIsMissing() throws Exception {
+        Path root = temporaryFolder.newFolder("access-time-root").toPath();
+        Path current = createCache(root, 1, APPLICATION, NOW);
+        Path old = createCache(root, 2, APPLICATION, NOW.minus(Duration.ofDays(60)));
+        Files.delete(old.resolve("last-used"));
+        Path applicationJar = Files.writeString(old.resolve("application.jar"), "jar", StandardCharsets.UTF_8);
+        setCacheTreeTimes(old, NOW.minus(Duration.ofDays(60)));
+        Instant recentAccess = NOW.minus(Duration.ofDays(1));
+        setTimes(applicationJar, NOW.minus(Duration.ofDays(60)), recentAccess);
+        assumeTrue("Filesystem does not preserve access time",
+                CacheRetentionManager.latestCacheTime(old) >= recentAccess.toEpochMilli());
+
+        assertEquals(0, CacheRetentionManager.cleanupExpired(current, applicationId(APPLICATION), NOW));
+        assertTrue(Files.isDirectory(old));
+    }
+
+    @Test
+    public void removesOldCacheWithoutLastUsedWhenAllArtifactsExpired() throws Exception {
+        Path root = temporaryFolder.newFolder("expired-artifacts-root").toPath();
+        Path current = createCache(root, 1, APPLICATION, NOW);
+        Path old = createCache(root, 2, APPLICATION, NOW.minus(Duration.ofDays(60)));
+        Files.delete(old.resolve("last-used"));
+        setCacheTreeTimes(old, NOW.minus(Duration.ofDays(60)));
+
+        assertEquals(1, CacheRetentionManager.cleanupExpired(current, applicationId(APPLICATION), NOW));
+        assertFalse(Files.exists(old));
+    }
+
+    @Test
+    public void markUsedRefreshesCacheMarkerAsFallback() throws Exception {
+        Path root = temporaryFolder.newFolder("marker-refresh-root").toPath();
+        Path current = createCache(root, 1, APPLICATION, NOW);
+        Path cache = createCache(root, 2, APPLICATION, NOW.minus(Duration.ofDays(60)));
+        Instant before = Instant.now().minusSeconds(1);
+
+        CacheRetentionManager.markUsed(cache, applicationId(APPLICATION));
+        Files.delete(cache.resolve("last-used"));
+
+        assertTrue(Files.getLastModifiedTime(cache.resolve("cache.ok")).toInstant().isAfter(before));
+        assertEquals(0, CacheRetentionManager.cleanupExpired(current, applicationId(APPLICATION), Instant.now()));
+        assertTrue(Files.isDirectory(cache));
+    }
+
+    @Test
     public void applicationIdentityIsStableAndApplicationSpecific() {
         assertTrue(applicationId(APPLICATION).matches("[0-9a-f]{64}"));
         assertEquals(applicationId(APPLICATION), applicationId(APPLICATION));
@@ -180,6 +269,20 @@ public class CacheRetentionManagerTest {
         Files.setLastModifiedTime(cache.resolve("last-used"), time);
         Files.setLastModifiedTime(cache.resolve("cache.ok"), time);
         Files.setLastModifiedTime(cache, time);
+    }
+
+    private static void setCacheTreeTimes(Path cache, Instant time) throws IOException {
+        try (Stream<Path> paths = Files.walk(cache)) {
+            for (Path path : paths.sorted(Comparator.reverseOrder()).toList()) {
+                setTimes(path, time, time);
+            }
+        }
+    }
+
+    private static void setTimes(Path path, Instant modified, Instant accessed) throws IOException {
+        BasicFileAttributeView view = Files.getFileAttributeView(path,
+                BasicFileAttributeView.class, LinkOption.NOFOLLOW_LINKS);
+        view.setTimes(FileTime.from(modified), FileTime.from(accessed), null);
     }
 
     private static String cacheName(int value) {
