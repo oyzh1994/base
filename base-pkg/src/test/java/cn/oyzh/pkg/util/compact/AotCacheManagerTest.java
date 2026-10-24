@@ -27,12 +27,52 @@ public class AotCacheManagerTest {
 
     @Before
     public void setUp() {
+        System.setProperty("compact.jar.aot", "true");
         System.setProperty("compact.jar.aot.assembly", "one-step");
     }
 
     @After
     public void tearDown() {
+        System.clearProperty("compact.jar.aot");
         System.clearProperty("compact.jar.aot.assembly");
+    }
+
+    @Test
+    public void disabledByDefault() {
+        assumeTrue(Runtime.version().feature() >= 24);
+        assumeTrue(AotCacheManager.isSupportedVm(System.getProperty("java.vm.name", "")));
+        String property = "compact.jar.aot";
+        String previous = System.getProperty(property);
+        try {
+            System.clearProperty(property);
+            assertFalse(AotCacheManager.isEnabled());
+            System.setProperty(property, "true");
+            assertTrue(AotCacheManager.isEnabled());
+            System.setProperty(property, "false");
+            assertFalse(AotCacheManager.isEnabled());
+        } finally {
+            if (previous == null) {
+                System.clearProperty(property);
+            } else {
+                System.setProperty(property, previous);
+            }
+        }
+    }
+
+    @Test
+    public void openSkipsAotWhenPropertyIsAbsent() throws Exception {
+        assumeTrue(Runtime.version().feature() >= 24);
+        assumeTrue(AotCacheManager.isSupportedVm(System.getProperty("java.vm.name", "")));
+        assumeFalse(AotCacheManager.hasConflictingEnvironment(System.getenv()));
+        System.clearProperty("compact.jar.aot");
+        Path runtimeCache = temporaryFolder.newFolder("disabled-cache").toPath();
+
+        try (AotCacheManager.Session session = AotCacheManager.open(runtimeCache, "application")) {
+            assertFalse(session.jvmArguments().stream()
+                    .map(argument -> argument.toLowerCase(Locale.ROOT))
+                    .anyMatch(argument -> argument.startsWith("-xx:aot")));
+        }
+        assertFalse(Files.exists(runtimeCache.resolve("aot")));
     }
 
     @Test

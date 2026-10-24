@@ -202,9 +202,10 @@ java -Dcompact.jar.cache.dir=/path/to/cache \
 
 ## AOT 缓存
 
-Java 24 及以上的 HotSpot 运行时会自动训练并复用 JEP 483 AOT 缓存；OpenJ9、Substrate VM
-等不支持这些参数的运行时会自动跳过 AOT。AOT 文件位于对应展开缓存的 `aot/` 目录中，与应用
-展开缓存一起按当前用户和压缩 JAR SHA-256 隔离：
+AOT 缓存默认关闭。Java 24 及以上的 HotSpot 支持 JEP 483，设置 `-Dcompact.jar.aot=true`
+后才会训练并复用 AOT 缓存；OpenJ9、Substrate VM 等不支持这些参数的运行时会自动跳过 AOT。
+AOT 文件位于对应展开缓存的 `aot/` 目录中，与应用展开缓存一起按当前用户和压缩 JAR SHA-256
+隔离。开启后流程如下：
 
 1. 缓存不存在时进行首次训练，应用 JVM 退出后装配 AOT 缓存。
 2. AOT 装配先写入临时文件，成功后再原子替换为目标文件并写入 `<signature>.ok`；
@@ -214,18 +215,18 @@ Java 24 及以上的 HotSpot 运行时会自动训练并复用 JEP 483 AOT 缓�
 
 启动器支持单阶段和两阶段两种训练流程，通过 `-Dcompact.jar.aot.assembly` 选择：
 
-- `auto`：默认值。Windows 使用 `async`，其他系统保持 `one-step`。
+- `auto`：开启 AOT 后的装配模式默认值。Windows 使用 `async`，其他系统使用 `one-step`。
 - `one-step`：应用 JVM 使用 `-XX:AOTCacheOutput=<cache>`。HotSpot 会在训练进程退出时再启动
   一个内部 JVM 执行装配，退出耗时包含完整的缓存创建和落盘。
 - `two-step`：应用 JVM 只使用 `-XX:AOTMode=record -XX:AOTConfiguration=<config>` 记录训练数据；
   应用退出后由启动器同步执行 `-XX:AOTMode=create` 装配。
 - `async`：与 `two-step` 相同的训练/装配拆分，但应用退出后启动独立的 `javaw.exe`（Windows）
-  或 `java`（其他系统）后台装配进程，启动器不等待装配完成。Windows 默认使用该模式，避免
-  AOT 装配阻塞程序退出。
+  或 `java`（其他系统）后台装配进程，启动器不等待装配完成。启用 AOT 后 Windows 默认使用该
+  模式，避免 AOT 装配阻塞程序退出。
 
 ```bash
-# Windows 默认即为 async；需要强制回退到 JDK 单阶段流程时：
-java -Dcompact.jar.aot.assembly=one-step -jar target/application-compressed.jar
+# 启用 AOT 时 Windows 默认即为 async；需要强制回退到 JDK 单阶段流程时：
+java -Dcompact.jar.aot=true -Dcompact.jar.aot.assembly=one-step -jar target/application-compressed.jar
 ```
 
 后台装配会持有 `aot/cache.lock`，装配成功前不会生成有效标记。因此装配期间再次启动程序不会
@@ -270,10 +271,11 @@ JDK、运行环境或 JVM 参数变化后也会重新训练，避免复用不兼
 `-XX:SharedArchiveFile`、`-XX:DumpLoadedClassList` 等）与 AOT cache 不兼容时会自动跳过 AOT，
 保留原启动参数。若 `JAVA_TOOL_OPTIONS`、`JDK_JAVA_OPTIONS` 或 `_JAVA_OPTIONS` 中包含这些参数，
 启动器也会跳过 AOT，避免它们被继承到子 JVM 后与 AOT 参数冲突。缓存加载失败时 JVM 的默认
-`auto` 模式会继续运行，不会阻止应用启动。显式传入 `-XX:AOTMode=off` 或设置以下属性可关闭该功能：
+`auto` 模式会继续运行，不会阻止应用启动。即使显式开启，传入 `-XX:AOTMode=off` 仍会跳过 AOT。
+需要启用时：
 
 ```bash
-java -Dcompact.jar.aot=false -jar target/application-compressed.jar
+java -Dcompact.jar.aot=true -jar target/application-compressed.jar
 ```
 
 AOT cache 是启动优化，不替代展开缓存；程序更新后会生成新的展开缓存和 AOT 缓存，旧版本超过

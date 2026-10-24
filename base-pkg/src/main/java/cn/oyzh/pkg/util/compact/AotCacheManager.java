@@ -120,13 +120,13 @@ final class AotCacheManager {
         }
     }
 
-    private static boolean isEnabled() {
+    static boolean isEnabled() {
         if (Runtime.version().feature() < MINIMUM_JAVA_FEATURE
                 || !isSupportedVm(System.getProperty("java.vm.name", ""))) {
             return false;
         }
         String value = System.getProperty(ENABLED_PROPERTY);
-        return value == null || value.isBlank() || Boolean.parseBoolean(value.trim());
+        return value != null && Boolean.parseBoolean(value.trim());
     }
 
     static boolean isSupportedVm(String vmName) {
