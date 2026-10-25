@@ -78,7 +78,8 @@ public class JdbcManager {
         }
         String dbFile = JdbcConst.dbFile();
         if (StringUtil.isBlank(dbFile)) {
-            dbFile = System.getProperty("user.dir") + File.separator + "temp_db";
+//            dbFile = System.getProperty("user.dir") + File.separator + "temp_db";
+            return null;
         }
         Connection connection;
         String url;
