@@ -1,5 +1,6 @@
 package cn.oyzh.store.jdbc;
 
+import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.common.util.StringUtil;
 import cn.oyzh.store.jdbc.param.DeleteParam;
@@ -11,6 +12,7 @@ import cn.oyzh.store.jdbc.param.SelectParam;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -346,6 +348,11 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
      * @throws SQLException 异常
      */
     public List<Map<String, Object>> selectList(SelectParam selectParam) throws SQLException {
+        JdbcConn connection = JdbcManager.takeoff();
+        if (connection == null) {
+            JulLog.warn("connection is null");
+            return Collections.emptyList();
+        }
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT ");
         if (selectParam == null || CollectionUtil.isEmpty(selectParam.getQueryColumns())) {
@@ -391,7 +398,6 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
                 }
             }
         }
-        JdbcConn connection = JdbcManager.takeoff();
         try {
             JdbcResultSet resultSet = JdbcHelper.executeQuery(connection, sql.toString());
             List<Map<String, Object>> records = new ArrayList<>();

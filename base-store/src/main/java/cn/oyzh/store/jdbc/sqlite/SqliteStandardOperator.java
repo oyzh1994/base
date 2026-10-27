@@ -1,5 +1,6 @@
 package cn.oyzh.store.jdbc.sqlite;
 
+import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.CollectionUtil;
 import cn.oyzh.store.jdbc.JdbcConn;
 import cn.oyzh.store.jdbc.JdbcHelper;
@@ -33,6 +34,10 @@ public class SqliteStandardOperator extends JdbcStandardOperator {
     @Override
     public boolean initTable() throws Exception {
         JdbcConn connection = JdbcManager.takeoff();
+        if (connection == null) {
+            JulLog.warn("connection is null");
+            return false;
+        }
         try {
             String tableName = this.tableName();
             ResultSet resultSet = connection.getTables(tableName);

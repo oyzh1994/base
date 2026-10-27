@@ -6,6 +6,7 @@ import cn.oyzh.common.util.CostUtil;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,10 +85,14 @@ public abstract class JdbcKeyValueOperator extends JdbcOperator {
      * @throws SQLException 异常
      */
     public Map<String, Object> select() throws SQLException {
+        JdbcConn connection = JdbcManager.takeoff();
+        if (connection == null) {
+            JulLog.warn("connection is null");
+            return Collections.emptyMap();
+        }
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT * FROM ");
         sql.append(JdbcUtil.wrap(tableName));
-        JdbcConn connection = JdbcManager.takeoff();
         try {
             JdbcResultSet resultSet = JdbcHelper.executeQuery(connection, sql.toString());
             Map<String, Object> record = new HashMap<>();

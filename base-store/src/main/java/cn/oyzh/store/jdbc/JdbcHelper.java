@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * jdbc辅助类
