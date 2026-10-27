@@ -8,6 +8,8 @@ java -jar target/application-compressed.jar
 
 组件不绑定具体应用的启动类、包名、目录名或业务参数。启动类优先读取可执行 JAR 的 `Start-Class`，如果不存在，再读取应用 JAR 的 `Main-Class`。
 
+AOT 未启用时，启动器直接在当前 JVM 内加载应用，不会额外创建 `java` 子进程；只有显式启用 AOT 且需要从 JVM 启动阶段注入 `-XX:AOT*` 参数时，才会启动独立子 JVM。
+
 ## 适用范围
 
 当前构建器面向 Spring Boot Maven Plugin 生成的嵌套 JAR 布局：

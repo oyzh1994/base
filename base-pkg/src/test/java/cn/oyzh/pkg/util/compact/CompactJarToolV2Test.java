@@ -49,6 +49,7 @@ public class CompactJarToolV2Test {
     public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private Path cacheDirectory;
+    private long lastProcessPid;
 
     @Before
     public void setUp() throws IOException {
@@ -101,12 +102,34 @@ public class CompactJarToolV2Test {
     }
 
     @Test
+    public void launchesInSameProcessWhenAotDisabled() throws Exception {
+        System.setProperty("compact.jar.aot", "false");
+        TestFixture fixture = createFixture(0);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+
+        String output = runJar(fixture.outputJar(), "--pid");
+        assertEquals("V2_PID:" + lastProcessPid, output);
+    }
+
+    @Test
+    public void waitsForApplicationThreadsWhenAotDisabled() throws Exception {
+        System.setProperty("compact.jar.aot", "false");
+        TestFixture fixture = createFixture(0);
+        CompactJarToolV2.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+
+        assertEquals("V2_BACKGROUND", runJar(fixture.outputJar(), "--background"));
+    }
+
+    @Test
     public void compactAndLaunchXzRealProcess() throws Exception {
+        System.setProperty("compact.jar.aot", "false");
         TestFixture fixture = createFixture(2);
         CompactJarTool.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
 
         assertEquals("V2_OK:--message=hello world|dependency-one|resource, \"quoted\"\nline",
                 runJar(fixture.outputJar(), "--message=hello world"));
+        String pidOutput = runJar(fixture.outputJar(), "--pid");
+        assertEquals("V2_PID:" + lastProcessPid, pidOutput);
         try (JarFile jar = new JarFile(fixture.outputJar().toFile())) {
             assertTrue(jar.getJarEntry("compact-payload.xz") != null);
             assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
@@ -483,6 +506,7 @@ public class CompactJarToolV2Test {
                     .redirectOutput(processOutput.toFile());
             builder.environment().putAll(environment);
             Process process = builder.start();
+            lastProcessPid = process.pid();
             if (!process.waitFor(30, TimeUnit.SECONDS)) {
                 process.destroyForcibly();
                 process.waitFor(5, TimeUnit.SECONDS);
@@ -705,6 +729,23 @@ public class CompactJarToolV2Test {
         }
 
         public static void main(String[] args) {
+            if (args.length == 1 && "--pid".equals(args[0])) {
+                System.out.println("V2_PID:" + ProcessHandle.current().pid());
+                return;
+            }
+            if (args.length == 1 && "--background".equals(args[0])) {
+                Thread thread = new Thread(() -> {
+                    try {
+                        Thread.sleep(100L);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                    System.out.println("V2_BACKGROUND");
+                }, "v2-background");
+                thread.start();
+                return;
+            }
             if (args.length == 1 && "--vm-args".equals(args[0])) {
                 System.out.println("V2_VM_ARGS:" + String.join("|",
                         java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments()));

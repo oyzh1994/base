@@ -694,6 +694,10 @@ final class AotCacheManager {
                     assemblyLog, inputArguments, signature, assemblyMode, channel, lock);
         }
 
+        boolean requiresChildProcess() {
+            return mode != Mode.DISABLED;
+        }
+
         List<String> jvmArguments() {
             if (mode == Mode.DISABLED) {
                 List<String> result = new ArrayList<>(inputArguments);

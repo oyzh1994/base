@@ -7,8 +7,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.AtomicMoveNotSupportedException;
@@ -47,7 +51,7 @@ import java.util.zip.ZipInputStream;
  * 压缩 JAR 的通用启动器。
  * <p>
  * 启动器根据当前用户和自身 JAR 的 SHA-256 选择缓存目录，并行重建应用和依赖 JAR，
- * 再通过路径 JAR 将原始 JVM 参数及应用参数转发给实际主类。
+ * 再在当前 JVM（AOT 关闭）或独立子 JVM（AOT 开启）中启动实际主类。
  */
 public final class CompressedJarLauncherV2 {
 
@@ -737,11 +741,16 @@ public final class CompressedJarLauncherV2 {
     }
 
     /**
-     * 启动实际应用 JVM，并转发启动器收到的 JVM 参数和应用参数。
+     * 启动实际应用；AOT 开启时通过子 JVM 注入启动参数，否则直接使用当前 JVM。
      */
     private static int launch(Path cache, String startClass, String[] args, String applicationIdentity,
                               String applicationId) throws Exception {
         try (AotCacheManager.Session aot = AotCacheManager.open(cache, applicationIdentity)) {
+            CacheRetentionManager.cleanupAsync(cache, applicationId);
+            if (!aot.requiresChildProcess()) {
+                launchInProcess(cache, startClass, args);
+                return 0;
+            }
             List<String> command = new ArrayList<>();
             command.add(javaExecutable());
             command.addAll(aot.jvmArguments());
@@ -750,10 +759,64 @@ public final class CompressedJarLauncherV2 {
             command.add(startClass);
             command.addAll(List.of(args));
             Process process = new ProcessBuilder(command).inheritIO().start();
-            CacheRetentionManager.cleanupAsync(cache, applicationId);
             int status = waitFor(process);
             aot.complete();
             return status;
+        }
+    }
+
+    /**
+     * AOT 未启用时直接在当前 JVM 加载应用，避免额外启动 java 子进程。
+     */
+    private static void launchInProcess(Path cache, String startClass, String[] args) throws Exception {
+        List<URL> urls = new ArrayList<>();
+        urls.add(cache.resolve(APPLICATION_JAR).toUri().toURL());
+        Path lib = cache.resolve("lib");
+        for (String dependency : Files.readAllLines(cache.resolve("classpath.order"), StandardCharsets.UTF_8)) {
+            urls.add(lib.resolve(dependency).toUri().toURL());
+        }
+        Thread thread = Thread.currentThread();
+        ClassLoader previousLoader = thread.getContextClassLoader();
+        String previousClassPath = System.getProperty("java.class.path");
+        try (URLClassLoader loader = new URLClassLoader(urls.toArray(URL[]::new),
+                ClassLoader.getSystemClassLoader())) {
+            thread.setContextClassLoader(loader);
+            System.setProperty("java.class.path", classPath(cache));
+            try {
+                Class<?> type = Class.forName(startClass, true, loader);
+                Method main = type.getMethod("main", String[].class);
+                main.invoke(null, (Object) args);
+            } catch (InvocationTargetException ex) {
+                Throwable cause = ex.getCause();
+                if (cause instanceof Exception exception) {
+                    throw exception;
+                }
+                if (cause instanceof Error error) {
+                    throw error;
+                }
+                throw new RuntimeException(cause);
+            }
+            awaitNonDaemonThreads();
+        } finally {
+            thread.setContextClassLoader(previousLoader);
+            if (previousClassPath == null) {
+                System.clearProperty("java.class.path");
+            } else {
+                System.setProperty("java.class.path", previousClassPath);
+            }
+        }
+    }
+
+    private static void awaitNonDaemonThreads() throws InterruptedException {
+        Thread current = Thread.currentThread();
+        while (true) {
+            List<Thread> threads = Thread.getAllStackTraces().keySet().stream()
+                    .filter(thread -> thread != current && thread.isAlive() && !thread.isDaemon())
+                    .toList();
+            if (threads.isEmpty()) {
+                return;
+            }
+            threads.get(0).join();
         }
     }
 
