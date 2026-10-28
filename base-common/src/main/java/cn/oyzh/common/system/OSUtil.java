@@ -268,7 +268,7 @@ public class OSUtil {
             return "arm32";
         }
         if (isX64()) {
-            return "amd64";
+            return "x64";
         }
         if (isX86()) {
             return "x86";
