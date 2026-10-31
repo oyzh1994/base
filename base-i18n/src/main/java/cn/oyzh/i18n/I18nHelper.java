@@ -619,6 +619,24 @@ public class I18nHelper {
 
     public static final String HOST = "base.host";
 
+    public static final String provider = "base.provider";
+
+    public static final String model = "base.model";
+
+    public static final String off = "base.off";
+
+    public static final String low = "base.low";
+
+    public static final String medium = "base.medium";
+
+    public static final String high = "base.high";
+
+    public static final String thinkingIntensity = "base.thinkingIntensity";
+
+    public static final String thinking = "base.thinking";
+
+    public static final String llm = "base.llm";
+
     public static final String PORT = "base.port";
 
     public static final String PORTS = "base.ports";
@@ -960,6 +978,8 @@ public class I18nHelper {
     public static final String SUBMIT = "base.submit";
 
     public static final String ABOUT = "base.about";
+
+    public static final String chat = "base.chat";
 
     public static final String COLLAPSE = "base.collapse";
 
@@ -4525,6 +4545,15 @@ public class I18nHelper {
     }
 
     /**
+     * 获取国际化文本：聊天
+     *
+     * @return 聊天
+     */
+    public static String chat() {
+        return I18nResourceBundle.i18nString(chat);
+    }
+
+    /**
      * 获取国际化文本：关于
      *
      * @return 关于
@@ -5881,6 +5910,16 @@ public class I18nHelper {
      */
     public static String pleaseSelectContent() {
         return I18nResourceBundle.i18nString(PLEASE, SELECT, CONTENT);
+    }
+
+
+    /**
+     * 获取国际化文本：请选择供应商
+     *
+     * @return 结果
+     */
+    public static String pleaseSelectProvider() {
+        return I18nResourceBundle.i18nString(PLEASE, SELECT, provider);
     }
 
     /**
@@ -10113,6 +10152,46 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(ADD, sequence);
     }
 
+    public static String editProvider() {
+        return I18nResourceBundle.i18nString(EDIT, provider);
+    }
+
+    public static String off() {
+        return I18nResourceBundle.i18nString(off);
+    }
+
+    public static String low() {
+        return I18nResourceBundle.i18nString(low);
+    }
+
+    public static String medium() {
+        return I18nResourceBundle.i18nString(medium);
+    }
+
+    public static String high() {
+        return I18nResourceBundle.i18nString(high);
+    }
+
+    public static String thinkingIntensity() {
+        return I18nResourceBundle.i18nString(thinkingIntensity);
+    }
+
+    public static String initLLMFail() {
+        return I18nResourceBundle.i18nString(INIT, llm, FAIL);
+    }
+
+    public static String thinking() {
+        return I18nResourceBundle.i18nString(thinking);
+    }
+
+    public static String session() {
+        return I18nResourceBundle.i18nString(SESSION);
+    }
+
+    public static String restore() {
+        return I18nResourceBundle.i18nString(RESTORE);
+    }
+
     /**
      * 获取国际化文本：文件上传失败
      *
@@ -10534,6 +10613,33 @@ public class I18nHelper {
      */
     public static String addHost() {
         return I18nResourceBundle.i18nString(ADD, HOST);
+    }
+
+    /**
+     * 获取国际化文本：添加供应商
+     *
+     * @return 结果
+     */
+    public static String addProvider() {
+        return I18nResourceBundle.i18nString(ADD, provider);
+    }
+
+    /**
+     * 获取国际化文本：供应商
+     *
+     * @return 结果
+     */
+    public static String provider() {
+        return I18nResourceBundle.i18nString(provider);
+    }
+
+    /**
+     * 获取国际化文本：模型
+     *
+     * @return 结果
+     */
+    public static String model() {
+        return I18nResourceBundle.i18nString(model);
     }
 
     /**

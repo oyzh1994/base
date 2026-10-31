@@ -10,10 +10,10 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * i18n资源绑定
+ * i18n资源绑定器
  *
  * @author oyzh
- * @since 2024-11-01
+ * @since 2024-04-10
  */
 public class I18nResourceBundle extends ResourceBundle {
 
@@ -37,7 +37,7 @@ public class I18nResourceBundle extends ResourceBundle {
     private final Map<Locale, ResourceBundle> i18n_resources = new HashMap<>();
 
     /**
-     * 构造i18n资源绑定实例
+     * 构造I18n资源资源包对象。
      */
     private I18nResourceBundle() {
 
@@ -110,7 +110,7 @@ public class I18nResourceBundle extends ResourceBundle {
     }
 
     /**
-     * 获取国际化资源字符串
+     * 获取基础的国际化资源，字符串
      *
      * @param key 键
      * @return 值
@@ -125,7 +125,19 @@ public class I18nResourceBundle extends ResourceBundle {
     }
 
     /**
-     * 按顺序拼接多个国际化资源值并返回；英文区域下首段首字母大写、其余首字母小写，并以空格分隔
+     * 获取基础的国际化资源，字符串
+     *
+     * @param key 键
+     * @param defaultText 默认值
+     * @return 值
+     */
+    public static String i18nStringWithDefault(String key, String defaultText) {
+        String text = i18nString(key);
+        return StringUtil.isNotBlank(text) ? text : defaultText;
+    }
+
+    /**
+     * 获取基础的国际化资源，字符串
      *
      * @param keys 键
      * @return 拼接后的值
