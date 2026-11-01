@@ -123,8 +123,8 @@ public class ReflectUtil {
      *
      * @param field  字段
      * @param object 对象
-     * @throws SecurityException        访问字段受限时抛出
-     * @throws IllegalAccessException   字段不可访问时抛出
+     * @throws SecurityException      访问字段受限时抛出
+     * @throws IllegalAccessException 字段不可访问时抛出
      */
     public static void clearFieldValue(Field field, Object object) throws SecurityException, IllegalAccessException {
         field.setAccessible(true);
@@ -270,6 +270,29 @@ public class ReflectUtil {
     }
 
     /**
+     * 获取方法，自动判断
+     *
+     * @param beanClass  类
+     * @param methodName 方法名
+     * @param paramTypes 参数类型
+     * @return 方法，未找到时返回null
+     * @throws SecurityException 访问方法受限时抛出
+     */
+    public static Method getMethodAuto(Class<?> beanClass, String methodName, Class<?>... paramTypes) throws SecurityException {
+        Method method = getMethod(beanClass, methodName, false, false, paramTypes);
+        if (method == null) {
+            method = getMethod(beanClass, methodName, true, false, paramTypes);
+        }
+        if (method == null) {
+            method = getMethod(beanClass, methodName, false, true, paramTypes);
+        }
+        if (method == null) {
+            method = getMethod(beanClass, methodName, true, true, paramTypes);
+        }
+        return method;
+    }
+
+    /**
      * 获取方法数组
      *
      * @param beanClass    类
@@ -317,13 +340,13 @@ public class ReflectUtil {
     public static Object invoke(Object obj, String methodName, Object... params) {
         Method method;
         if (params == null || params.length == 0) {
-            method = getMethod(obj.getClass(), methodName, true, true);
+            method = getMethodAuto(obj.getClass(), methodName);
         } else {
             Class<?>[] paramTypes = new Class[params.length];
             for (int i = 0; i < params.length; i++) {
                 paramTypes[i] = params[i].getClass();
             }
-            method = getMethod(obj.getClass(), methodName, true, true, paramTypes);
+            method = getMethodAuto(obj.getClass(), methodName, paramTypes);
         }
         return invoke(obj, method, params);
     }
