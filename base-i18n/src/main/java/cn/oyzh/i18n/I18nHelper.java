@@ -10192,6 +10192,14 @@ public class I18nHelper {
         return I18nResourceBundle.i18nString(RESTORE);
     }
 
+    public static String llm() {
+        return I18nResourceBundle.i18nString(llm);
+    }
+
+    public static String llmProvider() {
+        return I18nResourceBundle.i18nString(llm, provider);
+    }
+
     /**
      * 获取国际化文本：文件上传失败
      *
