@@ -12,6 +12,6 @@ public class SqliteSqlDialect extends AbstractSqlDialect {
      * 构造SQLite SQL方言实例
      */
     public SqliteSqlDialect() {
-        super(SqlDatabase.SQLITE, SqlLexicalProfile.ANSI);
+        super(SqlDatabase.SQLITE, SqlLexicalProfile.SQLITE);
     }
 }

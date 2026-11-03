@@ -18,6 +18,8 @@ public enum SqlLexicalProfile {
     ORACLE,
     /** SQL Server */
     SQL_SERVER,
+    /** SQLite */
+    SQLITE,
     /** 达梦数据库 */
     DM;
 
@@ -54,7 +56,7 @@ public enum SqlLexicalProfile {
      * @return 结果
      */
     public boolean isBracketIdentifier() {
-        return this == SQL_SERVER || this == DM;
+        return this == SQL_SERVER || this == SQLITE || this == DM;
     }
 
     /**

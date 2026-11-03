@@ -204,6 +204,37 @@ public class SqlSplitterTest {
     }
 
     @Test
+    public void supportsSqliteTransactionAndTriggerBodies() {
+        String transactionSql = """
+                BEGIN;
+                INSERT INTO item VALUES('a;b');
+                COMMIT;
+                """;
+
+        List<String> transactionStatements = SqlUtil.split(transactionSql, SqlDatabase.SQLITE);
+
+        assertEquals(3, transactionStatements.size());
+        assertEquals("BEGIN", transactionStatements.get(0));
+        assertEquals("COMMIT", transactionStatements.get(2));
+
+        String triggerSql = """
+                CREATE TEMP TRIGGER item_insert AFTER INSERT ON item BEGIN
+                    SELECT [created;item];
+                    UPDATE log SET message = CASE WHEN message IS NULL THEN 'created;item' ELSE message END;
+                END;
+                SELECT 1;
+                """;
+
+        List<String> triggerStatements = SqlUtil.split(triggerSql, SqlDatabase.SQLITE);
+
+        assertEquals(2, triggerStatements.size());
+        assertTrue(triggerStatements.get(0).startsWith("CREATE TEMP TRIGGER"));
+        assertTrue(triggerStatements.get(0).contains("SELECT [created;item]"));
+        assertTrue(triggerStatements.get(0).contains("CASE WHEN"));
+        assertEquals("SELECT 1", triggerStatements.get(1));
+    }
+
+    @Test
     public void ignoresEmptyAndTrailingSegments() {
         List<String> statements = SqlUtil.split(" ;;\nSELECT 1;;\n ", SqlDatabase.ANSI);
 

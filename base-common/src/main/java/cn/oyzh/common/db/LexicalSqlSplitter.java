@@ -393,11 +393,12 @@ public class LexicalSqlSplitter implements SqlSplitter {
             }
 
             if (word.equals("BEGIN")) {
-                if (!next.equals("TRANSACTION") && !next.equals("TRAN") && !next.equals("WORK")) {
-                    routineMode = routineMode || statementWordCount == 1;
-                    if (constructs.isEmpty()) {
-                        constructs.push(next.equals("TRY") ? "TRY" : "BLOCK");
-                    }
+                if (isTransactionBegin(next)) {
+                    return;
+                }
+                routineMode = routineMode || statementWordCount == 1;
+                if (constructs.isEmpty()) {
+                    constructs.push(next.equals("TRY") ? "TRY" : "BLOCK");
                 }
             } else if (word.equals("CASE")) {
                 constructs.push("CASE");
@@ -415,6 +416,22 @@ public class LexicalSqlSplitter implements SqlSplitter {
                     routineEnded = true;
                 }
             }
+        }
+
+        /**
+         * 判断 BEGIN 是否为事务控制语句
+         *
+         * @param nextWord BEGIN之后的下一个单词
+         * @return 结果
+         */
+        private boolean isTransactionBegin(String nextWord) {
+            return nextWord.isEmpty()
+                    || nextWord.equals("TRANSACTION")
+                    || nextWord.equals("TRAN")
+                    || nextWord.equals("WORK")
+                    || nextWord.equals("DEFERRED")
+                    || nextWord.equals("IMMEDIATE")
+                    || nextWord.equals("EXCLUSIVE");
         }
 
         /**
