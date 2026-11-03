@@ -378,6 +378,10 @@ public class LexicalSqlSplitter implements SqlSplitter {
          * @param nextWord 该词法单元之后的下一个单词
          */
         private void accept(SqlToken token, String nextWord) {
+            if (token.type() == SqlTokenType.PUNCTUATION && token.text().equals(";")) {
+                statementWordCount = 0;
+                return;
+            }
             if (token.type() != SqlTokenType.WORD) {
                 return;
             }
@@ -400,6 +404,7 @@ public class LexicalSqlSplitter implements SqlSplitter {
                 if (constructs.isEmpty()) {
                     constructs.push(next.equals("TRY") ? "TRY" : "BLOCK");
                 }
+                statementWordCount = 0;
             } else if (word.equals("CASE")) {
                 constructs.push("CASE");
             } else if (word.equals("IF") && isStatementStart()) {
@@ -440,7 +445,7 @@ public class LexicalSqlSplitter implements SqlSplitter {
          * @return 结果
          */
         private boolean isStatementStart() {
-            return statementWordCount <= 2 || constructs.isEmpty();
+            return statementWordCount <= 1;
         }
 
         /**

@@ -232,6 +232,27 @@ public class SqlSplitterTest {
         assertTrue(triggerStatements.get(0).contains("SELECT [created;item]"));
         assertTrue(triggerStatements.get(0).contains("CASE WHEN"));
         assertEquals("SELECT 1", triggerStatements.get(1));
+
+        String viewRenameSql = """
+                BEGIN;
+                DROP VIEW IF EXISTS item_view_dependent;
+                DROP TRIGGER IF EXISTS item_view_insert;
+                DROP VIEW IF EXISTS item_view;
+                CREATE VIEW renamed_view AS SELECT id, name FROM item;
+                CREATE TRIGGER item_view_insert INSTEAD OF INSERT ON renamed_view BEGIN
+                    INSERT INTO item(name) VALUES (NEW.name);
+                END;
+                COMMIT;
+                """;
+
+        List<String> viewRenameStatements = SqlUtil.split(viewRenameSql, SqlDatabase.SQLITE);
+
+        assertEquals(7, viewRenameStatements.size());
+        assertEquals("BEGIN", viewRenameStatements.get(0));
+        assertTrue(viewRenameStatements.get(1).startsWith("DROP VIEW IF EXISTS"));
+        assertTrue(viewRenameStatements.get(4).startsWith("CREATE VIEW renamed_view"));
+        assertTrue(viewRenameStatements.get(5).startsWith("CREATE TRIGGER"));
+        assertEquals("COMMIT", viewRenameStatements.get(6));
     }
 
     @Test
