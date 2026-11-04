@@ -41,67 +41,47 @@ public class I18nGeneratorTest {
 
     @Test
     public void test_base() {
-        List<Runnable> tasks = new ArrayList<>();
-        for (Locale locale : I18nLocales.locales()) {
-            // 中英无需翻译，默认支持
-            if (locale == Locale.PRC || locale == Locale.ENGLISH) {
-                continue;
-            }
-
-            tasks.add(() -> trans(baseDir1, locale, "base_"));
-        }
-        ThreadUtil.submit(tasks);
+        transLocales(baseDir1, "base_i18n");
+        transLocales(baseDir1, "base_compound");
     }
 
     @Test
     public void test_redis() {
-        List<Runnable> tasks = new ArrayList<>();
-        for (Locale locale : I18nLocales.locales()) {
-            // 中英无需翻译，默认支持
-            if (locale == Locale.PRC || locale == Locale.ENGLISH) {
-                continue;
-            }
-            tasks.add(() -> trans(baseDir2, locale, ""));
-        }
-        ThreadUtil.submit(tasks);
+        transLocales(baseDir2, "i18n");
     }
 
     @Test
     public void test_zk() {
-        List<Runnable> tasks = new ArrayList<>();
-        for (Locale locale : I18nLocales.locales()) {
-            // 中英无需翻译，默认支持
-            if (locale == Locale.PRC || locale == Locale.ENGLISH) {
-                continue;
-            }
-            tasks.add(() -> trans(baseDir3, locale, ""));
-        }
-        ThreadUtil.submit(tasks);
+        transLocales(baseDir3, "i18n");
     }
 
     @Test
     public void test_shell() {
+        transLocales(baseDir4, "i18n");
+    }
+
+    private void transLocales(String path, String filePrefix) {
         List<Runnable> tasks = new ArrayList<>();
         for (Locale locale : I18nLocales.locales()) {
             // 中英无需翻译，默认支持
             if (locale == Locale.PRC || locale == Locale.ENGLISH) {
                 continue;
             }
-            tasks.add(() -> trans(baseDir4, locale, ""));
+            tasks.add(() -> trans(path, locale, filePrefix));
         }
         ThreadUtil.submit(tasks);
     }
 
-    private void trans(String path, Locale locale, String prefix) {
+    private void trans(String path, Locale locale, String filePrefix) {
         try {
-            String name = I18nLocales.getLocaleName(locale);
-            String cnI18nFile = path + "/" + prefix + "i18n_zh_CN.properties";
-            String targetI18nFile = path + "/" + prefix + "i18n_" + name + ".properties";
+            String name = locale.toString();
+            String cnI18nFile = path + "/" + filePrefix + "_zh_CN.properties";
+            String targetI18nFile = path + "/" + filePrefix + "_" + name + ".properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
             I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
             if (!locale.getCountry().isEmpty()) {
                 name = locale.getLanguage();
-                targetI18nFile = path + "/" + prefix + "i18n_" + name + ".properties";
+                targetI18nFile = path + "/" + filePrefix + "_" + name + ".properties";
                 if (FileUtil.exists(targetI18nFile)) {
                     I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
                     I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
