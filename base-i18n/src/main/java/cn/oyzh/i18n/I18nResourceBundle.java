@@ -37,6 +37,13 @@ public class I18nResourceBundle extends ResourceBundle {
     private final Map<Locale, ResourceBundle> i18n_resources = new HashMap<>();
 
     /**
+     * 复合资源列表
+     * key 地区
+     * value 资源
+     */
+    private final Map<Locale, ResourceBundle> compound_resources = new HashMap<>();
+
+    /**
      * 构造I18n资源资源包对象。
      */
     private I18nResourceBundle() {
@@ -79,7 +86,13 @@ public class I18nResourceBundle extends ResourceBundle {
      */
     private ResourceBundle initResource(String key) {
         ResourceBundle resource;
-        if (key.startsWith("base.")) {
+        if (key.startsWith("base.compound.")) {
+            resource = this.compound_resources.get(I18nManager.currentLocale());
+            if (resource == null) {
+                resource = ResourceBundle.getBundle("base_compound", I18nManager.currentLocale());
+                this.compound_resources.put(I18nManager.currentLocale(), resource);
+            }
+        } else if (key.startsWith("base.")) {
             resource = this.base_resources.get(I18nManager.currentLocale());
             if (resource == null) {
                 resource = ResourceBundle.getBundle("base_i18n", I18nManager.currentLocale());
@@ -107,6 +120,7 @@ public class I18nResourceBundle extends ResourceBundle {
     public void clear() {
         this.base_resources.clear();
         this.i18n_resources.clear();
+        this.compound_resources.clear();
     }
 
     /**
@@ -144,6 +158,19 @@ public class I18nResourceBundle extends ResourceBundle {
      */
     public static String i18nString(String... keys) {
         try {
+            if (keys.length > 1) {
+                String compoundKey = compoundKey(keys);
+                try {
+                    if (INSTANCE.containsKey(compoundKey)) {
+                        String compoundText = INSTANCE.getString(compoundKey);
+                        if (StringUtil.isNotBlank(compoundText)) {
+                            return compoundText;
+                        }
+                    }
+                } catch (MissingResourceException ignored) {
+                    // 当前区域没有复合资源时回退到旧的分词拼接逻辑
+                }
+            }
             StringBuilder builder = new StringBuilder();
             boolean isFirst = true;
             for (String key : keys) {
@@ -169,6 +196,25 @@ public class I18nResourceBundle extends ResourceBundle {
             ex.printStackTrace();
         }
         return "";
+    }
+
+    /**
+     * 构建复合资源的键
+     *
+     * @param keys 基础键
+     * @return 复合键
+     */
+    public static String compoundKey(String... keys) {
+        StringBuilder builder = new StringBuilder("base.compound");
+        for (String key : keys) {
+            builder.append('.');
+            if (key.startsWith("base.")) {
+                builder.append(key, 5, key.length());
+            } else {
+                builder.append(key);
+            }
+        }
+        return builder.toString();
     }
 
     /**
