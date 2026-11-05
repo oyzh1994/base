@@ -50,7 +50,7 @@
     </description>
 
     <properties>
-        <!-- 锁版本，这玩意太坑了，新驱动不兼容旧数据 -->
+        <!-- 锁版本，这玩意太坑了，新驱动不兼容旧数据，改用sqlite -->
         <h2.version>2.4.240</h2.version>
         <poi.version>5.5.1</poi.version>
         <jna.version>5.19.1</jna.version>
@@ -65,20 +65,20 @@
         <mongodb.version>4.7.2</mongodb.version>
         <guava.version>33.7.2-jre</guava.version>
         <protobuf.version>4.35.1</protobuf.version>
-        <sqlite.version>3.53.4.0</sqlite.version>
+        <sqlite.version>3.54.1.0</sqlite.version>
         <netty.version>4.2.19.Final</netty.version>
         <fastjson2.version>2.0.66</fastjson2.version>
         <!-- <fastjson.version>1.2.83</fastjson.version> -->
+        <apache-csv.version>1.14.1</apache-csv.version>
         <jgit.version>7.8.0.202609011348-r</jgit.version>
         <bouncycastle.version>1.86</bouncycastle.version>
         <commons-cli.version>1.11.0</commons-cli.version>
         <commons-net.version>3.13.0</commons-net.version>
         <commons-compress.version>1.28.0</commons-compress.version>
-        <apache-csv.version>1.14.1</apache-csv.version>
-        <maven.compiler.release>25</maven.compiler.release>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
         <spring-boot-maven-plugin.version>4.0.5</spring-boot-maven-plugin.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <!-- 声明仓库 -->
@@ -98,16 +98,6 @@
             <name>tencent</name>
             <url>https://mirrors.tencent.com/nexus/repository/maven-public/</url>
         </repository>
-        <!-- <repository> -->
-        <!--     <id>jetbrains</id> -->
-        <!--     <name>jetbrains</name> -->
-        <!--     <url>https://packages.jetbrains.team/maven/p/ij/intellij-dependencies/</url> -->
-        <!-- </repository> -->
-        <!-- <repository> -->
-        <!--     <id>sonatype</id> -->
-        <!--     <name>sonatype</name> -->
-        <!--     <url>https://oss.sonatype.org/content/groups/public/</url> -->
-        <!-- </repository> -->
     </repositories>
 
     <dependencyManagement>
