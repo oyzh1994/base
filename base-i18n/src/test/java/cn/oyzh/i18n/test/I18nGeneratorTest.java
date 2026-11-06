@@ -78,13 +78,13 @@ public class I18nGeneratorTest {
             String cnI18nFile = path + "/" + filePrefix + "_zh_CN.properties";
             String targetI18nFile = path + "/" + filePrefix + "_" + name + ".properties";
             I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
-            I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
+//            I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
             if (!locale.getCountry().isEmpty()) {
                 name = locale.getLanguage();
                 targetI18nFile = path + "/" + filePrefix + "_" + name + ".properties";
                 if (FileUtil.exists(targetI18nFile)) {
                     I18nGenerator.i18nTranslate(skFile, cnI18nFile, targetI18nFile, locale);
-                    I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
+//                    I18nGenerator.i18nCorrection(cnI18nFile, targetI18nFile, locale);
                 }
             }
         } catch (IOException ex) {
