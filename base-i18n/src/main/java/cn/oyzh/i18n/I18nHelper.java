@@ -631,6 +631,8 @@ public class I18nHelper {
 
     public static final String high = "base.high";
 
+    public static final String xhigh = "base.xhigh";
+
     public static final String thinkingIntensity = "base.thinkingIntensity";
 
     public static final String thinking = "base.thinking";
@@ -10170,6 +10172,10 @@ public class I18nHelper {
 
     public static String high() {
         return I18nResourceBundle.i18nString(high);
+    }
+
+    public static String xhigh() {
+        return I18nResourceBundle.i18nString(xhigh);
     }
 
     public static String thinkingIntensity() {
