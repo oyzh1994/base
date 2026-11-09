@@ -5,12 +5,11 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingReply> {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 116;
-  private final ByteList map;
+  private final byte[] map;
 
   public XReplyFunction<SetPointerMappingReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> SetPointerMappingReply.readSetPointerMappingReply(field, sequenceNumber, in);
@@ -24,8 +23,8 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
     SetPointerMapping.SetPointerMappingBuilder javaBuilder = SetPointerMapping.builder();
     byte mapLen = in.readCard8();
     short length = in.readCard16();
-    ByteList map = in.readCard8(Byte.toUnsignedInt(mapLen));
-    javaBuilder.map(map.toImmutable());
+    byte[] map = in.readCard8(Byte.toUnsignedInt(mapLen));
+    javaBuilder.map(map);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -33,7 +32,7 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
-    byte mapLen = (byte) map.size();
+    byte mapLen = (byte) map.length;
     out.writeCard8(mapLen);
     out.writeCard16((short) getLength());
     out.writeCard8(map);
@@ -42,7 +41,7 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
 
   @Override
   public int getSize() {
-    return 4 + 1 * map.size();
+    return 4 + 1 * map.length;
   }
 
   public String getPluginName() {
@@ -52,10 +51,10 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
 
   public static class SetPointerMappingBuilder {
     @java.lang.SuppressWarnings("all")
-    private ByteList map;
+    private byte[] map;
 
     public int getSize() {
-      return 4 + 1 * map.size();
+      return 4 + 1 * map.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -66,7 +65,7 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetPointerMapping.SetPointerMappingBuilder map(final ByteList map) {
+    public SetPointerMapping.SetPointerMappingBuilder map(final byte[] map) {
       if (map == null) {
         throw new java.lang.NullPointerException("map is marked non-null but is null");
       }
@@ -82,12 +81,12 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetPointerMapping.SetPointerMappingBuilder(map=" + this.map + ")";
+      return "SetPointerMapping.SetPointerMappingBuilder(map=" + java.util.Arrays.toString(this.map) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetPointerMapping(final ByteList map) {
+  SetPointerMapping(final byte[] map) {
     if (map == null) {
       throw new java.lang.NullPointerException("map is marked non-null but is null");
     }
@@ -100,7 +99,7 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getMap() {
+  public byte[] getMap() {
     return this.map;
   }
 
@@ -110,9 +109,7 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
     if (o == this) return true;
     if (!(o instanceof SetPointerMapping)) return false;
     final SetPointerMapping other = (SetPointerMapping) o;
-    final java.lang.Object this$map = this.getMap();
-    final java.lang.Object other$map = other.getMap();
-    if (this$map == null ? other$map != null : !this$map.equals(other$map)) return false;
+    if (!java.util.Arrays.equals(this.getMap(), other.getMap())) return false;
     return true;
   }
 
@@ -121,14 +118,13 @@ public final class SetPointerMapping implements TwoWayRequest<SetPointerMappingR
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
-    final java.lang.Object $map = this.getMap();
-    result = result * PRIME + ($map == null ? 43 : $map.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getMap());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetPointerMapping(map=" + this.getMap() + ")";
+    return "SetPointerMapping(map=" + java.util.Arrays.toString(this.getMap()) + ")";
   }
 }

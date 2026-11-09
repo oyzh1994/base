@@ -1,32 +1,31 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class ListHostsReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final byte mode;
   private final short sequenceNumber;
-  private final ImmutableList<Host> hosts;
+  private final List<Host> hosts;
 
   public static ListHostsReply readListHostsReply(byte mode, short sequenceNumber, X11Input in) throws IOException {
     ListHostsReply.ListHostsReplyBuilder javaBuilder = ListHostsReply.builder();
     int length = in.readCard32();
     short hostsLen = in.readCard16();
     byte[] pad5 = in.readPad(22);
-    MutableList<Host> hosts = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(hostsLen));
+    List<Host> hosts = new ArrayList<>(Short.toUnsignedInt(hostsLen));
     for (int i = 0; i < Short.toUnsignedInt(hostsLen); i++) {
       hosts.add(Host.readHost(in));
     }
     javaBuilder.mode(mode);
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.hosts(hosts.toImmutable());
+    javaBuilder.hosts(List.copyOf(hosts));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -65,7 +64,7 @@ public final class ListHostsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Host> hosts;
+    private List<Host> hosts;
 
     public ListHostsReply.ListHostsReplyBuilder mode(AccessControl mode) {
       this.mode = (byte) mode.getValue();
@@ -98,7 +97,7 @@ public final class ListHostsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListHostsReply.ListHostsReplyBuilder hosts(final ImmutableList<Host> hosts) {
+    public ListHostsReply.ListHostsReplyBuilder hosts(final List<Host> hosts) {
       if (hosts == null) {
         throw new java.lang.NullPointerException("hosts is marked non-null but is null");
       }
@@ -119,7 +118,7 @@ public final class ListHostsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  ListHostsReply(final byte mode, final short sequenceNumber, final ImmutableList<Host> hosts) {
+  ListHostsReply(final byte mode, final short sequenceNumber, final List<Host> hosts) {
     if (hosts == null) {
       throw new java.lang.NullPointerException("hosts is marked non-null but is null");
     }
@@ -144,7 +143,7 @@ public final class ListHostsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Host> getHosts() {
+  public List<Host> getHosts() {
     return this.hosts;
   }
 

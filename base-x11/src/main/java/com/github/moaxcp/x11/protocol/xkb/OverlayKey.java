@@ -4,19 +4,18 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class OverlayKey implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
-  private final ByteList over;
-  private final ByteList under;
+  private final byte[] over;
+  private final byte[] under;
 
   public static OverlayKey readOverlayKey(X11Input in) throws IOException {
     OverlayKey.OverlayKeyBuilder javaBuilder = OverlayKey.builder();
-    ByteList over = in.readChar(4);
-    ByteList under = in.readChar(4);
-    javaBuilder.over(over.toImmutable());
-    javaBuilder.under(under.toImmutable());
+    byte[] over = in.readChar(4);
+    byte[] under = in.readChar(4);
+    javaBuilder.over(over);
+    javaBuilder.under(under);
     return javaBuilder.build();
   }
 
@@ -28,7 +27,7 @@ public final class OverlayKey implements XStruct {
 
   @Override
   public int getSize() {
-    return 0 + 1 * over.size() + 1 * under.size();
+    return 0 + 1 * over.length + 1 * under.length;
   }
 
   public String getPluginName() {
@@ -38,12 +37,12 @@ public final class OverlayKey implements XStruct {
 
   public static class OverlayKeyBuilder {
     @java.lang.SuppressWarnings("all")
-    private ByteList over;
+    private byte[] over;
     @java.lang.SuppressWarnings("all")
-    private ByteList under;
+    private byte[] under;
 
     public int getSize() {
-      return 0 + 1 * over.size() + 1 * under.size();
+      return 0 + 1 * over.length + 1 * under.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -54,7 +53,7 @@ public final class OverlayKey implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public OverlayKey.OverlayKeyBuilder over(final ByteList over) {
+    public OverlayKey.OverlayKeyBuilder over(final byte[] over) {
       if (over == null) {
         throw new java.lang.NullPointerException("over is marked non-null but is null");
       }
@@ -66,7 +65,7 @@ public final class OverlayKey implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public OverlayKey.OverlayKeyBuilder under(final ByteList under) {
+    public OverlayKey.OverlayKeyBuilder under(final byte[] under) {
       if (under == null) {
         throw new java.lang.NullPointerException("under is marked non-null but is null");
       }
@@ -82,12 +81,12 @@ public final class OverlayKey implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "OverlayKey.OverlayKeyBuilder(over=" + this.over + ", under=" + this.under + ")";
+      return "OverlayKey.OverlayKeyBuilder(over=" + java.util.Arrays.toString(this.over) + ", under=" + java.util.Arrays.toString(this.under) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  OverlayKey(final ByteList over, final ByteList under) {
+  OverlayKey(final byte[] over, final byte[] under) {
     if (over == null) {
       throw new java.lang.NullPointerException("over is marked non-null but is null");
     }
@@ -104,12 +103,12 @@ public final class OverlayKey implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getOver() {
+  public byte[] getOver() {
     return this.over;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getUnder() {
+  public byte[] getUnder() {
     return this.under;
   }
 
@@ -119,12 +118,8 @@ public final class OverlayKey implements XStruct {
     if (o == this) return true;
     if (!(o instanceof OverlayKey)) return false;
     final OverlayKey other = (OverlayKey) o;
-    final java.lang.Object this$over = this.getOver();
-    final java.lang.Object other$over = other.getOver();
-    if (this$over == null ? other$over != null : !this$over.equals(other$over)) return false;
-    final java.lang.Object this$under = this.getUnder();
-    final java.lang.Object other$under = other.getUnder();
-    if (this$under == null ? other$under != null : !this$under.equals(other$under)) return false;
+    if (!java.util.Arrays.equals(this.getOver(), other.getOver())) return false;
+    if (!java.util.Arrays.equals(this.getUnder(), other.getUnder())) return false;
     return true;
   }
 
@@ -133,16 +128,14 @@ public final class OverlayKey implements XStruct {
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
-    final java.lang.Object $over = this.getOver();
-    result = result * PRIME + ($over == null ? 43 : $over.hashCode());
-    final java.lang.Object $under = this.getUnder();
-    result = result * PRIME + ($under == null ? 43 : $under.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getOver());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getUnder());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "OverlayKey(over=" + this.getOver() + ", under=" + this.getUnder() + ")";
+    return "OverlayKey(over=" + java.util.Arrays.toString(this.getOver()) + ", under=" + java.util.Arrays.toString(this.getUnder()) + ")";
   }
 }

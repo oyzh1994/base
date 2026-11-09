@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class ChangeKeyboardMapping implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -12,7 +11,7 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
   private final byte keycodeCount;
   private final byte firstKeycode;
   private final byte keysymsPerKeycode;
-  private final IntList keysyms;
+  private final int[] keysyms;
 
   public byte getOpCode() {
     return OPCODE;
@@ -25,11 +24,11 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
     byte firstKeycode = in.readCard8();
     byte keysymsPerKeycode = in.readCard8();
     byte[] pad5 = in.readPad(2);
-    IntList keysyms = in.readCard32(Byte.toUnsignedInt(keycodeCount) * Byte.toUnsignedInt(keysymsPerKeycode));
+    int[] keysyms = in.readCard32(Byte.toUnsignedInt(keycodeCount) * Byte.toUnsignedInt(keysymsPerKeycode));
     javaBuilder.keycodeCount(keycodeCount);
     javaBuilder.firstKeycode(firstKeycode);
     javaBuilder.keysymsPerKeycode(keysymsPerKeycode);
-    javaBuilder.keysyms(keysyms.toImmutable());
+    javaBuilder.keysyms(keysyms);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -48,7 +47,7 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 8 + 4 * keysyms.size();
+    return 8 + 4 * keysyms.length;
   }
 
   public String getPluginName() {
@@ -64,10 +63,10 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private byte keysymsPerKeycode;
     @java.lang.SuppressWarnings("all")
-    private IntList keysyms;
+    private int[] keysyms;
 
     public int getSize() {
-      return 8 + 4 * keysyms.size();
+      return 8 + 4 * keysyms.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -105,7 +104,7 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ChangeKeyboardMapping.ChangeKeyboardMappingBuilder keysyms(final IntList keysyms) {
+    public ChangeKeyboardMapping.ChangeKeyboardMappingBuilder keysyms(final int[] keysyms) {
       if (keysyms == null) {
         throw new java.lang.NullPointerException("keysyms is marked non-null but is null");
       }
@@ -121,12 +120,12 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ChangeKeyboardMapping.ChangeKeyboardMappingBuilder(keycodeCount=" + this.keycodeCount + ", firstKeycode=" + this.firstKeycode + ", keysymsPerKeycode=" + this.keysymsPerKeycode + ", keysyms=" + this.keysyms + ")";
+      return "ChangeKeyboardMapping.ChangeKeyboardMappingBuilder(keycodeCount=" + this.keycodeCount + ", firstKeycode=" + this.firstKeycode + ", keysymsPerKeycode=" + this.keysymsPerKeycode + ", keysyms=" + java.util.Arrays.toString(this.keysyms) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ChangeKeyboardMapping(final byte keycodeCount, final byte firstKeycode, final byte keysymsPerKeycode, final IntList keysyms) {
+  ChangeKeyboardMapping(final byte keycodeCount, final byte firstKeycode, final byte keysymsPerKeycode, final int[] keysyms) {
     if (keysyms == null) {
       throw new java.lang.NullPointerException("keysyms is marked non-null but is null");
     }
@@ -157,7 +156,7 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getKeysyms() {
+  public int[] getKeysyms() {
     return this.keysyms;
   }
 
@@ -170,9 +169,7 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
     if (this.getKeycodeCount() != other.getKeycodeCount()) return false;
     if (this.getFirstKeycode() != other.getFirstKeycode()) return false;
     if (this.getKeysymsPerKeycode() != other.getKeysymsPerKeycode()) return false;
-    final java.lang.Object this$keysyms = this.getKeysyms();
-    final java.lang.Object other$keysyms = other.getKeysyms();
-    if (this$keysyms == null ? other$keysyms != null : !this$keysyms.equals(other$keysyms)) return false;
+    if (!java.util.Arrays.equals(this.getKeysyms(), other.getKeysyms())) return false;
     return true;
   }
 
@@ -184,14 +181,13 @@ public final class ChangeKeyboardMapping implements OneWayRequest {
     result = result * PRIME + this.getKeycodeCount();
     result = result * PRIME + this.getFirstKeycode();
     result = result * PRIME + this.getKeysymsPerKeycode();
-    final java.lang.Object $keysyms = this.getKeysyms();
-    result = result * PRIME + ($keysyms == null ? 43 : $keysyms.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getKeysyms());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ChangeKeyboardMapping(keycodeCount=" + this.getKeycodeCount() + ", firstKeycode=" + this.getFirstKeycode() + ", keysymsPerKeycode=" + this.getKeysymsPerKeycode() + ", keysyms=" + this.getKeysyms() + ")";
+    return "ChangeKeyboardMapping(keycodeCount=" + this.getKeycodeCount() + ", firstKeycode=" + this.getFirstKeycode() + ", keysymsPerKeycode=" + this.getKeysymsPerKeycode() + ", keysyms=" + java.util.Arrays.toString(this.getKeysyms()) + ")";
   }
 }

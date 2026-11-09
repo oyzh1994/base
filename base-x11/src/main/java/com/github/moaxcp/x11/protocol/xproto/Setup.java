@@ -1,14 +1,12 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class Setup implements XStruct {
   public static final String PLUGIN_NAME = "xproto";
@@ -27,9 +25,9 @@ public final class Setup implements XStruct {
   private final byte bitmapFormatScanlinePad;
   private final byte minKeycode;
   private final byte maxKeycode;
-  private final ByteList vendor;
-  private final ImmutableList<Format> pixmapFormats;
-  private final ImmutableList<Screen> roots;
+  private final byte[] vendor;
+  private final List<Format> pixmapFormats;
+  private final List<Screen> roots;
 
   public static Setup readSetup(X11Input in) throws IOException {
     Setup.SetupBuilder javaBuilder = Setup.builder();
@@ -53,13 +51,13 @@ public final class Setup implements XStruct {
     byte minKeycode = in.readCard8();
     byte maxKeycode = in.readCard8();
     byte[] pad19 = in.readPad(4);
-    ByteList vendor = in.readChar(Short.toUnsignedInt(vendorLen));
+    byte[] vendor = in.readChar(Short.toUnsignedInt(vendorLen));
     in.readPadAlign(Short.toUnsignedInt(vendorLen));
-    MutableList<Format> pixmapFormats = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(pixmapFormatsLen));
+    List<Format> pixmapFormats = new ArrayList<>(Byte.toUnsignedInt(pixmapFormatsLen));
     for (int i = 0; i < Byte.toUnsignedInt(pixmapFormatsLen); i++) {
       pixmapFormats.add(Format.readFormat(in));
     }
-    MutableList<Screen> roots = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(rootsLen));
+    List<Screen> roots = new ArrayList<>(Byte.toUnsignedInt(rootsLen));
     for (int i = 0; i < Byte.toUnsignedInt(rootsLen); i++) {
       roots.add(Screen.readScreen(in));
     }
@@ -78,9 +76,9 @@ public final class Setup implements XStruct {
     javaBuilder.bitmapFormatScanlinePad(bitmapFormatScanlinePad);
     javaBuilder.minKeycode(minKeycode);
     javaBuilder.maxKeycode(maxKeycode);
-    javaBuilder.vendor(vendor.toImmutable());
-    javaBuilder.pixmapFormats(pixmapFormats.toImmutable());
-    javaBuilder.roots(roots.toImmutable());
+    javaBuilder.vendor(vendor);
+    javaBuilder.pixmapFormats(List.copyOf(pixmapFormats));
+    javaBuilder.roots(List.copyOf(roots));
     return javaBuilder.build();
   }
 
@@ -95,7 +93,7 @@ public final class Setup implements XStruct {
     out.writeCard32(resourceIdBase);
     out.writeCard32(resourceIdMask);
     out.writeCard32(motionBufferSize);
-    short vendorLen = (short) vendor.size();
+    short vendorLen = (short) vendor.length;
     out.writeCard16(vendorLen);
     out.writeCard16(maximumRequestLength);
     byte rootsLen = (byte) roots.size();
@@ -121,7 +119,7 @@ public final class Setup implements XStruct {
 
   @Override
   public int getSize() {
-    return 40 + 1 * vendor.size() + XObject.getSizeForPadAlign(4, 1 * vendor.size()) + XObject.sizeOf(pixmapFormats) + XObject.sizeOf(roots);
+    return 40 + 1 * vendor.length + XObject.getSizeForPadAlign(4, 1 * vendor.length) + XObject.sizeOf(pixmapFormats) + XObject.sizeOf(roots);
   }
 
   public String getPluginName() {
@@ -161,11 +159,11 @@ public final class Setup implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte maxKeycode;
     @java.lang.SuppressWarnings("all")
-    private ByteList vendor;
+    private byte[] vendor;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Format> pixmapFormats;
+    private List<Format> pixmapFormats;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Screen> roots;
+    private List<Screen> roots;
 
     public Setup.SetupBuilder imageByteOrder(ImageOrder imageByteOrder) {
       this.imageByteOrder = (byte) imageByteOrder.getValue();
@@ -188,7 +186,7 @@ public final class Setup implements XStruct {
     }
 
     public int getSize() {
-      return 40 + 1 * vendor.size() + XObject.getSizeForPadAlign(4, 1 * vendor.size()) + XObject.sizeOf(pixmapFormats) + XObject.sizeOf(roots);
+      return 40 + 1 * vendor.length + XObject.getSizeForPadAlign(4, 1 * vendor.length) + XObject.sizeOf(pixmapFormats) + XObject.sizeOf(roots);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -316,7 +314,7 @@ public final class Setup implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Setup.SetupBuilder vendor(final ByteList vendor) {
+    public Setup.SetupBuilder vendor(final byte[] vendor) {
       if (vendor == null) {
         throw new java.lang.NullPointerException("vendor is marked non-null but is null");
       }
@@ -328,7 +326,7 @@ public final class Setup implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Setup.SetupBuilder pixmapFormats(final ImmutableList<Format> pixmapFormats) {
+    public Setup.SetupBuilder pixmapFormats(final List<Format> pixmapFormats) {
       if (pixmapFormats == null) {
         throw new java.lang.NullPointerException("pixmapFormats is marked non-null but is null");
       }
@@ -340,7 +338,7 @@ public final class Setup implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Setup.SetupBuilder roots(final ImmutableList<Screen> roots) {
+    public Setup.SetupBuilder roots(final List<Screen> roots) {
       if (roots == null) {
         throw new java.lang.NullPointerException("roots is marked non-null but is null");
       }
@@ -356,12 +354,12 @@ public final class Setup implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "Setup.SetupBuilder(status=" + this.status + ", protocolMajorVersion=" + this.protocolMajorVersion + ", protocolMinorVersion=" + this.protocolMinorVersion + ", length=" + this.length + ", releaseNumber=" + this.releaseNumber + ", resourceIdBase=" + this.resourceIdBase + ", resourceIdMask=" + this.resourceIdMask + ", motionBufferSize=" + this.motionBufferSize + ", maximumRequestLength=" + this.maximumRequestLength + ", imageByteOrder=" + this.imageByteOrder + ", bitmapFormatBitOrder=" + this.bitmapFormatBitOrder + ", bitmapFormatScanlineUnit=" + this.bitmapFormatScanlineUnit + ", bitmapFormatScanlinePad=" + this.bitmapFormatScanlinePad + ", minKeycode=" + this.minKeycode + ", maxKeycode=" + this.maxKeycode + ", vendor=" + this.vendor + ", pixmapFormats=" + this.pixmapFormats + ", roots=" + this.roots + ")";
+      return "Setup.SetupBuilder(status=" + this.status + ", protocolMajorVersion=" + this.protocolMajorVersion + ", protocolMinorVersion=" + this.protocolMinorVersion + ", length=" + this.length + ", releaseNumber=" + this.releaseNumber + ", resourceIdBase=" + this.resourceIdBase + ", resourceIdMask=" + this.resourceIdMask + ", motionBufferSize=" + this.motionBufferSize + ", maximumRequestLength=" + this.maximumRequestLength + ", imageByteOrder=" + this.imageByteOrder + ", bitmapFormatBitOrder=" + this.bitmapFormatBitOrder + ", bitmapFormatScanlineUnit=" + this.bitmapFormatScanlineUnit + ", bitmapFormatScanlinePad=" + this.bitmapFormatScanlinePad + ", minKeycode=" + this.minKeycode + ", maxKeycode=" + this.maxKeycode + ", vendor=" + java.util.Arrays.toString(this.vendor) + ", pixmapFormats=" + this.pixmapFormats + ", roots=" + this.roots + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  Setup(final byte status, final short protocolMajorVersion, final short protocolMinorVersion, final short length, final int releaseNumber, final int resourceIdBase, final int resourceIdMask, final int motionBufferSize, final short maximumRequestLength, final byte imageByteOrder, final byte bitmapFormatBitOrder, final byte bitmapFormatScanlineUnit, final byte bitmapFormatScanlinePad, final byte minKeycode, final byte maxKeycode, final ByteList vendor, final ImmutableList<Format> pixmapFormats, final ImmutableList<Screen> roots) {
+  Setup(final byte status, final short protocolMajorVersion, final short protocolMinorVersion, final short length, final int releaseNumber, final int resourceIdBase, final int resourceIdMask, final int motionBufferSize, final short maximumRequestLength, final byte imageByteOrder, final byte bitmapFormatBitOrder, final byte bitmapFormatScanlineUnit, final byte bitmapFormatScanlinePad, final byte minKeycode, final byte maxKeycode, final byte[] vendor, final List<Format> pixmapFormats, final List<Screen> roots) {
     if (vendor == null) {
       throw new java.lang.NullPointerException("vendor is marked non-null but is null");
     }
@@ -472,17 +470,17 @@ public final class Setup implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getVendor() {
+  public byte[] getVendor() {
     return this.vendor;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Format> getPixmapFormats() {
+  public List<Format> getPixmapFormats() {
     return this.pixmapFormats;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Screen> getRoots() {
+  public List<Screen> getRoots() {
     return this.roots;
   }
 
@@ -507,9 +505,7 @@ public final class Setup implements XStruct {
     if (this.getBitmapFormatScanlinePad() != other.getBitmapFormatScanlinePad()) return false;
     if (this.getMinKeycode() != other.getMinKeycode()) return false;
     if (this.getMaxKeycode() != other.getMaxKeycode()) return false;
-    final java.lang.Object this$vendor = this.getVendor();
-    final java.lang.Object other$vendor = other.getVendor();
-    if (this$vendor == null ? other$vendor != null : !this$vendor.equals(other$vendor)) return false;
+    if (!java.util.Arrays.equals(this.getVendor(), other.getVendor())) return false;
     final java.lang.Object this$pixmapFormats = this.getPixmapFormats();
     final java.lang.Object other$pixmapFormats = other.getPixmapFormats();
     if (this$pixmapFormats == null ? other$pixmapFormats != null : !this$pixmapFormats.equals(other$pixmapFormats)) return false;
@@ -539,8 +535,7 @@ public final class Setup implements XStruct {
     result = result * PRIME + this.getBitmapFormatScanlinePad();
     result = result * PRIME + this.getMinKeycode();
     result = result * PRIME + this.getMaxKeycode();
-    final java.lang.Object $vendor = this.getVendor();
-    result = result * PRIME + ($vendor == null ? 43 : $vendor.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getVendor());
     final java.lang.Object $pixmapFormats = this.getPixmapFormats();
     result = result * PRIME + ($pixmapFormats == null ? 43 : $pixmapFormats.hashCode());
     final java.lang.Object $roots = this.getRoots();
@@ -551,6 +546,6 @@ public final class Setup implements XStruct {
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "Setup(status=" + this.getStatus() + ", protocolMajorVersion=" + this.getProtocolMajorVersion() + ", protocolMinorVersion=" + this.getProtocolMinorVersion() + ", length=" + this.getLength() + ", releaseNumber=" + this.getReleaseNumber() + ", resourceIdBase=" + this.getResourceIdBase() + ", resourceIdMask=" + this.getResourceIdMask() + ", motionBufferSize=" + this.getMotionBufferSize() + ", maximumRequestLength=" + this.getMaximumRequestLength() + ", imageByteOrder=" + this.getImageByteOrder() + ", bitmapFormatBitOrder=" + this.getBitmapFormatBitOrder() + ", bitmapFormatScanlineUnit=" + this.getBitmapFormatScanlineUnit() + ", bitmapFormatScanlinePad=" + this.getBitmapFormatScanlinePad() + ", minKeycode=" + this.getMinKeycode() + ", maxKeycode=" + this.getMaxKeycode() + ", vendor=" + this.getVendor() + ", pixmapFormats=" + this.getPixmapFormats() + ", roots=" + this.getRoots() + ")";
+    return "Setup(status=" + this.getStatus() + ", protocolMajorVersion=" + this.getProtocolMajorVersion() + ", protocolMinorVersion=" + this.getProtocolMinorVersion() + ", length=" + this.getLength() + ", releaseNumber=" + this.getReleaseNumber() + ", resourceIdBase=" + this.getResourceIdBase() + ", resourceIdMask=" + this.getResourceIdMask() + ", motionBufferSize=" + this.getMotionBufferSize() + ", maximumRequestLength=" + this.getMaximumRequestLength() + ", imageByteOrder=" + this.getImageByteOrder() + ", bitmapFormatBitOrder=" + this.getBitmapFormatBitOrder() + ", bitmapFormatScanlineUnit=" + this.getBitmapFormatScanlineUnit() + ", bitmapFormatScanlinePad=" + this.getBitmapFormatScanlinePad() + ", minKeycode=" + this.getMinKeycode() + ", maxKeycode=" + this.getMaxKeycode() + ", vendor=" + java.util.Arrays.toString(this.getVendor()) + ", pixmapFormats=" + this.getPixmapFormats() + ", roots=" + this.getRoots() + ")";
   }
 }

@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetPropertyReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
@@ -13,7 +12,7 @@ public final class GetPropertyReply implements XReply {
   private final int type;
   private final int bytesAfter;
   private final int valueLen;
-  private final ByteList value;
+  private final byte[] value;
 
   public static GetPropertyReply readGetPropertyReply(byte format, short sequenceNumber, X11Input in) throws IOException {
     GetPropertyReply.GetPropertyReplyBuilder javaBuilder = GetPropertyReply.builder();
@@ -22,13 +21,13 @@ public final class GetPropertyReply implements XReply {
     int bytesAfter = in.readCard32();
     int valueLen = in.readCard32();
     byte[] pad7 = in.readPad(12);
-    ByteList value = in.readVoid((int) (Integer.toUnsignedLong(valueLen) * (Byte.toUnsignedInt(format) / 8)));
+    byte[] value = in.readVoid((int) (Integer.toUnsignedLong(valueLen) * (Byte.toUnsignedInt(format) / 8)));
     javaBuilder.format(format);
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.type(type);
     javaBuilder.bytesAfter(bytesAfter);
     javaBuilder.valueLen(valueLen);
-    javaBuilder.value(value.toImmutable());
+    javaBuilder.value(value);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -52,7 +51,7 @@ public final class GetPropertyReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 1 * value.size();
+    return 32 + 1 * value.length;
   }
 
   public String getPluginName() {
@@ -72,10 +71,10 @@ public final class GetPropertyReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int valueLen;
     @java.lang.SuppressWarnings("all")
-    private ByteList value;
+    private byte[] value;
 
     public int getSize() {
-      return 32 + 1 * value.size();
+      return 32 + 1 * value.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -131,7 +130,7 @@ public final class GetPropertyReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetPropertyReply.GetPropertyReplyBuilder value(final ByteList value) {
+    public GetPropertyReply.GetPropertyReplyBuilder value(final byte[] value) {
       if (value == null) {
         throw new java.lang.NullPointerException("value is marked non-null but is null");
       }
@@ -147,12 +146,12 @@ public final class GetPropertyReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetPropertyReply.GetPropertyReplyBuilder(format=" + this.format + ", sequenceNumber=" + this.sequenceNumber + ", type=" + this.type + ", bytesAfter=" + this.bytesAfter + ", valueLen=" + this.valueLen + ", value=" + this.value + ")";
+      return "GetPropertyReply.GetPropertyReplyBuilder(format=" + this.format + ", sequenceNumber=" + this.sequenceNumber + ", type=" + this.type + ", bytesAfter=" + this.bytesAfter + ", valueLen=" + this.valueLen + ", value=" + java.util.Arrays.toString(this.value) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetPropertyReply(final byte format, final short sequenceNumber, final int type, final int bytesAfter, final int valueLen, final ByteList value) {
+  GetPropertyReply(final byte format, final short sequenceNumber, final int type, final int bytesAfter, final int valueLen, final byte[] value) {
     if (value == null) {
       throw new java.lang.NullPointerException("value is marked non-null but is null");
     }
@@ -195,7 +194,7 @@ public final class GetPropertyReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getValue() {
+  public byte[] getValue() {
     return this.value;
   }
 
@@ -210,9 +209,7 @@ public final class GetPropertyReply implements XReply {
     if (this.getType() != other.getType()) return false;
     if (this.getBytesAfter() != other.getBytesAfter()) return false;
     if (this.getValueLen() != other.getValueLen()) return false;
-    final java.lang.Object this$value = this.getValue();
-    final java.lang.Object other$value = other.getValue();
-    if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
+    if (!java.util.Arrays.equals(this.getValue(), other.getValue())) return false;
     return true;
   }
 
@@ -226,14 +223,13 @@ public final class GetPropertyReply implements XReply {
     result = result * PRIME + this.getType();
     result = result * PRIME + this.getBytesAfter();
     result = result * PRIME + this.getValueLen();
-    final java.lang.Object $value = this.getValue();
-    result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getValue());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetPropertyReply(format=" + this.getFormat() + ", sequenceNumber=" + this.getSequenceNumber() + ", type=" + this.getType() + ", bytesAfter=" + this.getBytesAfter() + ", valueLen=" + this.getValueLen() + ", value=" + this.getValue() + ")";
+    return "GetPropertyReply(format=" + this.getFormat() + ", sequenceNumber=" + this.getSequenceNumber() + ", type=" + this.getType() + ", bytesAfter=" + this.getBytesAfter() + ", valueLen=" + this.getValueLen() + ", value=" + java.util.Arrays.toString(this.getValue()) + ")";
   }
 }

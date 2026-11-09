@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ImageText8 implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -13,7 +12,7 @@ public final class ImageText8 implements OneWayRequest {
   private final int gc;
   private final short x;
   private final short y;
-  private final ByteList string;
+  private final byte[] string;
 
   public byte getOpCode() {
     return OPCODE;
@@ -27,12 +26,12 @@ public final class ImageText8 implements OneWayRequest {
     int gc = in.readCard32();
     short x = in.readInt16();
     short y = in.readInt16();
-    ByteList string = in.readChar(stringLen);
+    byte[] string = in.readChar(stringLen);
     javaBuilder.drawable(drawable);
     javaBuilder.gc(gc);
     javaBuilder.x(x);
     javaBuilder.y(y);
-    javaBuilder.string(string.toImmutable());
+    javaBuilder.string(string);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -40,7 +39,7 @@ public final class ImageText8 implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
-    byte stringLen = (byte) string.size();
+    byte stringLen = (byte) string.length;
     out.writeByte(stringLen);
     out.writeCard16((short) getLength());
     out.writeCard32(drawable);
@@ -53,7 +52,7 @@ public final class ImageText8 implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 16 + 1 * string.size();
+    return 16 + 1 * string.length;
   }
 
   public String getPluginName() {
@@ -71,10 +70,10 @@ public final class ImageText8 implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short y;
     @java.lang.SuppressWarnings("all")
-    private ByteList string;
+    private byte[] string;
 
     public int getSize() {
-      return 16 + 1 * string.size();
+      return 16 + 1 * string.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -121,7 +120,7 @@ public final class ImageText8 implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ImageText8.ImageText8Builder string(final ByteList string) {
+    public ImageText8.ImageText8Builder string(final byte[] string) {
       if (string == null) {
         throw new java.lang.NullPointerException("string is marked non-null but is null");
       }
@@ -137,12 +136,12 @@ public final class ImageText8 implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ImageText8.ImageText8Builder(drawable=" + this.drawable + ", gc=" + this.gc + ", x=" + this.x + ", y=" + this.y + ", string=" + this.string + ")";
+      return "ImageText8.ImageText8Builder(drawable=" + this.drawable + ", gc=" + this.gc + ", x=" + this.x + ", y=" + this.y + ", string=" + java.util.Arrays.toString(this.string) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ImageText8(final int drawable, final int gc, final short x, final short y, final ByteList string) {
+  ImageText8(final int drawable, final int gc, final short x, final short y, final byte[] string) {
     if (string == null) {
       throw new java.lang.NullPointerException("string is marked non-null but is null");
     }
@@ -179,7 +178,7 @@ public final class ImageText8 implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getString() {
+  public byte[] getString() {
     return this.string;
   }
 
@@ -193,9 +192,7 @@ public final class ImageText8 implements OneWayRequest {
     if (this.getGc() != other.getGc()) return false;
     if (this.getX() != other.getX()) return false;
     if (this.getY() != other.getY()) return false;
-    final java.lang.Object this$string = this.getString();
-    final java.lang.Object other$string = other.getString();
-    if (this$string == null ? other$string != null : !this$string.equals(other$string)) return false;
+    if (!java.util.Arrays.equals(this.getString(), other.getString())) return false;
     return true;
   }
 
@@ -208,14 +205,13 @@ public final class ImageText8 implements OneWayRequest {
     result = result * PRIME + this.getGc();
     result = result * PRIME + this.getX();
     result = result * PRIME + this.getY();
-    final java.lang.Object $string = this.getString();
-    result = result * PRIME + ($string == null ? 43 : $string.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getString());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ImageText8(drawable=" + this.getDrawable() + ", gc=" + this.getGc() + ", x=" + this.getX() + ", y=" + this.getY() + ", string=" + this.getString() + ")";
+    return "ImageText8(drawable=" + this.getDrawable() + ", gc=" + this.getGc() + ", x=" + this.getX() + ", y=" + this.getY() + ", string=" + java.util.Arrays.toString(this.getString()) + ")";
   }
 }

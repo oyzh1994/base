@@ -5,7 +5,6 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import com.github.moaxcp.x11.protocol.xproto.ModMask;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetControlsReply implements XReply {
   public static final String PLUGIN_NAME = "xkb";
@@ -36,7 +35,7 @@ public final class GetControlsReply implements XReply {
   private final int accessXTimeoutMask;
   private final int accessXTimeoutValues;
   private final int enabledControls;
-  private final ByteList perKeyRepeat;
+  private final byte[] perKeyRepeat;
 
   public static GetControlsReply readGetControlsReply(byte deviceID, short sequenceNumber, X11Input in) throws IOException {
     GetControlsReply.GetControlsReplyBuilder javaBuilder = GetControlsReply.builder();
@@ -68,7 +67,7 @@ public final class GetControlsReply implements XReply {
     int accessXTimeoutMask = in.readCard32();
     int accessXTimeoutValues = in.readCard32();
     int enabledControls = in.readCard32();
-    ByteList perKeyRepeat = in.readCard8(32);
+    byte[] perKeyRepeat = in.readCard8(32);
     javaBuilder.deviceID(deviceID);
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.mouseKeysDfltBtn(mouseKeysDfltBtn);
@@ -96,7 +95,7 @@ public final class GetControlsReply implements XReply {
     javaBuilder.accessXTimeoutMask(accessXTimeoutMask);
     javaBuilder.accessXTimeoutValues(accessXTimeoutValues);
     javaBuilder.enabledControls(enabledControls);
-    javaBuilder.perKeyRepeat(perKeyRepeat.toImmutable());
+    javaBuilder.perKeyRepeat(perKeyRepeat);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -287,7 +286,7 @@ public final class GetControlsReply implements XReply {
 
   @Override
   public int getSize() {
-    return 60 + 1 * perKeyRepeat.size();
+    return 60 + 1 * perKeyRepeat.length;
   }
 
   public String getPluginName() {
@@ -351,7 +350,7 @@ public final class GetControlsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int enabledControls;
     @java.lang.SuppressWarnings("all")
-    private ByteList perKeyRepeat;
+    private byte[] perKeyRepeat;
 
     public boolean isInternalModsMaskEnabled(ModMask... maskEnums) {
       if (maskEnums == null) {
@@ -666,7 +665,7 @@ public final class GetControlsReply implements XReply {
     }
 
     public int getSize() {
-      return 60 + 1 * perKeyRepeat.size();
+      return 60 + 1 * perKeyRepeat.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -920,7 +919,7 @@ public final class GetControlsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetControlsReply.GetControlsReplyBuilder perKeyRepeat(final ByteList perKeyRepeat) {
+    public GetControlsReply.GetControlsReplyBuilder perKeyRepeat(final byte[] perKeyRepeat) {
       if (perKeyRepeat == null) {
         throw new java.lang.NullPointerException("perKeyRepeat is marked non-null but is null");
       }
@@ -936,12 +935,12 @@ public final class GetControlsReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetControlsReply.GetControlsReplyBuilder(deviceID=" + this.deviceID + ", sequenceNumber=" + this.sequenceNumber + ", mouseKeysDfltBtn=" + this.mouseKeysDfltBtn + ", numGroups=" + this.numGroups + ", groupsWrap=" + this.groupsWrap + ", internalModsMask=" + this.internalModsMask + ", ignoreLockModsMask=" + this.ignoreLockModsMask + ", internalModsRealMods=" + this.internalModsRealMods + ", ignoreLockModsRealMods=" + this.ignoreLockModsRealMods + ", internalModsVmods=" + this.internalModsVmods + ", ignoreLockModsVmods=" + this.ignoreLockModsVmods + ", repeatDelay=" + this.repeatDelay + ", repeatInterval=" + this.repeatInterval + ", slowKeysDelay=" + this.slowKeysDelay + ", debounceDelay=" + this.debounceDelay + ", mouseKeysDelay=" + this.mouseKeysDelay + ", mouseKeysInterval=" + this.mouseKeysInterval + ", mouseKeysTimeToMax=" + this.mouseKeysTimeToMax + ", mouseKeysMaxSpeed=" + this.mouseKeysMaxSpeed + ", mouseKeysCurve=" + this.mouseKeysCurve + ", accessXOption=" + this.accessXOption + ", accessXTimeout=" + this.accessXTimeout + ", accessXTimeoutOptionsMask=" + this.accessXTimeoutOptionsMask + ", accessXTimeoutOptionsValues=" + this.accessXTimeoutOptionsValues + ", accessXTimeoutMask=" + this.accessXTimeoutMask + ", accessXTimeoutValues=" + this.accessXTimeoutValues + ", enabledControls=" + this.enabledControls + ", perKeyRepeat=" + this.perKeyRepeat + ")";
+      return "GetControlsReply.GetControlsReplyBuilder(deviceID=" + this.deviceID + ", sequenceNumber=" + this.sequenceNumber + ", mouseKeysDfltBtn=" + this.mouseKeysDfltBtn + ", numGroups=" + this.numGroups + ", groupsWrap=" + this.groupsWrap + ", internalModsMask=" + this.internalModsMask + ", ignoreLockModsMask=" + this.ignoreLockModsMask + ", internalModsRealMods=" + this.internalModsRealMods + ", ignoreLockModsRealMods=" + this.ignoreLockModsRealMods + ", internalModsVmods=" + this.internalModsVmods + ", ignoreLockModsVmods=" + this.ignoreLockModsVmods + ", repeatDelay=" + this.repeatDelay + ", repeatInterval=" + this.repeatInterval + ", slowKeysDelay=" + this.slowKeysDelay + ", debounceDelay=" + this.debounceDelay + ", mouseKeysDelay=" + this.mouseKeysDelay + ", mouseKeysInterval=" + this.mouseKeysInterval + ", mouseKeysTimeToMax=" + this.mouseKeysTimeToMax + ", mouseKeysMaxSpeed=" + this.mouseKeysMaxSpeed + ", mouseKeysCurve=" + this.mouseKeysCurve + ", accessXOption=" + this.accessXOption + ", accessXTimeout=" + this.accessXTimeout + ", accessXTimeoutOptionsMask=" + this.accessXTimeoutOptionsMask + ", accessXTimeoutOptionsValues=" + this.accessXTimeoutOptionsValues + ", accessXTimeoutMask=" + this.accessXTimeoutMask + ", accessXTimeoutValues=" + this.accessXTimeoutValues + ", enabledControls=" + this.enabledControls + ", perKeyRepeat=" + java.util.Arrays.toString(this.perKeyRepeat) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetControlsReply(final byte deviceID, final short sequenceNumber, final byte mouseKeysDfltBtn, final byte numGroups, final byte groupsWrap, final byte internalModsMask, final byte ignoreLockModsMask, final byte internalModsRealMods, final byte ignoreLockModsRealMods, final short internalModsVmods, final short ignoreLockModsVmods, final short repeatDelay, final short repeatInterval, final short slowKeysDelay, final short debounceDelay, final short mouseKeysDelay, final short mouseKeysInterval, final short mouseKeysTimeToMax, final short mouseKeysMaxSpeed, final short mouseKeysCurve, final short accessXOption, final short accessXTimeout, final short accessXTimeoutOptionsMask, final short accessXTimeoutOptionsValues, final int accessXTimeoutMask, final int accessXTimeoutValues, final int enabledControls, final ByteList perKeyRepeat) {
+  GetControlsReply(final byte deviceID, final short sequenceNumber, final byte mouseKeysDfltBtn, final byte numGroups, final byte groupsWrap, final byte internalModsMask, final byte ignoreLockModsMask, final byte internalModsRealMods, final byte ignoreLockModsRealMods, final short internalModsVmods, final short ignoreLockModsVmods, final short repeatDelay, final short repeatInterval, final short slowKeysDelay, final short debounceDelay, final short mouseKeysDelay, final short mouseKeysInterval, final short mouseKeysTimeToMax, final short mouseKeysMaxSpeed, final short mouseKeysCurve, final short accessXOption, final short accessXTimeout, final short accessXTimeoutOptionsMask, final short accessXTimeoutOptionsValues, final int accessXTimeoutMask, final int accessXTimeoutValues, final int enabledControls, final byte[] perKeyRepeat) {
     if (perKeyRepeat == null) {
       throw new java.lang.NullPointerException("perKeyRepeat is marked non-null but is null");
     }
@@ -1116,7 +1115,7 @@ public final class GetControlsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getPerKeyRepeat() {
+  public byte[] getPerKeyRepeat() {
     return this.perKeyRepeat;
   }
 
@@ -1153,9 +1152,7 @@ public final class GetControlsReply implements XReply {
     if (this.getAccessXTimeoutMask() != other.getAccessXTimeoutMask()) return false;
     if (this.getAccessXTimeoutValues() != other.getAccessXTimeoutValues()) return false;
     if (this.getEnabledControls() != other.getEnabledControls()) return false;
-    final java.lang.Object this$perKeyRepeat = this.getPerKeyRepeat();
-    final java.lang.Object other$perKeyRepeat = other.getPerKeyRepeat();
-    if (this$perKeyRepeat == null ? other$perKeyRepeat != null : !this$perKeyRepeat.equals(other$perKeyRepeat)) return false;
+    if (!java.util.Arrays.equals(this.getPerKeyRepeat(), other.getPerKeyRepeat())) return false;
     return true;
   }
 
@@ -1191,14 +1188,13 @@ public final class GetControlsReply implements XReply {
     result = result * PRIME + this.getAccessXTimeoutMask();
     result = result * PRIME + this.getAccessXTimeoutValues();
     result = result * PRIME + this.getEnabledControls();
-    final java.lang.Object $perKeyRepeat = this.getPerKeyRepeat();
-    result = result * PRIME + ($perKeyRepeat == null ? 43 : $perKeyRepeat.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPerKeyRepeat());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetControlsReply(deviceID=" + this.getDeviceID() + ", sequenceNumber=" + this.getSequenceNumber() + ", mouseKeysDfltBtn=" + this.getMouseKeysDfltBtn() + ", numGroups=" + this.getNumGroups() + ", groupsWrap=" + this.getGroupsWrap() + ", internalModsMask=" + this.getInternalModsMask() + ", ignoreLockModsMask=" + this.getIgnoreLockModsMask() + ", internalModsRealMods=" + this.getInternalModsRealMods() + ", ignoreLockModsRealMods=" + this.getIgnoreLockModsRealMods() + ", internalModsVmods=" + this.getInternalModsVmods() + ", ignoreLockModsVmods=" + this.getIgnoreLockModsVmods() + ", repeatDelay=" + this.getRepeatDelay() + ", repeatInterval=" + this.getRepeatInterval() + ", slowKeysDelay=" + this.getSlowKeysDelay() + ", debounceDelay=" + this.getDebounceDelay() + ", mouseKeysDelay=" + this.getMouseKeysDelay() + ", mouseKeysInterval=" + this.getMouseKeysInterval() + ", mouseKeysTimeToMax=" + this.getMouseKeysTimeToMax() + ", mouseKeysMaxSpeed=" + this.getMouseKeysMaxSpeed() + ", mouseKeysCurve=" + this.getMouseKeysCurve() + ", accessXOption=" + this.getAccessXOption() + ", accessXTimeout=" + this.getAccessXTimeout() + ", accessXTimeoutOptionsMask=" + this.getAccessXTimeoutOptionsMask() + ", accessXTimeoutOptionsValues=" + this.getAccessXTimeoutOptionsValues() + ", accessXTimeoutMask=" + this.getAccessXTimeoutMask() + ", accessXTimeoutValues=" + this.getAccessXTimeoutValues() + ", enabledControls=" + this.getEnabledControls() + ", perKeyRepeat=" + this.getPerKeyRepeat() + ")";
+    return "GetControlsReply(deviceID=" + this.getDeviceID() + ", sequenceNumber=" + this.getSequenceNumber() + ", mouseKeysDfltBtn=" + this.getMouseKeysDfltBtn() + ", numGroups=" + this.getNumGroups() + ", groupsWrap=" + this.getGroupsWrap() + ", internalModsMask=" + this.getInternalModsMask() + ", ignoreLockModsMask=" + this.getIgnoreLockModsMask() + ", internalModsRealMods=" + this.getInternalModsRealMods() + ", ignoreLockModsRealMods=" + this.getIgnoreLockModsRealMods() + ", internalModsVmods=" + this.getInternalModsVmods() + ", ignoreLockModsVmods=" + this.getIgnoreLockModsVmods() + ", repeatDelay=" + this.getRepeatDelay() + ", repeatInterval=" + this.getRepeatInterval() + ", slowKeysDelay=" + this.getSlowKeysDelay() + ", debounceDelay=" + this.getDebounceDelay() + ", mouseKeysDelay=" + this.getMouseKeysDelay() + ", mouseKeysInterval=" + this.getMouseKeysInterval() + ", mouseKeysTimeToMax=" + this.getMouseKeysTimeToMax() + ", mouseKeysMaxSpeed=" + this.getMouseKeysMaxSpeed() + ", mouseKeysCurve=" + this.getMouseKeysCurve() + ", accessXOption=" + this.getAccessXOption() + ", accessXTimeout=" + this.getAccessXTimeout() + ", accessXTimeoutOptionsMask=" + this.getAccessXTimeoutOptionsMask() + ", accessXTimeoutOptionsValues=" + this.getAccessXTimeoutOptionsValues() + ", accessXTimeoutMask=" + this.getAccessXTimeoutMask() + ", accessXTimeoutValues=" + this.getAccessXTimeoutValues() + ", enabledControls=" + this.getEnabledControls() + ", perKeyRepeat=" + java.util.Arrays.toString(this.getPerKeyRepeat()) + ")";
   }
 }

@@ -4,14 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class RotateProperties implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 114;
   private final int window;
   private final short delta;
-  private final IntList atoms;
+  private final int[] atoms;
 
   public byte getOpCode() {
     return OPCODE;
@@ -24,10 +23,10 @@ public final class RotateProperties implements OneWayRequest {
     int window = in.readCard32();
     short atomsLen = in.readCard16();
     short delta = in.readInt16();
-    IntList atoms = in.readCard32(Short.toUnsignedInt(atomsLen));
+    int[] atoms = in.readCard32(Short.toUnsignedInt(atomsLen));
     javaBuilder.window(window);
     javaBuilder.delta(delta);
-    javaBuilder.atoms(atoms.toImmutable());
+    javaBuilder.atoms(atoms);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -38,7 +37,7 @@ public final class RotateProperties implements OneWayRequest {
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard32(window);
-    short atomsLen = (short) atoms.size();
+    short atomsLen = (short) atoms.length;
     out.writeCard16(atomsLen);
     out.writeInt16(delta);
     out.writeCard32(atoms);
@@ -47,7 +46,7 @@ public final class RotateProperties implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 4 * atoms.size();
+    return 12 + 4 * atoms.length;
   }
 
   public String getPluginName() {
@@ -61,10 +60,10 @@ public final class RotateProperties implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short delta;
     @java.lang.SuppressWarnings("all")
-    private IntList atoms;
+    private int[] atoms;
 
     public int getSize() {
-      return 12 + 4 * atoms.size();
+      return 12 + 4 * atoms.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -93,7 +92,7 @@ public final class RotateProperties implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public RotateProperties.RotatePropertiesBuilder atoms(final IntList atoms) {
+    public RotateProperties.RotatePropertiesBuilder atoms(final int[] atoms) {
       if (atoms == null) {
         throw new java.lang.NullPointerException("atoms is marked non-null but is null");
       }
@@ -109,12 +108,12 @@ public final class RotateProperties implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "RotateProperties.RotatePropertiesBuilder(window=" + this.window + ", delta=" + this.delta + ", atoms=" + this.atoms + ")";
+      return "RotateProperties.RotatePropertiesBuilder(window=" + this.window + ", delta=" + this.delta + ", atoms=" + java.util.Arrays.toString(this.atoms) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  RotateProperties(final int window, final short delta, final IntList atoms) {
+  RotateProperties(final int window, final short delta, final int[] atoms) {
     if (atoms == null) {
       throw new java.lang.NullPointerException("atoms is marked non-null but is null");
     }
@@ -139,7 +138,7 @@ public final class RotateProperties implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getAtoms() {
+  public int[] getAtoms() {
     return this.atoms;
   }
 
@@ -151,9 +150,7 @@ public final class RotateProperties implements OneWayRequest {
     final RotateProperties other = (RotateProperties) o;
     if (this.getWindow() != other.getWindow()) return false;
     if (this.getDelta() != other.getDelta()) return false;
-    final java.lang.Object this$atoms = this.getAtoms();
-    final java.lang.Object other$atoms = other.getAtoms();
-    if (this$atoms == null ? other$atoms != null : !this$atoms.equals(other$atoms)) return false;
+    if (!java.util.Arrays.equals(this.getAtoms(), other.getAtoms())) return false;
     return true;
   }
 
@@ -164,14 +161,13 @@ public final class RotateProperties implements OneWayRequest {
     int result = 1;
     result = result * PRIME + this.getWindow();
     result = result * PRIME + this.getDelta();
-    final java.lang.Object $atoms = this.getAtoms();
-    result = result * PRIME + ($atoms == null ? 43 : $atoms.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAtoms());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "RotateProperties(window=" + this.getWindow() + ", delta=" + this.getDelta() + ", atoms=" + this.getAtoms() + ")";
+    return "RotateProperties(window=" + this.getWindow() + ", delta=" + this.getDelta() + ", atoms=" + java.util.Arrays.toString(this.getAtoms()) + ")";
   }
 }

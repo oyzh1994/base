@@ -1,30 +1,29 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class QueryPictIndexValuesReply implements XReply {
   public static final String PLUGIN_NAME = "render";
   private final short sequenceNumber;
-  private final ImmutableList<Indexvalue> values;
+  private final List<Indexvalue> values;
 
   public static QueryPictIndexValuesReply readQueryPictIndexValuesReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryPictIndexValuesReply.QueryPictIndexValuesReplyBuilder javaBuilder = QueryPictIndexValuesReply.builder();
     int length = in.readCard32();
     int numValues = in.readCard32();
     byte[] pad5 = in.readPad(20);
-    MutableList<Indexvalue> values = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numValues)));
+    List<Indexvalue> values = new ArrayList<>((int) (Integer.toUnsignedLong(numValues)));
     for (int i = 0; i < Integer.toUnsignedLong(numValues); i++) {
       values.add(Indexvalue.readIndexvalue(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.values(values.toImmutable());
+    javaBuilder.values(List.copyOf(values));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -61,7 +60,7 @@ public final class QueryPictIndexValuesReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Indexvalue> values;
+    private List<Indexvalue> values;
 
     public int getSize() {
       return 32 + XObject.sizeOf(values);
@@ -84,7 +83,7 @@ public final class QueryPictIndexValuesReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryPictIndexValuesReply.QueryPictIndexValuesReplyBuilder values(final ImmutableList<Indexvalue> values) {
+    public QueryPictIndexValuesReply.QueryPictIndexValuesReplyBuilder values(final List<Indexvalue> values) {
       if (values == null) {
         throw new java.lang.NullPointerException("values is marked non-null but is null");
       }
@@ -105,7 +104,7 @@ public final class QueryPictIndexValuesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryPictIndexValuesReply(final short sequenceNumber, final ImmutableList<Indexvalue> values) {
+  QueryPictIndexValuesReply(final short sequenceNumber, final List<Indexvalue> values) {
     if (values == null) {
       throw new java.lang.NullPointerException("values is marked non-null but is null");
     }
@@ -124,7 +123,7 @@ public final class QueryPictIndexValuesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Indexvalue> getValues() {
+  public List<Indexvalue> getValues() {
     return this.values;
   }
 

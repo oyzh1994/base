@@ -4,13 +4,12 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class FreeGlyphs implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
   public static final byte OPCODE = 22;
   private final int glyphset;
-  private final IntList glyphs;
+  private final int[] glyphs;
 
   public byte getOpCode() {
     return OPCODE;
@@ -25,9 +24,9 @@ public final class FreeGlyphs implements OneWayRequest {
     javaStart += 2;
     int glyphset = in.readCard32();
     javaStart += 4;
-    IntList glyphs = in.readCard32(Short.toUnsignedInt(length) - javaStart);
+    int[] glyphs = in.readCard32(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.glyphset(glyphset);
-    javaBuilder.glyphs(glyphs.toImmutable());
+    javaBuilder.glyphs(glyphs);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -44,7 +43,7 @@ public final class FreeGlyphs implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 8 + 4 * glyphs.size();
+    return 8 + 4 * glyphs.length;
   }
 
   public String getPluginName() {
@@ -56,10 +55,10 @@ public final class FreeGlyphs implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int glyphset;
     @java.lang.SuppressWarnings("all")
-    private IntList glyphs;
+    private int[] glyphs;
 
     public int getSize() {
-      return 8 + 4 * glyphs.size();
+      return 8 + 4 * glyphs.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -79,7 +78,7 @@ public final class FreeGlyphs implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public FreeGlyphs.FreeGlyphsBuilder glyphs(final IntList glyphs) {
+    public FreeGlyphs.FreeGlyphsBuilder glyphs(final int[] glyphs) {
       if (glyphs == null) {
         throw new java.lang.NullPointerException("glyphs is marked non-null but is null");
       }
@@ -95,12 +94,12 @@ public final class FreeGlyphs implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "FreeGlyphs.FreeGlyphsBuilder(glyphset=" + this.glyphset + ", glyphs=" + this.glyphs + ")";
+      return "FreeGlyphs.FreeGlyphsBuilder(glyphset=" + this.glyphset + ", glyphs=" + java.util.Arrays.toString(this.glyphs) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  FreeGlyphs(final int glyphset, final IntList glyphs) {
+  FreeGlyphs(final int glyphset, final int[] glyphs) {
     if (glyphs == null) {
       throw new java.lang.NullPointerException("glyphs is marked non-null but is null");
     }
@@ -119,7 +118,7 @@ public final class FreeGlyphs implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getGlyphs() {
+  public int[] getGlyphs() {
     return this.glyphs;
   }
 
@@ -130,9 +129,7 @@ public final class FreeGlyphs implements OneWayRequest {
     if (!(o instanceof FreeGlyphs)) return false;
     final FreeGlyphs other = (FreeGlyphs) o;
     if (this.getGlyphset() != other.getGlyphset()) return false;
-    final java.lang.Object this$glyphs = this.getGlyphs();
-    final java.lang.Object other$glyphs = other.getGlyphs();
-    if (this$glyphs == null ? other$glyphs != null : !this$glyphs.equals(other$glyphs)) return false;
+    if (!java.util.Arrays.equals(this.getGlyphs(), other.getGlyphs())) return false;
     return true;
   }
 
@@ -142,14 +139,13 @@ public final class FreeGlyphs implements OneWayRequest {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getGlyphset();
-    final java.lang.Object $glyphs = this.getGlyphs();
-    result = result * PRIME + ($glyphs == null ? 43 : $glyphs.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getGlyphs());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "FreeGlyphs(glyphset=" + this.getGlyphset() + ", glyphs=" + this.getGlyphs() + ")";
+    return "FreeGlyphs(glyphset=" + this.getGlyphset() + ", glyphs=" + java.util.Arrays.toString(this.getGlyphs()) + ")";
   }
 }

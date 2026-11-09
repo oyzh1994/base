@@ -4,22 +4,21 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class Key implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
-  private final ByteList name;
+  private final byte[] name;
   private final short gap;
   private final byte shapeNdx;
   private final byte colorNdx;
 
   public static Key readKey(X11Input in) throws IOException {
     Key.KeyBuilder javaBuilder = Key.builder();
-    ByteList name = in.readChar(4);
+    byte[] name = in.readChar(4);
     short gap = in.readInt16();
     byte shapeNdx = in.readCard8();
     byte colorNdx = in.readCard8();
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     javaBuilder.gap(gap);
     javaBuilder.shapeNdx(shapeNdx);
     javaBuilder.colorNdx(colorNdx);
@@ -36,7 +35,7 @@ public final class Key implements XStruct {
 
   @Override
   public int getSize() {
-    return 4 + 1 * name.size();
+    return 4 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -46,7 +45,7 @@ public final class Key implements XStruct {
 
   public static class KeyBuilder {
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
     @java.lang.SuppressWarnings("all")
     private short gap;
     @java.lang.SuppressWarnings("all")
@@ -55,7 +54,7 @@ public final class Key implements XStruct {
     private byte colorNdx;
 
     public int getSize() {
-      return 4 + 1 * name.size();
+      return 4 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -66,7 +65,7 @@ public final class Key implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Key.KeyBuilder name(final ByteList name) {
+    public Key.KeyBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -109,12 +108,12 @@ public final class Key implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "Key.KeyBuilder(name=" + this.name + ", gap=" + this.gap + ", shapeNdx=" + this.shapeNdx + ", colorNdx=" + this.colorNdx + ")";
+      return "Key.KeyBuilder(name=" + java.util.Arrays.toString(this.name) + ", gap=" + this.gap + ", shapeNdx=" + this.shapeNdx + ", colorNdx=" + this.colorNdx + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  Key(final ByteList name, final short gap, final byte shapeNdx, final byte colorNdx) {
+  Key(final byte[] name, final short gap, final byte shapeNdx, final byte colorNdx) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -130,7 +129,7 @@ public final class Key implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -158,9 +157,7 @@ public final class Key implements XStruct {
     if (this.getGap() != other.getGap()) return false;
     if (this.getShapeNdx() != other.getShapeNdx()) return false;
     if (this.getColorNdx() != other.getColorNdx()) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -172,14 +169,13 @@ public final class Key implements XStruct {
     result = result * PRIME + this.getGap();
     result = result * PRIME + this.getShapeNdx();
     result = result * PRIME + this.getColorNdx();
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "Key(name=" + this.getName() + ", gap=" + this.getGap() + ", shapeNdx=" + this.getShapeNdx() + ", colorNdx=" + this.getColorNdx() + ")";
+    return "Key(name=" + java.util.Arrays.toString(this.getName()) + ", gap=" + this.getGap() + ", shapeNdx=" + this.getShapeNdx() + ", colorNdx=" + this.getColorNdx() + ")";
   }
 }

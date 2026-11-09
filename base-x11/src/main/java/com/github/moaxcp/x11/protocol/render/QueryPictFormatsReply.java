@@ -1,23 +1,21 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class QueryPictFormatsReply implements XReply {
   public static final String PLUGIN_NAME = "render";
   private final short sequenceNumber;
   private final int numDepths;
   private final int numVisuals;
-  private final ImmutableList<Pictforminfo> formats;
-  private final ImmutableList<Pictscreen> screens;
-  private final IntList subpixels;
+  private final List<Pictforminfo> formats;
+  private final List<Pictscreen> screens;
+  private final int[] subpixels;
 
   public static QueryPictFormatsReply readQueryPictFormatsReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryPictFormatsReply.QueryPictFormatsReplyBuilder javaBuilder = QueryPictFormatsReply.builder();
@@ -28,21 +26,21 @@ public final class QueryPictFormatsReply implements XReply {
     int numVisuals = in.readCard32();
     int numSubpixel = in.readCard32();
     byte[] pad9 = in.readPad(4);
-    MutableList<Pictforminfo> formats = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numFormats)));
+    List<Pictforminfo> formats = new ArrayList<>((int) (Integer.toUnsignedLong(numFormats)));
     for (int i = 0; i < Integer.toUnsignedLong(numFormats); i++) {
       formats.add(Pictforminfo.readPictforminfo(in));
     }
-    MutableList<Pictscreen> screens = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numScreens)));
+    List<Pictscreen> screens = new ArrayList<>((int) (Integer.toUnsignedLong(numScreens)));
     for (int i = 0; i < Integer.toUnsignedLong(numScreens); i++) {
       screens.add(Pictscreen.readPictscreen(in));
     }
-    IntList subpixels = in.readCard32((int) (Integer.toUnsignedLong(numSubpixel)));
+    int[] subpixels = in.readCard32((int) (Integer.toUnsignedLong(numSubpixel)));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.numDepths(numDepths);
     javaBuilder.numVisuals(numVisuals);
-    javaBuilder.formats(formats.toImmutable());
-    javaBuilder.screens(screens.toImmutable());
-    javaBuilder.subpixels(subpixels.toImmutable());
+    javaBuilder.formats(List.copyOf(formats));
+    javaBuilder.screens(List.copyOf(screens));
+    javaBuilder.subpixels(subpixels);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -62,7 +60,7 @@ public final class QueryPictFormatsReply implements XReply {
     out.writeCard32(numScreens);
     out.writeCard32(numDepths);
     out.writeCard32(numVisuals);
-    int numSubpixel = subpixels.size();
+    int numSubpixel = subpixels.length;
     out.writeCard32(numSubpixel);
     out.writePad(4);
     for (Pictforminfo t : formats) {
@@ -77,7 +75,7 @@ public final class QueryPictFormatsReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + XObject.sizeOf(formats) + XObject.sizeOf(screens) + 4 * subpixels.size();
+    return 32 + XObject.sizeOf(formats) + XObject.sizeOf(screens) + 4 * subpixels.length;
   }
 
   public String getPluginName() {
@@ -93,14 +91,14 @@ public final class QueryPictFormatsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int numVisuals;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Pictforminfo> formats;
+    private List<Pictforminfo> formats;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Pictscreen> screens;
+    private List<Pictscreen> screens;
     @java.lang.SuppressWarnings("all")
-    private IntList subpixels;
+    private int[] subpixels;
 
     public int getSize() {
-      return 32 + XObject.sizeOf(formats) + XObject.sizeOf(screens) + 4 * subpixels.size();
+      return 32 + XObject.sizeOf(formats) + XObject.sizeOf(screens) + 4 * subpixels.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -138,7 +136,7 @@ public final class QueryPictFormatsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryPictFormatsReply.QueryPictFormatsReplyBuilder formats(final ImmutableList<Pictforminfo> formats) {
+    public QueryPictFormatsReply.QueryPictFormatsReplyBuilder formats(final List<Pictforminfo> formats) {
       if (formats == null) {
         throw new java.lang.NullPointerException("formats is marked non-null but is null");
       }
@@ -150,7 +148,7 @@ public final class QueryPictFormatsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryPictFormatsReply.QueryPictFormatsReplyBuilder screens(final ImmutableList<Pictscreen> screens) {
+    public QueryPictFormatsReply.QueryPictFormatsReplyBuilder screens(final List<Pictscreen> screens) {
       if (screens == null) {
         throw new java.lang.NullPointerException("screens is marked non-null but is null");
       }
@@ -162,7 +160,7 @@ public final class QueryPictFormatsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryPictFormatsReply.QueryPictFormatsReplyBuilder subpixels(final IntList subpixels) {
+    public QueryPictFormatsReply.QueryPictFormatsReplyBuilder subpixels(final int[] subpixels) {
       if (subpixels == null) {
         throw new java.lang.NullPointerException("subpixels is marked non-null but is null");
       }
@@ -178,12 +176,12 @@ public final class QueryPictFormatsReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "QueryPictFormatsReply.QueryPictFormatsReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", numDepths=" + this.numDepths + ", numVisuals=" + this.numVisuals + ", formats=" + this.formats + ", screens=" + this.screens + ", subpixels=" + this.subpixels + ")";
+      return "QueryPictFormatsReply.QueryPictFormatsReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", numDepths=" + this.numDepths + ", numVisuals=" + this.numVisuals + ", formats=" + this.formats + ", screens=" + this.screens + ", subpixels=" + java.util.Arrays.toString(this.subpixels) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryPictFormatsReply(final short sequenceNumber, final int numDepths, final int numVisuals, final ImmutableList<Pictforminfo> formats, final ImmutableList<Pictscreen> screens, final IntList subpixels) {
+  QueryPictFormatsReply(final short sequenceNumber, final int numDepths, final int numVisuals, final List<Pictforminfo> formats, final List<Pictscreen> screens, final int[] subpixels) {
     if (formats == null) {
       throw new java.lang.NullPointerException("formats is marked non-null but is null");
     }
@@ -222,17 +220,17 @@ public final class QueryPictFormatsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Pictforminfo> getFormats() {
+  public List<Pictforminfo> getFormats() {
     return this.formats;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Pictscreen> getScreens() {
+  public List<Pictscreen> getScreens() {
     return this.screens;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getSubpixels() {
+  public int[] getSubpixels() {
     return this.subpixels;
   }
 
@@ -251,9 +249,7 @@ public final class QueryPictFormatsReply implements XReply {
     final java.lang.Object this$screens = this.getScreens();
     final java.lang.Object other$screens = other.getScreens();
     if (this$screens == null ? other$screens != null : !this$screens.equals(other$screens)) return false;
-    final java.lang.Object this$subpixels = this.getSubpixels();
-    final java.lang.Object other$subpixels = other.getSubpixels();
-    if (this$subpixels == null ? other$subpixels != null : !this$subpixels.equals(other$subpixels)) return false;
+    if (!java.util.Arrays.equals(this.getSubpixels(), other.getSubpixels())) return false;
     return true;
   }
 
@@ -269,14 +265,13 @@ public final class QueryPictFormatsReply implements XReply {
     result = result * PRIME + ($formats == null ? 43 : $formats.hashCode());
     final java.lang.Object $screens = this.getScreens();
     result = result * PRIME + ($screens == null ? 43 : $screens.hashCode());
-    final java.lang.Object $subpixels = this.getSubpixels();
-    result = result * PRIME + ($subpixels == null ? 43 : $subpixels.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getSubpixels());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "QueryPictFormatsReply(sequenceNumber=" + this.getSequenceNumber() + ", numDepths=" + this.getNumDepths() + ", numVisuals=" + this.getNumVisuals() + ", formats=" + this.getFormats() + ", screens=" + this.getScreens() + ", subpixels=" + this.getSubpixels() + ")";
+    return "QueryPictFormatsReply(sequenceNumber=" + this.getSequenceNumber() + ", numDepths=" + this.getNumDepths() + ", numVisuals=" + this.getNumVisuals() + ", formats=" + this.getFormats() + ", screens=" + this.getScreens() + ", subpixels=" + java.util.Arrays.toString(this.getSubpixels()) + ")";
   }
 }

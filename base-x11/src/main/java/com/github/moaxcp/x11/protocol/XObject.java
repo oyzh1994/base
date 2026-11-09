@@ -1,7 +1,5 @@
 package com.github.moaxcp.x11.protocol;
 
-import org.eclipse.collections.api.list.ImmutableList;
-
 import java.util.List;
 
 public interface XObject {
@@ -9,11 +7,6 @@ public interface XObject {
     return objects.stream()
       .mapToInt(XObject::getSize)
       .sum();
-  }
-  static <T extends XObject> int sizeOf(ImmutableList<T> objects) {
-    return objects.stream()
-        .mapToInt(XObject::getSize)
-        .sum();
   }
 
   static int getSizeForPadAlign(int size) {

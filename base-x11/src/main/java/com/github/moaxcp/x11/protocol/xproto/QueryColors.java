@@ -5,13 +5,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 91;
   private final int cmap;
-  private final IntList pixels;
+  private final int[] pixels;
 
   public XReplyFunction<QueryColorsReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> QueryColorsReply.readQueryColorsReply(field, sequenceNumber, in);
@@ -30,9 +29,9 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
     javaStart += 2;
     int cmap = in.readCard32();
     javaStart += 4;
-    IntList pixels = in.readCard32(Short.toUnsignedInt(length) - javaStart);
+    int[] pixels = in.readCard32(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.cmap(cmap);
-    javaBuilder.pixels(pixels.toImmutable());
+    javaBuilder.pixels(pixels);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -49,7 +48,7 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
 
   @Override
   public int getSize() {
-    return 8 + 4 * pixels.size();
+    return 8 + 4 * pixels.length;
   }
 
   public String getPluginName() {
@@ -61,10 +60,10 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
     @java.lang.SuppressWarnings("all")
     private int cmap;
     @java.lang.SuppressWarnings("all")
-    private IntList pixels;
+    private int[] pixels;
 
     public int getSize() {
-      return 8 + 4 * pixels.size();
+      return 8 + 4 * pixels.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -84,7 +83,7 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryColors.QueryColorsBuilder pixels(final IntList pixels) {
+    public QueryColors.QueryColorsBuilder pixels(final int[] pixels) {
       if (pixels == null) {
         throw new java.lang.NullPointerException("pixels is marked non-null but is null");
       }
@@ -100,12 +99,12 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "QueryColors.QueryColorsBuilder(cmap=" + this.cmap + ", pixels=" + this.pixels + ")";
+      return "QueryColors.QueryColorsBuilder(cmap=" + this.cmap + ", pixels=" + java.util.Arrays.toString(this.pixels) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryColors(final int cmap, final IntList pixels) {
+  QueryColors(final int cmap, final int[] pixels) {
     if (pixels == null) {
       throw new java.lang.NullPointerException("pixels is marked non-null but is null");
     }
@@ -124,7 +123,7 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getPixels() {
+  public int[] getPixels() {
     return this.pixels;
   }
 
@@ -135,9 +134,7 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
     if (!(o instanceof QueryColors)) return false;
     final QueryColors other = (QueryColors) o;
     if (this.getCmap() != other.getCmap()) return false;
-    final java.lang.Object this$pixels = this.getPixels();
-    final java.lang.Object other$pixels = other.getPixels();
-    if (this$pixels == null ? other$pixels != null : !this$pixels.equals(other$pixels)) return false;
+    if (!java.util.Arrays.equals(this.getPixels(), other.getPixels())) return false;
     return true;
   }
 
@@ -147,14 +144,13 @@ public final class QueryColors implements TwoWayRequest<QueryColorsReply> {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getCmap();
-    final java.lang.Object $pixels = this.getPixels();
-    result = result * PRIME + ($pixels == null ? 43 : $pixels.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPixels());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "QueryColors(cmap=" + this.getCmap() + ", pixels=" + this.getPixels() + ")";
+    return "QueryColors(cmap=" + this.getCmap() + ", pixels=" + java.util.Arrays.toString(this.getPixels()) + ")";
   }
 }

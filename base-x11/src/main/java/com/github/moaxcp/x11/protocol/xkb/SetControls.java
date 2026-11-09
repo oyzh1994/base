@@ -5,7 +5,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.xproto.ModMask;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SetControls implements OneWayRequest {
   public static final String PLUGIN_NAME = "xkb";
@@ -39,7 +38,7 @@ public final class SetControls implements OneWayRequest {
   private final int accessXTimeoutValues;
   private final short accessXTimeoutOptionsMask;
   private final short accessXTimeoutOptionsValues;
-  private final ByteList perKeyRepeat;
+  private final byte[] perKeyRepeat;
 
   public byte getOpCode() {
     return OPCODE;
@@ -79,7 +78,7 @@ public final class SetControls implements OneWayRequest {
     int accessXTimeoutValues = in.readCard32();
     short accessXTimeoutOptionsMask = in.readCard16();
     short accessXTimeoutOptionsValues = in.readCard16();
-    ByteList perKeyRepeat = in.readCard8(32);
+    byte[] perKeyRepeat = in.readCard8(32);
     javaBuilder.deviceSpec(deviceSpec);
     javaBuilder.affectInternalRealMods(affectInternalRealMods);
     javaBuilder.internalRealMods(internalRealMods);
@@ -109,7 +108,7 @@ public final class SetControls implements OneWayRequest {
     javaBuilder.accessXTimeoutValues(accessXTimeoutValues);
     javaBuilder.accessXTimeoutOptionsMask(accessXTimeoutOptionsMask);
     javaBuilder.accessXTimeoutOptionsValues(accessXTimeoutOptionsValues);
-    javaBuilder.perKeyRepeat(perKeyRepeat.toImmutable());
+    javaBuilder.perKeyRepeat(perKeyRepeat);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -347,7 +346,7 @@ public final class SetControls implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 68 + 1 * perKeyRepeat.size();
+    return 68 + 1 * perKeyRepeat.length;
   }
 
   public String getPluginName() {
@@ -415,7 +414,7 @@ public final class SetControls implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short accessXTimeoutOptionsValues;
     @java.lang.SuppressWarnings("all")
-    private ByteList perKeyRepeat;
+    private byte[] perKeyRepeat;
 
     public boolean isAffectInternalRealModsEnabled(ModMask... maskEnums) {
       if (maskEnums == null) {
@@ -834,7 +833,7 @@ public final class SetControls implements OneWayRequest {
     }
 
     public int getSize() {
-      return 68 + 1 * perKeyRepeat.size();
+      return 68 + 1 * perKeyRepeat.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -1106,7 +1105,7 @@ public final class SetControls implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetControls.SetControlsBuilder perKeyRepeat(final ByteList perKeyRepeat) {
+    public SetControls.SetControlsBuilder perKeyRepeat(final byte[] perKeyRepeat) {
       if (perKeyRepeat == null) {
         throw new java.lang.NullPointerException("perKeyRepeat is marked non-null but is null");
       }
@@ -1122,12 +1121,12 @@ public final class SetControls implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetControls.SetControlsBuilder(deviceSpec=" + this.deviceSpec + ", affectInternalRealMods=" + this.affectInternalRealMods + ", internalRealMods=" + this.internalRealMods + ", affectIgnoreLockRealMods=" + this.affectIgnoreLockRealMods + ", ignoreLockRealMods=" + this.ignoreLockRealMods + ", affectInternalVirtualMods=" + this.affectInternalVirtualMods + ", internalVirtualMods=" + this.internalVirtualMods + ", affectIgnoreLockVirtualMods=" + this.affectIgnoreLockVirtualMods + ", ignoreLockVirtualMods=" + this.ignoreLockVirtualMods + ", mouseKeysDfltBtn=" + this.mouseKeysDfltBtn + ", groupsWrap=" + this.groupsWrap + ", accessXOptions=" + this.accessXOptions + ", affectEnabledControls=" + this.affectEnabledControls + ", enabledControls=" + this.enabledControls + ", changeControls=" + this.changeControls + ", repeatDelay=" + this.repeatDelay + ", repeatInterval=" + this.repeatInterval + ", slowKeysDelay=" + this.slowKeysDelay + ", debounceDelay=" + this.debounceDelay + ", mouseKeysDelay=" + this.mouseKeysDelay + ", mouseKeysInterval=" + this.mouseKeysInterval + ", mouseKeysTimeToMax=" + this.mouseKeysTimeToMax + ", mouseKeysMaxSpeed=" + this.mouseKeysMaxSpeed + ", mouseKeysCurve=" + this.mouseKeysCurve + ", accessXTimeout=" + this.accessXTimeout + ", accessXTimeoutMask=" + this.accessXTimeoutMask + ", accessXTimeoutValues=" + this.accessXTimeoutValues + ", accessXTimeoutOptionsMask=" + this.accessXTimeoutOptionsMask + ", accessXTimeoutOptionsValues=" + this.accessXTimeoutOptionsValues + ", perKeyRepeat=" + this.perKeyRepeat + ")";
+      return "SetControls.SetControlsBuilder(deviceSpec=" + this.deviceSpec + ", affectInternalRealMods=" + this.affectInternalRealMods + ", internalRealMods=" + this.internalRealMods + ", affectIgnoreLockRealMods=" + this.affectIgnoreLockRealMods + ", ignoreLockRealMods=" + this.ignoreLockRealMods + ", affectInternalVirtualMods=" + this.affectInternalVirtualMods + ", internalVirtualMods=" + this.internalVirtualMods + ", affectIgnoreLockVirtualMods=" + this.affectIgnoreLockVirtualMods + ", ignoreLockVirtualMods=" + this.ignoreLockVirtualMods + ", mouseKeysDfltBtn=" + this.mouseKeysDfltBtn + ", groupsWrap=" + this.groupsWrap + ", accessXOptions=" + this.accessXOptions + ", affectEnabledControls=" + this.affectEnabledControls + ", enabledControls=" + this.enabledControls + ", changeControls=" + this.changeControls + ", repeatDelay=" + this.repeatDelay + ", repeatInterval=" + this.repeatInterval + ", slowKeysDelay=" + this.slowKeysDelay + ", debounceDelay=" + this.debounceDelay + ", mouseKeysDelay=" + this.mouseKeysDelay + ", mouseKeysInterval=" + this.mouseKeysInterval + ", mouseKeysTimeToMax=" + this.mouseKeysTimeToMax + ", mouseKeysMaxSpeed=" + this.mouseKeysMaxSpeed + ", mouseKeysCurve=" + this.mouseKeysCurve + ", accessXTimeout=" + this.accessXTimeout + ", accessXTimeoutMask=" + this.accessXTimeoutMask + ", accessXTimeoutValues=" + this.accessXTimeoutValues + ", accessXTimeoutOptionsMask=" + this.accessXTimeoutOptionsMask + ", accessXTimeoutOptionsValues=" + this.accessXTimeoutOptionsValues + ", perKeyRepeat=" + java.util.Arrays.toString(this.perKeyRepeat) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetControls(final short deviceSpec, final byte affectInternalRealMods, final byte internalRealMods, final byte affectIgnoreLockRealMods, final byte ignoreLockRealMods, final short affectInternalVirtualMods, final short internalVirtualMods, final short affectIgnoreLockVirtualMods, final short ignoreLockVirtualMods, final byte mouseKeysDfltBtn, final byte groupsWrap, final short accessXOptions, final int affectEnabledControls, final int enabledControls, final int changeControls, final short repeatDelay, final short repeatInterval, final short slowKeysDelay, final short debounceDelay, final short mouseKeysDelay, final short mouseKeysInterval, final short mouseKeysTimeToMax, final short mouseKeysMaxSpeed, final short mouseKeysCurve, final short accessXTimeout, final int accessXTimeoutMask, final int accessXTimeoutValues, final short accessXTimeoutOptionsMask, final short accessXTimeoutOptionsValues, final ByteList perKeyRepeat) {
+  SetControls(final short deviceSpec, final byte affectInternalRealMods, final byte internalRealMods, final byte affectIgnoreLockRealMods, final byte ignoreLockRealMods, final short affectInternalVirtualMods, final short internalVirtualMods, final short affectIgnoreLockVirtualMods, final short ignoreLockVirtualMods, final byte mouseKeysDfltBtn, final byte groupsWrap, final short accessXOptions, final int affectEnabledControls, final int enabledControls, final int changeControls, final short repeatDelay, final short repeatInterval, final short slowKeysDelay, final short debounceDelay, final short mouseKeysDelay, final short mouseKeysInterval, final short mouseKeysTimeToMax, final short mouseKeysMaxSpeed, final short mouseKeysCurve, final short accessXTimeout, final int accessXTimeoutMask, final int accessXTimeoutValues, final short accessXTimeoutOptionsMask, final short accessXTimeoutOptionsValues, final byte[] perKeyRepeat) {
     if (perKeyRepeat == null) {
       throw new java.lang.NullPointerException("perKeyRepeat is marked non-null but is null");
     }
@@ -1314,7 +1313,7 @@ public final class SetControls implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getPerKeyRepeat() {
+  public byte[] getPerKeyRepeat() {
     return this.perKeyRepeat;
   }
 
@@ -1353,9 +1352,7 @@ public final class SetControls implements OneWayRequest {
     if (this.getAccessXTimeoutValues() != other.getAccessXTimeoutValues()) return false;
     if (this.getAccessXTimeoutOptionsMask() != other.getAccessXTimeoutOptionsMask()) return false;
     if (this.getAccessXTimeoutOptionsValues() != other.getAccessXTimeoutOptionsValues()) return false;
-    final java.lang.Object this$perKeyRepeat = this.getPerKeyRepeat();
-    final java.lang.Object other$perKeyRepeat = other.getPerKeyRepeat();
-    if (this$perKeyRepeat == null ? other$perKeyRepeat != null : !this$perKeyRepeat.equals(other$perKeyRepeat)) return false;
+    if (!java.util.Arrays.equals(this.getPerKeyRepeat(), other.getPerKeyRepeat())) return false;
     return true;
   }
 
@@ -1393,14 +1390,13 @@ public final class SetControls implements OneWayRequest {
     result = result * PRIME + this.getAccessXTimeoutValues();
     result = result * PRIME + this.getAccessXTimeoutOptionsMask();
     result = result * PRIME + this.getAccessXTimeoutOptionsValues();
-    final java.lang.Object $perKeyRepeat = this.getPerKeyRepeat();
-    result = result * PRIME + ($perKeyRepeat == null ? 43 : $perKeyRepeat.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPerKeyRepeat());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetControls(deviceSpec=" + this.getDeviceSpec() + ", affectInternalRealMods=" + this.getAffectInternalRealMods() + ", internalRealMods=" + this.getInternalRealMods() + ", affectIgnoreLockRealMods=" + this.getAffectIgnoreLockRealMods() + ", ignoreLockRealMods=" + this.getIgnoreLockRealMods() + ", affectInternalVirtualMods=" + this.getAffectInternalVirtualMods() + ", internalVirtualMods=" + this.getInternalVirtualMods() + ", affectIgnoreLockVirtualMods=" + this.getAffectIgnoreLockVirtualMods() + ", ignoreLockVirtualMods=" + this.getIgnoreLockVirtualMods() + ", mouseKeysDfltBtn=" + this.getMouseKeysDfltBtn() + ", groupsWrap=" + this.getGroupsWrap() + ", accessXOptions=" + this.getAccessXOptions() + ", affectEnabledControls=" + this.getAffectEnabledControls() + ", enabledControls=" + this.getEnabledControls() + ", changeControls=" + this.getChangeControls() + ", repeatDelay=" + this.getRepeatDelay() + ", repeatInterval=" + this.getRepeatInterval() + ", slowKeysDelay=" + this.getSlowKeysDelay() + ", debounceDelay=" + this.getDebounceDelay() + ", mouseKeysDelay=" + this.getMouseKeysDelay() + ", mouseKeysInterval=" + this.getMouseKeysInterval() + ", mouseKeysTimeToMax=" + this.getMouseKeysTimeToMax() + ", mouseKeysMaxSpeed=" + this.getMouseKeysMaxSpeed() + ", mouseKeysCurve=" + this.getMouseKeysCurve() + ", accessXTimeout=" + this.getAccessXTimeout() + ", accessXTimeoutMask=" + this.getAccessXTimeoutMask() + ", accessXTimeoutValues=" + this.getAccessXTimeoutValues() + ", accessXTimeoutOptionsMask=" + this.getAccessXTimeoutOptionsMask() + ", accessXTimeoutOptionsValues=" + this.getAccessXTimeoutOptionsValues() + ", perKeyRepeat=" + this.getPerKeyRepeat() + ")";
+    return "SetControls(deviceSpec=" + this.getDeviceSpec() + ", affectInternalRealMods=" + this.getAffectInternalRealMods() + ", internalRealMods=" + this.getInternalRealMods() + ", affectIgnoreLockRealMods=" + this.getAffectIgnoreLockRealMods() + ", ignoreLockRealMods=" + this.getIgnoreLockRealMods() + ", affectInternalVirtualMods=" + this.getAffectInternalVirtualMods() + ", internalVirtualMods=" + this.getInternalVirtualMods() + ", affectIgnoreLockVirtualMods=" + this.getAffectIgnoreLockVirtualMods() + ", ignoreLockVirtualMods=" + this.getIgnoreLockVirtualMods() + ", mouseKeysDfltBtn=" + this.getMouseKeysDfltBtn() + ", groupsWrap=" + this.getGroupsWrap() + ", accessXOptions=" + this.getAccessXOptions() + ", affectEnabledControls=" + this.getAffectEnabledControls() + ", enabledControls=" + this.getEnabledControls() + ", changeControls=" + this.getChangeControls() + ", repeatDelay=" + this.getRepeatDelay() + ", repeatInterval=" + this.getRepeatInterval() + ", slowKeysDelay=" + this.getSlowKeysDelay() + ", debounceDelay=" + this.getDebounceDelay() + ", mouseKeysDelay=" + this.getMouseKeysDelay() + ", mouseKeysInterval=" + this.getMouseKeysInterval() + ", mouseKeysTimeToMax=" + this.getMouseKeysTimeToMax() + ", mouseKeysMaxSpeed=" + this.getMouseKeysMaxSpeed() + ", mouseKeysCurve=" + this.getMouseKeysCurve() + ", accessXTimeout=" + this.getAccessXTimeout() + ", accessXTimeoutMask=" + this.getAccessXTimeoutMask() + ", accessXTimeoutValues=" + this.getAccessXTimeoutValues() + ", accessXTimeoutOptionsMask=" + this.getAccessXTimeoutOptionsMask() + ", accessXTimeoutOptionsValues=" + this.getAccessXTimeoutOptionsValues() + ", perKeyRepeat=" + java.util.Arrays.toString(this.getPerKeyRepeat()) + ")";
   }
 }

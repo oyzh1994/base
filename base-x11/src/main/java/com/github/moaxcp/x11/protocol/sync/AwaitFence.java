@@ -4,12 +4,11 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class AwaitFence implements OneWayRequest {
   public static final String PLUGIN_NAME = "sync";
   public static final byte OPCODE = 19;
-  private final IntList fenceList;
+  private final int[] fenceList;
 
   public byte getOpCode() {
     return OPCODE;
@@ -22,8 +21,8 @@ public final class AwaitFence implements OneWayRequest {
     javaStart += 1;
     short length = in.readCard16();
     javaStart += 2;
-    IntList fenceList = in.readCard32(Short.toUnsignedInt(length) - javaStart);
-    javaBuilder.fenceList(fenceList.toImmutable());
+    int[] fenceList = in.readCard32(Short.toUnsignedInt(length) - javaStart);
+    javaBuilder.fenceList(fenceList);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -39,7 +38,7 @@ public final class AwaitFence implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 4 + 4 * fenceList.size();
+    return 4 + 4 * fenceList.length;
   }
 
   public String getPluginName() {
@@ -49,10 +48,10 @@ public final class AwaitFence implements OneWayRequest {
 
   public static class AwaitFenceBuilder {
     @java.lang.SuppressWarnings("all")
-    private IntList fenceList;
+    private int[] fenceList;
 
     public int getSize() {
-      return 4 + 4 * fenceList.size();
+      return 4 + 4 * fenceList.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -63,7 +62,7 @@ public final class AwaitFence implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AwaitFence.AwaitFenceBuilder fenceList(final IntList fenceList) {
+    public AwaitFence.AwaitFenceBuilder fenceList(final int[] fenceList) {
       if (fenceList == null) {
         throw new java.lang.NullPointerException("fenceList is marked non-null but is null");
       }
@@ -79,12 +78,12 @@ public final class AwaitFence implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "AwaitFence.AwaitFenceBuilder(fenceList=" + this.fenceList + ")";
+      return "AwaitFence.AwaitFenceBuilder(fenceList=" + java.util.Arrays.toString(this.fenceList) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  AwaitFence(final IntList fenceList) {
+  AwaitFence(final int[] fenceList) {
     if (fenceList == null) {
       throw new java.lang.NullPointerException("fenceList is marked non-null but is null");
     }
@@ -97,7 +96,7 @@ public final class AwaitFence implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getFenceList() {
+  public int[] getFenceList() {
     return this.fenceList;
   }
 
@@ -107,9 +106,7 @@ public final class AwaitFence implements OneWayRequest {
     if (o == this) return true;
     if (!(o instanceof AwaitFence)) return false;
     final AwaitFence other = (AwaitFence) o;
-    final java.lang.Object this$fenceList = this.getFenceList();
-    final java.lang.Object other$fenceList = other.getFenceList();
-    if (this$fenceList == null ? other$fenceList != null : !this$fenceList.equals(other$fenceList)) return false;
+    if (!java.util.Arrays.equals(this.getFenceList(), other.getFenceList())) return false;
     return true;
   }
 
@@ -118,14 +115,13 @@ public final class AwaitFence implements OneWayRequest {
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
-    final java.lang.Object $fenceList = this.getFenceList();
-    result = result * PRIME + ($fenceList == null ? 43 : $fenceList.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getFenceList());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "AwaitFence(fenceList=" + this.getFenceList() + ")";
+    return "AwaitFence(fenceList=" + java.util.Arrays.toString(this.getFenceList()) + ")";
   }
 }

@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetProviderPropertyReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
@@ -13,7 +12,7 @@ public final class GetProviderPropertyReply implements XReply {
   private final int type;
   private final int bytesAfter;
   private final int numItems;
-  private final ByteList data;
+  private final byte[] data;
 
   public static GetProviderPropertyReply readGetProviderPropertyReply(byte format, short sequenceNumber, X11Input in) throws IOException {
     GetProviderPropertyReply.GetProviderPropertyReplyBuilder javaBuilder = GetProviderPropertyReply.builder();
@@ -22,13 +21,13 @@ public final class GetProviderPropertyReply implements XReply {
     int bytesAfter = in.readCard32();
     int numItems = in.readCard32();
     byte[] pad7 = in.readPad(12);
-    ByteList data = in.readVoid((int) (Integer.toUnsignedLong(numItems) * (Byte.toUnsignedInt(format) / 8)));
+    byte[] data = in.readVoid((int) (Integer.toUnsignedLong(numItems) * (Byte.toUnsignedInt(format) / 8)));
     javaBuilder.format(format);
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.type(type);
     javaBuilder.bytesAfter(bytesAfter);
     javaBuilder.numItems(numItems);
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.data(data);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -52,7 +51,7 @@ public final class GetProviderPropertyReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 1 * data.size();
+    return 32 + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -72,10 +71,10 @@ public final class GetProviderPropertyReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int numItems;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public int getSize() {
-      return 32 + 1 * data.size();
+      return 32 + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -131,7 +130,7 @@ public final class GetProviderPropertyReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetProviderPropertyReply.GetProviderPropertyReplyBuilder data(final ByteList data) {
+    public GetProviderPropertyReply.GetProviderPropertyReplyBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -147,12 +146,12 @@ public final class GetProviderPropertyReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetProviderPropertyReply.GetProviderPropertyReplyBuilder(format=" + this.format + ", sequenceNumber=" + this.sequenceNumber + ", type=" + this.type + ", bytesAfter=" + this.bytesAfter + ", numItems=" + this.numItems + ", data=" + this.data + ")";
+      return "GetProviderPropertyReply.GetProviderPropertyReplyBuilder(format=" + this.format + ", sequenceNumber=" + this.sequenceNumber + ", type=" + this.type + ", bytesAfter=" + this.bytesAfter + ", numItems=" + this.numItems + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetProviderPropertyReply(final byte format, final short sequenceNumber, final int type, final int bytesAfter, final int numItems, final ByteList data) {
+  GetProviderPropertyReply(final byte format, final short sequenceNumber, final int type, final int bytesAfter, final int numItems, final byte[] data) {
     if (data == null) {
       throw new java.lang.NullPointerException("data is marked non-null but is null");
     }
@@ -195,7 +194,7 @@ public final class GetProviderPropertyReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -210,9 +209,7 @@ public final class GetProviderPropertyReply implements XReply {
     if (this.getType() != other.getType()) return false;
     if (this.getBytesAfter() != other.getBytesAfter()) return false;
     if (this.getNumItems() != other.getNumItems()) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -226,14 +223,13 @@ public final class GetProviderPropertyReply implements XReply {
     result = result * PRIME + this.getType();
     result = result * PRIME + this.getBytesAfter();
     result = result * PRIME + this.getNumItems();
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetProviderPropertyReply(format=" + this.getFormat() + ", sequenceNumber=" + this.getSequenceNumber() + ", type=" + this.getType() + ", bytesAfter=" + this.getBytesAfter() + ", numItems=" + this.getNumItems() + ", data=" + this.getData() + ")";
+    return "GetProviderPropertyReply(format=" + this.getFormat() + ", sequenceNumber=" + this.getSequenceNumber() + ", type=" + this.getType() + ", bytesAfter=" + this.getBytesAfter() + ", numItems=" + this.getNumItems() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

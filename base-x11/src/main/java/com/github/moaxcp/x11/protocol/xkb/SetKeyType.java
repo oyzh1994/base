@@ -1,14 +1,13 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import com.github.moaxcp.x11.protocol.xproto.ModMask;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class SetKeyType implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
@@ -17,8 +16,8 @@ public final class SetKeyType implements XStruct {
   private final short virtualMods;
   private final byte numLevels;
   private final boolean preserve;
-  private final ImmutableList<KTSetMapEntry> entries;
-  private final ImmutableList<KTSetMapEntry> preserveEntries;
+  private final List<KTSetMapEntry> entries;
+  private final List<KTSetMapEntry> preserveEntries;
 
   public static SetKeyType readSetKeyType(X11Input in) throws IOException {
     SetKeyType.SetKeyTypeBuilder javaBuilder = SetKeyType.builder();
@@ -29,11 +28,11 @@ public final class SetKeyType implements XStruct {
     byte nMapEntries = in.readCard8();
     boolean preserve = in.readBool();
     byte[] pad6 = in.readPad(1);
-    MutableList<KTSetMapEntry> entries = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nMapEntries));
+    List<KTSetMapEntry> entries = new ArrayList<>(Byte.toUnsignedInt(nMapEntries));
     for (int i = 0; i < Byte.toUnsignedInt(nMapEntries); i++) {
       entries.add(KTSetMapEntry.readKTSetMapEntry(in));
     }
-    MutableList<KTSetMapEntry> preserveEntries = Lists.mutable.withInitialCapacity((preserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries));
+    List<KTSetMapEntry> preserveEntries = new ArrayList<>((preserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries));
     for (int i = 0; i < (preserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries); i++) {
       preserveEntries.add(KTSetMapEntry.readKTSetMapEntry(in));
     }
@@ -42,8 +41,8 @@ public final class SetKeyType implements XStruct {
     javaBuilder.virtualMods(virtualMods);
     javaBuilder.numLevels(numLevels);
     javaBuilder.preserve(preserve);
-    javaBuilder.entries(entries.toImmutable());
-    javaBuilder.preserveEntries(preserveEntries.toImmutable());
+    javaBuilder.entries(List.copyOf(entries));
+    javaBuilder.preserveEntries(List.copyOf(preserveEntries));
     return javaBuilder.build();
   }
 
@@ -123,9 +122,9 @@ public final class SetKeyType implements XStruct {
     @java.lang.SuppressWarnings("all")
     private boolean preserve;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<KTSetMapEntry> entries;
+    private List<KTSetMapEntry> entries;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<KTSetMapEntry> preserveEntries;
+    private List<KTSetMapEntry> preserveEntries;
 
     public boolean isMaskEnabled(ModMask... maskEnums) {
       if (maskEnums == null) {
@@ -262,7 +261,7 @@ public final class SetKeyType implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetKeyType.SetKeyTypeBuilder entries(final ImmutableList<KTSetMapEntry> entries) {
+    public SetKeyType.SetKeyTypeBuilder entries(final List<KTSetMapEntry> entries) {
       if (entries == null) {
         throw new java.lang.NullPointerException("entries is marked non-null but is null");
       }
@@ -274,7 +273,7 @@ public final class SetKeyType implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetKeyType.SetKeyTypeBuilder preserveEntries(final ImmutableList<KTSetMapEntry> preserveEntries) {
+    public SetKeyType.SetKeyTypeBuilder preserveEntries(final List<KTSetMapEntry> preserveEntries) {
       if (preserveEntries == null) {
         throw new java.lang.NullPointerException("preserveEntries is marked non-null but is null");
       }
@@ -295,7 +294,7 @@ public final class SetKeyType implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  SetKeyType(final byte mask, final byte realMods, final short virtualMods, final byte numLevels, final boolean preserve, final ImmutableList<KTSetMapEntry> entries, final ImmutableList<KTSetMapEntry> preserveEntries) {
+  SetKeyType(final byte mask, final byte realMods, final short virtualMods, final byte numLevels, final boolean preserve, final List<KTSetMapEntry> entries, final List<KTSetMapEntry> preserveEntries) {
     if (entries == null) {
       throw new java.lang.NullPointerException("entries is marked non-null but is null");
     }
@@ -342,12 +341,12 @@ public final class SetKeyType implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<KTSetMapEntry> getEntries() {
+  public List<KTSetMapEntry> getEntries() {
     return this.entries;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<KTSetMapEntry> getPreserveEntries() {
+  public List<KTSetMapEntry> getPreserveEntries() {
     return this.preserveEntries;
   }
 

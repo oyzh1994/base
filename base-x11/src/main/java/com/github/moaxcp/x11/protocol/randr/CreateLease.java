@@ -5,15 +5,14 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
   public static final String PLUGIN_NAME = "randr";
   public static final byte OPCODE = 45;
   private final int window;
   private final int lid;
-  private final IntList crtcs;
-  private final IntList outputs;
+  private final int[] crtcs;
+  private final int[] outputs;
 
   public XReplyFunction<CreateLeaseReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> CreateLeaseReply.readCreateLeaseReply(field, sequenceNumber, in);
@@ -31,12 +30,12 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
     int lid = in.readCard32();
     short numCrtcs = in.readCard16();
     short numOutputs = in.readCard16();
-    IntList crtcs = in.readCard32(Short.toUnsignedInt(numCrtcs));
-    IntList outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
+    int[] crtcs = in.readCard32(Short.toUnsignedInt(numCrtcs));
+    int[] outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
     javaBuilder.window(window);
     javaBuilder.lid(lid);
-    javaBuilder.crtcs(crtcs.toImmutable());
-    javaBuilder.outputs(outputs.toImmutable());
+    javaBuilder.crtcs(crtcs);
+    javaBuilder.outputs(outputs);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -48,9 +47,9 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
     out.writeCard16((short) getLength());
     out.writeCard32(window);
     out.writeCard32(lid);
-    short numCrtcs = (short) crtcs.size();
+    short numCrtcs = (short) crtcs.length;
     out.writeCard16(numCrtcs);
-    short numOutputs = (short) outputs.size();
+    short numOutputs = (short) outputs.length;
     out.writeCard16(numOutputs);
     out.writeCard32(crtcs);
     out.writeCard32(outputs);
@@ -59,7 +58,7 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
 
   @Override
   public int getSize() {
-    return 16 + 4 * crtcs.size() + 4 * outputs.size();
+    return 16 + 4 * crtcs.length + 4 * outputs.length;
   }
 
   public String getPluginName() {
@@ -73,12 +72,12 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
     @java.lang.SuppressWarnings("all")
     private int lid;
     @java.lang.SuppressWarnings("all")
-    private IntList crtcs;
+    private int[] crtcs;
     @java.lang.SuppressWarnings("all")
-    private IntList outputs;
+    private int[] outputs;
 
     public int getSize() {
-      return 16 + 4 * crtcs.size() + 4 * outputs.size();
+      return 16 + 4 * crtcs.length + 4 * outputs.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -107,7 +106,7 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateLease.CreateLeaseBuilder crtcs(final IntList crtcs) {
+    public CreateLease.CreateLeaseBuilder crtcs(final int[] crtcs) {
       if (crtcs == null) {
         throw new java.lang.NullPointerException("crtcs is marked non-null but is null");
       }
@@ -119,7 +118,7 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateLease.CreateLeaseBuilder outputs(final IntList outputs) {
+    public CreateLease.CreateLeaseBuilder outputs(final int[] outputs) {
       if (outputs == null) {
         throw new java.lang.NullPointerException("outputs is marked non-null but is null");
       }
@@ -135,12 +134,12 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "CreateLease.CreateLeaseBuilder(window=" + this.window + ", lid=" + this.lid + ", crtcs=" + this.crtcs + ", outputs=" + this.outputs + ")";
+      return "CreateLease.CreateLeaseBuilder(window=" + this.window + ", lid=" + this.lid + ", crtcs=" + java.util.Arrays.toString(this.crtcs) + ", outputs=" + java.util.Arrays.toString(this.outputs) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  CreateLease(final int window, final int lid, final IntList crtcs, final IntList outputs) {
+  CreateLease(final int window, final int lid, final int[] crtcs, final int[] outputs) {
     if (crtcs == null) {
       throw new java.lang.NullPointerException("crtcs is marked non-null but is null");
     }
@@ -169,12 +168,12 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getCrtcs() {
+  public int[] getCrtcs() {
     return this.crtcs;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getOutputs() {
+  public int[] getOutputs() {
     return this.outputs;
   }
 
@@ -186,12 +185,8 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
     final CreateLease other = (CreateLease) o;
     if (this.getWindow() != other.getWindow()) return false;
     if (this.getLid() != other.getLid()) return false;
-    final java.lang.Object this$crtcs = this.getCrtcs();
-    final java.lang.Object other$crtcs = other.getCrtcs();
-    if (this$crtcs == null ? other$crtcs != null : !this$crtcs.equals(other$crtcs)) return false;
-    final java.lang.Object this$outputs = this.getOutputs();
-    final java.lang.Object other$outputs = other.getOutputs();
-    if (this$outputs == null ? other$outputs != null : !this$outputs.equals(other$outputs)) return false;
+    if (!java.util.Arrays.equals(this.getCrtcs(), other.getCrtcs())) return false;
+    if (!java.util.Arrays.equals(this.getOutputs(), other.getOutputs())) return false;
     return true;
   }
 
@@ -202,16 +197,14 @@ public final class CreateLease implements TwoWayRequest<CreateLeaseReply> {
     int result = 1;
     result = result * PRIME + this.getWindow();
     result = result * PRIME + this.getLid();
-    final java.lang.Object $crtcs = this.getCrtcs();
-    result = result * PRIME + ($crtcs == null ? 43 : $crtcs.hashCode());
-    final java.lang.Object $outputs = this.getOutputs();
-    result = result * PRIME + ($outputs == null ? 43 : $outputs.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getCrtcs());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getOutputs());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "CreateLease(window=" + this.getWindow() + ", lid=" + this.getLid() + ", crtcs=" + this.getCrtcs() + ", outputs=" + this.getOutputs() + ")";
+    return "CreateLease(window=" + this.getWindow() + ", lid=" + this.getLid() + ", crtcs=" + java.util.Arrays.toString(this.getCrtcs()) + ", outputs=" + java.util.Arrays.toString(this.getOutputs()) + ")";
   }
 }

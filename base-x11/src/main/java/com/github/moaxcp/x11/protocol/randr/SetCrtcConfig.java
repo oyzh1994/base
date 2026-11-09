@@ -5,7 +5,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
   public static final String PLUGIN_NAME = "randr";
@@ -17,7 +16,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
   private final short y;
   private final int mode;
   private final short rotation;
-  private final IntList outputs;
+  private final int[] outputs;
 
   public XReplyFunction<SetCrtcConfigReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> SetCrtcConfigReply.readSetCrtcConfigReply(field, sequenceNumber, in);
@@ -50,7 +49,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
     javaStart += 2;
     byte[] pad10 = in.readPad(2);
     javaStart += 2;
-    IntList outputs = in.readCard32(Short.toUnsignedInt(length) - javaStart);
+    int[] outputs = in.readCard32(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.crtc(crtc);
     javaBuilder.timestamp(timestamp);
     javaBuilder.configTimestamp(configTimestamp);
@@ -58,7 +57,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
     javaBuilder.y(y);
     javaBuilder.mode(mode);
     javaBuilder.rotation(rotation);
-    javaBuilder.outputs(outputs.toImmutable());
+    javaBuilder.outputs(outputs);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -94,7 +93,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
 
   @Override
   public int getSize() {
-    return 28 + 4 * outputs.size();
+    return 28 + 4 * outputs.length;
   }
 
   public String getPluginName() {
@@ -118,7 +117,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
     @java.lang.SuppressWarnings("all")
     private short rotation;
     @java.lang.SuppressWarnings("all")
-    private IntList outputs;
+    private int[] outputs;
 
     public boolean isRotationEnabled(Rotation... maskEnums) {
       if (maskEnums == null) {
@@ -147,7 +146,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
     }
 
     public int getSize() {
-      return 28 + 4 * outputs.size();
+      return 28 + 4 * outputs.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -221,7 +220,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCrtcConfig.SetCrtcConfigBuilder outputs(final IntList outputs) {
+    public SetCrtcConfig.SetCrtcConfigBuilder outputs(final int[] outputs) {
       if (outputs == null) {
         throw new java.lang.NullPointerException("outputs is marked non-null but is null");
       }
@@ -237,12 +236,12 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetCrtcConfig.SetCrtcConfigBuilder(crtc=" + this.crtc + ", timestamp=" + this.timestamp + ", configTimestamp=" + this.configTimestamp + ", x=" + this.x + ", y=" + this.y + ", mode=" + this.mode + ", rotation=" + this.rotation + ", outputs=" + this.outputs + ")";
+      return "SetCrtcConfig.SetCrtcConfigBuilder(crtc=" + this.crtc + ", timestamp=" + this.timestamp + ", configTimestamp=" + this.configTimestamp + ", x=" + this.x + ", y=" + this.y + ", mode=" + this.mode + ", rotation=" + this.rotation + ", outputs=" + java.util.Arrays.toString(this.outputs) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetCrtcConfig(final int crtc, final int timestamp, final int configTimestamp, final short x, final short y, final int mode, final short rotation, final IntList outputs) {
+  SetCrtcConfig(final int crtc, final int timestamp, final int configTimestamp, final short x, final short y, final int mode, final short rotation, final int[] outputs) {
     if (outputs == null) {
       throw new java.lang.NullPointerException("outputs is marked non-null but is null");
     }
@@ -297,7 +296,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getOutputs() {
+  public int[] getOutputs() {
     return this.outputs;
   }
 
@@ -314,9 +313,7 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
     if (this.getY() != other.getY()) return false;
     if (this.getMode() != other.getMode()) return false;
     if (this.getRotation() != other.getRotation()) return false;
-    final java.lang.Object this$outputs = this.getOutputs();
-    final java.lang.Object other$outputs = other.getOutputs();
-    if (this$outputs == null ? other$outputs != null : !this$outputs.equals(other$outputs)) return false;
+    if (!java.util.Arrays.equals(this.getOutputs(), other.getOutputs())) return false;
     return true;
   }
 
@@ -332,14 +329,13 @@ public final class SetCrtcConfig implements TwoWayRequest<SetCrtcConfigReply> {
     result = result * PRIME + this.getY();
     result = result * PRIME + this.getMode();
     result = result * PRIME + this.getRotation();
-    final java.lang.Object $outputs = this.getOutputs();
-    result = result * PRIME + ($outputs == null ? 43 : $outputs.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getOutputs());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetCrtcConfig(crtc=" + this.getCrtc() + ", timestamp=" + this.getTimestamp() + ", configTimestamp=" + this.getConfigTimestamp() + ", x=" + this.getX() + ", y=" + this.getY() + ", mode=" + this.getMode() + ", rotation=" + this.getRotation() + ", outputs=" + this.getOutputs() + ")";
+    return "SetCrtcConfig(crtc=" + this.getCrtc() + ", timestamp=" + this.getTimestamp() + ", configTimestamp=" + this.getConfigTimestamp() + ", x=" + this.getX() + ", y=" + this.getY() + ", mode=" + this.getMode() + ", rotation=" + this.getRotation() + ", outputs=" + java.util.Arrays.toString(this.getOutputs()) + ")";
   }
 }

@@ -4,19 +4,18 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class KeyAlias implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
-  private final ByteList real;
-  private final ByteList alias;
+  private final byte[] real;
+  private final byte[] alias;
 
   public static KeyAlias readKeyAlias(X11Input in) throws IOException {
     KeyAlias.KeyAliasBuilder javaBuilder = KeyAlias.builder();
-    ByteList real = in.readChar(4);
-    ByteList alias = in.readChar(4);
-    javaBuilder.real(real.toImmutable());
-    javaBuilder.alias(alias.toImmutable());
+    byte[] real = in.readChar(4);
+    byte[] alias = in.readChar(4);
+    javaBuilder.real(real);
+    javaBuilder.alias(alias);
     return javaBuilder.build();
   }
 
@@ -28,7 +27,7 @@ public final class KeyAlias implements XStruct {
 
   @Override
   public int getSize() {
-    return 0 + 1 * real.size() + 1 * alias.size();
+    return 0 + 1 * real.length + 1 * alias.length;
   }
 
   public String getPluginName() {
@@ -38,12 +37,12 @@ public final class KeyAlias implements XStruct {
 
   public static class KeyAliasBuilder {
     @java.lang.SuppressWarnings("all")
-    private ByteList real;
+    private byte[] real;
     @java.lang.SuppressWarnings("all")
-    private ByteList alias;
+    private byte[] alias;
 
     public int getSize() {
-      return 0 + 1 * real.size() + 1 * alias.size();
+      return 0 + 1 * real.length + 1 * alias.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -54,7 +53,7 @@ public final class KeyAlias implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeyAlias.KeyAliasBuilder real(final ByteList real) {
+    public KeyAlias.KeyAliasBuilder real(final byte[] real) {
       if (real == null) {
         throw new java.lang.NullPointerException("real is marked non-null but is null");
       }
@@ -66,7 +65,7 @@ public final class KeyAlias implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeyAlias.KeyAliasBuilder alias(final ByteList alias) {
+    public KeyAlias.KeyAliasBuilder alias(final byte[] alias) {
       if (alias == null) {
         throw new java.lang.NullPointerException("alias is marked non-null but is null");
       }
@@ -82,12 +81,12 @@ public final class KeyAlias implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "KeyAlias.KeyAliasBuilder(real=" + this.real + ", alias=" + this.alias + ")";
+      return "KeyAlias.KeyAliasBuilder(real=" + java.util.Arrays.toString(this.real) + ", alias=" + java.util.Arrays.toString(this.alias) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  KeyAlias(final ByteList real, final ByteList alias) {
+  KeyAlias(final byte[] real, final byte[] alias) {
     if (real == null) {
       throw new java.lang.NullPointerException("real is marked non-null but is null");
     }
@@ -104,12 +103,12 @@ public final class KeyAlias implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getReal() {
+  public byte[] getReal() {
     return this.real;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getAlias() {
+  public byte[] getAlias() {
     return this.alias;
   }
 
@@ -119,12 +118,8 @@ public final class KeyAlias implements XStruct {
     if (o == this) return true;
     if (!(o instanceof KeyAlias)) return false;
     final KeyAlias other = (KeyAlias) o;
-    final java.lang.Object this$real = this.getReal();
-    final java.lang.Object other$real = other.getReal();
-    if (this$real == null ? other$real != null : !this$real.equals(other$real)) return false;
-    final java.lang.Object this$alias = this.getAlias();
-    final java.lang.Object other$alias = other.getAlias();
-    if (this$alias == null ? other$alias != null : !this$alias.equals(other$alias)) return false;
+    if (!java.util.Arrays.equals(this.getReal(), other.getReal())) return false;
+    if (!java.util.Arrays.equals(this.getAlias(), other.getAlias())) return false;
     return true;
   }
 
@@ -133,16 +128,14 @@ public final class KeyAlias implements XStruct {
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
-    final java.lang.Object $real = this.getReal();
-    result = result * PRIME + ($real == null ? 43 : $real.hashCode());
-    final java.lang.Object $alias = this.getAlias();
-    result = result * PRIME + ($alias == null ? 43 : $alias.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getReal());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAlias());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "KeyAlias(real=" + this.getReal() + ", alias=" + this.getAlias() + ")";
+    return "KeyAlias(real=" + java.util.Arrays.toString(this.getReal()) + ", alias=" + java.util.Arrays.toString(this.getAlias()) + ")";
   }
 }

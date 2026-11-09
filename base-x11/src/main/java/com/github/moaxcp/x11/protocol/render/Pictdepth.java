@@ -1,18 +1,17 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Pictdepth implements XStruct {
   public static final String PLUGIN_NAME = "render";
   private final byte depth;
-  private final ImmutableList<Pictvisual> visuals;
+  private final List<Pictvisual> visuals;
 
   public static Pictdepth readPictdepth(X11Input in) throws IOException {
     Pictdepth.PictdepthBuilder javaBuilder = Pictdepth.builder();
@@ -20,12 +19,12 @@ public final class Pictdepth implements XStruct {
     byte[] pad1 = in.readPad(1);
     short numVisuals = in.readCard16();
     byte[] pad3 = in.readPad(4);
-    MutableList<Pictvisual> visuals = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(numVisuals));
+    List<Pictvisual> visuals = new ArrayList<>(Short.toUnsignedInt(numVisuals));
     for (int i = 0; i < Short.toUnsignedInt(numVisuals); i++) {
       visuals.add(Pictvisual.readPictvisual(in));
     }
     javaBuilder.depth(depth);
-    javaBuilder.visuals(visuals.toImmutable());
+    javaBuilder.visuals(List.copyOf(visuals));
     return javaBuilder.build();
   }
 
@@ -55,7 +54,7 @@ public final class Pictdepth implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte depth;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Pictvisual> visuals;
+    private List<Pictvisual> visuals;
 
     public int getSize() {
       return 8 + XObject.sizeOf(visuals);
@@ -78,7 +77,7 @@ public final class Pictdepth implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Pictdepth.PictdepthBuilder visuals(final ImmutableList<Pictvisual> visuals) {
+    public Pictdepth.PictdepthBuilder visuals(final List<Pictvisual> visuals) {
       if (visuals == null) {
         throw new java.lang.NullPointerException("visuals is marked non-null but is null");
       }
@@ -99,7 +98,7 @@ public final class Pictdepth implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  Pictdepth(final byte depth, final ImmutableList<Pictvisual> visuals) {
+  Pictdepth(final byte depth, final List<Pictvisual> visuals) {
     if (visuals == null) {
       throw new java.lang.NullPointerException("visuals is marked non-null but is null");
     }
@@ -118,7 +117,7 @@ public final class Pictdepth implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Pictvisual> getVisuals() {
+  public List<Pictvisual> getVisuals() {
     return this.visuals;
   }
 

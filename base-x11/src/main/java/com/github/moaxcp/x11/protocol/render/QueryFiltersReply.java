@@ -1,21 +1,19 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import com.github.moaxcp.x11.protocol.xproto.Str;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.ShortList;
 
 public final class QueryFiltersReply implements XReply {
   public static final String PLUGIN_NAME = "render";
   private final short sequenceNumber;
-  private final ShortList aliases;
-  private final ImmutableList<Str> filters;
+  private final short[] aliases;
+  private final List<Str> filters;
 
   public static QueryFiltersReply readQueryFiltersReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryFiltersReply.QueryFiltersReplyBuilder javaBuilder = QueryFiltersReply.builder();
@@ -23,14 +21,14 @@ public final class QueryFiltersReply implements XReply {
     int numAliases = in.readCard32();
     int numFilters = in.readCard32();
     byte[] pad6 = in.readPad(16);
-    ShortList aliases = in.readCard16((int) (Integer.toUnsignedLong(numAliases)));
-    MutableList<Str> filters = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numFilters)));
+    short[] aliases = in.readCard16((int) (Integer.toUnsignedLong(numAliases)));
+    List<Str> filters = new ArrayList<>((int) (Integer.toUnsignedLong(numFilters)));
     for (int i = 0; i < Integer.toUnsignedLong(numFilters); i++) {
       filters.add(Str.readStr(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.aliases(aliases.toImmutable());
-    javaBuilder.filters(filters.toImmutable());
+    javaBuilder.aliases(aliases);
+    javaBuilder.filters(List.copyOf(filters));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -44,7 +42,7 @@ public final class QueryFiltersReply implements XReply {
     out.writePad(1);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
-    int numAliases = aliases.size();
+    int numAliases = aliases.length;
     out.writeCard32(numAliases);
     int numFilters = filters.size();
     out.writeCard32(numFilters);
@@ -58,7 +56,7 @@ public final class QueryFiltersReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 2 * aliases.size() + XObject.sizeOf(filters);
+    return 32 + 2 * aliases.length + XObject.sizeOf(filters);
   }
 
   public String getPluginName() {
@@ -70,12 +68,12 @@ public final class QueryFiltersReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ShortList aliases;
+    private short[] aliases;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Str> filters;
+    private List<Str> filters;
 
     public int getSize() {
-      return 32 + 2 * aliases.size() + XObject.sizeOf(filters);
+      return 32 + 2 * aliases.length + XObject.sizeOf(filters);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -95,7 +93,7 @@ public final class QueryFiltersReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryFiltersReply.QueryFiltersReplyBuilder aliases(final ShortList aliases) {
+    public QueryFiltersReply.QueryFiltersReplyBuilder aliases(final short[] aliases) {
       if (aliases == null) {
         throw new java.lang.NullPointerException("aliases is marked non-null but is null");
       }
@@ -107,7 +105,7 @@ public final class QueryFiltersReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryFiltersReply.QueryFiltersReplyBuilder filters(final ImmutableList<Str> filters) {
+    public QueryFiltersReply.QueryFiltersReplyBuilder filters(final List<Str> filters) {
       if (filters == null) {
         throw new java.lang.NullPointerException("filters is marked non-null but is null");
       }
@@ -123,12 +121,12 @@ public final class QueryFiltersReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "QueryFiltersReply.QueryFiltersReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", aliases=" + this.aliases + ", filters=" + this.filters + ")";
+      return "QueryFiltersReply.QueryFiltersReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", aliases=" + java.util.Arrays.toString(this.aliases) + ", filters=" + this.filters + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryFiltersReply(final short sequenceNumber, final ShortList aliases, final ImmutableList<Str> filters) {
+  QueryFiltersReply(final short sequenceNumber, final short[] aliases, final List<Str> filters) {
     if (aliases == null) {
       throw new java.lang.NullPointerException("aliases is marked non-null but is null");
     }
@@ -151,12 +149,12 @@ public final class QueryFiltersReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getAliases() {
+  public short[] getAliases() {
     return this.aliases;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Str> getFilters() {
+  public List<Str> getFilters() {
     return this.filters;
   }
 
@@ -167,9 +165,7 @@ public final class QueryFiltersReply implements XReply {
     if (!(o instanceof QueryFiltersReply)) return false;
     final QueryFiltersReply other = (QueryFiltersReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$aliases = this.getAliases();
-    final java.lang.Object other$aliases = other.getAliases();
-    if (this$aliases == null ? other$aliases != null : !this$aliases.equals(other$aliases)) return false;
+    if (!java.util.Arrays.equals(this.getAliases(), other.getAliases())) return false;
     final java.lang.Object this$filters = this.getFilters();
     final java.lang.Object other$filters = other.getFilters();
     if (this$filters == null ? other$filters != null : !this$filters.equals(other$filters)) return false;
@@ -182,8 +178,7 @@ public final class QueryFiltersReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $aliases = this.getAliases();
-    result = result * PRIME + ($aliases == null ? 43 : $aliases.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAliases());
     final java.lang.Object $filters = this.getFilters();
     result = result * PRIME + ($filters == null ? 43 : $filters.hashCode());
     return result;
@@ -192,6 +187,6 @@ public final class QueryFiltersReply implements XReply {
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "QueryFiltersReply(sequenceNumber=" + this.getSequenceNumber() + ", aliases=" + this.getAliases() + ", filters=" + this.getFilters() + ")";
+    return "QueryFiltersReply(sequenceNumber=" + this.getSequenceNumber() + ", aliases=" + java.util.Arrays.toString(this.getAliases()) + ", filters=" + this.getFilters() + ")";
   }
 }

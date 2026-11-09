@@ -4,13 +4,12 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ChangeCursorByName implements OneWayRequest {
   public static final String PLUGIN_NAME = "xfixes";
   public static final byte OPCODE = 27;
   private final int src;
-  private final ByteList name;
+  private final byte[] name;
 
   public byte getOpCode() {
     return OPCODE;
@@ -23,9 +22,9 @@ public final class ChangeCursorByName implements OneWayRequest {
     int src = in.readCard32();
     short nbytes = in.readCard16();
     byte[] pad5 = in.readPad(2);
-    ByteList name = in.readChar(Short.toUnsignedInt(nbytes));
+    byte[] name = in.readChar(Short.toUnsignedInt(nbytes));
     javaBuilder.src(src);
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -36,7 +35,7 @@ public final class ChangeCursorByName implements OneWayRequest {
     out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(src);
-    short nbytes = (short) name.size();
+    short nbytes = (short) name.length;
     out.writeCard16(nbytes);
     out.writePad(2);
     out.writeChar(name);
@@ -45,7 +44,7 @@ public final class ChangeCursorByName implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 1 * name.size();
+    return 12 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -57,10 +56,10 @@ public final class ChangeCursorByName implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int src;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public int getSize() {
-      return 12 + 1 * name.size();
+      return 12 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -80,7 +79,7 @@ public final class ChangeCursorByName implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ChangeCursorByName.ChangeCursorByNameBuilder name(final ByteList name) {
+    public ChangeCursorByName.ChangeCursorByNameBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -96,12 +95,12 @@ public final class ChangeCursorByName implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ChangeCursorByName.ChangeCursorByNameBuilder(src=" + this.src + ", name=" + this.name + ")";
+      return "ChangeCursorByName.ChangeCursorByNameBuilder(src=" + this.src + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ChangeCursorByName(final int src, final ByteList name) {
+  ChangeCursorByName(final int src, final byte[] name) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -120,7 +119,7 @@ public final class ChangeCursorByName implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -131,9 +130,7 @@ public final class ChangeCursorByName implements OneWayRequest {
     if (!(o instanceof ChangeCursorByName)) return false;
     final ChangeCursorByName other = (ChangeCursorByName) o;
     if (this.getSrc() != other.getSrc()) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -143,14 +140,13 @@ public final class ChangeCursorByName implements OneWayRequest {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSrc();
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ChangeCursorByName(src=" + this.getSrc() + ", name=" + this.getName() + ")";
+    return "ChangeCursorByName(src=" + this.getSrc() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

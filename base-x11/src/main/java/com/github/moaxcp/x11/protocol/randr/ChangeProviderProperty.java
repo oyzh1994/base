@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ChangeProviderProperty implements OneWayRequest {
   public static final String PLUGIN_NAME = "randr";
@@ -15,7 +14,7 @@ public final class ChangeProviderProperty implements OneWayRequest {
   private final byte format;
   private final byte mode;
   private final int numItems;
-  private final ByteList data;
+  private final byte[] data;
 
   public byte getOpCode() {
     return OPCODE;
@@ -32,14 +31,14 @@ public final class ChangeProviderProperty implements OneWayRequest {
     byte mode = in.readCard8();
     byte[] pad8 = in.readPad(2);
     int numItems = in.readCard32();
-    ByteList data = in.readVoid((int) (Integer.toUnsignedLong(numItems) * (Byte.toUnsignedInt(format) / 8)));
+    byte[] data = in.readVoid((int) (Integer.toUnsignedLong(numItems) * (Byte.toUnsignedInt(format) / 8)));
     javaBuilder.provider(provider);
     javaBuilder.property(property);
     javaBuilder.type(type);
     javaBuilder.format(format);
     javaBuilder.mode(mode);
     javaBuilder.numItems(numItems);
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.data(data);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -62,7 +61,7 @@ public final class ChangeProviderProperty implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 24 + 1 * data.size();
+    return 24 + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -84,10 +83,10 @@ public final class ChangeProviderProperty implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int numItems;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public int getSize() {
-      return 24 + 1 * data.size();
+      return 24 + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -152,7 +151,7 @@ public final class ChangeProviderProperty implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ChangeProviderProperty.ChangeProviderPropertyBuilder data(final ByteList data) {
+    public ChangeProviderProperty.ChangeProviderPropertyBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -168,12 +167,12 @@ public final class ChangeProviderProperty implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ChangeProviderProperty.ChangeProviderPropertyBuilder(provider=" + this.provider + ", property=" + this.property + ", type=" + this.type + ", format=" + this.format + ", mode=" + this.mode + ", numItems=" + this.numItems + ", data=" + this.data + ")";
+      return "ChangeProviderProperty.ChangeProviderPropertyBuilder(provider=" + this.provider + ", property=" + this.property + ", type=" + this.type + ", format=" + this.format + ", mode=" + this.mode + ", numItems=" + this.numItems + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ChangeProviderProperty(final int provider, final int property, final int type, final byte format, final byte mode, final int numItems, final ByteList data) {
+  ChangeProviderProperty(final int provider, final int property, final int type, final byte format, final byte mode, final int numItems, final byte[] data) {
     if (data == null) {
       throw new java.lang.NullPointerException("data is marked non-null but is null");
     }
@@ -222,7 +221,7 @@ public final class ChangeProviderProperty implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -238,9 +237,7 @@ public final class ChangeProviderProperty implements OneWayRequest {
     if (this.getFormat() != other.getFormat()) return false;
     if (this.getMode() != other.getMode()) return false;
     if (this.getNumItems() != other.getNumItems()) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -255,14 +252,13 @@ public final class ChangeProviderProperty implements OneWayRequest {
     result = result * PRIME + this.getFormat();
     result = result * PRIME + this.getMode();
     result = result * PRIME + this.getNumItems();
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ChangeProviderProperty(provider=" + this.getProvider() + ", property=" + this.getProperty() + ", type=" + this.getType() + ", format=" + this.getFormat() + ", mode=" + this.getMode() + ", numItems=" + this.getNumItems() + ", data=" + this.getData() + ")";
+    return "ChangeProviderProperty(provider=" + this.getProvider() + ", property=" + this.getProperty() + ", type=" + this.getType() + ", format=" + this.getFormat() + ", mode=" + this.getMode() + ", numItems=" + this.getNumItems() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

@@ -1,29 +1,28 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class ListExtensionsReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final ImmutableList<Str> names;
+  private final List<Str> names;
 
   public static ListExtensionsReply readListExtensionsReply(byte namesLen, short sequenceNumber, X11Input in) throws IOException {
     ListExtensionsReply.ListExtensionsReplyBuilder javaBuilder = ListExtensionsReply.builder();
     int length = in.readCard32();
     byte[] pad4 = in.readPad(24);
-    MutableList<Str> names = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(namesLen));
+    List<Str> names = new ArrayList<>(Byte.toUnsignedInt(namesLen));
     for (int i = 0; i < Byte.toUnsignedInt(namesLen); i++) {
       names.add(Str.readStr(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.names(names.toImmutable());
+    javaBuilder.names(List.copyOf(names));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -59,7 +58,7 @@ public final class ListExtensionsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Str> names;
+    private List<Str> names;
 
     public int getSize() {
       return 32 + XObject.sizeOf(names);
@@ -82,7 +81,7 @@ public final class ListExtensionsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListExtensionsReply.ListExtensionsReplyBuilder names(final ImmutableList<Str> names) {
+    public ListExtensionsReply.ListExtensionsReplyBuilder names(final List<Str> names) {
       if (names == null) {
         throw new java.lang.NullPointerException("names is marked non-null but is null");
       }
@@ -103,7 +102,7 @@ public final class ListExtensionsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  ListExtensionsReply(final short sequenceNumber, final ImmutableList<Str> names) {
+  ListExtensionsReply(final short sequenceNumber, final List<Str> names) {
     if (names == null) {
       throw new java.lang.NullPointerException("names is marked non-null but is null");
     }
@@ -122,7 +121,7 @@ public final class ListExtensionsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Str> getNames() {
+  public List<Str> getNames() {
     return this.names;
   }
 

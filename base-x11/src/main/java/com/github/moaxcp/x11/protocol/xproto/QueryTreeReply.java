@@ -4,14 +4,13 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class QueryTreeReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
   private final int root;
   private final int parent;
-  private final IntList children;
+  private final int[] children;
 
   public static QueryTreeReply readQueryTreeReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryTreeReply.QueryTreeReplyBuilder javaBuilder = QueryTreeReply.builder();
@@ -20,11 +19,11 @@ public final class QueryTreeReply implements XReply {
     int parent = in.readCard32();
     short childrenLen = in.readCard16();
     byte[] pad7 = in.readPad(14);
-    IntList children = in.readCard32(Short.toUnsignedInt(childrenLen));
+    int[] children = in.readCard32(Short.toUnsignedInt(childrenLen));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.root(root);
     javaBuilder.parent(parent);
-    javaBuilder.children(children.toImmutable());
+    javaBuilder.children(children);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -40,7 +39,7 @@ public final class QueryTreeReply implements XReply {
     out.writeCard32(getLength());
     out.writeCard32(root);
     out.writeCard32(parent);
-    short childrenLen = (short) children.size();
+    short childrenLen = (short) children.length;
     out.writeCard16(childrenLen);
     out.writePad(14);
     out.writeCard32(children);
@@ -49,7 +48,7 @@ public final class QueryTreeReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * children.size();
+    return 32 + 4 * children.length;
   }
 
   public String getPluginName() {
@@ -65,10 +64,10 @@ public final class QueryTreeReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int parent;
     @java.lang.SuppressWarnings("all")
-    private IntList children;
+    private int[] children;
 
     public int getSize() {
-      return 32 + 4 * children.size();
+      return 32 + 4 * children.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -106,7 +105,7 @@ public final class QueryTreeReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryTreeReply.QueryTreeReplyBuilder children(final IntList children) {
+    public QueryTreeReply.QueryTreeReplyBuilder children(final int[] children) {
       if (children == null) {
         throw new java.lang.NullPointerException("children is marked non-null but is null");
       }
@@ -122,12 +121,12 @@ public final class QueryTreeReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "QueryTreeReply.QueryTreeReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", root=" + this.root + ", parent=" + this.parent + ", children=" + this.children + ")";
+      return "QueryTreeReply.QueryTreeReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", root=" + this.root + ", parent=" + this.parent + ", children=" + java.util.Arrays.toString(this.children) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryTreeReply(final short sequenceNumber, final int root, final int parent, final IntList children) {
+  QueryTreeReply(final short sequenceNumber, final int root, final int parent, final int[] children) {
     if (children == null) {
       throw new java.lang.NullPointerException("children is marked non-null but is null");
     }
@@ -158,7 +157,7 @@ public final class QueryTreeReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getChildren() {
+  public int[] getChildren() {
     return this.children;
   }
 
@@ -171,9 +170,7 @@ public final class QueryTreeReply implements XReply {
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
     if (this.getRoot() != other.getRoot()) return false;
     if (this.getParent() != other.getParent()) return false;
-    final java.lang.Object this$children = this.getChildren();
-    final java.lang.Object other$children = other.getChildren();
-    if (this$children == null ? other$children != null : !this$children.equals(other$children)) return false;
+    if (!java.util.Arrays.equals(this.getChildren(), other.getChildren())) return false;
     return true;
   }
 
@@ -185,14 +182,13 @@ public final class QueryTreeReply implements XReply {
     result = result * PRIME + this.getSequenceNumber();
     result = result * PRIME + this.getRoot();
     result = result * PRIME + this.getParent();
-    final java.lang.Object $children = this.getChildren();
-    result = result * PRIME + ($children == null ? 43 : $children.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getChildren());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "QueryTreeReply(sequenceNumber=" + this.getSequenceNumber() + ", root=" + this.getRoot() + ", parent=" + this.getParent() + ", children=" + this.getChildren() + ")";
+    return "QueryTreeReply(sequenceNumber=" + this.getSequenceNumber() + ", root=" + this.getRoot() + ", parent=" + this.getParent() + ", children=" + java.util.Arrays.toString(this.getChildren()) + ")";
   }
 }

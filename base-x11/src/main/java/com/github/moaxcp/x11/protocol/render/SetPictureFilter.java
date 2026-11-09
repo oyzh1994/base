@@ -5,15 +5,13 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class SetPictureFilter implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
   public static final byte OPCODE = 30;
   private final int picture;
-  private final ByteList filter;
-  private final IntList values;
+  private final byte[] filter;
+  private final int[] values;
 
   public byte getOpCode() {
     return OPCODE;
@@ -32,14 +30,14 @@ public final class SetPictureFilter implements OneWayRequest {
     javaStart += 2;
     byte[] pad5 = in.readPad(2);
     javaStart += 2;
-    ByteList filter = in.readChar(Short.toUnsignedInt(filterLen));
-    javaStart += 1 * filter.size();
+    byte[] filter = in.readChar(Short.toUnsignedInt(filterLen));
+    javaStart += 1 * filter.length;
     in.readPadAlign(Short.toUnsignedInt(filterLen));
-    javaStart += XObject.getSizeForPadAlign(4, 1 * filter.size());
-    IntList values = in.readInt32(Short.toUnsignedInt(length) - javaStart);
+    javaStart += XObject.getSizeForPadAlign(4, 1 * filter.length);
+    int[] values = in.readInt32(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.picture(picture);
-    javaBuilder.filter(filter.toImmutable());
-    javaBuilder.values(values.toImmutable());
+    javaBuilder.filter(filter);
+    javaBuilder.values(values);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -50,7 +48,7 @@ public final class SetPictureFilter implements OneWayRequest {
     out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(picture);
-    short filterLen = (short) filter.size();
+    short filterLen = (short) filter.length;
     out.writeCard16(filterLen);
     out.writePad(2);
     out.writeChar(filter);
@@ -61,7 +59,7 @@ public final class SetPictureFilter implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 1 * filter.size() + XObject.getSizeForPadAlign(4, 1 * filter.size()) + 4 * values.size();
+    return 12 + 1 * filter.length + XObject.getSizeForPadAlign(4, 1 * filter.length) + 4 * values.length;
   }
 
   public String getPluginName() {
@@ -73,12 +71,12 @@ public final class SetPictureFilter implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int picture;
     @java.lang.SuppressWarnings("all")
-    private ByteList filter;
+    private byte[] filter;
     @java.lang.SuppressWarnings("all")
-    private IntList values;
+    private int[] values;
 
     public int getSize() {
-      return 12 + 1 * filter.size() + XObject.getSizeForPadAlign(4, 1 * filter.size()) + 4 * values.size();
+      return 12 + 1 * filter.length + XObject.getSizeForPadAlign(4, 1 * filter.length) + 4 * values.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -98,7 +96,7 @@ public final class SetPictureFilter implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetPictureFilter.SetPictureFilterBuilder filter(final ByteList filter) {
+    public SetPictureFilter.SetPictureFilterBuilder filter(final byte[] filter) {
       if (filter == null) {
         throw new java.lang.NullPointerException("filter is marked non-null but is null");
       }
@@ -110,7 +108,7 @@ public final class SetPictureFilter implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetPictureFilter.SetPictureFilterBuilder values(final IntList values) {
+    public SetPictureFilter.SetPictureFilterBuilder values(final int[] values) {
       if (values == null) {
         throw new java.lang.NullPointerException("values is marked non-null but is null");
       }
@@ -126,12 +124,12 @@ public final class SetPictureFilter implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetPictureFilter.SetPictureFilterBuilder(picture=" + this.picture + ", filter=" + this.filter + ", values=" + this.values + ")";
+      return "SetPictureFilter.SetPictureFilterBuilder(picture=" + this.picture + ", filter=" + java.util.Arrays.toString(this.filter) + ", values=" + java.util.Arrays.toString(this.values) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetPictureFilter(final int picture, final ByteList filter, final IntList values) {
+  SetPictureFilter(final int picture, final byte[] filter, final int[] values) {
     if (filter == null) {
       throw new java.lang.NullPointerException("filter is marked non-null but is null");
     }
@@ -154,12 +152,12 @@ public final class SetPictureFilter implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getFilter() {
+  public byte[] getFilter() {
     return this.filter;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getValues() {
+  public int[] getValues() {
     return this.values;
   }
 
@@ -170,12 +168,8 @@ public final class SetPictureFilter implements OneWayRequest {
     if (!(o instanceof SetPictureFilter)) return false;
     final SetPictureFilter other = (SetPictureFilter) o;
     if (this.getPicture() != other.getPicture()) return false;
-    final java.lang.Object this$filter = this.getFilter();
-    final java.lang.Object other$filter = other.getFilter();
-    if (this$filter == null ? other$filter != null : !this$filter.equals(other$filter)) return false;
-    final java.lang.Object this$values = this.getValues();
-    final java.lang.Object other$values = other.getValues();
-    if (this$values == null ? other$values != null : !this$values.equals(other$values)) return false;
+    if (!java.util.Arrays.equals(this.getFilter(), other.getFilter())) return false;
+    if (!java.util.Arrays.equals(this.getValues(), other.getValues())) return false;
     return true;
   }
 
@@ -185,16 +179,14 @@ public final class SetPictureFilter implements OneWayRequest {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getPicture();
-    final java.lang.Object $filter = this.getFilter();
-    result = result * PRIME + ($filter == null ? 43 : $filter.hashCode());
-    final java.lang.Object $values = this.getValues();
-    result = result * PRIME + ($values == null ? 43 : $values.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getFilter());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getValues());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetPictureFilter(picture=" + this.getPicture() + ", filter=" + this.getFilter() + ", values=" + this.getValues() + ")";
+    return "SetPictureFilter(picture=" + this.getPicture() + ", filter=" + java.util.Arrays.toString(this.getFilter()) + ", values=" + java.util.Arrays.toString(this.getValues()) + ")";
   }
 }

@@ -1,14 +1,13 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import com.github.moaxcp.x11.protocol.xproto.ModMask;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class KeyType implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
@@ -17,8 +16,8 @@ public final class KeyType implements XStruct {
   private final short modsVmods;
   private final byte numLevels;
   private final boolean hasPreserve;
-  private final ImmutableList<KTMapEntry> map;
-  private final ImmutableList<ModDef> preserve;
+  private final List<KTMapEntry> map;
+  private final List<ModDef> preserve;
 
   public static KeyType readKeyType(X11Input in) throws IOException {
     KeyType.KeyTypeBuilder javaBuilder = KeyType.builder();
@@ -29,11 +28,11 @@ public final class KeyType implements XStruct {
     byte nMapEntries = in.readCard8();
     boolean hasPreserve = in.readBool();
     byte[] pad6 = in.readPad(1);
-    MutableList<KTMapEntry> map = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nMapEntries));
+    List<KTMapEntry> map = new ArrayList<>(Byte.toUnsignedInt(nMapEntries));
     for (int i = 0; i < Byte.toUnsignedInt(nMapEntries); i++) {
       map.add(KTMapEntry.readKTMapEntry(in));
     }
-    MutableList<ModDef> preserve = Lists.mutable.withInitialCapacity((hasPreserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries));
+    List<ModDef> preserve = new ArrayList<>((hasPreserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries));
     for (int i = 0; i < (hasPreserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries); i++) {
       preserve.add(ModDef.readModDef(in));
     }
@@ -42,8 +41,8 @@ public final class KeyType implements XStruct {
     javaBuilder.modsVmods(modsVmods);
     javaBuilder.numLevels(numLevels);
     javaBuilder.hasPreserve(hasPreserve);
-    javaBuilder.map(map.toImmutable());
-    javaBuilder.preserve(preserve.toImmutable());
+    javaBuilder.map(List.copyOf(map));
+    javaBuilder.preserve(List.copyOf(preserve));
     return javaBuilder.build();
   }
 
@@ -123,9 +122,9 @@ public final class KeyType implements XStruct {
     @java.lang.SuppressWarnings("all")
     private boolean hasPreserve;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<KTMapEntry> map;
+    private List<KTMapEntry> map;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ModDef> preserve;
+    private List<ModDef> preserve;
 
     public boolean isModsMaskEnabled(ModMask... maskEnums) {
       if (maskEnums == null) {
@@ -262,7 +261,7 @@ public final class KeyType implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeyType.KeyTypeBuilder map(final ImmutableList<KTMapEntry> map) {
+    public KeyType.KeyTypeBuilder map(final List<KTMapEntry> map) {
       if (map == null) {
         throw new java.lang.NullPointerException("map is marked non-null but is null");
       }
@@ -274,7 +273,7 @@ public final class KeyType implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeyType.KeyTypeBuilder preserve(final ImmutableList<ModDef> preserve) {
+    public KeyType.KeyTypeBuilder preserve(final List<ModDef> preserve) {
       if (preserve == null) {
         throw new java.lang.NullPointerException("preserve is marked non-null but is null");
       }
@@ -295,7 +294,7 @@ public final class KeyType implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  KeyType(final byte modsMask, final byte modsMods, final short modsVmods, final byte numLevels, final boolean hasPreserve, final ImmutableList<KTMapEntry> map, final ImmutableList<ModDef> preserve) {
+  KeyType(final byte modsMask, final byte modsMods, final short modsVmods, final byte numLevels, final boolean hasPreserve, final List<KTMapEntry> map, final List<ModDef> preserve) {
     if (map == null) {
       throw new java.lang.NullPointerException("map is marked non-null but is null");
     }
@@ -342,12 +341,12 @@ public final class KeyType implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<KTMapEntry> getMap() {
+  public List<KTMapEntry> getMap() {
     return this.map;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ModDef> getPreserve() {
+  public List<ModDef> getPreserve() {
     return this.preserve;
   }
 

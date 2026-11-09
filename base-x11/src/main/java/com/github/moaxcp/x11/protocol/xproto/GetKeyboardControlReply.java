@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetKeyboardControlReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
@@ -15,7 +14,7 @@ public final class GetKeyboardControlReply implements XReply {
   private final byte bellPercent;
   private final short bellPitch;
   private final short bellDuration;
-  private final ByteList autoRepeats;
+  private final byte[] autoRepeats;
 
   public static GetKeyboardControlReply readGetKeyboardControlReply(byte globalAutoRepeat, short sequenceNumber, X11Input in) throws IOException {
     GetKeyboardControlReply.GetKeyboardControlReplyBuilder javaBuilder = GetKeyboardControlReply.builder();
@@ -26,7 +25,7 @@ public final class GetKeyboardControlReply implements XReply {
     short bellPitch = in.readCard16();
     short bellDuration = in.readCard16();
     byte[] pad9 = in.readPad(2);
-    ByteList autoRepeats = in.readCard8(32);
+    byte[] autoRepeats = in.readCard8(32);
     javaBuilder.globalAutoRepeat(globalAutoRepeat);
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.ledMask(ledMask);
@@ -34,7 +33,7 @@ public final class GetKeyboardControlReply implements XReply {
     javaBuilder.bellPercent(bellPercent);
     javaBuilder.bellPitch(bellPitch);
     javaBuilder.bellDuration(bellDuration);
-    javaBuilder.autoRepeats(autoRepeats.toImmutable());
+    javaBuilder.autoRepeats(autoRepeats);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -60,7 +59,7 @@ public final class GetKeyboardControlReply implements XReply {
 
   @Override
   public int getSize() {
-    return 20 + 1 * autoRepeats.size();
+    return 20 + 1 * autoRepeats.length;
   }
 
   public String getPluginName() {
@@ -84,7 +83,7 @@ public final class GetKeyboardControlReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short bellDuration;
     @java.lang.SuppressWarnings("all")
-    private ByteList autoRepeats;
+    private byte[] autoRepeats;
 
     public GetKeyboardControlReply.GetKeyboardControlReplyBuilder globalAutoRepeat(AutoRepeatMode globalAutoRepeat) {
       this.globalAutoRepeat = (byte) globalAutoRepeat.getValue();
@@ -97,7 +96,7 @@ public final class GetKeyboardControlReply implements XReply {
     }
 
     public int getSize() {
-      return 20 + 1 * autoRepeats.size();
+      return 20 + 1 * autoRepeats.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -162,7 +161,7 @@ public final class GetKeyboardControlReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetKeyboardControlReply.GetKeyboardControlReplyBuilder autoRepeats(final ByteList autoRepeats) {
+    public GetKeyboardControlReply.GetKeyboardControlReplyBuilder autoRepeats(final byte[] autoRepeats) {
       if (autoRepeats == null) {
         throw new java.lang.NullPointerException("autoRepeats is marked non-null but is null");
       }
@@ -178,12 +177,12 @@ public final class GetKeyboardControlReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetKeyboardControlReply.GetKeyboardControlReplyBuilder(globalAutoRepeat=" + this.globalAutoRepeat + ", sequenceNumber=" + this.sequenceNumber + ", ledMask=" + this.ledMask + ", keyClickPercent=" + this.keyClickPercent + ", bellPercent=" + this.bellPercent + ", bellPitch=" + this.bellPitch + ", bellDuration=" + this.bellDuration + ", autoRepeats=" + this.autoRepeats + ")";
+      return "GetKeyboardControlReply.GetKeyboardControlReplyBuilder(globalAutoRepeat=" + this.globalAutoRepeat + ", sequenceNumber=" + this.sequenceNumber + ", ledMask=" + this.ledMask + ", keyClickPercent=" + this.keyClickPercent + ", bellPercent=" + this.bellPercent + ", bellPitch=" + this.bellPitch + ", bellDuration=" + this.bellDuration + ", autoRepeats=" + java.util.Arrays.toString(this.autoRepeats) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetKeyboardControlReply(final byte globalAutoRepeat, final short sequenceNumber, final int ledMask, final byte keyClickPercent, final byte bellPercent, final short bellPitch, final short bellDuration, final ByteList autoRepeats) {
+  GetKeyboardControlReply(final byte globalAutoRepeat, final short sequenceNumber, final int ledMask, final byte keyClickPercent, final byte bellPercent, final short bellPitch, final short bellDuration, final byte[] autoRepeats) {
     if (autoRepeats == null) {
       throw new java.lang.NullPointerException("autoRepeats is marked non-null but is null");
     }
@@ -238,7 +237,7 @@ public final class GetKeyboardControlReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getAutoRepeats() {
+  public byte[] getAutoRepeats() {
     return this.autoRepeats;
   }
 
@@ -255,9 +254,7 @@ public final class GetKeyboardControlReply implements XReply {
     if (this.getBellPercent() != other.getBellPercent()) return false;
     if (this.getBellPitch() != other.getBellPitch()) return false;
     if (this.getBellDuration() != other.getBellDuration()) return false;
-    final java.lang.Object this$autoRepeats = this.getAutoRepeats();
-    final java.lang.Object other$autoRepeats = other.getAutoRepeats();
-    if (this$autoRepeats == null ? other$autoRepeats != null : !this$autoRepeats.equals(other$autoRepeats)) return false;
+    if (!java.util.Arrays.equals(this.getAutoRepeats(), other.getAutoRepeats())) return false;
     return true;
   }
 
@@ -273,14 +270,13 @@ public final class GetKeyboardControlReply implements XReply {
     result = result * PRIME + this.getBellPercent();
     result = result * PRIME + this.getBellPitch();
     result = result * PRIME + this.getBellDuration();
-    final java.lang.Object $autoRepeats = this.getAutoRepeats();
-    result = result * PRIME + ($autoRepeats == null ? 43 : $autoRepeats.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAutoRepeats());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetKeyboardControlReply(globalAutoRepeat=" + this.getGlobalAutoRepeat() + ", sequenceNumber=" + this.getSequenceNumber() + ", ledMask=" + this.getLedMask() + ", keyClickPercent=" + this.getKeyClickPercent() + ", bellPercent=" + this.getBellPercent() + ", bellPitch=" + this.getBellPitch() + ", bellDuration=" + this.getBellDuration() + ", autoRepeats=" + this.getAutoRepeats() + ")";
+    return "GetKeyboardControlReply(globalAutoRepeat=" + this.getGlobalAutoRepeat() + ", sequenceNumber=" + this.getSequenceNumber() + ", ledMask=" + this.getLedMask() + ", keyClickPercent=" + this.getKeyClickPercent() + ", bellPercent=" + this.getBellPercent() + ", bellPitch=" + this.getBellPitch() + ", bellDuration=" + this.getBellDuration() + ", autoRepeats=" + java.util.Arrays.toString(this.getAutoRepeats()) + ")";
   }
 }

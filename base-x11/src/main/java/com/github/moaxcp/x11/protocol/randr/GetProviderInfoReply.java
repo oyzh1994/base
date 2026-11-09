@@ -4,8 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class GetProviderInfoReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
@@ -13,11 +11,11 @@ public final class GetProviderInfoReply implements XReply {
   private final short sequenceNumber;
   private final int timestamp;
   private final int capabilities;
-  private final IntList crtcs;
-  private final IntList outputs;
-  private final IntList associatedProviders;
-  private final IntList associatedCapability;
-  private final ByteList name;
+  private final int[] crtcs;
+  private final int[] outputs;
+  private final int[] associatedProviders;
+  private final int[] associatedCapability;
+  private final byte[] name;
 
   public static GetProviderInfoReply readGetProviderInfoReply(byte status, short sequenceNumber, X11Input in) throws IOException {
     GetProviderInfoReply.GetProviderInfoReplyBuilder javaBuilder = GetProviderInfoReply.builder();
@@ -29,20 +27,20 @@ public final class GetProviderInfoReply implements XReply {
     short numAssociatedProviders = in.readCard16();
     short nameLen = in.readCard16();
     byte[] pad10 = in.readPad(8);
-    IntList crtcs = in.readCard32(Short.toUnsignedInt(numCrtcs));
-    IntList outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
-    IntList associatedProviders = in.readCard32(Short.toUnsignedInt(numAssociatedProviders));
-    IntList associatedCapability = in.readCard32(Short.toUnsignedInt(numAssociatedProviders));
-    ByteList name = in.readChar(Short.toUnsignedInt(nameLen));
+    int[] crtcs = in.readCard32(Short.toUnsignedInt(numCrtcs));
+    int[] outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
+    int[] associatedProviders = in.readCard32(Short.toUnsignedInt(numAssociatedProviders));
+    int[] associatedCapability = in.readCard32(Short.toUnsignedInt(numAssociatedProviders));
+    byte[] name = in.readChar(Short.toUnsignedInt(nameLen));
     javaBuilder.status(status);
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.timestamp(timestamp);
     javaBuilder.capabilities(capabilities);
-    javaBuilder.crtcs(crtcs.toImmutable());
-    javaBuilder.outputs(outputs.toImmutable());
-    javaBuilder.associatedProviders(associatedProviders.toImmutable());
-    javaBuilder.associatedCapability(associatedCapability.toImmutable());
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.crtcs(crtcs);
+    javaBuilder.outputs(outputs);
+    javaBuilder.associatedProviders(associatedProviders);
+    javaBuilder.associatedCapability(associatedCapability);
+    javaBuilder.name(name);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -58,13 +56,13 @@ public final class GetProviderInfoReply implements XReply {
     out.writeCard32(getLength());
     out.writeCard32(timestamp);
     out.writeCard32(capabilities);
-    short numCrtcs = (short) crtcs.size();
+    short numCrtcs = (short) crtcs.length;
     out.writeCard16(numCrtcs);
-    short numOutputs = (short) outputs.size();
+    short numOutputs = (short) outputs.length;
     out.writeCard16(numOutputs);
-    short numAssociatedProviders = (short) associatedCapability.size();
+    short numAssociatedProviders = (short) associatedCapability.length;
     out.writeCard16(numAssociatedProviders);
-    short nameLen = (short) name.size();
+    short nameLen = (short) name.length;
     out.writeCard16(nameLen);
     out.writePad(8);
     out.writeCard32(crtcs);
@@ -89,7 +87,7 @@ public final class GetProviderInfoReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * crtcs.size() + 4 * outputs.size() + 4 * associatedProviders.size() + 4 * associatedCapability.size() + 1 * name.size();
+    return 32 + 4 * crtcs.length + 4 * outputs.length + 4 * associatedProviders.length + 4 * associatedCapability.length + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -107,15 +105,15 @@ public final class GetProviderInfoReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int capabilities;
     @java.lang.SuppressWarnings("all")
-    private IntList crtcs;
+    private int[] crtcs;
     @java.lang.SuppressWarnings("all")
-    private IntList outputs;
+    private int[] outputs;
     @java.lang.SuppressWarnings("all")
-    private IntList associatedProviders;
+    private int[] associatedProviders;
     @java.lang.SuppressWarnings("all")
-    private IntList associatedCapability;
+    private int[] associatedCapability;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public boolean isCapabilitiesEnabled(ProviderCapability... maskEnums) {
       if (maskEnums == null) {
@@ -144,7 +142,7 @@ public final class GetProviderInfoReply implements XReply {
     }
 
     public int getSize() {
-      return 32 + 4 * crtcs.size() + 4 * outputs.size() + 4 * associatedProviders.size() + 4 * associatedCapability.size() + 1 * name.size();
+      return 32 + 4 * crtcs.length + 4 * outputs.length + 4 * associatedProviders.length + 4 * associatedCapability.length + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -191,7 +189,7 @@ public final class GetProviderInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetProviderInfoReply.GetProviderInfoReplyBuilder crtcs(final IntList crtcs) {
+    public GetProviderInfoReply.GetProviderInfoReplyBuilder crtcs(final int[] crtcs) {
       if (crtcs == null) {
         throw new java.lang.NullPointerException("crtcs is marked non-null but is null");
       }
@@ -203,7 +201,7 @@ public final class GetProviderInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetProviderInfoReply.GetProviderInfoReplyBuilder outputs(final IntList outputs) {
+    public GetProviderInfoReply.GetProviderInfoReplyBuilder outputs(final int[] outputs) {
       if (outputs == null) {
         throw new java.lang.NullPointerException("outputs is marked non-null but is null");
       }
@@ -215,7 +213,7 @@ public final class GetProviderInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetProviderInfoReply.GetProviderInfoReplyBuilder associatedProviders(final IntList associatedProviders) {
+    public GetProviderInfoReply.GetProviderInfoReplyBuilder associatedProviders(final int[] associatedProviders) {
       if (associatedProviders == null) {
         throw new java.lang.NullPointerException("associatedProviders is marked non-null but is null");
       }
@@ -227,7 +225,7 @@ public final class GetProviderInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetProviderInfoReply.GetProviderInfoReplyBuilder associatedCapability(final IntList associatedCapability) {
+    public GetProviderInfoReply.GetProviderInfoReplyBuilder associatedCapability(final int[] associatedCapability) {
       if (associatedCapability == null) {
         throw new java.lang.NullPointerException("associatedCapability is marked non-null but is null");
       }
@@ -239,7 +237,7 @@ public final class GetProviderInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetProviderInfoReply.GetProviderInfoReplyBuilder name(final ByteList name) {
+    public GetProviderInfoReply.GetProviderInfoReplyBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -255,12 +253,12 @@ public final class GetProviderInfoReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetProviderInfoReply.GetProviderInfoReplyBuilder(status=" + this.status + ", sequenceNumber=" + this.sequenceNumber + ", timestamp=" + this.timestamp + ", capabilities=" + this.capabilities + ", crtcs=" + this.crtcs + ", outputs=" + this.outputs + ", associatedProviders=" + this.associatedProviders + ", associatedCapability=" + this.associatedCapability + ", name=" + this.name + ")";
+      return "GetProviderInfoReply.GetProviderInfoReplyBuilder(status=" + this.status + ", sequenceNumber=" + this.sequenceNumber + ", timestamp=" + this.timestamp + ", capabilities=" + this.capabilities + ", crtcs=" + java.util.Arrays.toString(this.crtcs) + ", outputs=" + java.util.Arrays.toString(this.outputs) + ", associatedProviders=" + java.util.Arrays.toString(this.associatedProviders) + ", associatedCapability=" + java.util.Arrays.toString(this.associatedCapability) + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetProviderInfoReply(final byte status, final short sequenceNumber, final int timestamp, final int capabilities, final IntList crtcs, final IntList outputs, final IntList associatedProviders, final IntList associatedCapability, final ByteList name) {
+  GetProviderInfoReply(final byte status, final short sequenceNumber, final int timestamp, final int capabilities, final int[] crtcs, final int[] outputs, final int[] associatedProviders, final int[] associatedCapability, final byte[] name) {
     if (crtcs == null) {
       throw new java.lang.NullPointerException("crtcs is marked non-null but is null");
     }
@@ -313,27 +311,27 @@ public final class GetProviderInfoReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getCrtcs() {
+  public int[] getCrtcs() {
     return this.crtcs;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getOutputs() {
+  public int[] getOutputs() {
     return this.outputs;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getAssociatedProviders() {
+  public int[] getAssociatedProviders() {
     return this.associatedProviders;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getAssociatedCapability() {
+  public int[] getAssociatedCapability() {
     return this.associatedCapability;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -347,21 +345,11 @@ public final class GetProviderInfoReply implements XReply {
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
     if (this.getTimestamp() != other.getTimestamp()) return false;
     if (this.getCapabilities() != other.getCapabilities()) return false;
-    final java.lang.Object this$crtcs = this.getCrtcs();
-    final java.lang.Object other$crtcs = other.getCrtcs();
-    if (this$crtcs == null ? other$crtcs != null : !this$crtcs.equals(other$crtcs)) return false;
-    final java.lang.Object this$outputs = this.getOutputs();
-    final java.lang.Object other$outputs = other.getOutputs();
-    if (this$outputs == null ? other$outputs != null : !this$outputs.equals(other$outputs)) return false;
-    final java.lang.Object this$associatedProviders = this.getAssociatedProviders();
-    final java.lang.Object other$associatedProviders = other.getAssociatedProviders();
-    if (this$associatedProviders == null ? other$associatedProviders != null : !this$associatedProviders.equals(other$associatedProviders)) return false;
-    final java.lang.Object this$associatedCapability = this.getAssociatedCapability();
-    final java.lang.Object other$associatedCapability = other.getAssociatedCapability();
-    if (this$associatedCapability == null ? other$associatedCapability != null : !this$associatedCapability.equals(other$associatedCapability)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getCrtcs(), other.getCrtcs())) return false;
+    if (!java.util.Arrays.equals(this.getOutputs(), other.getOutputs())) return false;
+    if (!java.util.Arrays.equals(this.getAssociatedProviders(), other.getAssociatedProviders())) return false;
+    if (!java.util.Arrays.equals(this.getAssociatedCapability(), other.getAssociatedCapability())) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -374,22 +362,17 @@ public final class GetProviderInfoReply implements XReply {
     result = result * PRIME + this.getSequenceNumber();
     result = result * PRIME + this.getTimestamp();
     result = result * PRIME + this.getCapabilities();
-    final java.lang.Object $crtcs = this.getCrtcs();
-    result = result * PRIME + ($crtcs == null ? 43 : $crtcs.hashCode());
-    final java.lang.Object $outputs = this.getOutputs();
-    result = result * PRIME + ($outputs == null ? 43 : $outputs.hashCode());
-    final java.lang.Object $associatedProviders = this.getAssociatedProviders();
-    result = result * PRIME + ($associatedProviders == null ? 43 : $associatedProviders.hashCode());
-    final java.lang.Object $associatedCapability = this.getAssociatedCapability();
-    result = result * PRIME + ($associatedCapability == null ? 43 : $associatedCapability.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getCrtcs());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getOutputs());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAssociatedProviders());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAssociatedCapability());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetProviderInfoReply(status=" + this.getStatus() + ", sequenceNumber=" + this.getSequenceNumber() + ", timestamp=" + this.getTimestamp() + ", capabilities=" + this.getCapabilities() + ", crtcs=" + this.getCrtcs() + ", outputs=" + this.getOutputs() + ", associatedProviders=" + this.getAssociatedProviders() + ", associatedCapability=" + this.getAssociatedCapability() + ", name=" + this.getName() + ")";
+    return "GetProviderInfoReply(status=" + this.getStatus() + ", sequenceNumber=" + this.getSequenceNumber() + ", timestamp=" + this.getTimestamp() + ", capabilities=" + this.getCapabilities() + ", crtcs=" + java.util.Arrays.toString(this.getCrtcs()) + ", outputs=" + java.util.Arrays.toString(this.getOutputs()) + ", associatedProviders=" + java.util.Arrays.toString(this.getAssociatedProviders()) + ", associatedCapability=" + java.util.Arrays.toString(this.getAssociatedCapability()) + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

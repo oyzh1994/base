@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class PolySegment implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 66;
   private final int drawable;
   private final int gc;
-  private final ImmutableList<Segment> segments;
+  private final List<Segment> segments;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,7 +30,7 @@ public final class PolySegment implements OneWayRequest {
     javaStart += 4;
     int gc = in.readCard32();
     javaStart += 4;
-    MutableList<Segment> segments = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Segment> segments = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Segment baseObject = Segment.readSegment(in);
       segments.add(baseObject);
@@ -39,7 +38,7 @@ public final class PolySegment implements OneWayRequest {
     }
     javaBuilder.drawable(drawable);
     javaBuilder.gc(gc);
-    javaBuilder.segments(segments.toImmutable());
+    javaBuilder.segments(List.copyOf(segments));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -73,7 +72,7 @@ public final class PolySegment implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int gc;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Segment> segments;
+    private List<Segment> segments;
 
     public int getSize() {
       return 12 + XObject.sizeOf(segments);
@@ -105,7 +104,7 @@ public final class PolySegment implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public PolySegment.PolySegmentBuilder segments(final ImmutableList<Segment> segments) {
+    public PolySegment.PolySegmentBuilder segments(final List<Segment> segments) {
       if (segments == null) {
         throw new java.lang.NullPointerException("segments is marked non-null but is null");
       }
@@ -126,7 +125,7 @@ public final class PolySegment implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  PolySegment(final int drawable, final int gc, final ImmutableList<Segment> segments) {
+  PolySegment(final int drawable, final int gc, final List<Segment> segments) {
     if (segments == null) {
       throw new java.lang.NullPointerException("segments is marked non-null but is null");
     }
@@ -151,7 +150,7 @@ public final class PolySegment implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Segment> getSegments() {
+  public List<Segment> getSegments() {
     return this.segments;
   }
 

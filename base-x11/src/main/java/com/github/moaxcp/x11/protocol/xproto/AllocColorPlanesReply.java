@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class AllocColorPlanesReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
@@ -12,7 +11,7 @@ public final class AllocColorPlanesReply implements XReply {
   private final int redMask;
   private final int greenMask;
   private final int blueMask;
-  private final IntList pixels;
+  private final int[] pixels;
 
   public static AllocColorPlanesReply readAllocColorPlanesReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     AllocColorPlanesReply.AllocColorPlanesReplyBuilder javaBuilder = AllocColorPlanesReply.builder();
@@ -23,12 +22,12 @@ public final class AllocColorPlanesReply implements XReply {
     int greenMask = in.readCard32();
     int blueMask = in.readCard32();
     byte[] pad9 = in.readPad(8);
-    IntList pixels = in.readCard32(Short.toUnsignedInt(pixelsLen));
+    int[] pixels = in.readCard32(Short.toUnsignedInt(pixelsLen));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.redMask(redMask);
     javaBuilder.greenMask(greenMask);
     javaBuilder.blueMask(blueMask);
-    javaBuilder.pixels(pixels.toImmutable());
+    javaBuilder.pixels(pixels);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -42,7 +41,7 @@ public final class AllocColorPlanesReply implements XReply {
     out.writePad(1);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
-    short pixelsLen = (short) pixels.size();
+    short pixelsLen = (short) pixels.length;
     out.writeCard16(pixelsLen);
     out.writePad(2);
     out.writeCard32(redMask);
@@ -55,7 +54,7 @@ public final class AllocColorPlanesReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * pixels.size();
+    return 32 + 4 * pixels.length;
   }
 
   public String getPluginName() {
@@ -73,10 +72,10 @@ public final class AllocColorPlanesReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int blueMask;
     @java.lang.SuppressWarnings("all")
-    private IntList pixels;
+    private int[] pixels;
 
     public int getSize() {
-      return 32 + 4 * pixels.size();
+      return 32 + 4 * pixels.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -123,7 +122,7 @@ public final class AllocColorPlanesReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AllocColorPlanesReply.AllocColorPlanesReplyBuilder pixels(final IntList pixels) {
+    public AllocColorPlanesReply.AllocColorPlanesReplyBuilder pixels(final int[] pixels) {
       if (pixels == null) {
         throw new java.lang.NullPointerException("pixels is marked non-null but is null");
       }
@@ -139,12 +138,12 @@ public final class AllocColorPlanesReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "AllocColorPlanesReply.AllocColorPlanesReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", redMask=" + this.redMask + ", greenMask=" + this.greenMask + ", blueMask=" + this.blueMask + ", pixels=" + this.pixels + ")";
+      return "AllocColorPlanesReply.AllocColorPlanesReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", redMask=" + this.redMask + ", greenMask=" + this.greenMask + ", blueMask=" + this.blueMask + ", pixels=" + java.util.Arrays.toString(this.pixels) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  AllocColorPlanesReply(final short sequenceNumber, final int redMask, final int greenMask, final int blueMask, final IntList pixels) {
+  AllocColorPlanesReply(final short sequenceNumber, final int redMask, final int greenMask, final int blueMask, final int[] pixels) {
     if (pixels == null) {
       throw new java.lang.NullPointerException("pixels is marked non-null but is null");
     }
@@ -181,7 +180,7 @@ public final class AllocColorPlanesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getPixels() {
+  public int[] getPixels() {
     return this.pixels;
   }
 
@@ -195,9 +194,7 @@ public final class AllocColorPlanesReply implements XReply {
     if (this.getRedMask() != other.getRedMask()) return false;
     if (this.getGreenMask() != other.getGreenMask()) return false;
     if (this.getBlueMask() != other.getBlueMask()) return false;
-    final java.lang.Object this$pixels = this.getPixels();
-    final java.lang.Object other$pixels = other.getPixels();
-    if (this$pixels == null ? other$pixels != null : !this$pixels.equals(other$pixels)) return false;
+    if (!java.util.Arrays.equals(this.getPixels(), other.getPixels())) return false;
     return true;
   }
 
@@ -210,14 +207,13 @@ public final class AllocColorPlanesReply implements XReply {
     result = result * PRIME + this.getRedMask();
     result = result * PRIME + this.getGreenMask();
     result = result * PRIME + this.getBlueMask();
-    final java.lang.Object $pixels = this.getPixels();
-    result = result * PRIME + ($pixels == null ? 43 : $pixels.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPixels());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "AllocColorPlanesReply(sequenceNumber=" + this.getSequenceNumber() + ", redMask=" + this.getRedMask() + ", greenMask=" + this.getGreenMask() + ", blueMask=" + this.getBlueMask() + ", pixels=" + this.getPixels() + ")";
+    return "AllocColorPlanesReply(sequenceNumber=" + this.getSequenceNumber() + ", redMask=" + this.getRedMask() + ", greenMask=" + this.getGreenMask() + ", blueMask=" + this.getBlueMask() + ", pixels=" + java.util.Arrays.toString(this.getPixels()) + ")";
   }
 }

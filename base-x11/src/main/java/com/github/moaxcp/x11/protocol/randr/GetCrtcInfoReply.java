@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class GetCrtcInfoReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
@@ -18,8 +17,8 @@ public final class GetCrtcInfoReply implements XReply {
   private final int mode;
   private final short rotation;
   private final short rotations;
-  private final IntList outputs;
-  private final IntList possible;
+  private final int[] outputs;
+  private final int[] possible;
 
   public static GetCrtcInfoReply readGetCrtcInfoReply(byte status, short sequenceNumber, X11Input in) throws IOException {
     GetCrtcInfoReply.GetCrtcInfoReplyBuilder javaBuilder = GetCrtcInfoReply.builder();
@@ -34,8 +33,8 @@ public final class GetCrtcInfoReply implements XReply {
     short rotations = in.readCard16();
     short numOutputs = in.readCard16();
     short numPossibleOutputs = in.readCard16();
-    IntList outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
-    IntList possible = in.readCard32(Short.toUnsignedInt(numPossibleOutputs));
+    int[] outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
+    int[] possible = in.readCard32(Short.toUnsignedInt(numPossibleOutputs));
     javaBuilder.status(status);
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.timestamp(timestamp);
@@ -46,8 +45,8 @@ public final class GetCrtcInfoReply implements XReply {
     javaBuilder.mode(mode);
     javaBuilder.rotation(rotation);
     javaBuilder.rotations(rotations);
-    javaBuilder.outputs(outputs.toImmutable());
-    javaBuilder.possible(possible.toImmutable());
+    javaBuilder.outputs(outputs);
+    javaBuilder.possible(possible);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -69,9 +68,9 @@ public final class GetCrtcInfoReply implements XReply {
     out.writeCard32(mode);
     out.writeCard16(rotation);
     out.writeCard16(rotations);
-    short numOutputs = (short) outputs.size();
+    short numOutputs = (short) outputs.length;
     out.writeCard16(numOutputs);
-    short numPossibleOutputs = (short) possible.size();
+    short numPossibleOutputs = (short) possible.length;
     out.writeCard16(numPossibleOutputs);
     out.writeCard32(outputs);
     out.writeCard32(possible);
@@ -104,7 +103,7 @@ public final class GetCrtcInfoReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * outputs.size() + 4 * possible.size();
+    return 32 + 4 * outputs.length + 4 * possible.length;
   }
 
   public String getPluginName() {
@@ -134,9 +133,9 @@ public final class GetCrtcInfoReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short rotations;
     @java.lang.SuppressWarnings("all")
-    private IntList outputs;
+    private int[] outputs;
     @java.lang.SuppressWarnings("all")
-    private IntList possible;
+    private int[] possible;
 
     public GetCrtcInfoReply.GetCrtcInfoReplyBuilder status(SetConfig status) {
       this.status = (byte) status.getValue();
@@ -201,7 +200,7 @@ public final class GetCrtcInfoReply implements XReply {
     }
 
     public int getSize() {
-      return 32 + 4 * outputs.size() + 4 * possible.size();
+      return 32 + 4 * outputs.length + 4 * possible.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -293,7 +292,7 @@ public final class GetCrtcInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcInfoReply.GetCrtcInfoReplyBuilder outputs(final IntList outputs) {
+    public GetCrtcInfoReply.GetCrtcInfoReplyBuilder outputs(final int[] outputs) {
       if (outputs == null) {
         throw new java.lang.NullPointerException("outputs is marked non-null but is null");
       }
@@ -305,7 +304,7 @@ public final class GetCrtcInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcInfoReply.GetCrtcInfoReplyBuilder possible(final IntList possible) {
+    public GetCrtcInfoReply.GetCrtcInfoReplyBuilder possible(final int[] possible) {
       if (possible == null) {
         throw new java.lang.NullPointerException("possible is marked non-null but is null");
       }
@@ -321,12 +320,12 @@ public final class GetCrtcInfoReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetCrtcInfoReply.GetCrtcInfoReplyBuilder(status=" + this.status + ", sequenceNumber=" + this.sequenceNumber + ", timestamp=" + this.timestamp + ", x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", mode=" + this.mode + ", rotation=" + this.rotation + ", rotations=" + this.rotations + ", outputs=" + this.outputs + ", possible=" + this.possible + ")";
+      return "GetCrtcInfoReply.GetCrtcInfoReplyBuilder(status=" + this.status + ", sequenceNumber=" + this.sequenceNumber + ", timestamp=" + this.timestamp + ", x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", mode=" + this.mode + ", rotation=" + this.rotation + ", rotations=" + this.rotations + ", outputs=" + java.util.Arrays.toString(this.outputs) + ", possible=" + java.util.Arrays.toString(this.possible) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetCrtcInfoReply(final byte status, final short sequenceNumber, final int timestamp, final short x, final short y, final short width, final short height, final int mode, final short rotation, final short rotations, final IntList outputs, final IntList possible) {
+  GetCrtcInfoReply(final byte status, final short sequenceNumber, final int timestamp, final short x, final short y, final short width, final short height, final int mode, final short rotation, final short rotations, final int[] outputs, final int[] possible) {
     if (outputs == null) {
       throw new java.lang.NullPointerException("outputs is marked non-null but is null");
     }
@@ -403,12 +402,12 @@ public final class GetCrtcInfoReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getOutputs() {
+  public int[] getOutputs() {
     return this.outputs;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getPossible() {
+  public int[] getPossible() {
     return this.possible;
   }
 
@@ -428,12 +427,8 @@ public final class GetCrtcInfoReply implements XReply {
     if (this.getMode() != other.getMode()) return false;
     if (this.getRotation() != other.getRotation()) return false;
     if (this.getRotations() != other.getRotations()) return false;
-    final java.lang.Object this$outputs = this.getOutputs();
-    final java.lang.Object other$outputs = other.getOutputs();
-    if (this$outputs == null ? other$outputs != null : !this$outputs.equals(other$outputs)) return false;
-    final java.lang.Object this$possible = this.getPossible();
-    final java.lang.Object other$possible = other.getPossible();
-    if (this$possible == null ? other$possible != null : !this$possible.equals(other$possible)) return false;
+    if (!java.util.Arrays.equals(this.getOutputs(), other.getOutputs())) return false;
+    if (!java.util.Arrays.equals(this.getPossible(), other.getPossible())) return false;
     return true;
   }
 
@@ -452,16 +447,14 @@ public final class GetCrtcInfoReply implements XReply {
     result = result * PRIME + this.getMode();
     result = result * PRIME + this.getRotation();
     result = result * PRIME + this.getRotations();
-    final java.lang.Object $outputs = this.getOutputs();
-    result = result * PRIME + ($outputs == null ? 43 : $outputs.hashCode());
-    final java.lang.Object $possible = this.getPossible();
-    result = result * PRIME + ($possible == null ? 43 : $possible.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getOutputs());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPossible());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetCrtcInfoReply(status=" + this.getStatus() + ", sequenceNumber=" + this.getSequenceNumber() + ", timestamp=" + this.getTimestamp() + ", x=" + this.getX() + ", y=" + this.getY() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", mode=" + this.getMode() + ", rotation=" + this.getRotation() + ", rotations=" + this.getRotations() + ", outputs=" + this.getOutputs() + ", possible=" + this.getPossible() + ")";
+    return "GetCrtcInfoReply(status=" + this.getStatus() + ", sequenceNumber=" + this.getSequenceNumber() + ", timestamp=" + this.getTimestamp() + ", x=" + this.getX() + ", y=" + this.getY() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", mode=" + this.getMode() + ", rotation=" + this.getRotation() + ", rotations=" + this.getRotations() + ", outputs=" + java.util.Arrays.toString(this.getOutputs()) + ", possible=" + java.util.Arrays.toString(this.getPossible()) + ")";
   }
 }

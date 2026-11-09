@@ -1,18 +1,17 @@
 package com.github.moaxcp.x11.protocol.sync;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Await implements OneWayRequest {
   public static final String PLUGIN_NAME = "sync";
   public static final byte OPCODE = 7;
-  private final ImmutableList<Waitcondition> waitList;
+  private final List<Waitcondition> waitList;
 
   public byte getOpCode() {
     return OPCODE;
@@ -25,13 +24,13 @@ public final class Await implements OneWayRequest {
     javaStart += 1;
     short length = in.readCard16();
     javaStart += 2;
-    MutableList<Waitcondition> waitList = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Waitcondition> waitList = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Waitcondition baseObject = Waitcondition.readWaitcondition(in);
       waitList.add(baseObject);
       javaStart += baseObject.getSize();
     }
-    javaBuilder.waitList(waitList.toImmutable());
+    javaBuilder.waitList(List.copyOf(waitList));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -59,7 +58,7 @@ public final class Await implements OneWayRequest {
 
   public static class AwaitBuilder {
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Waitcondition> waitList;
+    private List<Waitcondition> waitList;
 
     public int getSize() {
       return 4 + XObject.sizeOf(waitList);
@@ -73,7 +72,7 @@ public final class Await implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Await.AwaitBuilder waitList(final ImmutableList<Waitcondition> waitList) {
+    public Await.AwaitBuilder waitList(final List<Waitcondition> waitList) {
       if (waitList == null) {
         throw new java.lang.NullPointerException("waitList is marked non-null but is null");
       }
@@ -94,7 +93,7 @@ public final class Await implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  Await(final ImmutableList<Waitcondition> waitList) {
+  Await(final List<Waitcondition> waitList) {
     if (waitList == null) {
       throw new java.lang.NullPointerException("waitList is marked non-null but is null");
     }
@@ -107,7 +106,7 @@ public final class Await implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Waitcondition> getWaitList() {
+  public List<Waitcondition> getWaitList() {
     return this.waitList;
   }
 

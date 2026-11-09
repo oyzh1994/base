@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xfixes;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.xproto.Rectangle;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class SetRegion implements OneWayRequest {
   public static final String PLUGIN_NAME = "xfixes";
   public static final byte OPCODE = 11;
   private final int region;
-  private final ImmutableList<Rectangle> rectangles;
+  private final List<Rectangle> rectangles;
 
   public byte getOpCode() {
     return OPCODE;
@@ -29,14 +28,14 @@ public final class SetRegion implements OneWayRequest {
     javaStart += 2;
     int region = in.readCard32();
     javaStart += 4;
-    MutableList<Rectangle> rectangles = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Rectangle> rectangles = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Rectangle baseObject = Rectangle.readRectangle(in);
       rectangles.add(baseObject);
       javaStart += baseObject.getSize();
     }
     javaBuilder.region(region);
-    javaBuilder.rectangles(rectangles.toImmutable());
+    javaBuilder.rectangles(List.copyOf(rectangles));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -67,7 +66,7 @@ public final class SetRegion implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int region;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Rectangle> rectangles;
+    private List<Rectangle> rectangles;
 
     public int getSize() {
       return 8 + XObject.sizeOf(rectangles);
@@ -90,7 +89,7 @@ public final class SetRegion implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetRegion.SetRegionBuilder rectangles(final ImmutableList<Rectangle> rectangles) {
+    public SetRegion.SetRegionBuilder rectangles(final List<Rectangle> rectangles) {
       if (rectangles == null) {
         throw new java.lang.NullPointerException("rectangles is marked non-null but is null");
       }
@@ -111,7 +110,7 @@ public final class SetRegion implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  SetRegion(final int region, final ImmutableList<Rectangle> rectangles) {
+  SetRegion(final int region, final List<Rectangle> rectangles) {
     if (rectangles == null) {
       throw new java.lang.NullPointerException("rectangles is marked non-null but is null");
     }
@@ -130,7 +129,7 @@ public final class SetRegion implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Rectangle> getRectangles() {
+  public List<Rectangle> getRectangles() {
     return this.rectangles;
   }
 

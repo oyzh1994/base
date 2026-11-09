@@ -4,21 +4,20 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SetupAuthenticate implements XStruct {
   public static final String PLUGIN_NAME = "xproto";
   private final byte status;
-  private final ByteList reason;
+  private final byte[] reason;
 
   public static SetupAuthenticate readSetupAuthenticate(X11Input in) throws IOException {
     SetupAuthenticate.SetupAuthenticateBuilder javaBuilder = SetupAuthenticate.builder();
     byte status = in.readCard8();
     byte[] pad1 = in.readPad(5);
     short length = in.readCard16();
-    ByteList reason = in.readChar(Short.toUnsignedInt(length) * 4);
+    byte[] reason = in.readChar(Short.toUnsignedInt(length) * 4);
     javaBuilder.status(status);
-    javaBuilder.reason(reason.toImmutable());
+    javaBuilder.reason(reason);
     return javaBuilder.build();
   }
 
@@ -26,14 +25,14 @@ public final class SetupAuthenticate implements XStruct {
   public void write(X11Output out) throws IOException {
     out.writeCard8(status);
     out.writePad(5);
-    short length = (short) reason.size();
+    short length = (short) reason.length;
     out.writeCard16(length);
     out.writeChar(reason);
   }
 
   @Override
   public int getSize() {
-    return 8 + 1 * reason.size();
+    return 8 + 1 * reason.length;
   }
 
   public String getPluginName() {
@@ -45,10 +44,10 @@ public final class SetupAuthenticate implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte status;
     @java.lang.SuppressWarnings("all")
-    private ByteList reason;
+    private byte[] reason;
 
     public int getSize() {
-      return 8 + 1 * reason.size();
+      return 8 + 1 * reason.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -68,7 +67,7 @@ public final class SetupAuthenticate implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetupAuthenticate.SetupAuthenticateBuilder reason(final ByteList reason) {
+    public SetupAuthenticate.SetupAuthenticateBuilder reason(final byte[] reason) {
       if (reason == null) {
         throw new java.lang.NullPointerException("reason is marked non-null but is null");
       }
@@ -84,12 +83,12 @@ public final class SetupAuthenticate implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetupAuthenticate.SetupAuthenticateBuilder(status=" + this.status + ", reason=" + this.reason + ")";
+      return "SetupAuthenticate.SetupAuthenticateBuilder(status=" + this.status + ", reason=" + java.util.Arrays.toString(this.reason) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetupAuthenticate(final byte status, final ByteList reason) {
+  SetupAuthenticate(final byte status, final byte[] reason) {
     if (reason == null) {
       throw new java.lang.NullPointerException("reason is marked non-null but is null");
     }
@@ -108,7 +107,7 @@ public final class SetupAuthenticate implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getReason() {
+  public byte[] getReason() {
     return this.reason;
   }
 
@@ -119,9 +118,7 @@ public final class SetupAuthenticate implements XStruct {
     if (!(o instanceof SetupAuthenticate)) return false;
     final SetupAuthenticate other = (SetupAuthenticate) o;
     if (this.getStatus() != other.getStatus()) return false;
-    final java.lang.Object this$reason = this.getReason();
-    final java.lang.Object other$reason = other.getReason();
-    if (this$reason == null ? other$reason != null : !this$reason.equals(other$reason)) return false;
+    if (!java.util.Arrays.equals(this.getReason(), other.getReason())) return false;
     return true;
   }
 
@@ -131,14 +128,13 @@ public final class SetupAuthenticate implements XStruct {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getStatus();
-    final java.lang.Object $reason = this.getReason();
-    result = result * PRIME + ($reason == null ? 43 : $reason.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getReason());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetupAuthenticate(status=" + this.getStatus() + ", reason=" + this.getReason() + ")";
+    return "SetupAuthenticate(status=" + this.getStatus() + ", reason=" + java.util.Arrays.toString(this.getReason()) + ")";
   }
 }

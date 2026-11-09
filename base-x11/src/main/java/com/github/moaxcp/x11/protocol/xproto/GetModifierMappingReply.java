@@ -4,20 +4,19 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetModifierMappingReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final ByteList keycodes;
+  private final byte[] keycodes;
 
   public static GetModifierMappingReply readGetModifierMappingReply(byte keycodesPerModifier, short sequenceNumber, X11Input in) throws IOException {
     GetModifierMappingReply.GetModifierMappingReplyBuilder javaBuilder = GetModifierMappingReply.builder();
     int length = in.readCard32();
     byte[] pad4 = in.readPad(24);
-    ByteList keycodes = in.readCard8(Byte.toUnsignedInt(keycodesPerModifier) * 8);
+    byte[] keycodes = in.readCard8(Byte.toUnsignedInt(keycodesPerModifier) * 8);
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.keycodes(keycodes.toImmutable());
+    javaBuilder.keycodes(keycodes);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -28,7 +27,7 @@ public final class GetModifierMappingReply implements XReply {
   @Override
   public void write(X11Output out) throws IOException {
     out.writeCard8(getResponseCode());
-    byte keycodesPerModifier = (byte) keycodes.size();
+    byte keycodesPerModifier = (byte) keycodes.length;
     out.writeCard8(keycodesPerModifier);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
@@ -39,7 +38,7 @@ public final class GetModifierMappingReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 1 * keycodes.size();
+    return 32 + 1 * keycodes.length;
   }
 
   public String getPluginName() {
@@ -51,10 +50,10 @@ public final class GetModifierMappingReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ByteList keycodes;
+    private byte[] keycodes;
 
     public int getSize() {
-      return 32 + 1 * keycodes.size();
+      return 32 + 1 * keycodes.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -74,7 +73,7 @@ public final class GetModifierMappingReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetModifierMappingReply.GetModifierMappingReplyBuilder keycodes(final ByteList keycodes) {
+    public GetModifierMappingReply.GetModifierMappingReplyBuilder keycodes(final byte[] keycodes) {
       if (keycodes == null) {
         throw new java.lang.NullPointerException("keycodes is marked non-null but is null");
       }
@@ -90,12 +89,12 @@ public final class GetModifierMappingReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetModifierMappingReply.GetModifierMappingReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", keycodes=" + this.keycodes + ")";
+      return "GetModifierMappingReply.GetModifierMappingReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", keycodes=" + java.util.Arrays.toString(this.keycodes) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetModifierMappingReply(final short sequenceNumber, final ByteList keycodes) {
+  GetModifierMappingReply(final short sequenceNumber, final byte[] keycodes) {
     if (keycodes == null) {
       throw new java.lang.NullPointerException("keycodes is marked non-null but is null");
     }
@@ -114,7 +113,7 @@ public final class GetModifierMappingReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getKeycodes() {
+  public byte[] getKeycodes() {
     return this.keycodes;
   }
 
@@ -125,9 +124,7 @@ public final class GetModifierMappingReply implements XReply {
     if (!(o instanceof GetModifierMappingReply)) return false;
     final GetModifierMappingReply other = (GetModifierMappingReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$keycodes = this.getKeycodes();
-    final java.lang.Object other$keycodes = other.getKeycodes();
-    if (this$keycodes == null ? other$keycodes != null : !this$keycodes.equals(other$keycodes)) return false;
+    if (!java.util.Arrays.equals(this.getKeycodes(), other.getKeycodes())) return false;
     return true;
   }
 
@@ -137,14 +134,13 @@ public final class GetModifierMappingReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $keycodes = this.getKeycodes();
-    result = result * PRIME + ($keycodes == null ? 43 : $keycodes.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getKeycodes());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetModifierMappingReply(sequenceNumber=" + this.getSequenceNumber() + ", keycodes=" + this.getKeycodes() + ")";
+    return "GetModifierMappingReply(sequenceNumber=" + this.getSequenceNumber() + ", keycodes=" + java.util.Arrays.toString(this.getKeycodes()) + ")";
   }
 }

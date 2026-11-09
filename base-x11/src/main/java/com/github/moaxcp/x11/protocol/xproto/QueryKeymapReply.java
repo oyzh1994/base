@@ -4,19 +4,18 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class QueryKeymapReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final ByteList keys;
+  private final byte[] keys;
 
   public static QueryKeymapReply readQueryKeymapReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryKeymapReply.QueryKeymapReplyBuilder javaBuilder = QueryKeymapReply.builder();
     int length = in.readCard32();
-    ByteList keys = in.readCard8(32);
+    byte[] keys = in.readCard8(32);
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.keys(keys.toImmutable());
+    javaBuilder.keys(keys);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -36,7 +35,7 @@ public final class QueryKeymapReply implements XReply {
 
   @Override
   public int getSize() {
-    return 8 + 1 * keys.size();
+    return 8 + 1 * keys.length;
   }
 
   public String getPluginName() {
@@ -48,10 +47,10 @@ public final class QueryKeymapReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ByteList keys;
+    private byte[] keys;
 
     public int getSize() {
-      return 8 + 1 * keys.size();
+      return 8 + 1 * keys.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -71,7 +70,7 @@ public final class QueryKeymapReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryKeymapReply.QueryKeymapReplyBuilder keys(final ByteList keys) {
+    public QueryKeymapReply.QueryKeymapReplyBuilder keys(final byte[] keys) {
       if (keys == null) {
         throw new java.lang.NullPointerException("keys is marked non-null but is null");
       }
@@ -87,12 +86,12 @@ public final class QueryKeymapReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "QueryKeymapReply.QueryKeymapReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", keys=" + this.keys + ")";
+      return "QueryKeymapReply.QueryKeymapReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", keys=" + java.util.Arrays.toString(this.keys) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryKeymapReply(final short sequenceNumber, final ByteList keys) {
+  QueryKeymapReply(final short sequenceNumber, final byte[] keys) {
     if (keys == null) {
       throw new java.lang.NullPointerException("keys is marked non-null but is null");
     }
@@ -111,7 +110,7 @@ public final class QueryKeymapReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getKeys() {
+  public byte[] getKeys() {
     return this.keys;
   }
 
@@ -122,9 +121,7 @@ public final class QueryKeymapReply implements XReply {
     if (!(o instanceof QueryKeymapReply)) return false;
     final QueryKeymapReply other = (QueryKeymapReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$keys = this.getKeys();
-    final java.lang.Object other$keys = other.getKeys();
-    if (this$keys == null ? other$keys != null : !this$keys.equals(other$keys)) return false;
+    if (!java.util.Arrays.equals(this.getKeys(), other.getKeys())) return false;
     return true;
   }
 
@@ -134,14 +131,13 @@ public final class QueryKeymapReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $keys = this.getKeys();
-    result = result * PRIME + ($keys == null ? 43 : $keys.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getKeys());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "QueryKeymapReply(sequenceNumber=" + this.getSequenceNumber() + ", keys=" + this.getKeys() + ")";
+    return "QueryKeymapReply(sequenceNumber=" + this.getSequenceNumber() + ", keys=" + java.util.Arrays.toString(this.getKeys()) + ")";
   }
 }

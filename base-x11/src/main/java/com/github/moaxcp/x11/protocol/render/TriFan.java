@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class TriFan implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
@@ -18,7 +17,7 @@ public final class TriFan implements OneWayRequest {
   private final int maskFormat;
   private final short srcX;
   private final short srcY;
-  private final ImmutableList<Pointfix> points;
+  private final List<Pointfix> points;
 
   public byte getOpCode() {
     return OPCODE;
@@ -45,7 +44,7 @@ public final class TriFan implements OneWayRequest {
     javaStart += 2;
     short srcY = in.readInt16();
     javaStart += 2;
-    MutableList<Pointfix> points = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Pointfix> points = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Pointfix baseObject = Pointfix.readPointfix(in);
       points.add(baseObject);
@@ -57,7 +56,7 @@ public final class TriFan implements OneWayRequest {
     javaBuilder.maskFormat(maskFormat);
     javaBuilder.srcX(srcX);
     javaBuilder.srcY(srcY);
-    javaBuilder.points(points.toImmutable());
+    javaBuilder.points(List.copyOf(points));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -104,7 +103,7 @@ public final class TriFan implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short srcY;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Pointfix> points;
+    private List<Pointfix> points;
 
     public TriFan.TriFanBuilder op(PictOp op) {
       this.op = (byte) op.getValue();
@@ -173,7 +172,7 @@ public final class TriFan implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public TriFan.TriFanBuilder points(final ImmutableList<Pointfix> points) {
+    public TriFan.TriFanBuilder points(final List<Pointfix> points) {
       if (points == null) {
         throw new java.lang.NullPointerException("points is marked non-null but is null");
       }
@@ -194,7 +193,7 @@ public final class TriFan implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  TriFan(final byte op, final int src, final int dst, final int maskFormat, final short srcX, final short srcY, final ImmutableList<Pointfix> points) {
+  TriFan(final byte op, final int src, final int dst, final int maskFormat, final short srcX, final short srcY, final List<Pointfix> points) {
     if (points == null) {
       throw new java.lang.NullPointerException("points is marked non-null but is null");
     }
@@ -243,7 +242,7 @@ public final class TriFan implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Pointfix> getPoints() {
+  public List<Pointfix> getPoints() {
     return this.points;
   }
 

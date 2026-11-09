@@ -6,16 +6,14 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.render.Transform;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class SetCrtcTransform implements OneWayRequest {
   public static final String PLUGIN_NAME = "randr";
   public static final byte OPCODE = 26;
   private final int crtc;
   private final Transform transform;
-  private final ByteList filterName;
-  private final IntList filterParams;
+  private final byte[] filterName;
+  private final int[] filterParams;
 
   public byte getOpCode() {
     return OPCODE;
@@ -36,15 +34,15 @@ public final class SetCrtcTransform implements OneWayRequest {
     javaStart += 2;
     byte[] pad6 = in.readPad(2);
     javaStart += 2;
-    ByteList filterName = in.readChar(Short.toUnsignedInt(filterLen));
-    javaStart += 1 * filterName.size();
+    byte[] filterName = in.readChar(Short.toUnsignedInt(filterLen));
+    javaStart += 1 * filterName.length;
     in.readPadAlign(Short.toUnsignedInt(filterLen));
-    javaStart += XObject.getSizeForPadAlign(4, 1 * filterName.size());
-    IntList filterParams = in.readInt32(Short.toUnsignedInt(length) - javaStart);
+    javaStart += XObject.getSizeForPadAlign(4, 1 * filterName.length);
+    int[] filterParams = in.readInt32(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.crtc(crtc);
     javaBuilder.transform(transform);
-    javaBuilder.filterName(filterName.toImmutable());
-    javaBuilder.filterParams(filterParams.toImmutable());
+    javaBuilder.filterName(filterName);
+    javaBuilder.filterParams(filterParams);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -56,7 +54,7 @@ public final class SetCrtcTransform implements OneWayRequest {
     out.writeCard16((short) getLength());
     out.writeCard32(crtc);
     transform.write(out);
-    short filterLen = (short) filterName.size();
+    short filterLen = (short) filterName.length;
     out.writeCard16(filterLen);
     out.writePad(2);
     out.writeChar(filterName);
@@ -67,7 +65,7 @@ public final class SetCrtcTransform implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 48 + 1 * filterName.size() + XObject.getSizeForPadAlign(4, 1 * filterName.size()) + 4 * filterParams.size();
+    return 48 + 1 * filterName.length + XObject.getSizeForPadAlign(4, 1 * filterName.length) + 4 * filterParams.length;
   }
 
   public String getPluginName() {
@@ -81,12 +79,12 @@ public final class SetCrtcTransform implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private Transform transform;
     @java.lang.SuppressWarnings("all")
-    private ByteList filterName;
+    private byte[] filterName;
     @java.lang.SuppressWarnings("all")
-    private IntList filterParams;
+    private int[] filterParams;
 
     public int getSize() {
-      return 48 + 1 * filterName.size() + XObject.getSizeForPadAlign(4, 1 * filterName.size()) + 4 * filterParams.size();
+      return 48 + 1 * filterName.length + XObject.getSizeForPadAlign(4, 1 * filterName.length) + 4 * filterParams.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -118,7 +116,7 @@ public final class SetCrtcTransform implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCrtcTransform.SetCrtcTransformBuilder filterName(final ByteList filterName) {
+    public SetCrtcTransform.SetCrtcTransformBuilder filterName(final byte[] filterName) {
       if (filterName == null) {
         throw new java.lang.NullPointerException("filterName is marked non-null but is null");
       }
@@ -130,7 +128,7 @@ public final class SetCrtcTransform implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCrtcTransform.SetCrtcTransformBuilder filterParams(final IntList filterParams) {
+    public SetCrtcTransform.SetCrtcTransformBuilder filterParams(final int[] filterParams) {
       if (filterParams == null) {
         throw new java.lang.NullPointerException("filterParams is marked non-null but is null");
       }
@@ -146,12 +144,12 @@ public final class SetCrtcTransform implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetCrtcTransform.SetCrtcTransformBuilder(crtc=" + this.crtc + ", transform=" + this.transform + ", filterName=" + this.filterName + ", filterParams=" + this.filterParams + ")";
+      return "SetCrtcTransform.SetCrtcTransformBuilder(crtc=" + this.crtc + ", transform=" + this.transform + ", filterName=" + java.util.Arrays.toString(this.filterName) + ", filterParams=" + java.util.Arrays.toString(this.filterParams) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetCrtcTransform(final int crtc, final Transform transform, final ByteList filterName, final IntList filterParams) {
+  SetCrtcTransform(final int crtc, final Transform transform, final byte[] filterName, final int[] filterParams) {
     if (transform == null) {
       throw new java.lang.NullPointerException("transform is marked non-null but is null");
     }
@@ -183,12 +181,12 @@ public final class SetCrtcTransform implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getFilterName() {
+  public byte[] getFilterName() {
     return this.filterName;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getFilterParams() {
+  public int[] getFilterParams() {
     return this.filterParams;
   }
 
@@ -202,12 +200,8 @@ public final class SetCrtcTransform implements OneWayRequest {
     final java.lang.Object this$transform = this.getTransform();
     final java.lang.Object other$transform = other.getTransform();
     if (this$transform == null ? other$transform != null : !this$transform.equals(other$transform)) return false;
-    final java.lang.Object this$filterName = this.getFilterName();
-    final java.lang.Object other$filterName = other.getFilterName();
-    if (this$filterName == null ? other$filterName != null : !this$filterName.equals(other$filterName)) return false;
-    final java.lang.Object this$filterParams = this.getFilterParams();
-    final java.lang.Object other$filterParams = other.getFilterParams();
-    if (this$filterParams == null ? other$filterParams != null : !this$filterParams.equals(other$filterParams)) return false;
+    if (!java.util.Arrays.equals(this.getFilterName(), other.getFilterName())) return false;
+    if (!java.util.Arrays.equals(this.getFilterParams(), other.getFilterParams())) return false;
     return true;
   }
 
@@ -219,16 +213,14 @@ public final class SetCrtcTransform implements OneWayRequest {
     result = result * PRIME + this.getCrtc();
     final java.lang.Object $transform = this.getTransform();
     result = result * PRIME + ($transform == null ? 43 : $transform.hashCode());
-    final java.lang.Object $filterName = this.getFilterName();
-    result = result * PRIME + ($filterName == null ? 43 : $filterName.hashCode());
-    final java.lang.Object $filterParams = this.getFilterParams();
-    result = result * PRIME + ($filterParams == null ? 43 : $filterParams.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getFilterName());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getFilterParams());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetCrtcTransform(crtc=" + this.getCrtc() + ", transform=" + this.getTransform() + ", filterName=" + this.getFilterName() + ", filterParams=" + this.getFilterParams() + ")";
+    return "SetCrtcTransform(crtc=" + this.getCrtc() + ", transform=" + this.getTransform() + ", filterName=" + java.util.Arrays.toString(this.getFilterName()) + ", filterParams=" + java.util.Arrays.toString(this.getFilterParams()) + ")";
   }
 }

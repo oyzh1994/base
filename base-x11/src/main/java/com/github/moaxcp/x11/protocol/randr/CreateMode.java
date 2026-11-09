@@ -5,14 +5,13 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class CreateMode implements TwoWayRequest<CreateModeReply> {
   public static final String PLUGIN_NAME = "randr";
   public static final byte OPCODE = 16;
   private final int window;
   private final ModeInfo modeInfo;
-  private final ByteList name;
+  private final byte[] name;
 
   public XReplyFunction<CreateModeReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> CreateModeReply.readCreateModeReply(field, sequenceNumber, in);
@@ -33,10 +32,10 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
     javaStart += 4;
     ModeInfo modeInfo = ModeInfo.readModeInfo(in);
     javaStart += modeInfo.getSize();
-    ByteList name = in.readChar(Short.toUnsignedInt(length) - javaStart);
+    byte[] name = in.readChar(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.window(window);
     javaBuilder.modeInfo(modeInfo);
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -54,7 +53,7 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
 
   @Override
   public int getSize() {
-    return 40 + 1 * name.size();
+    return 40 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -68,10 +67,10 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
     @java.lang.SuppressWarnings("all")
     private ModeInfo modeInfo;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public int getSize() {
-      return 40 + 1 * name.size();
+      return 40 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -103,7 +102,7 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateMode.CreateModeBuilder name(final ByteList name) {
+    public CreateMode.CreateModeBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -119,12 +118,12 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "CreateMode.CreateModeBuilder(window=" + this.window + ", modeInfo=" + this.modeInfo + ", name=" + this.name + ")";
+      return "CreateMode.CreateModeBuilder(window=" + this.window + ", modeInfo=" + this.modeInfo + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  CreateMode(final int window, final ModeInfo modeInfo, final ByteList name) {
+  CreateMode(final int window, final ModeInfo modeInfo, final byte[] name) {
     if (modeInfo == null) {
       throw new java.lang.NullPointerException("modeInfo is marked non-null but is null");
     }
@@ -152,7 +151,7 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -166,9 +165,7 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
     final java.lang.Object this$modeInfo = this.getModeInfo();
     final java.lang.Object other$modeInfo = other.getModeInfo();
     if (this$modeInfo == null ? other$modeInfo != null : !this$modeInfo.equals(other$modeInfo)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -180,14 +177,13 @@ public final class CreateMode implements TwoWayRequest<CreateModeReply> {
     result = result * PRIME + this.getWindow();
     final java.lang.Object $modeInfo = this.getModeInfo();
     result = result * PRIME + ($modeInfo == null ? 43 : $modeInfo.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "CreateMode(window=" + this.getWindow() + ", modeInfo=" + this.getModeInfo() + ", name=" + this.getName() + ")";
+    return "CreateMode(window=" + this.getWindow() + ", modeInfo=" + this.getModeInfo() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

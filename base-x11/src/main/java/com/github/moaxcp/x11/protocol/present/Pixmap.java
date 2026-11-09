@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.present;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Pixmap implements OneWayRequest {
   public static final String PLUGIN_NAME = "present";
@@ -26,7 +25,7 @@ public final class Pixmap implements OneWayRequest {
   private final long targetMsc;
   private final long divisor;
   private final long remainder;
-  private final ImmutableList<Notify> notifies;
+  private final List<Notify> notifies;
 
   public byte getOpCode() {
     return OPCODE;
@@ -69,7 +68,7 @@ public final class Pixmap implements OneWayRequest {
     javaStart += 8;
     long remainder = in.readCard64();
     javaStart += 8;
-    MutableList<Notify> notifies = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Notify> notifies = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Notify baseObject = Notify.readNotify(in);
       notifies.add(baseObject);
@@ -89,7 +88,7 @@ public final class Pixmap implements OneWayRequest {
     javaBuilder.targetMsc(targetMsc);
     javaBuilder.divisor(divisor);
     javaBuilder.remainder(remainder);
-    javaBuilder.notifies(notifies.toImmutable());
+    javaBuilder.notifies(List.copyOf(notifies));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -160,7 +159,7 @@ public final class Pixmap implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private long remainder;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Notify> notifies;
+    private List<Notify> notifies;
 
     public int getSize() {
       return 72 + XObject.sizeOf(notifies);
@@ -300,7 +299,7 @@ public final class Pixmap implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Pixmap.PixmapBuilder notifies(final ImmutableList<Notify> notifies) {
+    public Pixmap.PixmapBuilder notifies(final List<Notify> notifies) {
       if (notifies == null) {
         throw new java.lang.NullPointerException("notifies is marked non-null but is null");
       }
@@ -321,7 +320,7 @@ public final class Pixmap implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  Pixmap(final int window, final int pixmap, final int serial, final int valid, final int update, final short xOff, final short yOff, final int targetCrtc, final int waitFence, final int idleFence, final int options, final long targetMsc, final long divisor, final long remainder, final ImmutableList<Notify> notifies) {
+  Pixmap(final int window, final int pixmap, final int serial, final int valid, final int update, final short xOff, final short yOff, final int targetCrtc, final int waitFence, final int idleFence, final int options, final long targetMsc, final long divisor, final long remainder, final List<Notify> notifies) {
     if (notifies == null) {
       throw new java.lang.NullPointerException("notifies is marked non-null but is null");
     }
@@ -418,7 +417,7 @@ public final class Pixmap implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Notify> getNotifies() {
+  public List<Notify> getNotifies() {
     return this.notifies;
   }
 

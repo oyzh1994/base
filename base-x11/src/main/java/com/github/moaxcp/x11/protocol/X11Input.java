@@ -1,21 +1,18 @@
 package com.github.moaxcp.x11.protocol;
 
-import org.eclipse.collections.api.factory.primitive.*;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.primitive.*;
-import org.eclipse.collections.impl.factory.Lists;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public interface X11Input {
   boolean readBool() throws IOException;
 
-  default BooleanList readBool(int length) throws IOException {
-    var list = BooleanLists.mutable.withInitialCapacity(length);
+  default boolean[] readBool(int length) throws IOException {
+    boolean[] list = new boolean[length];
     for (int i = 0; i < length; i++) {
-      list.add(readBool());
+      list[i] = readBool();
     }
-    return list.toImmutable();
+    return list;
   }
 
   byte readByte() throws IOException;
@@ -28,101 +25,101 @@ public interface X11Input {
 
   int readInt32() throws IOException;
 
-  default IntList readInt32(int length) throws IOException {
-    var list = IntLists.mutable.withInitialCapacity(length);
+  default int[] readInt32(int length) throws IOException {
+    int[] list = new int[length];
     for (int i = 0; i < length; i++) {
-      list.add(readInt32());
+      list[i] = readInt32();
     }
-    return list.toImmutable();
+    return list;
   }
 
   long readInt64() throws IOException;
 
   byte readCard8() throws IOException;
 
-  default ByteList readCard8(int length) throws IOException {
-    var list = ByteLists.mutable.withInitialCapacity(length);
+  default byte[] readCard8(int length) throws IOException {
+    byte[] list = new byte[length];
     for (int i = 0; i < length; i++) {
-      list.add(readCard8());
+      list[i] = readCard8();
     }
-    return list.toImmutable();
+    return list;
   }
 
   short readCard16() throws IOException;
 
-  default ShortList readCard16(int length) throws IOException {
-    var list = ShortLists.mutable.withInitialCapacity(length);
+  default short[] readCard16(int length) throws IOException {
+    short[] list = new short[length];
     for (int i = 0; i < length; i++) {
-      list.add(readCard16());
+      list[i] = readCard16();
     }
-    return list.toImmutable();
+    return list;
   }
 
   int readCard32() throws IOException;
 
-  default IntList readCard32(int length) throws IOException {
-    var list = IntLists.mutable.withInitialCapacity(length);
+  default int[] readCard32(int length) throws IOException {
+    int[] list = new int[length];
     for (int i = 0; i < length; i++) {
-      list.add(readCard32());
+      list[i] = readCard32();
     }
-    return list.toImmutable();
+    return list;
   }
 
   long readCard64() throws IOException;
 
-  default LongList readCard64(int length) throws IOException {
-    var list = LongLists.mutable.withInitialCapacity(length);
+  default long[] readCard64(int length) throws IOException {
+    long[] list = new long[length];
     for (int i = 0; i < length; i++) {
-      list.add(readCard64());
+      list[i] = readCard64();
     }
-    return list.toImmutable();
+    return list;
   }
 
   float readFloat() throws IOException;
 
-  default FloatList readFloat(int length) throws IOException {
-    var list = FloatLists.mutable.withInitialCapacity(length);
+  default float[] readFloat(int length) throws IOException {
+    float[] list = new float[length];
     for (int i = 0; i < length; i++) {
-      list.add(readFloat());
+      list[i] = readFloat();
     }
-    return list.toImmutable();
+    return list;
   }
 
   double readDouble() throws IOException;
 
-  default DoubleList readDouble(int length) throws IOException {
-    var list = DoubleLists.mutable.withInitialCapacity(length);
+  default double[] readDouble(int length) throws IOException {
+    double[] list = new double[length];
     for (int i = 0; i < length; i++) {
-      list.add(readDouble());
+      list[i] = readDouble();
     }
-    return list.toImmutable();
+    return list;
   }
 
-  default ByteList readChar(int length) throws IOException {
-    var list = ByteLists.mutable.withInitialCapacity(length);
+  default byte[] readChar(int length) throws IOException {
+    byte[] list = new byte[length];
     for (int i = 0; i < length; i++) {
-      list.add(readByte());
+      list[i] = readByte();
     }
-    return list.toImmutable();
+    return list;
   }
 
   String readString8(int length) throws IOException;
 
-  default ByteList readByte(int length) throws IOException {
-    var list = ByteLists.mutable.withInitialCapacity(length);
+  default byte[] readByte(int length) throws IOException {
+    byte[] list = new byte[length];
     for (int i = 0; i < length; i++) {
-      list.add(readCard8());
+      list[i] = readCard8();
     }
-    return list.toImmutable();
+    return list;
   }
 
-  default ByteList readVoid(int length) throws IOException {
+  default byte[] readVoid(int length) throws IOException {
     return readByte(length);
   }
 
   int readFd() throws IOException;
 
-  default IntList readFd(int length) throws IOException {
+  default int[] readFd(int length) throws IOException {
     return readInt32(length);
   }
 
@@ -140,12 +137,12 @@ public interface X11Input {
 
   int available() throws IOException;
 
-  default <T> ImmutableList<T> readObject(XReadFunction<T> reader, int length) throws IOException {
-    var result = Lists.mutable.<T>withInitialCapacity(length);
-    for(int i = 0; i < length; i++) {
+  default <T> List<T> readObject(XReadFunction<T> reader, int length) throws IOException {
+    List<T> result = new ArrayList<>(length);
+    for (int i = 0; i < length; i++) {
       T object = reader.read(this);
       result.add(object);
     }
-    return result.toImmutable();
+    return List.copyOf(result);
   }
 }

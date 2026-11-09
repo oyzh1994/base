@@ -5,7 +5,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsReply> {
   public static final String PLUGIN_NAME = "xkb";
@@ -14,7 +13,7 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
   private final int flags;
   private final int affectCtrls;
   private final int ctrls;
-  private final ByteList message;
+  private final byte[] message;
 
   public XReplyFunction<SetDebuggingFlagsReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> SetDebuggingFlagsReply.readSetDebuggingFlagsReply(field, sequenceNumber, in);
@@ -34,12 +33,12 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
     int flags = in.readCard32();
     int affectCtrls = in.readCard32();
     int ctrls = in.readCard32();
-    ByteList message = in.readChar(Short.toUnsignedInt(msgLength));
+    byte[] message = in.readChar(Short.toUnsignedInt(msgLength));
     javaBuilder.affectFlags(affectFlags);
     javaBuilder.flags(flags);
     javaBuilder.affectCtrls(affectCtrls);
     javaBuilder.ctrls(ctrls);
-    javaBuilder.message(message.toImmutable());
+    javaBuilder.message(message);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -49,7 +48,7 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
     out.writeCard8(majorOpcode);
     out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
-    short msgLength = (short) message.size();
+    short msgLength = (short) message.length;
     out.writeCard16(msgLength);
     out.writePad(2);
     out.writeCard32(affectFlags);
@@ -62,7 +61,7 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
 
   @Override
   public int getSize() {
-    return 24 + 1 * message.size();
+    return 24 + 1 * message.length;
   }
 
   public String getPluginName() {
@@ -80,10 +79,10 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
     @java.lang.SuppressWarnings("all")
     private int ctrls;
     @java.lang.SuppressWarnings("all")
-    private ByteList message;
+    private byte[] message;
 
     public int getSize() {
-      return 24 + 1 * message.size();
+      return 24 + 1 * message.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -130,7 +129,7 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetDebuggingFlags.SetDebuggingFlagsBuilder message(final ByteList message) {
+    public SetDebuggingFlags.SetDebuggingFlagsBuilder message(final byte[] message) {
       if (message == null) {
         throw new java.lang.NullPointerException("message is marked non-null but is null");
       }
@@ -146,12 +145,12 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetDebuggingFlags.SetDebuggingFlagsBuilder(affectFlags=" + this.affectFlags + ", flags=" + this.flags + ", affectCtrls=" + this.affectCtrls + ", ctrls=" + this.ctrls + ", message=" + this.message + ")";
+      return "SetDebuggingFlags.SetDebuggingFlagsBuilder(affectFlags=" + this.affectFlags + ", flags=" + this.flags + ", affectCtrls=" + this.affectCtrls + ", ctrls=" + this.ctrls + ", message=" + java.util.Arrays.toString(this.message) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetDebuggingFlags(final int affectFlags, final int flags, final int affectCtrls, final int ctrls, final ByteList message) {
+  SetDebuggingFlags(final int affectFlags, final int flags, final int affectCtrls, final int ctrls, final byte[] message) {
     if (message == null) {
       throw new java.lang.NullPointerException("message is marked non-null but is null");
     }
@@ -188,7 +187,7 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getMessage() {
+  public byte[] getMessage() {
     return this.message;
   }
 
@@ -202,9 +201,7 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
     if (this.getFlags() != other.getFlags()) return false;
     if (this.getAffectCtrls() != other.getAffectCtrls()) return false;
     if (this.getCtrls() != other.getCtrls()) return false;
-    final java.lang.Object this$message = this.getMessage();
-    final java.lang.Object other$message = other.getMessage();
-    if (this$message == null ? other$message != null : !this$message.equals(other$message)) return false;
+    if (!java.util.Arrays.equals(this.getMessage(), other.getMessage())) return false;
     return true;
   }
 
@@ -217,14 +214,13 @@ public final class SetDebuggingFlags implements TwoWayRequest<SetDebuggingFlagsR
     result = result * PRIME + this.getFlags();
     result = result * PRIME + this.getAffectCtrls();
     result = result * PRIME + this.getCtrls();
-    final java.lang.Object $message = this.getMessage();
-    result = result * PRIME + ($message == null ? 43 : $message.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getMessage());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetDebuggingFlags(affectFlags=" + this.getAffectFlags() + ", flags=" + this.getFlags() + ", affectCtrls=" + this.getAffectCtrls() + ", ctrls=" + this.getCtrls() + ", message=" + this.getMessage() + ")";
+    return "SetDebuggingFlags(affectFlags=" + this.getAffectFlags() + ", flags=" + this.getFlags() + ", affectCtrls=" + this.getAffectCtrls() + ", ctrls=" + this.getCtrls() + ", message=" + java.util.Arrays.toString(this.getMessage()) + ")";
   }
 }

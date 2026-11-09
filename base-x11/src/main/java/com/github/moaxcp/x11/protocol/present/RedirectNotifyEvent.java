@@ -1,14 +1,13 @@
 package com.github.moaxcp.x11.protocol.present;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XGenericEvent;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.xproto.Rectangle;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class RedirectNotifyEvent implements XGenericEvent {
   public static final String PLUGIN_NAME = "present";
@@ -37,7 +36,7 @@ public final class RedirectNotifyEvent implements XGenericEvent {
   private final long targetMsc;
   private final long divisor;
   private final long remainder;
-  private final ImmutableList<Notify> notifies;
+  private final List<Notify> notifies;
 
   @Override
   public byte getResponseCode() {
@@ -94,7 +93,7 @@ public final class RedirectNotifyEvent implements XGenericEvent {
     javaStart += 8;
     long remainder = in.readCard64();
     javaStart += 8;
-    MutableList<Notify> notifies = Lists.mutable.withInitialCapacity(length - javaStart);
+    List<Notify> notifies = new ArrayList<>(length - javaStart);
     while (javaStart < length * 4) {
       Notify baseObject = Notify.readNotify(in);
       notifies.add(baseObject);
@@ -122,7 +121,7 @@ public final class RedirectNotifyEvent implements XGenericEvent {
     javaBuilder.targetMsc(targetMsc);
     javaBuilder.divisor(divisor);
     javaBuilder.remainder(remainder);
-    javaBuilder.notifies(notifies.toImmutable());
+    javaBuilder.notifies(List.copyOf(notifies));
     javaBuilder.sentEvent(sentEvent);
     javaBuilder.firstEventOffset(firstEventOffset);
     if (javaBuilder.getSize() < 32) {
@@ -225,7 +224,7 @@ public final class RedirectNotifyEvent implements XGenericEvent {
     @java.lang.SuppressWarnings("all")
     private long remainder;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Notify> notifies;
+    private List<Notify> notifies;
 
     public int getSize() {
       return 104 + XObject.sizeOf(notifies);
@@ -461,7 +460,7 @@ public final class RedirectNotifyEvent implements XGenericEvent {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public RedirectNotifyEvent.RedirectNotifyEventBuilder notifies(final ImmutableList<Notify> notifies) {
+    public RedirectNotifyEvent.RedirectNotifyEventBuilder notifies(final List<Notify> notifies) {
       if (notifies == null) {
         throw new java.lang.NullPointerException("notifies is marked non-null but is null");
       }
@@ -482,7 +481,7 @@ public final class RedirectNotifyEvent implements XGenericEvent {
   }
 
   @java.lang.SuppressWarnings("all")
-  RedirectNotifyEvent(final byte firstEventOffset, final boolean sentEvent, final byte extension, final short sequenceNumber, final short eventType, final boolean updateWindow, final int event, final int eventWindow, final int window, final int pixmap, final int serial, final int validRegion, final int updateRegion, final Rectangle validRect, final Rectangle updateRect, final short xOff, final short yOff, final int targetCrtc, final int waitFence, final int idleFence, final int options, final long targetMsc, final long divisor, final long remainder, final ImmutableList<Notify> notifies) {
+  RedirectNotifyEvent(final byte firstEventOffset, final boolean sentEvent, final byte extension, final short sequenceNumber, final short eventType, final boolean updateWindow, final int event, final int eventWindow, final int window, final int pixmap, final int serial, final int validRegion, final int updateRegion, final Rectangle validRect, final Rectangle updateRect, final short xOff, final short yOff, final int targetCrtc, final int waitFence, final int idleFence, final int options, final long targetMsc, final long divisor, final long remainder, final List<Notify> notifies) {
     if (validRect == null) {
       throw new java.lang.NullPointerException("validRect is marked non-null but is null");
     }
@@ -645,7 +644,7 @@ public final class RedirectNotifyEvent implements XGenericEvent {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Notify> getNotifies() {
+  public List<Notify> getNotifies() {
     return this.notifies;
   }
 

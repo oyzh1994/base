@@ -1,23 +1,20 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class AddGlyphs implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
   public static final byte OPCODE = 20;
   private final int glyphset;
-  private final IntList glyphids;
-  private final ImmutableList<Glyphinfo> glyphs;
-  private final ByteList data;
+  private final int[] glyphids;
+  private final List<Glyphinfo> glyphs;
+  private final byte[] data;
 
   public byte getOpCode() {
     return OPCODE;
@@ -34,18 +31,18 @@ public final class AddGlyphs implements OneWayRequest {
     javaStart += 4;
     int glyphsLen = in.readCard32();
     javaStart += 4;
-    IntList glyphids = in.readCard32((int) (Integer.toUnsignedLong(glyphsLen)));
-    javaStart += 4 * glyphids.size();
-    MutableList<Glyphinfo> glyphs = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(glyphsLen)));
+    int[] glyphids = in.readCard32((int) (Integer.toUnsignedLong(glyphsLen)));
+    javaStart += 4 * glyphids.length;
+    List<Glyphinfo> glyphs = new ArrayList<>((int) (Integer.toUnsignedLong(glyphsLen)));
     for (int i = 0; i < Integer.toUnsignedLong(glyphsLen); i++) {
       glyphs.add(Glyphinfo.readGlyphinfo(in));
     }
     javaStart += XObject.sizeOf(glyphs);
-    ByteList data = in.readByte(Short.toUnsignedInt(length) - javaStart);
+    byte[] data = in.readByte(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.glyphset(glyphset);
-    javaBuilder.glyphids(glyphids.toImmutable());
-    javaBuilder.glyphs(glyphs.toImmutable());
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.glyphids(glyphids);
+    javaBuilder.glyphs(List.copyOf(glyphs));
+    javaBuilder.data(data);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -68,7 +65,7 @@ public final class AddGlyphs implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 4 * glyphids.size() + XObject.sizeOf(glyphs) + 1 * data.size();
+    return 12 + 4 * glyphids.length + XObject.sizeOf(glyphs) + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -80,14 +77,14 @@ public final class AddGlyphs implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int glyphset;
     @java.lang.SuppressWarnings("all")
-    private IntList glyphids;
+    private int[] glyphids;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Glyphinfo> glyphs;
+    private List<Glyphinfo> glyphs;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public int getSize() {
-      return 12 + 4 * glyphids.size() + XObject.sizeOf(glyphs) + 1 * data.size();
+      return 12 + 4 * glyphids.length + XObject.sizeOf(glyphs) + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -107,7 +104,7 @@ public final class AddGlyphs implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AddGlyphs.AddGlyphsBuilder glyphids(final IntList glyphids) {
+    public AddGlyphs.AddGlyphsBuilder glyphids(final int[] glyphids) {
       if (glyphids == null) {
         throw new java.lang.NullPointerException("glyphids is marked non-null but is null");
       }
@@ -119,7 +116,7 @@ public final class AddGlyphs implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AddGlyphs.AddGlyphsBuilder glyphs(final ImmutableList<Glyphinfo> glyphs) {
+    public AddGlyphs.AddGlyphsBuilder glyphs(final List<Glyphinfo> glyphs) {
       if (glyphs == null) {
         throw new java.lang.NullPointerException("glyphs is marked non-null but is null");
       }
@@ -131,7 +128,7 @@ public final class AddGlyphs implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AddGlyphs.AddGlyphsBuilder data(final ByteList data) {
+    public AddGlyphs.AddGlyphsBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -147,12 +144,12 @@ public final class AddGlyphs implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "AddGlyphs.AddGlyphsBuilder(glyphset=" + this.glyphset + ", glyphids=" + this.glyphids + ", glyphs=" + this.glyphs + ", data=" + this.data + ")";
+      return "AddGlyphs.AddGlyphsBuilder(glyphset=" + this.glyphset + ", glyphids=" + java.util.Arrays.toString(this.glyphids) + ", glyphs=" + this.glyphs + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  AddGlyphs(final int glyphset, final IntList glyphids, final ImmutableList<Glyphinfo> glyphs, final ByteList data) {
+  AddGlyphs(final int glyphset, final int[] glyphids, final List<Glyphinfo> glyphs, final byte[] data) {
     if (glyphids == null) {
       throw new java.lang.NullPointerException("glyphids is marked non-null but is null");
     }
@@ -179,17 +176,17 @@ public final class AddGlyphs implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getGlyphids() {
+  public int[] getGlyphids() {
     return this.glyphids;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Glyphinfo> getGlyphs() {
+  public List<Glyphinfo> getGlyphs() {
     return this.glyphs;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -200,15 +197,11 @@ public final class AddGlyphs implements OneWayRequest {
     if (!(o instanceof AddGlyphs)) return false;
     final AddGlyphs other = (AddGlyphs) o;
     if (this.getGlyphset() != other.getGlyphset()) return false;
-    final java.lang.Object this$glyphids = this.getGlyphids();
-    final java.lang.Object other$glyphids = other.getGlyphids();
-    if (this$glyphids == null ? other$glyphids != null : !this$glyphids.equals(other$glyphids)) return false;
+    if (!java.util.Arrays.equals(this.getGlyphids(), other.getGlyphids())) return false;
     final java.lang.Object this$glyphs = this.getGlyphs();
     final java.lang.Object other$glyphs = other.getGlyphs();
     if (this$glyphs == null ? other$glyphs != null : !this$glyphs.equals(other$glyphs)) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -218,18 +211,16 @@ public final class AddGlyphs implements OneWayRequest {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getGlyphset();
-    final java.lang.Object $glyphids = this.getGlyphids();
-    result = result * PRIME + ($glyphids == null ? 43 : $glyphids.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getGlyphids());
     final java.lang.Object $glyphs = this.getGlyphs();
     result = result * PRIME + ($glyphs == null ? 43 : $glyphs.hashCode());
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "AddGlyphs(glyphset=" + this.getGlyphset() + ", glyphids=" + this.getGlyphids() + ", glyphs=" + this.getGlyphs() + ", data=" + this.getData() + ")";
+    return "AddGlyphs(glyphset=" + this.getGlyphset() + ", glyphids=" + java.util.Arrays.toString(this.getGlyphids()) + ", glyphs=" + this.getGlyphs() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

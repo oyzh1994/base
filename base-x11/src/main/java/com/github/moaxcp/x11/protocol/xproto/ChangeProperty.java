@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ChangeProperty implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -15,7 +14,7 @@ public final class ChangeProperty implements OneWayRequest {
   private final int type;
   private final byte format;
   private final int dataLen;
-  private final ByteList data;
+  private final byte[] data;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,14 +30,14 @@ public final class ChangeProperty implements OneWayRequest {
     byte format = in.readCard8();
     byte[] pad7 = in.readPad(3);
     int dataLen = in.readCard32();
-    ByteList data = in.readVoid((int) ((Integer.toUnsignedLong(dataLen) * Byte.toUnsignedInt(format)) / 8));
+    byte[] data = in.readVoid((int) ((Integer.toUnsignedLong(dataLen) * Byte.toUnsignedInt(format)) / 8));
     javaBuilder.mode(mode);
     javaBuilder.window(window);
     javaBuilder.property(property);
     javaBuilder.type(type);
     javaBuilder.format(format);
     javaBuilder.dataLen(dataLen);
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.data(data);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -60,7 +59,7 @@ public final class ChangeProperty implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 24 + 1 * data.size();
+    return 24 + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -82,7 +81,7 @@ public final class ChangeProperty implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int dataLen;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public ChangeProperty.ChangePropertyBuilder mode(PropMode mode) {
       this.mode = (byte) mode.getValue();
@@ -95,7 +94,7 @@ public final class ChangeProperty implements OneWayRequest {
     }
 
     public int getSize() {
-      return 24 + 1 * data.size();
+      return 24 + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -151,7 +150,7 @@ public final class ChangeProperty implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ChangeProperty.ChangePropertyBuilder data(final ByteList data) {
+    public ChangeProperty.ChangePropertyBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -167,12 +166,12 @@ public final class ChangeProperty implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ChangeProperty.ChangePropertyBuilder(mode=" + this.mode + ", window=" + this.window + ", property=" + this.property + ", type=" + this.type + ", format=" + this.format + ", dataLen=" + this.dataLen + ", data=" + this.data + ")";
+      return "ChangeProperty.ChangePropertyBuilder(mode=" + this.mode + ", window=" + this.window + ", property=" + this.property + ", type=" + this.type + ", format=" + this.format + ", dataLen=" + this.dataLen + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ChangeProperty(final byte mode, final int window, final int property, final int type, final byte format, final int dataLen, final ByteList data) {
+  ChangeProperty(final byte mode, final int window, final int property, final int type, final byte format, final int dataLen, final byte[] data) {
     if (data == null) {
       throw new java.lang.NullPointerException("data is marked non-null but is null");
     }
@@ -221,7 +220,7 @@ public final class ChangeProperty implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -237,9 +236,7 @@ public final class ChangeProperty implements OneWayRequest {
     if (this.getType() != other.getType()) return false;
     if (this.getFormat() != other.getFormat()) return false;
     if (this.getDataLen() != other.getDataLen()) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -254,14 +251,13 @@ public final class ChangeProperty implements OneWayRequest {
     result = result * PRIME + this.getType();
     result = result * PRIME + this.getFormat();
     result = result * PRIME + this.getDataLen();
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ChangeProperty(mode=" + this.getMode() + ", window=" + this.getWindow() + ", property=" + this.getProperty() + ", type=" + this.getType() + ", format=" + this.getFormat() + ", dataLen=" + this.getDataLen() + ", data=" + this.getData() + ")";
+    return "ChangeProperty(mode=" + this.getMode() + ", window=" + this.getWindow() + ", property=" + this.getProperty() + ", type=" + this.getType() + ", format=" + this.getFormat() + ", dataLen=" + this.getDataLen() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

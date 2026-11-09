@@ -1,31 +1,30 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import com.github.moaxcp.x11.protocol.xproto.Point;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Outline implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
   private final byte cornerRadius;
-  private final ImmutableList<Point> points;
+  private final List<Point> points;
 
   public static Outline readOutline(X11Input in) throws IOException {
     Outline.OutlineBuilder javaBuilder = Outline.builder();
     byte nPoints = in.readCard8();
     byte cornerRadius = in.readCard8();
     byte[] pad2 = in.readPad(2);
-    MutableList<Point> points = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nPoints));
+    List<Point> points = new ArrayList<>(Byte.toUnsignedInt(nPoints));
     for (int i = 0; i < Byte.toUnsignedInt(nPoints); i++) {
       points.add(Point.readPoint(in));
     }
     javaBuilder.cornerRadius(cornerRadius);
-    javaBuilder.points(points.toImmutable());
+    javaBuilder.points(List.copyOf(points));
     return javaBuilder.build();
   }
 
@@ -54,7 +53,7 @@ public final class Outline implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte cornerRadius;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Point> points;
+    private List<Point> points;
 
     public int getSize() {
       return 4 + XObject.sizeOf(points);
@@ -77,7 +76,7 @@ public final class Outline implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Outline.OutlineBuilder points(final ImmutableList<Point> points) {
+    public Outline.OutlineBuilder points(final List<Point> points) {
       if (points == null) {
         throw new java.lang.NullPointerException("points is marked non-null but is null");
       }
@@ -98,7 +97,7 @@ public final class Outline implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  Outline(final byte cornerRadius, final ImmutableList<Point> points) {
+  Outline(final byte cornerRadius, final List<Point> points) {
     if (points == null) {
       throw new java.lang.NullPointerException("points is marked non-null but is null");
     }
@@ -117,7 +116,7 @@ public final class Outline implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Point> getPoints() {
+  public List<Point> getPoints() {
     return this.points;
   }
 

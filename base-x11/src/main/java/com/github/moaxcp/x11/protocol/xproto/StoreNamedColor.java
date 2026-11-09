@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class StoreNamedColor implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -12,7 +11,7 @@ public final class StoreNamedColor implements OneWayRequest {
   private final byte flags;
   private final int cmap;
   private final int pixel;
-  private final ByteList name;
+  private final byte[] name;
 
   public byte getOpCode() {
     return OPCODE;
@@ -26,11 +25,11 @@ public final class StoreNamedColor implements OneWayRequest {
     int pixel = in.readCard32();
     short nameLen = in.readCard16();
     byte[] pad6 = in.readPad(2);
-    ByteList name = in.readChar(Short.toUnsignedInt(nameLen));
+    byte[] name = in.readChar(Short.toUnsignedInt(nameLen));
     javaBuilder.flags(flags);
     javaBuilder.cmap(cmap);
     javaBuilder.pixel(pixel);
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -42,7 +41,7 @@ public final class StoreNamedColor implements OneWayRequest {
     out.writeCard16((short) getLength());
     out.writeCard32(cmap);
     out.writeCard32(pixel);
-    short nameLen = (short) name.size();
+    short nameLen = (short) name.length;
     out.writeCard16(nameLen);
     out.writePad(2);
     out.writeChar(name);
@@ -63,7 +62,7 @@ public final class StoreNamedColor implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 16 + 1 * name.size();
+    return 16 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -79,7 +78,7 @@ public final class StoreNamedColor implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int pixel;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public boolean isFlagsEnabled(ColorFlag... maskEnums) {
       if (maskEnums == null) {
@@ -108,7 +107,7 @@ public final class StoreNamedColor implements OneWayRequest {
     }
 
     public int getSize() {
-      return 16 + 1 * name.size();
+      return 16 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -146,7 +145,7 @@ public final class StoreNamedColor implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public StoreNamedColor.StoreNamedColorBuilder name(final ByteList name) {
+    public StoreNamedColor.StoreNamedColorBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -162,12 +161,12 @@ public final class StoreNamedColor implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "StoreNamedColor.StoreNamedColorBuilder(flags=" + this.flags + ", cmap=" + this.cmap + ", pixel=" + this.pixel + ", name=" + this.name + ")";
+      return "StoreNamedColor.StoreNamedColorBuilder(flags=" + this.flags + ", cmap=" + this.cmap + ", pixel=" + this.pixel + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  StoreNamedColor(final byte flags, final int cmap, final int pixel, final ByteList name) {
+  StoreNamedColor(final byte flags, final int cmap, final int pixel, final byte[] name) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -198,7 +197,7 @@ public final class StoreNamedColor implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -211,9 +210,7 @@ public final class StoreNamedColor implements OneWayRequest {
     if (this.getFlags() != other.getFlags()) return false;
     if (this.getCmap() != other.getCmap()) return false;
     if (this.getPixel() != other.getPixel()) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -225,14 +222,13 @@ public final class StoreNamedColor implements OneWayRequest {
     result = result * PRIME + this.getFlags();
     result = result * PRIME + this.getCmap();
     result = result * PRIME + this.getPixel();
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "StoreNamedColor(flags=" + this.getFlags() + ", cmap=" + this.getCmap() + ", pixel=" + this.getPixel() + ", name=" + this.getName() + ")";
+    return "StoreNamedColor(flags=" + this.getFlags() + ", cmap=" + this.getCmap() + ", pixel=" + this.getPixel() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

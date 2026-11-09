@@ -5,13 +5,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class InternAtom implements TwoWayRequest<InternAtomReply> {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 16;
   private final boolean onlyIfExists;
-  private final ByteList name;
+  private final byte[] name;
 
   public XReplyFunction<InternAtomReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> InternAtomReply.readInternAtomReply(field, sequenceNumber, in);
@@ -27,9 +26,9 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
     short length = in.readCard16();
     short nameLen = in.readCard16();
     byte[] pad4 = in.readPad(2);
-    ByteList name = in.readChar(Short.toUnsignedInt(nameLen));
+    byte[] name = in.readChar(Short.toUnsignedInt(nameLen));
     javaBuilder.onlyIfExists(onlyIfExists);
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -39,7 +38,7 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
     out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeBool(onlyIfExists);
     out.writeCard16((short) getLength());
-    short nameLen = (short) name.size();
+    short nameLen = (short) name.length;
     out.writeCard16(nameLen);
     out.writePad(2);
     out.writeChar(name);
@@ -48,7 +47,7 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
 
   @Override
   public int getSize() {
-    return 8 + 1 * name.size();
+    return 8 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -60,10 +59,10 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
     @java.lang.SuppressWarnings("all")
     private boolean onlyIfExists;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public int getSize() {
-      return 8 + 1 * name.size();
+      return 8 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -83,7 +82,7 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public InternAtom.InternAtomBuilder name(final ByteList name) {
+    public InternAtom.InternAtomBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -99,12 +98,12 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "InternAtom.InternAtomBuilder(onlyIfExists=" + this.onlyIfExists + ", name=" + this.name + ")";
+      return "InternAtom.InternAtomBuilder(onlyIfExists=" + this.onlyIfExists + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  InternAtom(final boolean onlyIfExists, final ByteList name) {
+  InternAtom(final boolean onlyIfExists, final byte[] name) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -123,7 +122,7 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -134,9 +133,7 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
     if (!(o instanceof InternAtom)) return false;
     final InternAtom other = (InternAtom) o;
     if (this.isOnlyIfExists() != other.isOnlyIfExists()) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -146,14 +143,13 @@ public final class InternAtom implements TwoWayRequest<InternAtomReply> {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + (this.isOnlyIfExists() ? 79 : 97);
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "InternAtom(onlyIfExists=" + this.isOnlyIfExists() + ", name=" + this.getName() + ")";
+    return "InternAtom(onlyIfExists=" + this.isOnlyIfExists() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

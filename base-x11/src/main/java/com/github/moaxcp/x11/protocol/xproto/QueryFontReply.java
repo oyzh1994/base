@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class QueryFontReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
@@ -23,8 +22,8 @@ public final class QueryFontReply implements XReply {
   private final boolean allCharsExist;
   private final short fontAscent;
   private final short fontDescent;
-  private final ImmutableList<Fontprop> properties;
-  private final ImmutableList<Charinfo> charInfos;
+  private final List<Fontprop> properties;
+  private final List<Charinfo> charInfos;
 
   public static QueryFontReply readQueryFontReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryFontReply.QueryFontReplyBuilder javaBuilder = QueryFontReply.builder();
@@ -44,11 +43,11 @@ public final class QueryFontReply implements XReply {
     short fontAscent = in.readInt16();
     short fontDescent = in.readInt16();
     int charInfosLen = in.readCard32();
-    MutableList<Fontprop> properties = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(propertiesLen));
+    List<Fontprop> properties = new ArrayList<>(Short.toUnsignedInt(propertiesLen));
     for (int i = 0; i < Short.toUnsignedInt(propertiesLen); i++) {
       properties.add(Fontprop.readFontprop(in));
     }
-    MutableList<Charinfo> charInfos = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(charInfosLen)));
+    List<Charinfo> charInfos = new ArrayList<>((int) (Integer.toUnsignedLong(charInfosLen)));
     for (int i = 0; i < Integer.toUnsignedLong(charInfosLen); i++) {
       charInfos.add(Charinfo.readCharinfo(in));
     }
@@ -64,8 +63,8 @@ public final class QueryFontReply implements XReply {
     javaBuilder.allCharsExist(allCharsExist);
     javaBuilder.fontAscent(fontAscent);
     javaBuilder.fontDescent(fontDescent);
-    javaBuilder.properties(properties.toImmutable());
-    javaBuilder.charInfos(charInfos.toImmutable());
+    javaBuilder.properties(List.copyOf(properties));
+    javaBuilder.charInfos(List.copyOf(charInfos));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -141,9 +140,9 @@ public final class QueryFontReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short fontDescent;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Fontprop> properties;
+    private List<Fontprop> properties;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Charinfo> charInfos;
+    private List<Charinfo> charInfos;
 
     public QueryFontReply.QueryFontReplyBuilder drawDirection(FontDraw drawDirection) {
       this.drawDirection = (byte) drawDirection.getValue();
@@ -272,7 +271,7 @@ public final class QueryFontReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryFontReply.QueryFontReplyBuilder properties(final ImmutableList<Fontprop> properties) {
+    public QueryFontReply.QueryFontReplyBuilder properties(final List<Fontprop> properties) {
       if (properties == null) {
         throw new java.lang.NullPointerException("properties is marked non-null but is null");
       }
@@ -284,7 +283,7 @@ public final class QueryFontReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryFontReply.QueryFontReplyBuilder charInfos(final ImmutableList<Charinfo> charInfos) {
+    public QueryFontReply.QueryFontReplyBuilder charInfos(final List<Charinfo> charInfos) {
       if (charInfos == null) {
         throw new java.lang.NullPointerException("charInfos is marked non-null but is null");
       }
@@ -305,7 +304,7 @@ public final class QueryFontReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryFontReply(final short sequenceNumber, final Charinfo minBounds, final Charinfo maxBounds, final short minCharOrByte2, final short maxCharOrByte2, final short defaultChar, final byte drawDirection, final byte minByte1, final byte maxByte1, final boolean allCharsExist, final short fontAscent, final short fontDescent, final ImmutableList<Fontprop> properties, final ImmutableList<Charinfo> charInfos) {
+  QueryFontReply(final short sequenceNumber, final Charinfo minBounds, final Charinfo maxBounds, final short minCharOrByte2, final short maxCharOrByte2, final short defaultChar, final byte drawDirection, final byte minByte1, final byte maxByte1, final boolean allCharsExist, final short fontAscent, final short fontDescent, final List<Fontprop> properties, final List<Charinfo> charInfos) {
     if (minBounds == null) {
       throw new java.lang.NullPointerException("minBounds is marked non-null but is null");
     }
@@ -400,12 +399,12 @@ public final class QueryFontReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Fontprop> getProperties() {
+  public List<Fontprop> getProperties() {
     return this.properties;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Charinfo> getCharInfos() {
+  public List<Charinfo> getCharInfos() {
     return this.charInfos;
   }
 

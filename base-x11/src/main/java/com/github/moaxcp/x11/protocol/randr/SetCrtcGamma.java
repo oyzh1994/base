@@ -4,15 +4,14 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ShortList;
 
 public final class SetCrtcGamma implements OneWayRequest {
   public static final String PLUGIN_NAME = "randr";
   public static final byte OPCODE = 24;
   private final int crtc;
-  private final ShortList red;
-  private final ShortList green;
-  private final ShortList blue;
+  private final short[] red;
+  private final short[] green;
+  private final short[] blue;
 
   public byte getOpCode() {
     return OPCODE;
@@ -25,13 +24,13 @@ public final class SetCrtcGamma implements OneWayRequest {
     int crtc = in.readCard32();
     short size = in.readCard16();
     byte[] pad5 = in.readPad(2);
-    ShortList red = in.readCard16(Short.toUnsignedInt(size));
-    ShortList green = in.readCard16(Short.toUnsignedInt(size));
-    ShortList blue = in.readCard16(Short.toUnsignedInt(size));
+    short[] red = in.readCard16(Short.toUnsignedInt(size));
+    short[] green = in.readCard16(Short.toUnsignedInt(size));
+    short[] blue = in.readCard16(Short.toUnsignedInt(size));
     javaBuilder.crtc(crtc);
-    javaBuilder.red(red.toImmutable());
-    javaBuilder.green(green.toImmutable());
-    javaBuilder.blue(blue.toImmutable());
+    javaBuilder.red(red);
+    javaBuilder.green(green);
+    javaBuilder.blue(blue);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -42,7 +41,7 @@ public final class SetCrtcGamma implements OneWayRequest {
     out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(crtc);
-    short size = (short) blue.size();
+    short size = (short) blue.length;
     out.writeCard16(size);
     out.writePad(2);
     out.writeCard16(red);
@@ -53,7 +52,7 @@ public final class SetCrtcGamma implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 2 * red.size() + 2 * green.size() + 2 * blue.size();
+    return 12 + 2 * red.length + 2 * green.length + 2 * blue.length;
   }
 
   public String getPluginName() {
@@ -65,14 +64,14 @@ public final class SetCrtcGamma implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int crtc;
     @java.lang.SuppressWarnings("all")
-    private ShortList red;
+    private short[] red;
     @java.lang.SuppressWarnings("all")
-    private ShortList green;
+    private short[] green;
     @java.lang.SuppressWarnings("all")
-    private ShortList blue;
+    private short[] blue;
 
     public int getSize() {
-      return 12 + 2 * red.size() + 2 * green.size() + 2 * blue.size();
+      return 12 + 2 * red.length + 2 * green.length + 2 * blue.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -92,7 +91,7 @@ public final class SetCrtcGamma implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCrtcGamma.SetCrtcGammaBuilder red(final ShortList red) {
+    public SetCrtcGamma.SetCrtcGammaBuilder red(final short[] red) {
       if (red == null) {
         throw new java.lang.NullPointerException("red is marked non-null but is null");
       }
@@ -104,7 +103,7 @@ public final class SetCrtcGamma implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCrtcGamma.SetCrtcGammaBuilder green(final ShortList green) {
+    public SetCrtcGamma.SetCrtcGammaBuilder green(final short[] green) {
       if (green == null) {
         throw new java.lang.NullPointerException("green is marked non-null but is null");
       }
@@ -116,7 +115,7 @@ public final class SetCrtcGamma implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCrtcGamma.SetCrtcGammaBuilder blue(final ShortList blue) {
+    public SetCrtcGamma.SetCrtcGammaBuilder blue(final short[] blue) {
       if (blue == null) {
         throw new java.lang.NullPointerException("blue is marked non-null but is null");
       }
@@ -132,12 +131,12 @@ public final class SetCrtcGamma implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetCrtcGamma.SetCrtcGammaBuilder(crtc=" + this.crtc + ", red=" + this.red + ", green=" + this.green + ", blue=" + this.blue + ")";
+      return "SetCrtcGamma.SetCrtcGammaBuilder(crtc=" + this.crtc + ", red=" + java.util.Arrays.toString(this.red) + ", green=" + java.util.Arrays.toString(this.green) + ", blue=" + java.util.Arrays.toString(this.blue) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetCrtcGamma(final int crtc, final ShortList red, final ShortList green, final ShortList blue) {
+  SetCrtcGamma(final int crtc, final short[] red, final short[] green, final short[] blue) {
     if (red == null) {
       throw new java.lang.NullPointerException("red is marked non-null but is null");
     }
@@ -164,17 +163,17 @@ public final class SetCrtcGamma implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getRed() {
+  public short[] getRed() {
     return this.red;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getGreen() {
+  public short[] getGreen() {
     return this.green;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getBlue() {
+  public short[] getBlue() {
     return this.blue;
   }
 
@@ -185,15 +184,9 @@ public final class SetCrtcGamma implements OneWayRequest {
     if (!(o instanceof SetCrtcGamma)) return false;
     final SetCrtcGamma other = (SetCrtcGamma) o;
     if (this.getCrtc() != other.getCrtc()) return false;
-    final java.lang.Object this$red = this.getRed();
-    final java.lang.Object other$red = other.getRed();
-    if (this$red == null ? other$red != null : !this$red.equals(other$red)) return false;
-    final java.lang.Object this$green = this.getGreen();
-    final java.lang.Object other$green = other.getGreen();
-    if (this$green == null ? other$green != null : !this$green.equals(other$green)) return false;
-    final java.lang.Object this$blue = this.getBlue();
-    final java.lang.Object other$blue = other.getBlue();
-    if (this$blue == null ? other$blue != null : !this$blue.equals(other$blue)) return false;
+    if (!java.util.Arrays.equals(this.getRed(), other.getRed())) return false;
+    if (!java.util.Arrays.equals(this.getGreen(), other.getGreen())) return false;
+    if (!java.util.Arrays.equals(this.getBlue(), other.getBlue())) return false;
     return true;
   }
 
@@ -203,18 +196,15 @@ public final class SetCrtcGamma implements OneWayRequest {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getCrtc();
-    final java.lang.Object $red = this.getRed();
-    result = result * PRIME + ($red == null ? 43 : $red.hashCode());
-    final java.lang.Object $green = this.getGreen();
-    result = result * PRIME + ($green == null ? 43 : $green.hashCode());
-    final java.lang.Object $blue = this.getBlue();
-    result = result * PRIME + ($blue == null ? 43 : $blue.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getRed());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getGreen());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getBlue());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetCrtcGamma(crtc=" + this.getCrtc() + ", red=" + this.getRed() + ", green=" + this.getGreen() + ", blue=" + this.getBlue() + ")";
+    return "SetCrtcGamma(crtc=" + this.getCrtc() + ", red=" + java.util.Arrays.toString(this.getRed()) + ", green=" + java.util.Arrays.toString(this.getGreen()) + ", blue=" + java.util.Arrays.toString(this.getBlue()) + ")";
   }
 }

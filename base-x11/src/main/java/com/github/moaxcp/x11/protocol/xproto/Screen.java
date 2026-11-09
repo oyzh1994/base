@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Screen implements XStruct {
   public static final String PLUGIN_NAME = "xproto";
@@ -26,7 +25,7 @@ public final class Screen implements XStruct {
   private final byte backingStores;
   private final boolean saveUnders;
   private final byte rootDepth;
-  private final ImmutableList<Depth> allowedDepths;
+  private final List<Depth> allowedDepths;
 
   public static Screen readScreen(X11Input in) throws IOException {
     Screen.ScreenBuilder javaBuilder = Screen.builder();
@@ -46,7 +45,7 @@ public final class Screen implements XStruct {
     boolean saveUnders = in.readBool();
     byte rootDepth = in.readCard8();
     byte allowedDepthsLen = in.readCard8();
-    MutableList<Depth> allowedDepths = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(allowedDepthsLen));
+    List<Depth> allowedDepths = new ArrayList<>(Byte.toUnsignedInt(allowedDepthsLen));
     for (int i = 0; i < Byte.toUnsignedInt(allowedDepthsLen); i++) {
       allowedDepths.add(Depth.readDepth(in));
     }
@@ -65,7 +64,7 @@ public final class Screen implements XStruct {
     javaBuilder.backingStores(backingStores);
     javaBuilder.saveUnders(saveUnders);
     javaBuilder.rootDepth(rootDepth);
-    javaBuilder.allowedDepths(allowedDepths.toImmutable());
+    javaBuilder.allowedDepths(List.copyOf(allowedDepths));
     return javaBuilder.build();
   }
 
@@ -147,7 +146,7 @@ public final class Screen implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte rootDepth;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Depth> allowedDepths;
+    private List<Depth> allowedDepths;
 
     public boolean isCurrentInputMasksEnabled(EventMask... maskEnums) {
       if (maskEnums == null) {
@@ -323,7 +322,7 @@ public final class Screen implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Screen.ScreenBuilder allowedDepths(final ImmutableList<Depth> allowedDepths) {
+    public Screen.ScreenBuilder allowedDepths(final List<Depth> allowedDepths) {
       if (allowedDepths == null) {
         throw new java.lang.NullPointerException("allowedDepths is marked non-null but is null");
       }
@@ -344,7 +343,7 @@ public final class Screen implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  Screen(final int root, final int defaultColormap, final int whitePixel, final int blackPixel, final int currentInputMasks, final short widthInPixels, final short heightInPixels, final short widthInMillimeters, final short heightInMillimeters, final short minInstalledMaps, final short maxInstalledMaps, final int rootVisual, final byte backingStores, final boolean saveUnders, final byte rootDepth, final ImmutableList<Depth> allowedDepths) {
+  Screen(final int root, final int defaultColormap, final int whitePixel, final int blackPixel, final int currentInputMasks, final short widthInPixels, final short heightInPixels, final short widthInMillimeters, final short heightInMillimeters, final short minInstalledMaps, final short maxInstalledMaps, final int rootVisual, final byte backingStores, final boolean saveUnders, final byte rootDepth, final List<Depth> allowedDepths) {
     if (allowedDepths == null) {
       throw new java.lang.NullPointerException("allowedDepths is marked non-null but is null");
     }
@@ -447,7 +446,7 @@ public final class Screen implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Depth> getAllowedDepths() {
+  public List<Depth> getAllowedDepths() {
     return this.allowedDepths;
   }
 

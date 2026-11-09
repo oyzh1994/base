@@ -5,22 +5,21 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class Host implements XStruct {
   public static final String PLUGIN_NAME = "xproto";
   private final byte family;
-  private final ByteList address;
+  private final byte[] address;
 
   public static Host readHost(X11Input in) throws IOException {
     Host.HostBuilder javaBuilder = Host.builder();
     byte family = in.readCard8();
     byte[] pad1 = in.readPad(1);
     short addressLen = in.readCard16();
-    ByteList address = in.readByte(Short.toUnsignedInt(addressLen));
+    byte[] address = in.readByte(Short.toUnsignedInt(addressLen));
     in.readPadAlign(Short.toUnsignedInt(addressLen));
     javaBuilder.family(family);
-    javaBuilder.address(address.toImmutable());
+    javaBuilder.address(address);
     return javaBuilder.build();
   }
 
@@ -28,7 +27,7 @@ public final class Host implements XStruct {
   public void write(X11Output out) throws IOException {
     out.writeCard8(family);
     out.writePad(1);
-    short addressLen = (short) address.size();
+    short addressLen = (short) address.length;
     out.writeCard16(addressLen);
     out.writeByte(address);
     out.writePadAlign(Short.toUnsignedInt(addressLen));
@@ -36,7 +35,7 @@ public final class Host implements XStruct {
 
   @Override
   public int getSize() {
-    return 4 + 1 * address.size() + XObject.getSizeForPadAlign(4, 1 * address.size());
+    return 4 + 1 * address.length + XObject.getSizeForPadAlign(4, 1 * address.length);
   }
 
   public String getPluginName() {
@@ -48,7 +47,7 @@ public final class Host implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte family;
     @java.lang.SuppressWarnings("all")
-    private ByteList address;
+    private byte[] address;
 
     public Host.HostBuilder family(Family family) {
       this.family = (byte) family.getValue();
@@ -61,7 +60,7 @@ public final class Host implements XStruct {
     }
 
     public int getSize() {
-      return 4 + 1 * address.size() + XObject.getSizeForPadAlign(4, 1 * address.size());
+      return 4 + 1 * address.length + XObject.getSizeForPadAlign(4, 1 * address.length);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -72,7 +71,7 @@ public final class Host implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Host.HostBuilder address(final ByteList address) {
+    public Host.HostBuilder address(final byte[] address) {
       if (address == null) {
         throw new java.lang.NullPointerException("address is marked non-null but is null");
       }
@@ -88,12 +87,12 @@ public final class Host implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "Host.HostBuilder(family=" + this.family + ", address=" + this.address + ")";
+      return "Host.HostBuilder(family=" + this.family + ", address=" + java.util.Arrays.toString(this.address) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  Host(final byte family, final ByteList address) {
+  Host(final byte family, final byte[] address) {
     if (address == null) {
       throw new java.lang.NullPointerException("address is marked non-null but is null");
     }
@@ -112,7 +111,7 @@ public final class Host implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getAddress() {
+  public byte[] getAddress() {
     return this.address;
   }
 
@@ -123,9 +122,7 @@ public final class Host implements XStruct {
     if (!(o instanceof Host)) return false;
     final Host other = (Host) o;
     if (this.getFamily() != other.getFamily()) return false;
-    final java.lang.Object this$address = this.getAddress();
-    final java.lang.Object other$address = other.getAddress();
-    if (this$address == null ? other$address != null : !this$address.equals(other$address)) return false;
+    if (!java.util.Arrays.equals(this.getAddress(), other.getAddress())) return false;
     return true;
   }
 
@@ -135,14 +132,13 @@ public final class Host implements XStruct {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getFamily();
-    final java.lang.Object $address = this.getAddress();
-    result = result * PRIME + ($address == null ? 43 : $address.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAddress());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "Host(family=" + this.getFamily() + ", address=" + this.getAddress() + ")";
+    return "Host(family=" + this.getFamily() + ", address=" + java.util.Arrays.toString(this.getAddress()) + ")";
   }
 }

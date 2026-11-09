@@ -5,7 +5,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.xproto.PropMode;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ChangeOutputProperty implements OneWayRequest {
   public static final String PLUGIN_NAME = "randr";
@@ -16,7 +15,7 @@ public final class ChangeOutputProperty implements OneWayRequest {
   private final byte format;
   private final byte mode;
   private final int numUnits;
-  private final ByteList data;
+  private final byte[] data;
 
   public byte getOpCode() {
     return OPCODE;
@@ -33,14 +32,14 @@ public final class ChangeOutputProperty implements OneWayRequest {
     byte mode = in.readCard8();
     byte[] pad8 = in.readPad(2);
     int numUnits = in.readCard32();
-    ByteList data = in.readVoid((int) ((Integer.toUnsignedLong(numUnits) * Byte.toUnsignedInt(format)) / 8));
+    byte[] data = in.readVoid((int) ((Integer.toUnsignedLong(numUnits) * Byte.toUnsignedInt(format)) / 8));
     javaBuilder.output(output);
     javaBuilder.property(property);
     javaBuilder.type(type);
     javaBuilder.format(format);
     javaBuilder.mode(mode);
     javaBuilder.numUnits(numUnits);
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.data(data);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -63,7 +62,7 @@ public final class ChangeOutputProperty implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 24 + 1 * data.size();
+    return 24 + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -85,7 +84,7 @@ public final class ChangeOutputProperty implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int numUnits;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public ChangeOutputProperty.ChangeOutputPropertyBuilder mode(PropMode mode) {
       this.mode = (byte) mode.getValue();
@@ -98,7 +97,7 @@ public final class ChangeOutputProperty implements OneWayRequest {
     }
 
     public int getSize() {
-      return 24 + 1 * data.size();
+      return 24 + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -154,7 +153,7 @@ public final class ChangeOutputProperty implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ChangeOutputProperty.ChangeOutputPropertyBuilder data(final ByteList data) {
+    public ChangeOutputProperty.ChangeOutputPropertyBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -170,12 +169,12 @@ public final class ChangeOutputProperty implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ChangeOutputProperty.ChangeOutputPropertyBuilder(output=" + this.output + ", property=" + this.property + ", type=" + this.type + ", format=" + this.format + ", mode=" + this.mode + ", numUnits=" + this.numUnits + ", data=" + this.data + ")";
+      return "ChangeOutputProperty.ChangeOutputPropertyBuilder(output=" + this.output + ", property=" + this.property + ", type=" + this.type + ", format=" + this.format + ", mode=" + this.mode + ", numUnits=" + this.numUnits + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ChangeOutputProperty(final int output, final int property, final int type, final byte format, final byte mode, final int numUnits, final ByteList data) {
+  ChangeOutputProperty(final int output, final int property, final int type, final byte format, final byte mode, final int numUnits, final byte[] data) {
     if (data == null) {
       throw new java.lang.NullPointerException("data is marked non-null but is null");
     }
@@ -224,7 +223,7 @@ public final class ChangeOutputProperty implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -240,9 +239,7 @@ public final class ChangeOutputProperty implements OneWayRequest {
     if (this.getFormat() != other.getFormat()) return false;
     if (this.getMode() != other.getMode()) return false;
     if (this.getNumUnits() != other.getNumUnits()) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -257,14 +254,13 @@ public final class ChangeOutputProperty implements OneWayRequest {
     result = result * PRIME + this.getFormat();
     result = result * PRIME + this.getMode();
     result = result * PRIME + this.getNumUnits();
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ChangeOutputProperty(output=" + this.getOutput() + ", property=" + this.getProperty() + ", type=" + this.getType() + ", format=" + this.getFormat() + ", mode=" + this.getMode() + ", numUnits=" + this.getNumUnits() + ", data=" + this.getData() + ")";
+    return "ChangeOutputProperty(output=" + this.getOutput() + ", property=" + this.getProperty() + ", type=" + this.getType() + ", format=" + this.getFormat() + ", mode=" + this.getMode() + ", numUnits=" + this.getNumUnits() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

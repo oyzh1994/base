@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
 import com.github.moaxcp.x11.protocol.X11Output;
-import org.eclipse.collections.api.list.primitive.ShortList;
 import java.io.IOException;
 
 public final class ClientMessageData16 implements ClientMessageDataUnion {
   public static final String PLUGIN_NAME = "xproto";
-  private final ShortList data16;
+  private final short[] data16;
   private final byte format = 16;
 
-  public ClientMessageData16(ShortList data16) {
+  public ClientMessageData16(short[] data16) {
     if (data16 == null) {
       throw new java.lang.NullPointerException("data16 is marked non-null but is null");
     }
-    if (data16.size() != 10) {
-      throw new IllegalArgumentException("data16 must have length of 10. Got: \"" + data16.size() + "\"");
+    if (data16.length != 10) {
+      throw new IllegalArgumentException("data16 must have length of 10. Got: \"" + data16.length + "\"");
     }
     this.data16 = data16;
   }
@@ -34,7 +33,7 @@ public final class ClientMessageData16 implements ClientMessageDataUnion {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getData16() {
+  public short[] getData16() {
     return this.data16;
   }
 
@@ -50,9 +49,7 @@ public final class ClientMessageData16 implements ClientMessageDataUnion {
     if (!(o instanceof ClientMessageData16)) return false;
     final ClientMessageData16 other = (ClientMessageData16) o;
     if (this.getFormat() != other.getFormat()) return false;
-    final java.lang.Object this$data16 = this.getData16();
-    final java.lang.Object other$data16 = other.getData16();
-    if (this$data16 == null ? other$data16 != null : !this$data16.equals(other$data16)) return false;
+    if (!java.util.Arrays.equals(this.getData16(), other.getData16())) return false;
     return true;
   }
 
@@ -62,14 +59,13 @@ public final class ClientMessageData16 implements ClientMessageDataUnion {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getFormat();
-    final java.lang.Object $data16 = this.getData16();
-    result = result * PRIME + ($data16 == null ? 43 : $data16.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData16());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ClientMessageData16(data16=" + this.getData16() + ", format=" + this.getFormat() + ")";
+    return "ClientMessageData16(data16=" + java.util.Arrays.toString(this.getData16()) + ", format=" + this.getFormat() + ")";
   }
 }

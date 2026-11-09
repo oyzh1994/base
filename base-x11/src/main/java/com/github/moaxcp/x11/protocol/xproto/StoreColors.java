@@ -1,19 +1,18 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class StoreColors implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 89;
   private final int cmap;
-  private final ImmutableList<Coloritem> items;
+  private final List<Coloritem> items;
 
   public byte getOpCode() {
     return OPCODE;
@@ -28,14 +27,14 @@ public final class StoreColors implements OneWayRequest {
     javaStart += 2;
     int cmap = in.readCard32();
     javaStart += 4;
-    MutableList<Coloritem> items = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Coloritem> items = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Coloritem baseObject = Coloritem.readColoritem(in);
       items.add(baseObject);
       javaStart += baseObject.getSize();
     }
     javaBuilder.cmap(cmap);
-    javaBuilder.items(items.toImmutable());
+    javaBuilder.items(List.copyOf(items));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -66,7 +65,7 @@ public final class StoreColors implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int cmap;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Coloritem> items;
+    private List<Coloritem> items;
 
     public int getSize() {
       return 8 + XObject.sizeOf(items);
@@ -89,7 +88,7 @@ public final class StoreColors implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public StoreColors.StoreColorsBuilder items(final ImmutableList<Coloritem> items) {
+    public StoreColors.StoreColorsBuilder items(final List<Coloritem> items) {
       if (items == null) {
         throw new java.lang.NullPointerException("items is marked non-null but is null");
       }
@@ -110,7 +109,7 @@ public final class StoreColors implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  StoreColors(final int cmap, final ImmutableList<Coloritem> items) {
+  StoreColors(final int cmap, final List<Coloritem> items) {
     if (items == null) {
       throw new java.lang.NullPointerException("items is marked non-null but is null");
     }
@@ -129,7 +128,7 @@ public final class StoreColors implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Coloritem> getItems() {
+  public List<Coloritem> getItems() {
     return this.items;
   }
 

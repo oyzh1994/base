@@ -5,13 +5,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ListFonts implements TwoWayRequest<ListFontsReply> {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 49;
   private final short maxNames;
-  private final ByteList pattern;
+  private final byte[] pattern;
 
   public XReplyFunction<ListFontsReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> ListFontsReply.readListFontsReply(field, sequenceNumber, in);
@@ -27,9 +26,9 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
     short length = in.readCard16();
     short maxNames = in.readCard16();
     short patternLen = in.readCard16();
-    ByteList pattern = in.readChar(Short.toUnsignedInt(patternLen));
+    byte[] pattern = in.readChar(Short.toUnsignedInt(patternLen));
     javaBuilder.maxNames(maxNames);
-    javaBuilder.pattern(pattern.toImmutable());
+    javaBuilder.pattern(pattern);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -40,7 +39,7 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard16(maxNames);
-    short patternLen = (short) pattern.size();
+    short patternLen = (short) pattern.length;
     out.writeCard16(patternLen);
     out.writeChar(pattern);
     out.writePadAlign(getSize());
@@ -48,7 +47,7 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
 
   @Override
   public int getSize() {
-    return 8 + 1 * pattern.size();
+    return 8 + 1 * pattern.length;
   }
 
   public String getPluginName() {
@@ -60,10 +59,10 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
     @java.lang.SuppressWarnings("all")
     private short maxNames;
     @java.lang.SuppressWarnings("all")
-    private ByteList pattern;
+    private byte[] pattern;
 
     public int getSize() {
-      return 8 + 1 * pattern.size();
+      return 8 + 1 * pattern.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -83,7 +82,7 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListFonts.ListFontsBuilder pattern(final ByteList pattern) {
+    public ListFonts.ListFontsBuilder pattern(final byte[] pattern) {
       if (pattern == null) {
         throw new java.lang.NullPointerException("pattern is marked non-null but is null");
       }
@@ -99,12 +98,12 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ListFonts.ListFontsBuilder(maxNames=" + this.maxNames + ", pattern=" + this.pattern + ")";
+      return "ListFonts.ListFontsBuilder(maxNames=" + this.maxNames + ", pattern=" + java.util.Arrays.toString(this.pattern) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ListFonts(final short maxNames, final ByteList pattern) {
+  ListFonts(final short maxNames, final byte[] pattern) {
     if (pattern == null) {
       throw new java.lang.NullPointerException("pattern is marked non-null but is null");
     }
@@ -123,7 +122,7 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getPattern() {
+  public byte[] getPattern() {
     return this.pattern;
   }
 
@@ -134,9 +133,7 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
     if (!(o instanceof ListFonts)) return false;
     final ListFonts other = (ListFonts) o;
     if (this.getMaxNames() != other.getMaxNames()) return false;
-    final java.lang.Object this$pattern = this.getPattern();
-    final java.lang.Object other$pattern = other.getPattern();
-    if (this$pattern == null ? other$pattern != null : !this$pattern.equals(other$pattern)) return false;
+    if (!java.util.Arrays.equals(this.getPattern(), other.getPattern())) return false;
     return true;
   }
 
@@ -146,14 +143,13 @@ public final class ListFonts implements TwoWayRequest<ListFontsReply> {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getMaxNames();
-    final java.lang.Object $pattern = this.getPattern();
-    result = result * PRIME + ($pattern == null ? 43 : $pattern.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPattern());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ListFonts(maxNames=" + this.getMaxNames() + ", pattern=" + this.getPattern() + ")";
+    return "ListFonts(maxNames=" + this.getMaxNames() + ", pattern=" + java.util.Arrays.toString(this.getPattern()) + ")";
   }
 }

@@ -1,15 +1,13 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.Popcount;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class DeviceLedInfo implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
@@ -17,8 +15,8 @@ public final class DeviceLedInfo implements XStruct {
   private final short ledID;
   private final int physIndicators;
   private final int state;
-  private final IntList names;
-  private final ImmutableList<IndicatorMap> maps;
+  private final int[] names;
+  private final List<IndicatorMap> maps;
 
   public static DeviceLedInfo readDeviceLedInfo(X11Input in) throws IOException {
     DeviceLedInfo.DeviceLedInfoBuilder javaBuilder = DeviceLedInfo.builder();
@@ -28,8 +26,8 @@ public final class DeviceLedInfo implements XStruct {
     int mapsPresent = in.readCard32();
     int physIndicators = in.readCard32();
     int state = in.readCard32();
-    IntList names = in.readCard32(Popcount.popcount(Integer.toUnsignedLong(namesPresent)));
-    MutableList<IndicatorMap> maps = Lists.mutable.withInitialCapacity(Popcount.popcount(Integer.toUnsignedLong(mapsPresent)));
+    int[] names = in.readCard32(Popcount.popcount(Integer.toUnsignedLong(namesPresent)));
+    List<IndicatorMap> maps = new ArrayList<>(Popcount.popcount(Integer.toUnsignedLong(mapsPresent)));
     for (int i = 0; i < Popcount.popcount(Integer.toUnsignedLong(mapsPresent)); i++) {
       maps.add(IndicatorMap.readIndicatorMap(in));
     }
@@ -37,8 +35,8 @@ public final class DeviceLedInfo implements XStruct {
     javaBuilder.ledID(ledID);
     javaBuilder.physIndicators(physIndicators);
     javaBuilder.state(state);
-    javaBuilder.names(names.toImmutable());
-    javaBuilder.maps(maps.toImmutable());
+    javaBuilder.names(names);
+    javaBuilder.maps(List.copyOf(maps));
     return javaBuilder.build();
   }
 
@@ -46,7 +44,7 @@ public final class DeviceLedInfo implements XStruct {
   public void write(X11Output out) throws IOException {
     out.writeCard16(ledClass);
     out.writeCard16(ledID);
-    int namesPresent = names.size();
+    int namesPresent = names.length;
     out.writeCard32(namesPresent);
     int mapsPresent = maps.size();
     out.writeCard32(mapsPresent);
@@ -60,7 +58,7 @@ public final class DeviceLedInfo implements XStruct {
 
   @Override
   public int getSize() {
-    return 20 + 4 * names.size() + XObject.sizeOf(maps);
+    return 20 + 4 * names.length + XObject.sizeOf(maps);
   }
 
   public String getPluginName() {
@@ -78,9 +76,9 @@ public final class DeviceLedInfo implements XStruct {
     @java.lang.SuppressWarnings("all")
     private int state;
     @java.lang.SuppressWarnings("all")
-    private IntList names;
+    private int[] names;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<IndicatorMap> maps;
+    private List<IndicatorMap> maps;
 
     public DeviceLedInfo.DeviceLedInfoBuilder ledClass(LedClass ledClass) {
       this.ledClass = (short) ledClass.getValue();
@@ -93,7 +91,7 @@ public final class DeviceLedInfo implements XStruct {
     }
 
     public int getSize() {
-      return 20 + 4 * names.size() + XObject.sizeOf(maps);
+      return 20 + 4 * names.length + XObject.sizeOf(maps);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -131,7 +129,7 @@ public final class DeviceLedInfo implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public DeviceLedInfo.DeviceLedInfoBuilder names(final IntList names) {
+    public DeviceLedInfo.DeviceLedInfoBuilder names(final int[] names) {
       if (names == null) {
         throw new java.lang.NullPointerException("names is marked non-null but is null");
       }
@@ -143,7 +141,7 @@ public final class DeviceLedInfo implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public DeviceLedInfo.DeviceLedInfoBuilder maps(final ImmutableList<IndicatorMap> maps) {
+    public DeviceLedInfo.DeviceLedInfoBuilder maps(final List<IndicatorMap> maps) {
       if (maps == null) {
         throw new java.lang.NullPointerException("maps is marked non-null but is null");
       }
@@ -159,12 +157,12 @@ public final class DeviceLedInfo implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "DeviceLedInfo.DeviceLedInfoBuilder(ledClass=" + this.ledClass + ", ledID=" + this.ledID + ", physIndicators=" + this.physIndicators + ", state=" + this.state + ", names=" + this.names + ", maps=" + this.maps + ")";
+      return "DeviceLedInfo.DeviceLedInfoBuilder(ledClass=" + this.ledClass + ", ledID=" + this.ledID + ", physIndicators=" + this.physIndicators + ", state=" + this.state + ", names=" + java.util.Arrays.toString(this.names) + ", maps=" + this.maps + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  DeviceLedInfo(final short ledClass, final short ledID, final int physIndicators, final int state, final IntList names, final ImmutableList<IndicatorMap> maps) {
+  DeviceLedInfo(final short ledClass, final short ledID, final int physIndicators, final int state, final int[] names, final List<IndicatorMap> maps) {
     if (names == null) {
       throw new java.lang.NullPointerException("names is marked non-null but is null");
     }
@@ -205,12 +203,12 @@ public final class DeviceLedInfo implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getNames() {
+  public int[] getNames() {
     return this.names;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<IndicatorMap> getMaps() {
+  public List<IndicatorMap> getMaps() {
     return this.maps;
   }
 
@@ -224,9 +222,7 @@ public final class DeviceLedInfo implements XStruct {
     if (this.getLedID() != other.getLedID()) return false;
     if (this.getPhysIndicators() != other.getPhysIndicators()) return false;
     if (this.getState() != other.getState()) return false;
-    final java.lang.Object this$names = this.getNames();
-    final java.lang.Object other$names = other.getNames();
-    if (this$names == null ? other$names != null : !this$names.equals(other$names)) return false;
+    if (!java.util.Arrays.equals(this.getNames(), other.getNames())) return false;
     final java.lang.Object this$maps = this.getMaps();
     final java.lang.Object other$maps = other.getMaps();
     if (this$maps == null ? other$maps != null : !this$maps.equals(other$maps)) return false;
@@ -242,8 +238,7 @@ public final class DeviceLedInfo implements XStruct {
     result = result * PRIME + this.getLedID();
     result = result * PRIME + this.getPhysIndicators();
     result = result * PRIME + this.getState();
-    final java.lang.Object $names = this.getNames();
-    result = result * PRIME + ($names == null ? 43 : $names.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getNames());
     final java.lang.Object $maps = this.getMaps();
     result = result * PRIME + ($maps == null ? 43 : $maps.hashCode());
     return result;
@@ -252,6 +247,6 @@ public final class DeviceLedInfo implements XStruct {
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "DeviceLedInfo(ledClass=" + this.getLedClass() + ", ledID=" + this.getLedID() + ", physIndicators=" + this.getPhysIndicators() + ", state=" + this.getState() + ", names=" + this.getNames() + ", maps=" + this.getMaps() + ")";
+    return "DeviceLedInfo(ledClass=" + this.getLedClass() + ", ledID=" + this.getLedID() + ", physIndicators=" + this.getPhysIndicators() + ", state=" + this.getState() + ", names=" + java.util.Arrays.toString(this.getNames()) + ", maps=" + this.getMaps() + ")";
   }
 }

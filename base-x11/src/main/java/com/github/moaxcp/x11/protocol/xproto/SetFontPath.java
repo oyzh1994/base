@@ -1,18 +1,17 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class SetFontPath implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 51;
-  private final ImmutableList<Str> font;
+  private final List<Str> font;
 
   public byte getOpCode() {
     return OPCODE;
@@ -24,11 +23,11 @@ public final class SetFontPath implements OneWayRequest {
     short length = in.readCard16();
     short fontQty = in.readCard16();
     byte[] pad4 = in.readPad(2);
-    MutableList<Str> font = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(fontQty));
+    List<Str> font = new ArrayList<>(Short.toUnsignedInt(fontQty));
     for (int i = 0; i < Short.toUnsignedInt(fontQty); i++) {
       font.add(Str.readStr(in));
     }
-    javaBuilder.font(font.toImmutable());
+    javaBuilder.font(List.copyOf(font));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -59,7 +58,7 @@ public final class SetFontPath implements OneWayRequest {
 
   public static class SetFontPathBuilder {
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Str> font;
+    private List<Str> font;
 
     public int getSize() {
       return 8 + XObject.sizeOf(font);
@@ -73,7 +72,7 @@ public final class SetFontPath implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetFontPath.SetFontPathBuilder font(final ImmutableList<Str> font) {
+    public SetFontPath.SetFontPathBuilder font(final List<Str> font) {
       if (font == null) {
         throw new java.lang.NullPointerException("font is marked non-null but is null");
       }
@@ -94,7 +93,7 @@ public final class SetFontPath implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  SetFontPath(final ImmutableList<Str> font) {
+  SetFontPath(final List<Str> font) {
     if (font == null) {
       throw new java.lang.NullPointerException("font is marked non-null but is null");
     }
@@ -107,7 +106,7 @@ public final class SetFontPath implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Str> getFont() {
+  public List<Str> getFont() {
     return this.font;
   }
 

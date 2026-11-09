@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class QueryOutputPropertyReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
@@ -12,7 +11,7 @@ public final class QueryOutputPropertyReply implements XReply {
   private final boolean pending;
   private final boolean range;
   private final boolean immutable;
-  private final IntList validValues;
+  private final int[] validValues;
 
   public static QueryOutputPropertyReply readQueryOutputPropertyReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryOutputPropertyReply.QueryOutputPropertyReplyBuilder javaBuilder = QueryOutputPropertyReply.builder();
@@ -21,12 +20,12 @@ public final class QueryOutputPropertyReply implements XReply {
     boolean range = in.readBool();
     boolean immutable = in.readBool();
     byte[] pad7 = in.readPad(21);
-    IntList validValues = in.readInt32((int) (Integer.toUnsignedLong(length)));
+    int[] validValues = in.readInt32((int) (Integer.toUnsignedLong(length)));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.pending(pending);
     javaBuilder.range(range);
     javaBuilder.immutable(immutable);
-    javaBuilder.validValues(validValues.toImmutable());
+    javaBuilder.validValues(validValues);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -39,7 +38,7 @@ public final class QueryOutputPropertyReply implements XReply {
     out.writeCard8(getResponseCode());
     out.writePad(1);
     out.writeCard16(sequenceNumber);
-    int length = validValues.size();
+    int length = validValues.length;
     out.writeCard32(getLength());
     out.writeBool(pending);
     out.writeBool(range);
@@ -51,7 +50,7 @@ public final class QueryOutputPropertyReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * validValues.size();
+    return 32 + 4 * validValues.length;
   }
 
   public String getPluginName() {
@@ -69,10 +68,10 @@ public final class QueryOutputPropertyReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private boolean immutable;
     @java.lang.SuppressWarnings("all")
-    private IntList validValues;
+    private int[] validValues;
 
     public int getSize() {
-      return 32 + 4 * validValues.size();
+      return 32 + 4 * validValues.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -119,7 +118,7 @@ public final class QueryOutputPropertyReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryOutputPropertyReply.QueryOutputPropertyReplyBuilder validValues(final IntList validValues) {
+    public QueryOutputPropertyReply.QueryOutputPropertyReplyBuilder validValues(final int[] validValues) {
       if (validValues == null) {
         throw new java.lang.NullPointerException("validValues is marked non-null but is null");
       }
@@ -135,12 +134,12 @@ public final class QueryOutputPropertyReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "QueryOutputPropertyReply.QueryOutputPropertyReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", pending=" + this.pending + ", range=" + this.range + ", immutable=" + this.immutable + ", validValues=" + this.validValues + ")";
+      return "QueryOutputPropertyReply.QueryOutputPropertyReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", pending=" + this.pending + ", range=" + this.range + ", immutable=" + this.immutable + ", validValues=" + java.util.Arrays.toString(this.validValues) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryOutputPropertyReply(final short sequenceNumber, final boolean pending, final boolean range, final boolean immutable, final IntList validValues) {
+  QueryOutputPropertyReply(final short sequenceNumber, final boolean pending, final boolean range, final boolean immutable, final int[] validValues) {
     if (validValues == null) {
       throw new java.lang.NullPointerException("validValues is marked non-null but is null");
     }
@@ -177,7 +176,7 @@ public final class QueryOutputPropertyReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getValidValues() {
+  public int[] getValidValues() {
     return this.validValues;
   }
 
@@ -191,9 +190,7 @@ public final class QueryOutputPropertyReply implements XReply {
     if (this.isPending() != other.isPending()) return false;
     if (this.isRange() != other.isRange()) return false;
     if (this.isImmutable() != other.isImmutable()) return false;
-    final java.lang.Object this$validValues = this.getValidValues();
-    final java.lang.Object other$validValues = other.getValidValues();
-    if (this$validValues == null ? other$validValues != null : !this$validValues.equals(other$validValues)) return false;
+    if (!java.util.Arrays.equals(this.getValidValues(), other.getValidValues())) return false;
     return true;
   }
 
@@ -206,14 +203,13 @@ public final class QueryOutputPropertyReply implements XReply {
     result = result * PRIME + (this.isPending() ? 79 : 97);
     result = result * PRIME + (this.isRange() ? 79 : 97);
     result = result * PRIME + (this.isImmutable() ? 79 : 97);
-    final java.lang.Object $validValues = this.getValidValues();
-    result = result * PRIME + ($validValues == null ? 43 : $validValues.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getValidValues());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "QueryOutputPropertyReply(sequenceNumber=" + this.getSequenceNumber() + ", pending=" + this.isPending() + ", range=" + this.isRange() + ", immutable=" + this.isImmutable() + ", validValues=" + this.getValidValues() + ")";
+    return "QueryOutputPropertyReply(sequenceNumber=" + this.getSequenceNumber() + ", pending=" + this.isPending() + ", range=" + this.isRange() + ", immutable=" + this.isImmutable() + ", validValues=" + java.util.Arrays.toString(this.getValidValues()) + ")";
   }
 }

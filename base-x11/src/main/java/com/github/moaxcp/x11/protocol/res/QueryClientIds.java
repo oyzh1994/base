@@ -1,19 +1,18 @@
 package com.github.moaxcp.x11.protocol.res;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.TwoWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class QueryClientIds implements TwoWayRequest<QueryClientIdsReply> {
   public static final String PLUGIN_NAME = "res";
   public static final byte OPCODE = 4;
-  private final ImmutableList<ClientIdSpec> specs;
+  private final List<ClientIdSpec> specs;
 
   public XReplyFunction<QueryClientIdsReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> QueryClientIdsReply.readQueryClientIdsReply(field, sequenceNumber, in);
@@ -28,11 +27,11 @@ public final class QueryClientIds implements TwoWayRequest<QueryClientIdsReply> 
     byte majorOpcode = in.readCard8();
     short length = in.readCard16();
     int numSpecs = in.readCard32();
-    MutableList<ClientIdSpec> specs = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numSpecs)));
+    List<ClientIdSpec> specs = new ArrayList<>((int) (Integer.toUnsignedLong(numSpecs)));
     for (int i = 0; i < Integer.toUnsignedLong(numSpecs); i++) {
       specs.add(ClientIdSpec.readClientIdSpec(in));
     }
-    javaBuilder.specs(specs.toImmutable());
+    javaBuilder.specs(List.copyOf(specs));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -62,7 +61,7 @@ public final class QueryClientIds implements TwoWayRequest<QueryClientIdsReply> 
 
   public static class QueryClientIdsBuilder {
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ClientIdSpec> specs;
+    private List<ClientIdSpec> specs;
 
     public int getSize() {
       return 8 + XObject.sizeOf(specs);
@@ -76,7 +75,7 @@ public final class QueryClientIds implements TwoWayRequest<QueryClientIdsReply> 
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryClientIds.QueryClientIdsBuilder specs(final ImmutableList<ClientIdSpec> specs) {
+    public QueryClientIds.QueryClientIdsBuilder specs(final List<ClientIdSpec> specs) {
       if (specs == null) {
         throw new java.lang.NullPointerException("specs is marked non-null but is null");
       }
@@ -97,7 +96,7 @@ public final class QueryClientIds implements TwoWayRequest<QueryClientIdsReply> 
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryClientIds(final ImmutableList<ClientIdSpec> specs) {
+  QueryClientIds(final List<ClientIdSpec> specs) {
     if (specs == null) {
       throw new java.lang.NullPointerException("specs is marked non-null but is null");
     }
@@ -110,7 +109,7 @@ public final class QueryClientIds implements TwoWayRequest<QueryClientIdsReply> 
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ClientIdSpec> getSpecs() {
+  public List<ClientIdSpec> getSpecs() {
     return this.specs;
   }
 

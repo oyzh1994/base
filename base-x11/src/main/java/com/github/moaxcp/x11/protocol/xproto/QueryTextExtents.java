@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.TwoWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class QueryTextExtents implements TwoWayRequest<QueryTextExtentsReply> {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 48;
   private final int font;
-  private final ImmutableList<Char2b> string;
+  private final List<Char2b> string;
 
   public XReplyFunction<QueryTextExtentsReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> QueryTextExtentsReply.readQueryTextExtentsReply(field, sequenceNumber, in);
@@ -33,14 +32,14 @@ public final class QueryTextExtents implements TwoWayRequest<QueryTextExtentsRep
     javaStart += 2;
     int font = in.readCard32();
     javaStart += 4;
-    MutableList<Char2b> string = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Char2b> string = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Char2b baseObject = Char2b.readChar2b(in);
       string.add(baseObject);
       javaStart += baseObject.getSize();
     }
     javaBuilder.font(font);
-    javaBuilder.string(string.toImmutable());
+    javaBuilder.string(List.copyOf(string));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -75,7 +74,7 @@ public final class QueryTextExtents implements TwoWayRequest<QueryTextExtentsRep
     @java.lang.SuppressWarnings("all")
     private int font;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Char2b> string;
+    private List<Char2b> string;
 
     public int getSize() {
       return 8 + XObject.sizeOf(string);
@@ -98,7 +97,7 @@ public final class QueryTextExtents implements TwoWayRequest<QueryTextExtentsRep
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryTextExtents.QueryTextExtentsBuilder string(final ImmutableList<Char2b> string) {
+    public QueryTextExtents.QueryTextExtentsBuilder string(final List<Char2b> string) {
       if (string == null) {
         throw new java.lang.NullPointerException("string is marked non-null but is null");
       }
@@ -119,7 +118,7 @@ public final class QueryTextExtents implements TwoWayRequest<QueryTextExtentsRep
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryTextExtents(final int font, final ImmutableList<Char2b> string) {
+  QueryTextExtents(final int font, final List<Char2b> string) {
     if (string == null) {
       throw new java.lang.NullPointerException("string is marked non-null but is null");
     }
@@ -138,7 +137,7 @@ public final class QueryTextExtents implements TwoWayRequest<QueryTextExtentsRep
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Char2b> getString() {
+  public List<Char2b> getString() {
     return this.string;
   }
 

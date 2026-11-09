@@ -5,15 +5,14 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SetupRequest implements XStruct {
   public static final String PLUGIN_NAME = "xproto";
   private final byte byteOrder;
   private final short protocolMajorVersion;
   private final short protocolMinorVersion;
-  private final ByteList authorizationProtocolName;
-  private final ByteList authorizationProtocolData;
+  private final byte[] authorizationProtocolName;
+  private final byte[] authorizationProtocolData;
 
   public static SetupRequest readSetupRequest(X11Input in) throws IOException {
     SetupRequest.SetupRequestBuilder javaBuilder = SetupRequest.builder();
@@ -24,15 +23,15 @@ public final class SetupRequest implements XStruct {
     short authorizationProtocolNameLen = in.readCard16();
     short authorizationProtocolDataLen = in.readCard16();
     byte[] pad6 = in.readPad(2);
-    ByteList authorizationProtocolName = in.readChar(Short.toUnsignedInt(authorizationProtocolNameLen));
+    byte[] authorizationProtocolName = in.readChar(Short.toUnsignedInt(authorizationProtocolNameLen));
     in.readPadAlign(Short.toUnsignedInt(authorizationProtocolNameLen));
-    ByteList authorizationProtocolData = in.readChar(Short.toUnsignedInt(authorizationProtocolDataLen));
+    byte[] authorizationProtocolData = in.readChar(Short.toUnsignedInt(authorizationProtocolDataLen));
     in.readPadAlign(Short.toUnsignedInt(authorizationProtocolDataLen));
     javaBuilder.byteOrder(byteOrder);
     javaBuilder.protocolMajorVersion(protocolMajorVersion);
     javaBuilder.protocolMinorVersion(protocolMinorVersion);
-    javaBuilder.authorizationProtocolName(authorizationProtocolName.toImmutable());
-    javaBuilder.authorizationProtocolData(authorizationProtocolData.toImmutable());
+    javaBuilder.authorizationProtocolName(authorizationProtocolName);
+    javaBuilder.authorizationProtocolData(authorizationProtocolData);
     return javaBuilder.build();
   }
 
@@ -42,9 +41,9 @@ public final class SetupRequest implements XStruct {
     out.writePad(1);
     out.writeCard16(protocolMajorVersion);
     out.writeCard16(protocolMinorVersion);
-    short authorizationProtocolNameLen = (short) authorizationProtocolName.size();
+    short authorizationProtocolNameLen = (short) authorizationProtocolName.length;
     out.writeCard16(authorizationProtocolNameLen);
-    short authorizationProtocolDataLen = (short) authorizationProtocolData.size();
+    short authorizationProtocolDataLen = (short) authorizationProtocolData.length;
     out.writeCard16(authorizationProtocolDataLen);
     out.writePad(2);
     out.writeChar(authorizationProtocolName);
@@ -55,7 +54,7 @@ public final class SetupRequest implements XStruct {
 
   @Override
   public int getSize() {
-    return 12 + 1 * authorizationProtocolName.size() + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolName.size()) + 1 * authorizationProtocolData.size() + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolData.size());
+    return 12 + 1 * authorizationProtocolName.length + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolName.length) + 1 * authorizationProtocolData.length + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolData.length);
   }
 
   public String getPluginName() {
@@ -71,12 +70,12 @@ public final class SetupRequest implements XStruct {
     @java.lang.SuppressWarnings("all")
     private short protocolMinorVersion;
     @java.lang.SuppressWarnings("all")
-    private ByteList authorizationProtocolName;
+    private byte[] authorizationProtocolName;
     @java.lang.SuppressWarnings("all")
-    private ByteList authorizationProtocolData;
+    private byte[] authorizationProtocolData;
 
     public int getSize() {
-      return 12 + 1 * authorizationProtocolName.size() + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolName.size()) + 1 * authorizationProtocolData.size() + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolData.size());
+      return 12 + 1 * authorizationProtocolName.length + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolName.length) + 1 * authorizationProtocolData.length + XObject.getSizeForPadAlign(4, 1 * authorizationProtocolData.length);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -114,7 +113,7 @@ public final class SetupRequest implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetupRequest.SetupRequestBuilder authorizationProtocolName(final ByteList authorizationProtocolName) {
+    public SetupRequest.SetupRequestBuilder authorizationProtocolName(final byte[] authorizationProtocolName) {
       if (authorizationProtocolName == null) {
         throw new java.lang.NullPointerException("authorizationProtocolName is marked non-null but is null");
       }
@@ -126,7 +125,7 @@ public final class SetupRequest implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetupRequest.SetupRequestBuilder authorizationProtocolData(final ByteList authorizationProtocolData) {
+    public SetupRequest.SetupRequestBuilder authorizationProtocolData(final byte[] authorizationProtocolData) {
       if (authorizationProtocolData == null) {
         throw new java.lang.NullPointerException("authorizationProtocolData is marked non-null but is null");
       }
@@ -142,12 +141,12 @@ public final class SetupRequest implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetupRequest.SetupRequestBuilder(byteOrder=" + this.byteOrder + ", protocolMajorVersion=" + this.protocolMajorVersion + ", protocolMinorVersion=" + this.protocolMinorVersion + ", authorizationProtocolName=" + this.authorizationProtocolName + ", authorizationProtocolData=" + this.authorizationProtocolData + ")";
+      return "SetupRequest.SetupRequestBuilder(byteOrder=" + this.byteOrder + ", protocolMajorVersion=" + this.protocolMajorVersion + ", protocolMinorVersion=" + this.protocolMinorVersion + ", authorizationProtocolName=" + java.util.Arrays.toString(this.authorizationProtocolName) + ", authorizationProtocolData=" + java.util.Arrays.toString(this.authorizationProtocolData) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetupRequest(final byte byteOrder, final short protocolMajorVersion, final short protocolMinorVersion, final ByteList authorizationProtocolName, final ByteList authorizationProtocolData) {
+  SetupRequest(final byte byteOrder, final short protocolMajorVersion, final short protocolMinorVersion, final byte[] authorizationProtocolName, final byte[] authorizationProtocolData) {
     if (authorizationProtocolName == null) {
       throw new java.lang.NullPointerException("authorizationProtocolName is marked non-null but is null");
     }
@@ -182,12 +181,12 @@ public final class SetupRequest implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getAuthorizationProtocolName() {
+  public byte[] getAuthorizationProtocolName() {
     return this.authorizationProtocolName;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getAuthorizationProtocolData() {
+  public byte[] getAuthorizationProtocolData() {
     return this.authorizationProtocolData;
   }
 
@@ -200,12 +199,8 @@ public final class SetupRequest implements XStruct {
     if (this.getByteOrder() != other.getByteOrder()) return false;
     if (this.getProtocolMajorVersion() != other.getProtocolMajorVersion()) return false;
     if (this.getProtocolMinorVersion() != other.getProtocolMinorVersion()) return false;
-    final java.lang.Object this$authorizationProtocolName = this.getAuthorizationProtocolName();
-    final java.lang.Object other$authorizationProtocolName = other.getAuthorizationProtocolName();
-    if (this$authorizationProtocolName == null ? other$authorizationProtocolName != null : !this$authorizationProtocolName.equals(other$authorizationProtocolName)) return false;
-    final java.lang.Object this$authorizationProtocolData = this.getAuthorizationProtocolData();
-    final java.lang.Object other$authorizationProtocolData = other.getAuthorizationProtocolData();
-    if (this$authorizationProtocolData == null ? other$authorizationProtocolData != null : !this$authorizationProtocolData.equals(other$authorizationProtocolData)) return false;
+    if (!java.util.Arrays.equals(this.getAuthorizationProtocolName(), other.getAuthorizationProtocolName())) return false;
+    if (!java.util.Arrays.equals(this.getAuthorizationProtocolData(), other.getAuthorizationProtocolData())) return false;
     return true;
   }
 
@@ -217,16 +212,14 @@ public final class SetupRequest implements XStruct {
     result = result * PRIME + this.getByteOrder();
     result = result * PRIME + this.getProtocolMajorVersion();
     result = result * PRIME + this.getProtocolMinorVersion();
-    final java.lang.Object $authorizationProtocolName = this.getAuthorizationProtocolName();
-    result = result * PRIME + ($authorizationProtocolName == null ? 43 : $authorizationProtocolName.hashCode());
-    final java.lang.Object $authorizationProtocolData = this.getAuthorizationProtocolData();
-    result = result * PRIME + ($authorizationProtocolData == null ? 43 : $authorizationProtocolData.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAuthorizationProtocolName());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAuthorizationProtocolData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetupRequest(byteOrder=" + this.getByteOrder() + ", protocolMajorVersion=" + this.getProtocolMajorVersion() + ", protocolMinorVersion=" + this.getProtocolMinorVersion() + ", authorizationProtocolName=" + this.getAuthorizationProtocolName() + ", authorizationProtocolData=" + this.getAuthorizationProtocolData() + ")";
+    return "SetupRequest(byteOrder=" + this.getByteOrder() + ", protocolMajorVersion=" + this.getProtocolMajorVersion() + ", protocolMinorVersion=" + this.getProtocolMinorVersion() + ", authorizationProtocolName=" + java.util.Arrays.toString(this.getAuthorizationProtocolName()) + ", authorizationProtocolData=" + java.util.Arrays.toString(this.getAuthorizationProtocolData()) + ")";
   }
 }

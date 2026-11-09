@@ -4,25 +4,24 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetImageReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final byte depth;
   private final short sequenceNumber;
   private final int visual;
-  private final ByteList data;
+  private final byte[] data;
 
   public static GetImageReply readGetImageReply(byte depth, short sequenceNumber, X11Input in) throws IOException {
     GetImageReply.GetImageReplyBuilder javaBuilder = GetImageReply.builder();
     int length = in.readCard32();
     int visual = in.readCard32();
     byte[] pad5 = in.readPad(20);
-    ByteList data = in.readByte((int) (Integer.toUnsignedLong(length) * 4));
+    byte[] data = in.readByte((int) (Integer.toUnsignedLong(length) * 4));
     javaBuilder.depth(depth);
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.visual(visual);
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.data(data);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -35,7 +34,7 @@ public final class GetImageReply implements XReply {
     out.writeCard8(getResponseCode());
     out.writeCard8(depth);
     out.writeCard16(sequenceNumber);
-    int length = data.size();
+    int length = data.length;
     out.writeCard32(getLength());
     out.writeCard32(visual);
     out.writePad(20);
@@ -45,7 +44,7 @@ public final class GetImageReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 1 * data.size();
+    return 32 + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -61,10 +60,10 @@ public final class GetImageReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int visual;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public int getSize() {
-      return 32 + 1 * data.size();
+      return 32 + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -102,7 +101,7 @@ public final class GetImageReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetImageReply.GetImageReplyBuilder data(final ByteList data) {
+    public GetImageReply.GetImageReplyBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -118,12 +117,12 @@ public final class GetImageReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetImageReply.GetImageReplyBuilder(depth=" + this.depth + ", sequenceNumber=" + this.sequenceNumber + ", visual=" + this.visual + ", data=" + this.data + ")";
+      return "GetImageReply.GetImageReplyBuilder(depth=" + this.depth + ", sequenceNumber=" + this.sequenceNumber + ", visual=" + this.visual + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetImageReply(final byte depth, final short sequenceNumber, final int visual, final ByteList data) {
+  GetImageReply(final byte depth, final short sequenceNumber, final int visual, final byte[] data) {
     if (data == null) {
       throw new java.lang.NullPointerException("data is marked non-null but is null");
     }
@@ -154,7 +153,7 @@ public final class GetImageReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -167,9 +166,7 @@ public final class GetImageReply implements XReply {
     if (this.getDepth() != other.getDepth()) return false;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
     if (this.getVisual() != other.getVisual()) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -181,14 +178,13 @@ public final class GetImageReply implements XReply {
     result = result * PRIME + this.getDepth();
     result = result * PRIME + this.getSequenceNumber();
     result = result * PRIME + this.getVisual();
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetImageReply(depth=" + this.getDepth() + ", sequenceNumber=" + this.getSequenceNumber() + ", visual=" + this.getVisual() + ", data=" + this.getData() + ")";
+    return "GetImageReply(depth=" + this.getDepth() + ", sequenceNumber=" + this.getSequenceNumber() + ", visual=" + this.getVisual() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

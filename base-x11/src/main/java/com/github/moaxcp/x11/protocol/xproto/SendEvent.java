@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SendEvent implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -12,7 +11,7 @@ public final class SendEvent implements OneWayRequest {
   private final boolean propagate;
   private final int destination;
   private final int eventMask;
-  private final ByteList event;
+  private final byte[] event;
 
   public byte getOpCode() {
     return OPCODE;
@@ -24,11 +23,11 @@ public final class SendEvent implements OneWayRequest {
     short length = in.readCard16();
     int destination = in.readCard32();
     int eventMask = in.readCard32();
-    ByteList event = in.readChar(32);
+    byte[] event = in.readChar(32);
     javaBuilder.propagate(propagate);
     javaBuilder.destination(destination);
     javaBuilder.eventMask(eventMask);
-    javaBuilder.event(event.toImmutable());
+    javaBuilder.event(event);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -58,7 +57,7 @@ public final class SendEvent implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 1 * event.size();
+    return 12 + 1 * event.length;
   }
 
   public String getPluginName() {
@@ -74,7 +73,7 @@ public final class SendEvent implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int eventMask;
     @java.lang.SuppressWarnings("all")
-    private ByteList event;
+    private byte[] event;
 
     public boolean isEventMaskEnabled(EventMask... maskEnums) {
       if (maskEnums == null) {
@@ -103,7 +102,7 @@ public final class SendEvent implements OneWayRequest {
     }
 
     public int getSize() {
-      return 12 + 1 * event.size();
+      return 12 + 1 * event.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -141,7 +140,7 @@ public final class SendEvent implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SendEvent.SendEventBuilder event(final ByteList event) {
+    public SendEvent.SendEventBuilder event(final byte[] event) {
       if (event == null) {
         throw new java.lang.NullPointerException("event is marked non-null but is null");
       }
@@ -157,12 +156,12 @@ public final class SendEvent implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SendEvent.SendEventBuilder(propagate=" + this.propagate + ", destination=" + this.destination + ", eventMask=" + this.eventMask + ", event=" + this.event + ")";
+      return "SendEvent.SendEventBuilder(propagate=" + this.propagate + ", destination=" + this.destination + ", eventMask=" + this.eventMask + ", event=" + java.util.Arrays.toString(this.event) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SendEvent(final boolean propagate, final int destination, final int eventMask, final ByteList event) {
+  SendEvent(final boolean propagate, final int destination, final int eventMask, final byte[] event) {
     if (event == null) {
       throw new java.lang.NullPointerException("event is marked non-null but is null");
     }
@@ -193,7 +192,7 @@ public final class SendEvent implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getEvent() {
+  public byte[] getEvent() {
     return this.event;
   }
 
@@ -206,9 +205,7 @@ public final class SendEvent implements OneWayRequest {
     if (this.isPropagate() != other.isPropagate()) return false;
     if (this.getDestination() != other.getDestination()) return false;
     if (this.getEventMask() != other.getEventMask()) return false;
-    final java.lang.Object this$event = this.getEvent();
-    final java.lang.Object other$event = other.getEvent();
-    if (this$event == null ? other$event != null : !this$event.equals(other$event)) return false;
+    if (!java.util.Arrays.equals(this.getEvent(), other.getEvent())) return false;
     return true;
   }
 
@@ -220,14 +217,13 @@ public final class SendEvent implements OneWayRequest {
     result = result * PRIME + (this.isPropagate() ? 79 : 97);
     result = result * PRIME + this.getDestination();
     result = result * PRIME + this.getEventMask();
-    final java.lang.Object $event = this.getEvent();
-    result = result * PRIME + ($event == null ? 43 : $event.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getEvent());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SendEvent(propagate=" + this.isPropagate() + ", destination=" + this.getDestination() + ", eventMask=" + this.getEventMask() + ", event=" + this.getEvent() + ")";
+    return "SendEvent(propagate=" + this.isPropagate() + ", destination=" + this.getDestination() + ", eventMask=" + this.getEventMask() + ", event=" + java.util.Arrays.toString(this.getEvent()) + ")";
   }
 }

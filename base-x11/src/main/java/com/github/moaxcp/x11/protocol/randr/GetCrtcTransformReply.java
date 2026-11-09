@@ -6,8 +6,6 @@ import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import com.github.moaxcp.x11.protocol.render.Transform;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class GetCrtcTransformReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
@@ -15,10 +13,10 @@ public final class GetCrtcTransformReply implements XReply {
   private final Transform pendingTransform;
   private final boolean hasTransforms;
   private final Transform currentTransform;
-  private final ByteList pendingFilterName;
-  private final IntList pendingParams;
-  private final ByteList currentFilterName;
-  private final IntList currentParams;
+  private final byte[] pendingFilterName;
+  private final int[] pendingParams;
+  private final byte[] currentFilterName;
+  private final int[] currentParams;
 
   public static GetCrtcTransformReply readGetCrtcTransformReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetCrtcTransformReply.GetCrtcTransformReplyBuilder javaBuilder = GetCrtcTransformReply.builder();
@@ -32,20 +30,20 @@ public final class GetCrtcTransformReply implements XReply {
     short pendingNparams = in.readCard16();
     short currentLen = in.readCard16();
     short currentNparams = in.readCard16();
-    ByteList pendingFilterName = in.readChar(Short.toUnsignedInt(pendingLen));
+    byte[] pendingFilterName = in.readChar(Short.toUnsignedInt(pendingLen));
     in.readPadAlign(Short.toUnsignedInt(pendingLen));
-    IntList pendingParams = in.readInt32(Short.toUnsignedInt(pendingNparams));
-    ByteList currentFilterName = in.readChar(Short.toUnsignedInt(currentLen));
+    int[] pendingParams = in.readInt32(Short.toUnsignedInt(pendingNparams));
+    byte[] currentFilterName = in.readChar(Short.toUnsignedInt(currentLen));
     in.readPadAlign(Short.toUnsignedInt(currentLen));
-    IntList currentParams = in.readInt32(Short.toUnsignedInt(currentNparams));
+    int[] currentParams = in.readInt32(Short.toUnsignedInt(currentNparams));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.pendingTransform(pendingTransform);
     javaBuilder.hasTransforms(hasTransforms);
     javaBuilder.currentTransform(currentTransform);
-    javaBuilder.pendingFilterName(pendingFilterName.toImmutable());
-    javaBuilder.pendingParams(pendingParams.toImmutable());
-    javaBuilder.currentFilterName(currentFilterName.toImmutable());
-    javaBuilder.currentParams(currentParams.toImmutable());
+    javaBuilder.pendingFilterName(pendingFilterName);
+    javaBuilder.pendingParams(pendingParams);
+    javaBuilder.currentFilterName(currentFilterName);
+    javaBuilder.currentParams(currentParams);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -64,13 +62,13 @@ public final class GetCrtcTransformReply implements XReply {
     out.writePad(3);
     currentTransform.write(out);
     out.writePad(4);
-    short pendingLen = (short) pendingFilterName.size();
+    short pendingLen = (short) pendingFilterName.length;
     out.writeCard16(pendingLen);
-    short pendingNparams = (short) pendingParams.size();
+    short pendingNparams = (short) pendingParams.length;
     out.writeCard16(pendingNparams);
-    short currentLen = (short) currentFilterName.size();
+    short currentLen = (short) currentFilterName.length;
     out.writeCard16(currentLen);
-    short currentNparams = (short) currentParams.size();
+    short currentNparams = (short) currentParams.length;
     out.writeCard16(currentNparams);
     out.writeChar(pendingFilterName);
     out.writePadAlign(Short.toUnsignedInt(pendingLen));
@@ -83,7 +81,7 @@ public final class GetCrtcTransformReply implements XReply {
 
   @Override
   public int getSize() {
-    return 96 + 1 * pendingFilterName.size() + XObject.getSizeForPadAlign(4, 1 * pendingFilterName.size()) + 4 * pendingParams.size() + 1 * currentFilterName.size() + XObject.getSizeForPadAlign(4, 1 * currentFilterName.size()) + 4 * currentParams.size();
+    return 96 + 1 * pendingFilterName.length + XObject.getSizeForPadAlign(4, 1 * pendingFilterName.length) + 4 * pendingParams.length + 1 * currentFilterName.length + XObject.getSizeForPadAlign(4, 1 * currentFilterName.length) + 4 * currentParams.length;
   }
 
   public String getPluginName() {
@@ -101,16 +99,16 @@ public final class GetCrtcTransformReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private Transform currentTransform;
     @java.lang.SuppressWarnings("all")
-    private ByteList pendingFilterName;
+    private byte[] pendingFilterName;
     @java.lang.SuppressWarnings("all")
-    private IntList pendingParams;
+    private int[] pendingParams;
     @java.lang.SuppressWarnings("all")
-    private ByteList currentFilterName;
+    private byte[] currentFilterName;
     @java.lang.SuppressWarnings("all")
-    private IntList currentParams;
+    private int[] currentParams;
 
     public int getSize() {
-      return 96 + 1 * pendingFilterName.size() + XObject.getSizeForPadAlign(4, 1 * pendingFilterName.size()) + 4 * pendingParams.size() + 1 * currentFilterName.size() + XObject.getSizeForPadAlign(4, 1 * currentFilterName.size()) + 4 * currentParams.size();
+      return 96 + 1 * pendingFilterName.length + XObject.getSizeForPadAlign(4, 1 * pendingFilterName.length) + 4 * pendingParams.length + 1 * currentFilterName.length + XObject.getSizeForPadAlign(4, 1 * currentFilterName.length) + 4 * currentParams.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -163,7 +161,7 @@ public final class GetCrtcTransformReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder pendingFilterName(final ByteList pendingFilterName) {
+    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder pendingFilterName(final byte[] pendingFilterName) {
       if (pendingFilterName == null) {
         throw new java.lang.NullPointerException("pendingFilterName is marked non-null but is null");
       }
@@ -175,7 +173,7 @@ public final class GetCrtcTransformReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder pendingParams(final IntList pendingParams) {
+    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder pendingParams(final int[] pendingParams) {
       if (pendingParams == null) {
         throw new java.lang.NullPointerException("pendingParams is marked non-null but is null");
       }
@@ -187,7 +185,7 @@ public final class GetCrtcTransformReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder currentFilterName(final ByteList currentFilterName) {
+    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder currentFilterName(final byte[] currentFilterName) {
       if (currentFilterName == null) {
         throw new java.lang.NullPointerException("currentFilterName is marked non-null but is null");
       }
@@ -199,7 +197,7 @@ public final class GetCrtcTransformReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder currentParams(final IntList currentParams) {
+    public GetCrtcTransformReply.GetCrtcTransformReplyBuilder currentParams(final int[] currentParams) {
       if (currentParams == null) {
         throw new java.lang.NullPointerException("currentParams is marked non-null but is null");
       }
@@ -215,12 +213,12 @@ public final class GetCrtcTransformReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetCrtcTransformReply.GetCrtcTransformReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", pendingTransform=" + this.pendingTransform + ", hasTransforms=" + this.hasTransforms + ", currentTransform=" + this.currentTransform + ", pendingFilterName=" + this.pendingFilterName + ", pendingParams=" + this.pendingParams + ", currentFilterName=" + this.currentFilterName + ", currentParams=" + this.currentParams + ")";
+      return "GetCrtcTransformReply.GetCrtcTransformReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", pendingTransform=" + this.pendingTransform + ", hasTransforms=" + this.hasTransforms + ", currentTransform=" + this.currentTransform + ", pendingFilterName=" + java.util.Arrays.toString(this.pendingFilterName) + ", pendingParams=" + java.util.Arrays.toString(this.pendingParams) + ", currentFilterName=" + java.util.Arrays.toString(this.currentFilterName) + ", currentParams=" + java.util.Arrays.toString(this.currentParams) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetCrtcTransformReply(final short sequenceNumber, final Transform pendingTransform, final boolean hasTransforms, final Transform currentTransform, final ByteList pendingFilterName, final IntList pendingParams, final ByteList currentFilterName, final IntList currentParams) {
+  GetCrtcTransformReply(final short sequenceNumber, final Transform pendingTransform, final boolean hasTransforms, final Transform currentTransform, final byte[] pendingFilterName, final int[] pendingParams, final byte[] currentFilterName, final int[] currentParams) {
     if (pendingTransform == null) {
       throw new java.lang.NullPointerException("pendingTransform is marked non-null but is null");
     }
@@ -275,22 +273,22 @@ public final class GetCrtcTransformReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getPendingFilterName() {
+  public byte[] getPendingFilterName() {
     return this.pendingFilterName;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getPendingParams() {
+  public int[] getPendingParams() {
     return this.pendingParams;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getCurrentFilterName() {
+  public byte[] getCurrentFilterName() {
     return this.currentFilterName;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getCurrentParams() {
+  public int[] getCurrentParams() {
     return this.currentParams;
   }
 
@@ -308,18 +306,10 @@ public final class GetCrtcTransformReply implements XReply {
     final java.lang.Object this$currentTransform = this.getCurrentTransform();
     final java.lang.Object other$currentTransform = other.getCurrentTransform();
     if (this$currentTransform == null ? other$currentTransform != null : !this$currentTransform.equals(other$currentTransform)) return false;
-    final java.lang.Object this$pendingFilterName = this.getPendingFilterName();
-    final java.lang.Object other$pendingFilterName = other.getPendingFilterName();
-    if (this$pendingFilterName == null ? other$pendingFilterName != null : !this$pendingFilterName.equals(other$pendingFilterName)) return false;
-    final java.lang.Object this$pendingParams = this.getPendingParams();
-    final java.lang.Object other$pendingParams = other.getPendingParams();
-    if (this$pendingParams == null ? other$pendingParams != null : !this$pendingParams.equals(other$pendingParams)) return false;
-    final java.lang.Object this$currentFilterName = this.getCurrentFilterName();
-    final java.lang.Object other$currentFilterName = other.getCurrentFilterName();
-    if (this$currentFilterName == null ? other$currentFilterName != null : !this$currentFilterName.equals(other$currentFilterName)) return false;
-    final java.lang.Object this$currentParams = this.getCurrentParams();
-    final java.lang.Object other$currentParams = other.getCurrentParams();
-    if (this$currentParams == null ? other$currentParams != null : !this$currentParams.equals(other$currentParams)) return false;
+    if (!java.util.Arrays.equals(this.getPendingFilterName(), other.getPendingFilterName())) return false;
+    if (!java.util.Arrays.equals(this.getPendingParams(), other.getPendingParams())) return false;
+    if (!java.util.Arrays.equals(this.getCurrentFilterName(), other.getCurrentFilterName())) return false;
+    if (!java.util.Arrays.equals(this.getCurrentParams(), other.getCurrentParams())) return false;
     return true;
   }
 
@@ -334,20 +324,16 @@ public final class GetCrtcTransformReply implements XReply {
     result = result * PRIME + ($pendingTransform == null ? 43 : $pendingTransform.hashCode());
     final java.lang.Object $currentTransform = this.getCurrentTransform();
     result = result * PRIME + ($currentTransform == null ? 43 : $currentTransform.hashCode());
-    final java.lang.Object $pendingFilterName = this.getPendingFilterName();
-    result = result * PRIME + ($pendingFilterName == null ? 43 : $pendingFilterName.hashCode());
-    final java.lang.Object $pendingParams = this.getPendingParams();
-    result = result * PRIME + ($pendingParams == null ? 43 : $pendingParams.hashCode());
-    final java.lang.Object $currentFilterName = this.getCurrentFilterName();
-    result = result * PRIME + ($currentFilterName == null ? 43 : $currentFilterName.hashCode());
-    final java.lang.Object $currentParams = this.getCurrentParams();
-    result = result * PRIME + ($currentParams == null ? 43 : $currentParams.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPendingFilterName());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPendingParams());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getCurrentFilterName());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getCurrentParams());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetCrtcTransformReply(sequenceNumber=" + this.getSequenceNumber() + ", pendingTransform=" + this.getPendingTransform() + ", hasTransforms=" + this.isHasTransforms() + ", currentTransform=" + this.getCurrentTransform() + ", pendingFilterName=" + this.getPendingFilterName() + ", pendingParams=" + this.getPendingParams() + ", currentFilterName=" + this.getCurrentFilterName() + ", currentParams=" + this.getCurrentParams() + ")";
+    return "GetCrtcTransformReply(sequenceNumber=" + this.getSequenceNumber() + ", pendingTransform=" + this.getPendingTransform() + ", hasTransforms=" + this.isHasTransforms() + ", currentTransform=" + this.getCurrentTransform() + ", pendingFilterName=" + java.util.Arrays.toString(this.getPendingFilterName()) + ", pendingParams=" + java.util.Arrays.toString(this.getPendingParams()) + ", currentFilterName=" + java.util.Arrays.toString(this.getCurrentFilterName()) + ", currentParams=" + java.util.Arrays.toString(this.getCurrentParams()) + ")";
   }
 }

@@ -4,14 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SetDashes implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 58;
   private final int gc;
   private final short dashOffset;
-  private final ByteList dashes;
+  private final byte[] dashes;
 
   public byte getOpCode() {
     return OPCODE;
@@ -24,10 +23,10 @@ public final class SetDashes implements OneWayRequest {
     int gc = in.readCard32();
     short dashOffset = in.readCard16();
     short dashesLen = in.readCard16();
-    ByteList dashes = in.readCard8(Short.toUnsignedInt(dashesLen));
+    byte[] dashes = in.readCard8(Short.toUnsignedInt(dashesLen));
     javaBuilder.gc(gc);
     javaBuilder.dashOffset(dashOffset);
-    javaBuilder.dashes(dashes.toImmutable());
+    javaBuilder.dashes(dashes);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -39,7 +38,7 @@ public final class SetDashes implements OneWayRequest {
     out.writeCard16((short) getLength());
     out.writeCard32(gc);
     out.writeCard16(dashOffset);
-    short dashesLen = (short) dashes.size();
+    short dashesLen = (short) dashes.length;
     out.writeCard16(dashesLen);
     out.writeCard8(dashes);
     out.writePadAlign(getSize());
@@ -47,7 +46,7 @@ public final class SetDashes implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 1 * dashes.size();
+    return 12 + 1 * dashes.length;
   }
 
   public String getPluginName() {
@@ -61,10 +60,10 @@ public final class SetDashes implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short dashOffset;
     @java.lang.SuppressWarnings("all")
-    private ByteList dashes;
+    private byte[] dashes;
 
     public int getSize() {
-      return 12 + 1 * dashes.size();
+      return 12 + 1 * dashes.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -93,7 +92,7 @@ public final class SetDashes implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetDashes.SetDashesBuilder dashes(final ByteList dashes) {
+    public SetDashes.SetDashesBuilder dashes(final byte[] dashes) {
       if (dashes == null) {
         throw new java.lang.NullPointerException("dashes is marked non-null but is null");
       }
@@ -109,12 +108,12 @@ public final class SetDashes implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetDashes.SetDashesBuilder(gc=" + this.gc + ", dashOffset=" + this.dashOffset + ", dashes=" + this.dashes + ")";
+      return "SetDashes.SetDashesBuilder(gc=" + this.gc + ", dashOffset=" + this.dashOffset + ", dashes=" + java.util.Arrays.toString(this.dashes) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetDashes(final int gc, final short dashOffset, final ByteList dashes) {
+  SetDashes(final int gc, final short dashOffset, final byte[] dashes) {
     if (dashes == null) {
       throw new java.lang.NullPointerException("dashes is marked non-null but is null");
     }
@@ -139,7 +138,7 @@ public final class SetDashes implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getDashes() {
+  public byte[] getDashes() {
     return this.dashes;
   }
 
@@ -151,9 +150,7 @@ public final class SetDashes implements OneWayRequest {
     final SetDashes other = (SetDashes) o;
     if (this.getGc() != other.getGc()) return false;
     if (this.getDashOffset() != other.getDashOffset()) return false;
-    final java.lang.Object this$dashes = this.getDashes();
-    final java.lang.Object other$dashes = other.getDashes();
-    if (this$dashes == null ? other$dashes != null : !this$dashes.equals(other$dashes)) return false;
+    if (!java.util.Arrays.equals(this.getDashes(), other.getDashes())) return false;
     return true;
   }
 
@@ -164,14 +161,13 @@ public final class SetDashes implements OneWayRequest {
     int result = 1;
     result = result * PRIME + this.getGc();
     result = result * PRIME + this.getDashOffset();
-    final java.lang.Object $dashes = this.getDashes();
-    result = result * PRIME + ($dashes == null ? 43 : $dashes.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getDashes());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetDashes(gc=" + this.getGc() + ", dashOffset=" + this.getDashOffset() + ", dashes=" + this.getDashes() + ")";
+    return "SetDashes(gc=" + this.getGc() + ", dashOffset=" + this.getDashOffset() + ", dashes=" + java.util.Arrays.toString(this.getDashes()) + ")";
   }
 }

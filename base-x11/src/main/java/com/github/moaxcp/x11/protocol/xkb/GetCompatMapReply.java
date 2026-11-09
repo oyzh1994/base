@@ -1,14 +1,13 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.Popcount;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class GetCompatMapReply implements XReply {
   public static final String PLUGIN_NAME = "xkb";
@@ -16,8 +15,8 @@ public final class GetCompatMapReply implements XReply {
   private final short sequenceNumber;
   private final short firstSIRtrn;
   private final short nTotalSI;
-  private final ImmutableList<SymInterpret> siRtrn;
-  private final ImmutableList<ModDef> groupRtrn;
+  private final List<SymInterpret> siRtrn;
+  private final List<ModDef> groupRtrn;
 
   public static GetCompatMapReply readGetCompatMapReply(byte deviceID, short sequenceNumber, X11Input in) throws IOException {
     GetCompatMapReply.GetCompatMapReplyBuilder javaBuilder = GetCompatMapReply.builder();
@@ -28,11 +27,11 @@ public final class GetCompatMapReply implements XReply {
     short nSIRtrn = in.readCard16();
     short nTotalSI = in.readCard16();
     byte[] pad9 = in.readPad(16);
-    MutableList<SymInterpret> siRtrn = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nSIRtrn));
+    List<SymInterpret> siRtrn = new ArrayList<>(Short.toUnsignedInt(nSIRtrn));
     for (int i = 0; i < Short.toUnsignedInt(nSIRtrn); i++) {
       siRtrn.add(SymInterpret.readSymInterpret(in));
     }
-    MutableList<ModDef> groupRtrn = Lists.mutable.withInitialCapacity(Popcount.popcount(Byte.toUnsignedInt(groupsRtrn)));
+    List<ModDef> groupRtrn = new ArrayList<>(Popcount.popcount(Byte.toUnsignedInt(groupsRtrn)));
     for (int i = 0; i < Popcount.popcount(Byte.toUnsignedInt(groupsRtrn)); i++) {
       groupRtrn.add(ModDef.readModDef(in));
     }
@@ -40,8 +39,8 @@ public final class GetCompatMapReply implements XReply {
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.firstSIRtrn(firstSIRtrn);
     javaBuilder.nTotalSI(nTotalSI);
-    javaBuilder.siRtrn(siRtrn.toImmutable());
-    javaBuilder.groupRtrn(groupRtrn.toImmutable());
+    javaBuilder.siRtrn(List.copyOf(siRtrn));
+    javaBuilder.groupRtrn(List.copyOf(groupRtrn));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -92,9 +91,9 @@ public final class GetCompatMapReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short nTotalSI;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<SymInterpret> siRtrn;
+    private List<SymInterpret> siRtrn;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ModDef> groupRtrn;
+    private List<ModDef> groupRtrn;
 
     public int getSize() {
       return 32 + XObject.sizeOf(siRtrn) + XObject.sizeOf(groupRtrn);
@@ -144,7 +143,7 @@ public final class GetCompatMapReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCompatMapReply.GetCompatMapReplyBuilder siRtrn(final ImmutableList<SymInterpret> siRtrn) {
+    public GetCompatMapReply.GetCompatMapReplyBuilder siRtrn(final List<SymInterpret> siRtrn) {
       if (siRtrn == null) {
         throw new java.lang.NullPointerException("siRtrn is marked non-null but is null");
       }
@@ -156,7 +155,7 @@ public final class GetCompatMapReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCompatMapReply.GetCompatMapReplyBuilder groupRtrn(final ImmutableList<ModDef> groupRtrn) {
+    public GetCompatMapReply.GetCompatMapReplyBuilder groupRtrn(final List<ModDef> groupRtrn) {
       if (groupRtrn == null) {
         throw new java.lang.NullPointerException("groupRtrn is marked non-null but is null");
       }
@@ -177,7 +176,7 @@ public final class GetCompatMapReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  GetCompatMapReply(final byte deviceID, final short sequenceNumber, final short firstSIRtrn, final short nTotalSI, final ImmutableList<SymInterpret> siRtrn, final ImmutableList<ModDef> groupRtrn) {
+  GetCompatMapReply(final byte deviceID, final short sequenceNumber, final short firstSIRtrn, final short nTotalSI, final List<SymInterpret> siRtrn, final List<ModDef> groupRtrn) {
     if (siRtrn == null) {
       throw new java.lang.NullPointerException("siRtrn is marked non-null but is null");
     }
@@ -218,12 +217,12 @@ public final class GetCompatMapReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<SymInterpret> getSiRtrn() {
+  public List<SymInterpret> getSiRtrn() {
     return this.siRtrn;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ModDef> getGroupRtrn() {
+  public List<ModDef> getGroupRtrn() {
     return this.groupRtrn;
   }
 

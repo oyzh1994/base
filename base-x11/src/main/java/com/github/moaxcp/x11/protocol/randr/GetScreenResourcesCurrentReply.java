@@ -1,25 +1,22 @@
 package com.github.moaxcp.x11.protocol.randr;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class GetScreenResourcesCurrentReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
   private final short sequenceNumber;
   private final int timestamp;
   private final int configTimestamp;
-  private final IntList crtcs;
-  private final IntList outputs;
-  private final ImmutableList<ModeInfo> modes;
-  private final ByteList names;
+  private final int[] crtcs;
+  private final int[] outputs;
+  private final List<ModeInfo> modes;
+  private final byte[] names;
 
   public static GetScreenResourcesCurrentReply readGetScreenResourcesCurrentReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder javaBuilder = GetScreenResourcesCurrentReply.builder();
@@ -31,20 +28,20 @@ public final class GetScreenResourcesCurrentReply implements XReply {
     short numModes = in.readCard16();
     short namesLen = in.readCard16();
     byte[] pad10 = in.readPad(8);
-    IntList crtcs = in.readCard32(Short.toUnsignedInt(numCrtcs));
-    IntList outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
-    MutableList<ModeInfo> modes = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(numModes));
+    int[] crtcs = in.readCard32(Short.toUnsignedInt(numCrtcs));
+    int[] outputs = in.readCard32(Short.toUnsignedInt(numOutputs));
+    List<ModeInfo> modes = new ArrayList<>(Short.toUnsignedInt(numModes));
     for (int i = 0; i < Short.toUnsignedInt(numModes); i++) {
       modes.add(ModeInfo.readModeInfo(in));
     }
-    ByteList names = in.readByte(Short.toUnsignedInt(namesLen));
+    byte[] names = in.readByte(Short.toUnsignedInt(namesLen));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.timestamp(timestamp);
     javaBuilder.configTimestamp(configTimestamp);
-    javaBuilder.crtcs(crtcs.toImmutable());
-    javaBuilder.outputs(outputs.toImmutable());
-    javaBuilder.modes(modes.toImmutable());
-    javaBuilder.names(names.toImmutable());
+    javaBuilder.crtcs(crtcs);
+    javaBuilder.outputs(outputs);
+    javaBuilder.modes(List.copyOf(modes));
+    javaBuilder.names(names);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -60,13 +57,13 @@ public final class GetScreenResourcesCurrentReply implements XReply {
     out.writeCard32(getLength());
     out.writeCard32(timestamp);
     out.writeCard32(configTimestamp);
-    short numCrtcs = (short) crtcs.size();
+    short numCrtcs = (short) crtcs.length;
     out.writeCard16(numCrtcs);
-    short numOutputs = (short) outputs.size();
+    short numOutputs = (short) outputs.length;
     out.writeCard16(numOutputs);
     short numModes = (short) modes.size();
     out.writeCard16(numModes);
-    short namesLen = (short) names.size();
+    short namesLen = (short) names.length;
     out.writeCard16(namesLen);
     out.writePad(8);
     out.writeCard32(crtcs);
@@ -80,7 +77,7 @@ public final class GetScreenResourcesCurrentReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * crtcs.size() + 4 * outputs.size() + XObject.sizeOf(modes) + 1 * names.size();
+    return 32 + 4 * crtcs.length + 4 * outputs.length + XObject.sizeOf(modes) + 1 * names.length;
   }
 
   public String getPluginName() {
@@ -96,16 +93,16 @@ public final class GetScreenResourcesCurrentReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int configTimestamp;
     @java.lang.SuppressWarnings("all")
-    private IntList crtcs;
+    private int[] crtcs;
     @java.lang.SuppressWarnings("all")
-    private IntList outputs;
+    private int[] outputs;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ModeInfo> modes;
+    private List<ModeInfo> modes;
     @java.lang.SuppressWarnings("all")
-    private ByteList names;
+    private byte[] names;
 
     public int getSize() {
-      return 32 + 4 * crtcs.size() + 4 * outputs.size() + XObject.sizeOf(modes) + 1 * names.size();
+      return 32 + 4 * crtcs.length + 4 * outputs.length + XObject.sizeOf(modes) + 1 * names.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -143,7 +140,7 @@ public final class GetScreenResourcesCurrentReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder crtcs(final IntList crtcs) {
+    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder crtcs(final int[] crtcs) {
       if (crtcs == null) {
         throw new java.lang.NullPointerException("crtcs is marked non-null but is null");
       }
@@ -155,7 +152,7 @@ public final class GetScreenResourcesCurrentReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder outputs(final IntList outputs) {
+    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder outputs(final int[] outputs) {
       if (outputs == null) {
         throw new java.lang.NullPointerException("outputs is marked non-null but is null");
       }
@@ -167,7 +164,7 @@ public final class GetScreenResourcesCurrentReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder modes(final ImmutableList<ModeInfo> modes) {
+    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder modes(final List<ModeInfo> modes) {
       if (modes == null) {
         throw new java.lang.NullPointerException("modes is marked non-null but is null");
       }
@@ -179,7 +176,7 @@ public final class GetScreenResourcesCurrentReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder names(final ByteList names) {
+    public GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder names(final byte[] names) {
       if (names == null) {
         throw new java.lang.NullPointerException("names is marked non-null but is null");
       }
@@ -195,12 +192,12 @@ public final class GetScreenResourcesCurrentReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", timestamp=" + this.timestamp + ", configTimestamp=" + this.configTimestamp + ", crtcs=" + this.crtcs + ", outputs=" + this.outputs + ", modes=" + this.modes + ", names=" + this.names + ")";
+      return "GetScreenResourcesCurrentReply.GetScreenResourcesCurrentReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", timestamp=" + this.timestamp + ", configTimestamp=" + this.configTimestamp + ", crtcs=" + java.util.Arrays.toString(this.crtcs) + ", outputs=" + java.util.Arrays.toString(this.outputs) + ", modes=" + this.modes + ", names=" + java.util.Arrays.toString(this.names) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetScreenResourcesCurrentReply(final short sequenceNumber, final int timestamp, final int configTimestamp, final IntList crtcs, final IntList outputs, final ImmutableList<ModeInfo> modes, final ByteList names) {
+  GetScreenResourcesCurrentReply(final short sequenceNumber, final int timestamp, final int configTimestamp, final int[] crtcs, final int[] outputs, final List<ModeInfo> modes, final byte[] names) {
     if (crtcs == null) {
       throw new java.lang.NullPointerException("crtcs is marked non-null but is null");
     }
@@ -243,22 +240,22 @@ public final class GetScreenResourcesCurrentReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getCrtcs() {
+  public int[] getCrtcs() {
     return this.crtcs;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getOutputs() {
+  public int[] getOutputs() {
     return this.outputs;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ModeInfo> getModes() {
+  public List<ModeInfo> getModes() {
     return this.modes;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getNames() {
+  public byte[] getNames() {
     return this.names;
   }
 
@@ -271,18 +268,12 @@ public final class GetScreenResourcesCurrentReply implements XReply {
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
     if (this.getTimestamp() != other.getTimestamp()) return false;
     if (this.getConfigTimestamp() != other.getConfigTimestamp()) return false;
-    final java.lang.Object this$crtcs = this.getCrtcs();
-    final java.lang.Object other$crtcs = other.getCrtcs();
-    if (this$crtcs == null ? other$crtcs != null : !this$crtcs.equals(other$crtcs)) return false;
-    final java.lang.Object this$outputs = this.getOutputs();
-    final java.lang.Object other$outputs = other.getOutputs();
-    if (this$outputs == null ? other$outputs != null : !this$outputs.equals(other$outputs)) return false;
+    if (!java.util.Arrays.equals(this.getCrtcs(), other.getCrtcs())) return false;
+    if (!java.util.Arrays.equals(this.getOutputs(), other.getOutputs())) return false;
     final java.lang.Object this$modes = this.getModes();
     final java.lang.Object other$modes = other.getModes();
     if (this$modes == null ? other$modes != null : !this$modes.equals(other$modes)) return false;
-    final java.lang.Object this$names = this.getNames();
-    final java.lang.Object other$names = other.getNames();
-    if (this$names == null ? other$names != null : !this$names.equals(other$names)) return false;
+    if (!java.util.Arrays.equals(this.getNames(), other.getNames())) return false;
     return true;
   }
 
@@ -294,20 +285,17 @@ public final class GetScreenResourcesCurrentReply implements XReply {
     result = result * PRIME + this.getSequenceNumber();
     result = result * PRIME + this.getTimestamp();
     result = result * PRIME + this.getConfigTimestamp();
-    final java.lang.Object $crtcs = this.getCrtcs();
-    result = result * PRIME + ($crtcs == null ? 43 : $crtcs.hashCode());
-    final java.lang.Object $outputs = this.getOutputs();
-    result = result * PRIME + ($outputs == null ? 43 : $outputs.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getCrtcs());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getOutputs());
     final java.lang.Object $modes = this.getModes();
     result = result * PRIME + ($modes == null ? 43 : $modes.hashCode());
-    final java.lang.Object $names = this.getNames();
-    result = result * PRIME + ($names == null ? 43 : $names.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getNames());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetScreenResourcesCurrentReply(sequenceNumber=" + this.getSequenceNumber() + ", timestamp=" + this.getTimestamp() + ", configTimestamp=" + this.getConfigTimestamp() + ", crtcs=" + this.getCrtcs() + ", outputs=" + this.getOutputs() + ", modes=" + this.getModes() + ", names=" + this.getNames() + ")";
+    return "GetScreenResourcesCurrentReply(sequenceNumber=" + this.getSequenceNumber() + ", timestamp=" + this.getTimestamp() + ", configTimestamp=" + this.getConfigTimestamp() + ", crtcs=" + java.util.Arrays.toString(this.getCrtcs()) + ", outputs=" + java.util.Arrays.toString(this.getOutputs()) + ", modes=" + this.getModes() + ", names=" + java.util.Arrays.toString(this.getNames()) + ")";
   }
 }

@@ -1,14 +1,13 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.Popcount;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class SetCompatMap implements OneWayRequest {
   public static final String PLUGIN_NAME = "xkb";
@@ -17,8 +16,8 @@ public final class SetCompatMap implements OneWayRequest {
   private final boolean recomputeActions;
   private final boolean truncateSI;
   private final short firstSI;
-  private final ImmutableList<SymInterpret> si;
-  private final ImmutableList<ModDef> groupMaps;
+  private final List<SymInterpret> si;
+  private final List<ModDef> groupMaps;
 
   public byte getOpCode() {
     return OPCODE;
@@ -36,11 +35,11 @@ public final class SetCompatMap implements OneWayRequest {
     short firstSI = in.readCard16();
     short nSI = in.readCard16();
     byte[] pad10 = in.readPad(2);
-    MutableList<SymInterpret> si = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nSI));
+    List<SymInterpret> si = new ArrayList<>(Short.toUnsignedInt(nSI));
     for (int i = 0; i < Short.toUnsignedInt(nSI); i++) {
       si.add(SymInterpret.readSymInterpret(in));
     }
-    MutableList<ModDef> groupMaps = Lists.mutable.withInitialCapacity(Popcount.popcount(Byte.toUnsignedInt(groups)));
+    List<ModDef> groupMaps = new ArrayList<>(Popcount.popcount(Byte.toUnsignedInt(groups)));
     for (int i = 0; i < Popcount.popcount(Byte.toUnsignedInt(groups)); i++) {
       groupMaps.add(ModDef.readModDef(in));
     }
@@ -48,8 +47,8 @@ public final class SetCompatMap implements OneWayRequest {
     javaBuilder.recomputeActions(recomputeActions);
     javaBuilder.truncateSI(truncateSI);
     javaBuilder.firstSI(firstSI);
-    javaBuilder.si(si.toImmutable());
-    javaBuilder.groupMaps(groupMaps.toImmutable());
+    javaBuilder.si(List.copyOf(si));
+    javaBuilder.groupMaps(List.copyOf(groupMaps));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -98,9 +97,9 @@ public final class SetCompatMap implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short firstSI;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<SymInterpret> si;
+    private List<SymInterpret> si;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ModDef> groupMaps;
+    private List<ModDef> groupMaps;
 
     public int getSize() {
       return 16 + XObject.sizeOf(si) + XObject.sizeOf(groupMaps);
@@ -150,7 +149,7 @@ public final class SetCompatMap implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCompatMap.SetCompatMapBuilder si(final ImmutableList<SymInterpret> si) {
+    public SetCompatMap.SetCompatMapBuilder si(final List<SymInterpret> si) {
       if (si == null) {
         throw new java.lang.NullPointerException("si is marked non-null but is null");
       }
@@ -162,7 +161,7 @@ public final class SetCompatMap implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetCompatMap.SetCompatMapBuilder groupMaps(final ImmutableList<ModDef> groupMaps) {
+    public SetCompatMap.SetCompatMapBuilder groupMaps(final List<ModDef> groupMaps) {
       if (groupMaps == null) {
         throw new java.lang.NullPointerException("groupMaps is marked non-null but is null");
       }
@@ -183,7 +182,7 @@ public final class SetCompatMap implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  SetCompatMap(final short deviceSpec, final boolean recomputeActions, final boolean truncateSI, final short firstSI, final ImmutableList<SymInterpret> si, final ImmutableList<ModDef> groupMaps) {
+  SetCompatMap(final short deviceSpec, final boolean recomputeActions, final boolean truncateSI, final short firstSI, final List<SymInterpret> si, final List<ModDef> groupMaps) {
     if (si == null) {
       throw new java.lang.NullPointerException("si is marked non-null but is null");
     }
@@ -224,12 +223,12 @@ public final class SetCompatMap implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<SymInterpret> getSi() {
+  public List<SymInterpret> getSi() {
     return this.si;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ModDef> getGroupMaps() {
+  public List<ModDef> getGroupMaps() {
     return this.groupMaps;
   }
 

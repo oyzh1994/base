@@ -1,14 +1,12 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ListFontsWithInfoReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
@@ -25,8 +23,8 @@ public final class ListFontsWithInfoReply implements XReply {
   private final short fontAscent;
   private final short fontDescent;
   private final int repliesHint;
-  private final ImmutableList<Fontprop> properties;
-  private final ByteList name;
+  private final List<Fontprop> properties;
+  private final byte[] name;
 
   public static ListFontsWithInfoReply readListFontsWithInfoReply(byte nameLen, short sequenceNumber, X11Input in) throws IOException {
     ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder javaBuilder = ListFontsWithInfoReply.builder();
@@ -46,11 +44,11 @@ public final class ListFontsWithInfoReply implements XReply {
     short fontAscent = in.readInt16();
     short fontDescent = in.readInt16();
     int repliesHint = in.readCard32();
-    MutableList<Fontprop> properties = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(propertiesLen));
+    List<Fontprop> properties = new ArrayList<>(Short.toUnsignedInt(propertiesLen));
     for (int i = 0; i < Short.toUnsignedInt(propertiesLen); i++) {
       properties.add(Fontprop.readFontprop(in));
     }
-    ByteList name = in.readChar(Byte.toUnsignedInt(nameLen));
+    byte[] name = in.readChar(Byte.toUnsignedInt(nameLen));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.minBounds(minBounds);
     javaBuilder.maxBounds(maxBounds);
@@ -64,8 +62,8 @@ public final class ListFontsWithInfoReply implements XReply {
     javaBuilder.fontAscent(fontAscent);
     javaBuilder.fontDescent(fontDescent);
     javaBuilder.repliesHint(repliesHint);
-    javaBuilder.properties(properties.toImmutable());
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.properties(List.copyOf(properties));
+    javaBuilder.name(name);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -76,7 +74,7 @@ public final class ListFontsWithInfoReply implements XReply {
   @Override
   public void write(X11Output out) throws IOException {
     out.writeCard8(getResponseCode());
-    byte nameLen = (byte) name.size();
+    byte nameLen = (byte) name.length;
     out.writeCard8(nameLen);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
@@ -105,7 +103,7 @@ public final class ListFontsWithInfoReply implements XReply {
 
   @Override
   public int getSize() {
-    return 60 + XObject.sizeOf(properties) + 1 * name.size();
+    return 60 + XObject.sizeOf(properties) + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -141,9 +139,9 @@ public final class ListFontsWithInfoReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int repliesHint;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Fontprop> properties;
+    private List<Fontprop> properties;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder drawDirection(FontDraw drawDirection) {
       this.drawDirection = (byte) drawDirection.getValue();
@@ -156,7 +154,7 @@ public final class ListFontsWithInfoReply implements XReply {
     }
 
     public int getSize() {
-      return 60 + XObject.sizeOf(properties) + 1 * name.size();
+      return 60 + XObject.sizeOf(properties) + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -281,7 +279,7 @@ public final class ListFontsWithInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder properties(final ImmutableList<Fontprop> properties) {
+    public ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder properties(final List<Fontprop> properties) {
       if (properties == null) {
         throw new java.lang.NullPointerException("properties is marked non-null but is null");
       }
@@ -293,7 +291,7 @@ public final class ListFontsWithInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder name(final ByteList name) {
+    public ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -309,12 +307,12 @@ public final class ListFontsWithInfoReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", minBounds=" + this.minBounds + ", maxBounds=" + this.maxBounds + ", minCharOrByte2=" + this.minCharOrByte2 + ", maxCharOrByte2=" + this.maxCharOrByte2 + ", defaultChar=" + this.defaultChar + ", drawDirection=" + this.drawDirection + ", minByte1=" + this.minByte1 + ", maxByte1=" + this.maxByte1 + ", allCharsExist=" + this.allCharsExist + ", fontAscent=" + this.fontAscent + ", fontDescent=" + this.fontDescent + ", repliesHint=" + this.repliesHint + ", properties=" + this.properties + ", name=" + this.name + ")";
+      return "ListFontsWithInfoReply.ListFontsWithInfoReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", minBounds=" + this.minBounds + ", maxBounds=" + this.maxBounds + ", minCharOrByte2=" + this.minCharOrByte2 + ", maxCharOrByte2=" + this.maxCharOrByte2 + ", defaultChar=" + this.defaultChar + ", drawDirection=" + this.drawDirection + ", minByte1=" + this.minByte1 + ", maxByte1=" + this.maxByte1 + ", allCharsExist=" + this.allCharsExist + ", fontAscent=" + this.fontAscent + ", fontDescent=" + this.fontDescent + ", repliesHint=" + this.repliesHint + ", properties=" + this.properties + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ListFontsWithInfoReply(final short sequenceNumber, final Charinfo minBounds, final Charinfo maxBounds, final short minCharOrByte2, final short maxCharOrByte2, final short defaultChar, final byte drawDirection, final byte minByte1, final byte maxByte1, final boolean allCharsExist, final short fontAscent, final short fontDescent, final int repliesHint, final ImmutableList<Fontprop> properties, final ByteList name) {
+  ListFontsWithInfoReply(final short sequenceNumber, final Charinfo minBounds, final Charinfo maxBounds, final short minCharOrByte2, final short maxCharOrByte2, final short defaultChar, final byte drawDirection, final byte minByte1, final byte maxByte1, final boolean allCharsExist, final short fontAscent, final short fontDescent, final int repliesHint, final List<Fontprop> properties, final byte[] name) {
     if (minBounds == null) {
       throw new java.lang.NullPointerException("minBounds is marked non-null but is null");
     }
@@ -415,12 +413,12 @@ public final class ListFontsWithInfoReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Fontprop> getProperties() {
+  public List<Fontprop> getProperties() {
     return this.properties;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -450,9 +448,7 @@ public final class ListFontsWithInfoReply implements XReply {
     final java.lang.Object this$properties = this.getProperties();
     final java.lang.Object other$properties = other.getProperties();
     if (this$properties == null ? other$properties != null : !this$properties.equals(other$properties)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -478,14 +474,13 @@ public final class ListFontsWithInfoReply implements XReply {
     result = result * PRIME + ($maxBounds == null ? 43 : $maxBounds.hashCode());
     final java.lang.Object $properties = this.getProperties();
     result = result * PRIME + ($properties == null ? 43 : $properties.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ListFontsWithInfoReply(sequenceNumber=" + this.getSequenceNumber() + ", minBounds=" + this.getMinBounds() + ", maxBounds=" + this.getMaxBounds() + ", minCharOrByte2=" + this.getMinCharOrByte2() + ", maxCharOrByte2=" + this.getMaxCharOrByte2() + ", defaultChar=" + this.getDefaultChar() + ", drawDirection=" + this.getDrawDirection() + ", minByte1=" + this.getMinByte1() + ", maxByte1=" + this.getMaxByte1() + ", allCharsExist=" + this.isAllCharsExist() + ", fontAscent=" + this.getFontAscent() + ", fontDescent=" + this.getFontDescent() + ", repliesHint=" + this.getRepliesHint() + ", properties=" + this.getProperties() + ", name=" + this.getName() + ")";
+    return "ListFontsWithInfoReply(sequenceNumber=" + this.getSequenceNumber() + ", minBounds=" + this.getMinBounds() + ", maxBounds=" + this.getMaxBounds() + ", minCharOrByte2=" + this.getMinCharOrByte2() + ", maxCharOrByte2=" + this.getMaxCharOrByte2() + ", defaultChar=" + this.getDefaultChar() + ", drawDirection=" + this.getDrawDirection() + ", minByte1=" + this.getMinByte1() + ", maxByte1=" + this.getMaxByte1() + ", allCharsExist=" + this.isAllCharsExist() + ", fontAscent=" + this.getFontAscent() + ", fontDescent=" + this.getFontDescent() + ", repliesHint=" + this.getRepliesHint() + ", properties=" + this.getProperties() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

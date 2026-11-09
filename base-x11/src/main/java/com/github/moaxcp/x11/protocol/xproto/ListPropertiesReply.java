@@ -4,21 +4,20 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class ListPropertiesReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final IntList atoms;
+  private final int[] atoms;
 
   public static ListPropertiesReply readListPropertiesReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     ListPropertiesReply.ListPropertiesReplyBuilder javaBuilder = ListPropertiesReply.builder();
     int length = in.readCard32();
     short atomsLen = in.readCard16();
     byte[] pad5 = in.readPad(22);
-    IntList atoms = in.readCard32(Short.toUnsignedInt(atomsLen));
+    int[] atoms = in.readCard32(Short.toUnsignedInt(atomsLen));
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.atoms(atoms.toImmutable());
+    javaBuilder.atoms(atoms);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -32,7 +31,7 @@ public final class ListPropertiesReply implements XReply {
     out.writePad(1);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
-    short atomsLen = (short) atoms.size();
+    short atomsLen = (short) atoms.length;
     out.writeCard16(atomsLen);
     out.writePad(22);
     out.writeCard32(atoms);
@@ -41,7 +40,7 @@ public final class ListPropertiesReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * atoms.size();
+    return 32 + 4 * atoms.length;
   }
 
   public String getPluginName() {
@@ -53,10 +52,10 @@ public final class ListPropertiesReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private IntList atoms;
+    private int[] atoms;
 
     public int getSize() {
-      return 32 + 4 * atoms.size();
+      return 32 + 4 * atoms.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -76,7 +75,7 @@ public final class ListPropertiesReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListPropertiesReply.ListPropertiesReplyBuilder atoms(final IntList atoms) {
+    public ListPropertiesReply.ListPropertiesReplyBuilder atoms(final int[] atoms) {
       if (atoms == null) {
         throw new java.lang.NullPointerException("atoms is marked non-null but is null");
       }
@@ -92,12 +91,12 @@ public final class ListPropertiesReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ListPropertiesReply.ListPropertiesReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", atoms=" + this.atoms + ")";
+      return "ListPropertiesReply.ListPropertiesReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", atoms=" + java.util.Arrays.toString(this.atoms) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ListPropertiesReply(final short sequenceNumber, final IntList atoms) {
+  ListPropertiesReply(final short sequenceNumber, final int[] atoms) {
     if (atoms == null) {
       throw new java.lang.NullPointerException("atoms is marked non-null but is null");
     }
@@ -116,7 +115,7 @@ public final class ListPropertiesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getAtoms() {
+  public int[] getAtoms() {
     return this.atoms;
   }
 
@@ -127,9 +126,7 @@ public final class ListPropertiesReply implements XReply {
     if (!(o instanceof ListPropertiesReply)) return false;
     final ListPropertiesReply other = (ListPropertiesReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$atoms = this.getAtoms();
-    final java.lang.Object other$atoms = other.getAtoms();
-    if (this$atoms == null ? other$atoms != null : !this$atoms.equals(other$atoms)) return false;
+    if (!java.util.Arrays.equals(this.getAtoms(), other.getAtoms())) return false;
     return true;
   }
 
@@ -139,14 +136,13 @@ public final class ListPropertiesReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $atoms = this.getAtoms();
-    result = result * PRIME + ($atoms == null ? 43 : $atoms.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAtoms());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ListPropertiesReply(sequenceNumber=" + this.getSequenceNumber() + ", atoms=" + this.getAtoms() + ")";
+    return "ListPropertiesReply(sequenceNumber=" + this.getSequenceNumber() + ", atoms=" + java.util.Arrays.toString(this.getAtoms()) + ")";
   }
 }

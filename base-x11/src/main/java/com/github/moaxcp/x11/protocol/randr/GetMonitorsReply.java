@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.randr;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class GetMonitorsReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
   private final short sequenceNumber;
   private final int timestamp;
   private final int nOutputs;
-  private final ImmutableList<MonitorInfo> monitors;
+  private final List<MonitorInfo> monitors;
 
   public static GetMonitorsReply readGetMonitorsReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetMonitorsReply.GetMonitorsReplyBuilder javaBuilder = GetMonitorsReply.builder();
@@ -23,14 +22,14 @@ public final class GetMonitorsReply implements XReply {
     int nMonitors = in.readCard32();
     int nOutputs = in.readCard32();
     byte[] pad7 = in.readPad(12);
-    MutableList<MonitorInfo> monitors = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(nMonitors)));
+    List<MonitorInfo> monitors = new ArrayList<>((int) (Integer.toUnsignedLong(nMonitors)));
     for (int i = 0; i < Integer.toUnsignedLong(nMonitors); i++) {
       monitors.add(MonitorInfo.readMonitorInfo(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.timestamp(timestamp);
     javaBuilder.nOutputs(nOutputs);
-    javaBuilder.monitors(monitors.toImmutable());
+    javaBuilder.monitors(List.copyOf(monitors));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -73,7 +72,7 @@ public final class GetMonitorsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int nOutputs;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<MonitorInfo> monitors;
+    private List<MonitorInfo> monitors;
 
     public int getSize() {
       return 32 + XObject.sizeOf(monitors);
@@ -114,7 +113,7 @@ public final class GetMonitorsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetMonitorsReply.GetMonitorsReplyBuilder monitors(final ImmutableList<MonitorInfo> monitors) {
+    public GetMonitorsReply.GetMonitorsReplyBuilder monitors(final List<MonitorInfo> monitors) {
       if (monitors == null) {
         throw new java.lang.NullPointerException("monitors is marked non-null but is null");
       }
@@ -135,7 +134,7 @@ public final class GetMonitorsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  GetMonitorsReply(final short sequenceNumber, final int timestamp, final int nOutputs, final ImmutableList<MonitorInfo> monitors) {
+  GetMonitorsReply(final short sequenceNumber, final int timestamp, final int nOutputs, final List<MonitorInfo> monitors) {
     if (monitors == null) {
       throw new java.lang.NullPointerException("monitors is marked non-null but is null");
     }
@@ -166,7 +165,7 @@ public final class GetMonitorsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<MonitorInfo> getMonitors() {
+  public List<MonitorInfo> getMonitors() {
     return this.monitors;
   }
 

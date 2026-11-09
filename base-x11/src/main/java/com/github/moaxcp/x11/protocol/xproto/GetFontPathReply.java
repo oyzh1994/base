@@ -1,30 +1,29 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class GetFontPathReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final ImmutableList<Str> path;
+  private final List<Str> path;
 
   public static GetFontPathReply readGetFontPathReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetFontPathReply.GetFontPathReplyBuilder javaBuilder = GetFontPathReply.builder();
     int length = in.readCard32();
     short pathLen = in.readCard16();
     byte[] pad5 = in.readPad(22);
-    MutableList<Str> path = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(pathLen));
+    List<Str> path = new ArrayList<>(Short.toUnsignedInt(pathLen));
     for (int i = 0; i < Short.toUnsignedInt(pathLen); i++) {
       path.add(Str.readStr(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.path(path.toImmutable());
+    javaBuilder.path(List.copyOf(path));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -61,7 +60,7 @@ public final class GetFontPathReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Str> path;
+    private List<Str> path;
 
     public int getSize() {
       return 32 + XObject.sizeOf(path);
@@ -84,7 +83,7 @@ public final class GetFontPathReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetFontPathReply.GetFontPathReplyBuilder path(final ImmutableList<Str> path) {
+    public GetFontPathReply.GetFontPathReplyBuilder path(final List<Str> path) {
       if (path == null) {
         throw new java.lang.NullPointerException("path is marked non-null but is null");
       }
@@ -105,7 +104,7 @@ public final class GetFontPathReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  GetFontPathReply(final short sequenceNumber, final ImmutableList<Str> path) {
+  GetFontPathReply(final short sequenceNumber, final List<Str> path) {
     if (path == null) {
       throw new java.lang.NullPointerException("path is marked non-null but is null");
     }
@@ -124,7 +123,7 @@ public final class GetFontPathReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Str> getPath() {
+  public List<Str> getPath() {
     return this.path;
   }
 

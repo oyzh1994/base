@@ -4,14 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class FreeColors implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 88;
   private final int cmap;
   private final int planeMask;
-  private final IntList pixels;
+  private final int[] pixels;
 
   public byte getOpCode() {
     return OPCODE;
@@ -28,10 +27,10 @@ public final class FreeColors implements OneWayRequest {
     javaStart += 4;
     int planeMask = in.readCard32();
     javaStart += 4;
-    IntList pixels = in.readCard32(Short.toUnsignedInt(length) - javaStart);
+    int[] pixels = in.readCard32(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.cmap(cmap);
     javaBuilder.planeMask(planeMask);
-    javaBuilder.pixels(pixels.toImmutable());
+    javaBuilder.pixels(pixels);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -49,7 +48,7 @@ public final class FreeColors implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 12 + 4 * pixels.size();
+    return 12 + 4 * pixels.length;
   }
 
   public String getPluginName() {
@@ -63,10 +62,10 @@ public final class FreeColors implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int planeMask;
     @java.lang.SuppressWarnings("all")
-    private IntList pixels;
+    private int[] pixels;
 
     public int getSize() {
-      return 12 + 4 * pixels.size();
+      return 12 + 4 * pixels.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -95,7 +94,7 @@ public final class FreeColors implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public FreeColors.FreeColorsBuilder pixels(final IntList pixels) {
+    public FreeColors.FreeColorsBuilder pixels(final int[] pixels) {
       if (pixels == null) {
         throw new java.lang.NullPointerException("pixels is marked non-null but is null");
       }
@@ -111,12 +110,12 @@ public final class FreeColors implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "FreeColors.FreeColorsBuilder(cmap=" + this.cmap + ", planeMask=" + this.planeMask + ", pixels=" + this.pixels + ")";
+      return "FreeColors.FreeColorsBuilder(cmap=" + this.cmap + ", planeMask=" + this.planeMask + ", pixels=" + java.util.Arrays.toString(this.pixels) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  FreeColors(final int cmap, final int planeMask, final IntList pixels) {
+  FreeColors(final int cmap, final int planeMask, final int[] pixels) {
     if (pixels == null) {
       throw new java.lang.NullPointerException("pixels is marked non-null but is null");
     }
@@ -141,7 +140,7 @@ public final class FreeColors implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getPixels() {
+  public int[] getPixels() {
     return this.pixels;
   }
 
@@ -153,9 +152,7 @@ public final class FreeColors implements OneWayRequest {
     final FreeColors other = (FreeColors) o;
     if (this.getCmap() != other.getCmap()) return false;
     if (this.getPlaneMask() != other.getPlaneMask()) return false;
-    final java.lang.Object this$pixels = this.getPixels();
-    final java.lang.Object other$pixels = other.getPixels();
-    if (this$pixels == null ? other$pixels != null : !this$pixels.equals(other$pixels)) return false;
+    if (!java.util.Arrays.equals(this.getPixels(), other.getPixels())) return false;
     return true;
   }
 
@@ -166,14 +163,13 @@ public final class FreeColors implements OneWayRequest {
     int result = 1;
     result = result * PRIME + this.getCmap();
     result = result * PRIME + this.getPlaneMask();
-    final java.lang.Object $pixels = this.getPixels();
-    result = result * PRIME + ($pixels == null ? 43 : $pixels.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPixels());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "FreeColors(cmap=" + this.getCmap() + ", planeMask=" + this.getPlaneMask() + ", pixels=" + this.getPixels() + ")";
+    return "FreeColors(cmap=" + this.getCmap() + ", planeMask=" + this.getPlaneMask() + ", pixels=" + java.util.Arrays.toString(this.getPixels()) + ")";
   }
 }

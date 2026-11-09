@@ -4,22 +4,21 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SAActionMessage implements ActionUnion, XStruct {
   public static final String PLUGIN_NAME = "xkb";
   private final byte type;
   private final byte flags;
-  private final ByteList message;
+  private final byte[] message;
 
   public static SAActionMessage readSAActionMessage(X11Input in) throws IOException {
     SAActionMessage.SAActionMessageBuilder javaBuilder = SAActionMessage.builder();
     byte type = in.readCard8();
     byte flags = in.readCard8();
-    ByteList message = in.readCard8(6);
+    byte[] message = in.readCard8(6);
     javaBuilder.type(type);
     javaBuilder.flags(flags);
-    javaBuilder.message(message.toImmutable());
+    javaBuilder.message(message);
     return javaBuilder.build();
   }
 
@@ -44,7 +43,7 @@ public final class SAActionMessage implements ActionUnion, XStruct {
 
   @Override
   public int getSize() {
-    return 2 + 1 * message.size();
+    return 2 + 1 * message.length;
   }
 
   public String getPluginName() {
@@ -58,7 +57,7 @@ public final class SAActionMessage implements ActionUnion, XStruct {
     @java.lang.SuppressWarnings("all")
     private byte flags;
     @java.lang.SuppressWarnings("all")
-    private ByteList message;
+    private byte[] message;
 
     public SAActionMessage.SAActionMessageBuilder type(SAType type) {
       this.type = (byte) type.getValue();
@@ -97,7 +96,7 @@ public final class SAActionMessage implements ActionUnion, XStruct {
     }
 
     public int getSize() {
-      return 2 + 1 * message.size();
+      return 2 + 1 * message.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -117,7 +116,7 @@ public final class SAActionMessage implements ActionUnion, XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SAActionMessage.SAActionMessageBuilder message(final ByteList message) {
+    public SAActionMessage.SAActionMessageBuilder message(final byte[] message) {
       if (message == null) {
         throw new java.lang.NullPointerException("message is marked non-null but is null");
       }
@@ -133,12 +132,12 @@ public final class SAActionMessage implements ActionUnion, XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SAActionMessage.SAActionMessageBuilder(type=" + this.type + ", flags=" + this.flags + ", message=" + this.message + ")";
+      return "SAActionMessage.SAActionMessageBuilder(type=" + this.type + ", flags=" + this.flags + ", message=" + java.util.Arrays.toString(this.message) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SAActionMessage(final byte type, final byte flags, final ByteList message) {
+  SAActionMessage(final byte type, final byte flags, final byte[] message) {
     if (message == null) {
       throw new java.lang.NullPointerException("message is marked non-null but is null");
     }
@@ -163,7 +162,7 @@ public final class SAActionMessage implements ActionUnion, XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getMessage() {
+  public byte[] getMessage() {
     return this.message;
   }
 
@@ -175,9 +174,7 @@ public final class SAActionMessage implements ActionUnion, XStruct {
     final SAActionMessage other = (SAActionMessage) o;
     if (this.getType() != other.getType()) return false;
     if (this.getFlags() != other.getFlags()) return false;
-    final java.lang.Object this$message = this.getMessage();
-    final java.lang.Object other$message = other.getMessage();
-    if (this$message == null ? other$message != null : !this$message.equals(other$message)) return false;
+    if (!java.util.Arrays.equals(this.getMessage(), other.getMessage())) return false;
     return true;
   }
 
@@ -188,14 +185,13 @@ public final class SAActionMessage implements ActionUnion, XStruct {
     int result = 1;
     result = result * PRIME + this.getType();
     result = result * PRIME + this.getFlags();
-    final java.lang.Object $message = this.getMessage();
-    result = result * PRIME + ($message == null ? 43 : $message.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getMessage());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SAActionMessage(type=" + this.getType() + ", flags=" + this.getFlags() + ", message=" + this.getMessage() + ")";
+    return "SAActionMessage(type=" + this.getType() + ", flags=" + this.getFlags() + ", message=" + java.util.Arrays.toString(this.getMessage()) + ")";
   }
 }

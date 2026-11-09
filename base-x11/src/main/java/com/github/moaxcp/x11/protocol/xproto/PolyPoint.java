@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class PolyPoint implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -15,7 +14,7 @@ public final class PolyPoint implements OneWayRequest {
   private final byte coordinateMode;
   private final int drawable;
   private final int gc;
-  private final ImmutableList<Point> points;
+  private final List<Point> points;
 
   public byte getOpCode() {
     return OPCODE;
@@ -32,7 +31,7 @@ public final class PolyPoint implements OneWayRequest {
     javaStart += 4;
     int gc = in.readCard32();
     javaStart += 4;
-    MutableList<Point> points = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Point> points = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Point baseObject = Point.readPoint(in);
       points.add(baseObject);
@@ -41,7 +40,7 @@ public final class PolyPoint implements OneWayRequest {
     javaBuilder.coordinateMode(coordinateMode);
     javaBuilder.drawable(drawable);
     javaBuilder.gc(gc);
-    javaBuilder.points(points.toImmutable());
+    javaBuilder.points(List.copyOf(points));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -77,7 +76,7 @@ public final class PolyPoint implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int gc;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Point> points;
+    private List<Point> points;
 
     public PolyPoint.PolyPointBuilder coordinateMode(CoordMode coordinateMode) {
       this.coordinateMode = (byte) coordinateMode.getValue();
@@ -119,7 +118,7 @@ public final class PolyPoint implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public PolyPoint.PolyPointBuilder points(final ImmutableList<Point> points) {
+    public PolyPoint.PolyPointBuilder points(final List<Point> points) {
       if (points == null) {
         throw new java.lang.NullPointerException("points is marked non-null but is null");
       }
@@ -140,7 +139,7 @@ public final class PolyPoint implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  PolyPoint(final byte coordinateMode, final int drawable, final int gc, final ImmutableList<Point> points) {
+  PolyPoint(final byte coordinateMode, final int drawable, final int gc, final List<Point> points) {
     if (points == null) {
       throw new java.lang.NullPointerException("points is marked non-null but is null");
     }
@@ -171,7 +170,7 @@ public final class PolyPoint implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Point> getPoints() {
+  public List<Point> getPoints() {
     return this.points;
   }
 

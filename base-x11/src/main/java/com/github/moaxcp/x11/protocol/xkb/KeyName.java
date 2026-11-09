@@ -4,16 +4,15 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class KeyName implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
-  private final ByteList name;
+  private final byte[] name;
 
   public static KeyName readKeyName(X11Input in) throws IOException {
     KeyName.KeyNameBuilder javaBuilder = KeyName.builder();
-    ByteList name = in.readChar(4);
-    javaBuilder.name(name.toImmutable());
+    byte[] name = in.readChar(4);
+    javaBuilder.name(name);
     return javaBuilder.build();
   }
 
@@ -24,7 +23,7 @@ public final class KeyName implements XStruct {
 
   @Override
   public int getSize() {
-    return 0 + 1 * name.size();
+    return 0 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -34,10 +33,10 @@ public final class KeyName implements XStruct {
 
   public static class KeyNameBuilder {
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public int getSize() {
-      return 0 + 1 * name.size();
+      return 0 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -48,7 +47,7 @@ public final class KeyName implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeyName.KeyNameBuilder name(final ByteList name) {
+    public KeyName.KeyNameBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -64,12 +63,12 @@ public final class KeyName implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "KeyName.KeyNameBuilder(name=" + this.name + ")";
+      return "KeyName.KeyNameBuilder(name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  KeyName(final ByteList name) {
+  KeyName(final byte[] name) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -82,7 +81,7 @@ public final class KeyName implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -92,9 +91,7 @@ public final class KeyName implements XStruct {
     if (o == this) return true;
     if (!(o instanceof KeyName)) return false;
     final KeyName other = (KeyName) o;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -103,14 +100,13 @@ public final class KeyName implements XStruct {
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "KeyName(name=" + this.getName() + ")";
+    return "KeyName(name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

@@ -4,27 +4,25 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class KeySymMap implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
-  private final ByteList ktIndex;
+  private final byte[] ktIndex;
   private final byte groupInfo;
   private final byte width;
-  private final IntList syms;
+  private final int[] syms;
 
   public static KeySymMap readKeySymMap(X11Input in) throws IOException {
     KeySymMap.KeySymMapBuilder javaBuilder = KeySymMap.builder();
-    ByteList ktIndex = in.readCard8(4);
+    byte[] ktIndex = in.readCard8(4);
     byte groupInfo = in.readCard8();
     byte width = in.readCard8();
     short nSyms = in.readCard16();
-    IntList syms = in.readCard32(Short.toUnsignedInt(nSyms));
-    javaBuilder.ktIndex(ktIndex.toImmutable());
+    int[] syms = in.readCard32(Short.toUnsignedInt(nSyms));
+    javaBuilder.ktIndex(ktIndex);
     javaBuilder.groupInfo(groupInfo);
     javaBuilder.width(width);
-    javaBuilder.syms(syms.toImmutable());
+    javaBuilder.syms(syms);
     return javaBuilder.build();
   }
 
@@ -33,14 +31,14 @@ public final class KeySymMap implements XStruct {
     out.writeCard8(ktIndex);
     out.writeCard8(groupInfo);
     out.writeCard8(width);
-    short nSyms = (short) syms.size();
+    short nSyms = (short) syms.length;
     out.writeCard16(nSyms);
     out.writeCard32(syms);
   }
 
   @Override
   public int getSize() {
-    return 4 + 1 * ktIndex.size() + 4 * syms.size();
+    return 4 + 1 * ktIndex.length + 4 * syms.length;
   }
 
   public String getPluginName() {
@@ -50,16 +48,16 @@ public final class KeySymMap implements XStruct {
 
   public static class KeySymMapBuilder {
     @java.lang.SuppressWarnings("all")
-    private ByteList ktIndex;
+    private byte[] ktIndex;
     @java.lang.SuppressWarnings("all")
     private byte groupInfo;
     @java.lang.SuppressWarnings("all")
     private byte width;
     @java.lang.SuppressWarnings("all")
-    private IntList syms;
+    private int[] syms;
 
     public int getSize() {
-      return 4 + 1 * ktIndex.size() + 4 * syms.size();
+      return 4 + 1 * ktIndex.length + 4 * syms.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -70,7 +68,7 @@ public final class KeySymMap implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeySymMap.KeySymMapBuilder ktIndex(final ByteList ktIndex) {
+    public KeySymMap.KeySymMapBuilder ktIndex(final byte[] ktIndex) {
       if (ktIndex == null) {
         throw new java.lang.NullPointerException("ktIndex is marked non-null but is null");
       }
@@ -100,7 +98,7 @@ public final class KeySymMap implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeySymMap.KeySymMapBuilder syms(final IntList syms) {
+    public KeySymMap.KeySymMapBuilder syms(final int[] syms) {
       if (syms == null) {
         throw new java.lang.NullPointerException("syms is marked non-null but is null");
       }
@@ -116,12 +114,12 @@ public final class KeySymMap implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "KeySymMap.KeySymMapBuilder(ktIndex=" + this.ktIndex + ", groupInfo=" + this.groupInfo + ", width=" + this.width + ", syms=" + this.syms + ")";
+      return "KeySymMap.KeySymMapBuilder(ktIndex=" + java.util.Arrays.toString(this.ktIndex) + ", groupInfo=" + this.groupInfo + ", width=" + this.width + ", syms=" + java.util.Arrays.toString(this.syms) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  KeySymMap(final ByteList ktIndex, final byte groupInfo, final byte width, final IntList syms) {
+  KeySymMap(final byte[] ktIndex, final byte groupInfo, final byte width, final int[] syms) {
     if (ktIndex == null) {
       throw new java.lang.NullPointerException("ktIndex is marked non-null but is null");
     }
@@ -140,7 +138,7 @@ public final class KeySymMap implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getKtIndex() {
+  public byte[] getKtIndex() {
     return this.ktIndex;
   }
 
@@ -155,7 +153,7 @@ public final class KeySymMap implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getSyms() {
+  public int[] getSyms() {
     return this.syms;
   }
 
@@ -167,12 +165,8 @@ public final class KeySymMap implements XStruct {
     final KeySymMap other = (KeySymMap) o;
     if (this.getGroupInfo() != other.getGroupInfo()) return false;
     if (this.getWidth() != other.getWidth()) return false;
-    final java.lang.Object this$ktIndex = this.getKtIndex();
-    final java.lang.Object other$ktIndex = other.getKtIndex();
-    if (this$ktIndex == null ? other$ktIndex != null : !this$ktIndex.equals(other$ktIndex)) return false;
-    final java.lang.Object this$syms = this.getSyms();
-    final java.lang.Object other$syms = other.getSyms();
-    if (this$syms == null ? other$syms != null : !this$syms.equals(other$syms)) return false;
+    if (!java.util.Arrays.equals(this.getKtIndex(), other.getKtIndex())) return false;
+    if (!java.util.Arrays.equals(this.getSyms(), other.getSyms())) return false;
     return true;
   }
 
@@ -183,16 +177,14 @@ public final class KeySymMap implements XStruct {
     int result = 1;
     result = result * PRIME + this.getGroupInfo();
     result = result * PRIME + this.getWidth();
-    final java.lang.Object $ktIndex = this.getKtIndex();
-    result = result * PRIME + ($ktIndex == null ? 43 : $ktIndex.hashCode());
-    final java.lang.Object $syms = this.getSyms();
-    result = result * PRIME + ($syms == null ? 43 : $syms.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getKtIndex());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getSyms());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "KeySymMap(ktIndex=" + this.getKtIndex() + ", groupInfo=" + this.getGroupInfo() + ", width=" + this.getWidth() + ", syms=" + this.getSyms() + ")";
+    return "KeySymMap(ktIndex=" + java.util.Arrays.toString(this.getKtIndex()) + ", groupInfo=" + this.getGroupInfo() + ", width=" + this.getWidth() + ", syms=" + java.util.Arrays.toString(this.getSyms()) + ")";
   }
 }

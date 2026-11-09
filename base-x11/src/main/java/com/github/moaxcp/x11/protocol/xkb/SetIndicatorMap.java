@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.Popcount;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class SetIndicatorMap implements OneWayRequest {
   public static final String PLUGIN_NAME = "xkb";
   public static final byte OPCODE = 14;
   private final short deviceSpec;
-  private final ImmutableList<IndicatorMap> maps;
+  private final List<IndicatorMap> maps;
 
   public byte getOpCode() {
     return OPCODE;
@@ -27,12 +26,12 @@ public final class SetIndicatorMap implements OneWayRequest {
     short deviceSpec = in.readCard16();
     byte[] pad4 = in.readPad(2);
     int which = in.readCard32();
-    MutableList<IndicatorMap> maps = Lists.mutable.withInitialCapacity(Popcount.popcount(Integer.toUnsignedLong(which)));
+    List<IndicatorMap> maps = new ArrayList<>(Popcount.popcount(Integer.toUnsignedLong(which)));
     for (int i = 0; i < Popcount.popcount(Integer.toUnsignedLong(which)); i++) {
       maps.add(IndicatorMap.readIndicatorMap(in));
     }
     javaBuilder.deviceSpec(deviceSpec);
-    javaBuilder.maps(maps.toImmutable());
+    javaBuilder.maps(List.copyOf(maps));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -66,7 +65,7 @@ public final class SetIndicatorMap implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short deviceSpec;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<IndicatorMap> maps;
+    private List<IndicatorMap> maps;
 
     public int getSize() {
       return 12 + XObject.sizeOf(maps);
@@ -89,7 +88,7 @@ public final class SetIndicatorMap implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetIndicatorMap.SetIndicatorMapBuilder maps(final ImmutableList<IndicatorMap> maps) {
+    public SetIndicatorMap.SetIndicatorMapBuilder maps(final List<IndicatorMap> maps) {
       if (maps == null) {
         throw new java.lang.NullPointerException("maps is marked non-null but is null");
       }
@@ -110,7 +109,7 @@ public final class SetIndicatorMap implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  SetIndicatorMap(final short deviceSpec, final ImmutableList<IndicatorMap> maps) {
+  SetIndicatorMap(final short deviceSpec, final List<IndicatorMap> maps) {
     if (maps == null) {
       throw new java.lang.NullPointerException("maps is marked non-null but is null");
     }
@@ -129,7 +128,7 @@ public final class SetIndicatorMap implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<IndicatorMap> getMaps() {
+  public List<IndicatorMap> getMaps() {
     return this.maps;
   }
 

@@ -1,14 +1,13 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.Popcount;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class GetIndicatorMapReply implements XReply {
   public static final String PLUGIN_NAME = "xkb";
@@ -16,7 +15,7 @@ public final class GetIndicatorMapReply implements XReply {
   private final short sequenceNumber;
   private final int realIndicators;
   private final byte nIndicators;
-  private final ImmutableList<IndicatorMap> maps;
+  private final List<IndicatorMap> maps;
 
   public static GetIndicatorMapReply readGetIndicatorMapReply(byte deviceID, short sequenceNumber, X11Input in) throws IOException {
     GetIndicatorMapReply.GetIndicatorMapReplyBuilder javaBuilder = GetIndicatorMapReply.builder();
@@ -25,7 +24,7 @@ public final class GetIndicatorMapReply implements XReply {
     int realIndicators = in.readCard32();
     byte nIndicators = in.readCard8();
     byte[] pad7 = in.readPad(15);
-    MutableList<IndicatorMap> maps = Lists.mutable.withInitialCapacity(Popcount.popcount(Integer.toUnsignedLong(which)));
+    List<IndicatorMap> maps = new ArrayList<>(Popcount.popcount(Integer.toUnsignedLong(which)));
     for (int i = 0; i < Popcount.popcount(Integer.toUnsignedLong(which)); i++) {
       maps.add(IndicatorMap.readIndicatorMap(in));
     }
@@ -33,7 +32,7 @@ public final class GetIndicatorMapReply implements XReply {
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.realIndicators(realIndicators);
     javaBuilder.nIndicators(nIndicators);
-    javaBuilder.maps(maps.toImmutable());
+    javaBuilder.maps(List.copyOf(maps));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -78,7 +77,7 @@ public final class GetIndicatorMapReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private byte nIndicators;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<IndicatorMap> maps;
+    private List<IndicatorMap> maps;
 
     public int getSize() {
       return 32 + XObject.sizeOf(maps);
@@ -128,7 +127,7 @@ public final class GetIndicatorMapReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetIndicatorMapReply.GetIndicatorMapReplyBuilder maps(final ImmutableList<IndicatorMap> maps) {
+    public GetIndicatorMapReply.GetIndicatorMapReplyBuilder maps(final List<IndicatorMap> maps) {
       if (maps == null) {
         throw new java.lang.NullPointerException("maps is marked non-null but is null");
       }
@@ -149,7 +148,7 @@ public final class GetIndicatorMapReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  GetIndicatorMapReply(final byte deviceID, final short sequenceNumber, final int realIndicators, final byte nIndicators, final ImmutableList<IndicatorMap> maps) {
+  GetIndicatorMapReply(final byte deviceID, final short sequenceNumber, final int realIndicators, final byte nIndicators, final List<IndicatorMap> maps) {
     if (maps == null) {
       throw new java.lang.NullPointerException("maps is marked non-null but is null");
     }
@@ -186,7 +185,7 @@ public final class GetIndicatorMapReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<IndicatorMap> getMaps() {
+  public List<IndicatorMap> getMaps() {
     return this.maps;
   }
 

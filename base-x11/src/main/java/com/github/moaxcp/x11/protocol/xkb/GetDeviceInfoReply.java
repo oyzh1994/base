@@ -1,14 +1,12 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetDeviceInfoReply implements XReply {
   public static final String PLUGIN_NAME = "xkb";
@@ -25,9 +23,9 @@ public final class GetDeviceInfoReply implements XReply {
   private final short dfltKbdFB;
   private final short dfltLedFB;
   private final int devType;
-  private final ByteList name;
-  private final ImmutableList<ActionUnion> btnActions;
-  private final ImmutableList<DeviceLedInfo> leds;
+  private final byte[] name;
+  private final List<ActionUnion> btnActions;
+  private final List<DeviceLedInfo> leds;
 
   public static GetDeviceInfoReply readGetDeviceInfoReply(byte deviceID, short sequenceNumber, X11Input in) throws IOException {
     GetDeviceInfoReply.GetDeviceInfoReplyBuilder javaBuilder = GetDeviceInfoReply.builder();
@@ -47,13 +45,13 @@ public final class GetDeviceInfoReply implements XReply {
     byte[] pad16 = in.readPad(2);
     int devType = in.readCard32();
     short nameLen = in.readCard16();
-    ByteList name = in.readChar(Short.toUnsignedInt(nameLen));
+    byte[] name = in.readChar(Short.toUnsignedInt(nameLen));
     in.readPadAlign(Short.toUnsignedInt(nameLen));
-    MutableList<ActionUnion> btnActions = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nBtnsRtrn));
+    List<ActionUnion> btnActions = new ArrayList<>(Byte.toUnsignedInt(nBtnsRtrn));
     for (int i = 0; i < Byte.toUnsignedInt(nBtnsRtrn); i++) {
       btnActions.add(ActionUnion.readActionUnion(in));
     }
-    MutableList<DeviceLedInfo> leds = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nDeviceLedFBs));
+    List<DeviceLedInfo> leds = new ArrayList<>(Short.toUnsignedInt(nDeviceLedFBs));
     for (int i = 0; i < Short.toUnsignedInt(nDeviceLedFBs); i++) {
       leds.add(DeviceLedInfo.readDeviceLedInfo(in));
     }
@@ -70,9 +68,9 @@ public final class GetDeviceInfoReply implements XReply {
     javaBuilder.dfltKbdFB(dfltKbdFB);
     javaBuilder.dfltLedFB(dfltLedFB);
     javaBuilder.devType(devType);
-    javaBuilder.name(name.toImmutable());
-    javaBuilder.btnActions(btnActions.toImmutable());
-    javaBuilder.leds(leds.toImmutable());
+    javaBuilder.name(name);
+    javaBuilder.btnActions(List.copyOf(btnActions));
+    javaBuilder.leds(List.copyOf(leds));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -102,7 +100,7 @@ public final class GetDeviceInfoReply implements XReply {
     out.writeCard16(dfltLedFB);
     out.writePad(2);
     out.writeCard32(devType);
-    short nameLen = (short) name.size();
+    short nameLen = (short) name.length;
     out.writeCard16(nameLen);
     out.writeChar(name);
     out.writePadAlign(Short.toUnsignedInt(nameLen));
@@ -153,7 +151,7 @@ public final class GetDeviceInfoReply implements XReply {
 
   @Override
   public int getSize() {
-    return 34 + 1 * name.size() + XObject.getSizeForPadAlign(4, 1 * name.size()) + XObject.sizeOf(btnActions) + XObject.sizeOf(leds);
+    return 34 + 1 * name.length + XObject.getSizeForPadAlign(4, 1 * name.length) + XObject.sizeOf(btnActions) + XObject.sizeOf(leds);
   }
 
   public String getPluginName() {
@@ -189,11 +187,11 @@ public final class GetDeviceInfoReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int devType;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ActionUnion> btnActions;
+    private List<ActionUnion> btnActions;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<DeviceLedInfo> leds;
+    private List<DeviceLedInfo> leds;
 
     public boolean isPresentEnabled(XIFeature... maskEnums) {
       if (maskEnums == null) {
@@ -274,7 +272,7 @@ public final class GetDeviceInfoReply implements XReply {
     }
 
     public int getSize() {
-      return 34 + 1 * name.size() + XObject.getSizeForPadAlign(4, 1 * name.size()) + XObject.sizeOf(btnActions) + XObject.sizeOf(leds);
+      return 34 + 1 * name.length + XObject.getSizeForPadAlign(4, 1 * name.length) + XObject.sizeOf(btnActions) + XObject.sizeOf(leds);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -402,7 +400,7 @@ public final class GetDeviceInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetDeviceInfoReply.GetDeviceInfoReplyBuilder name(final ByteList name) {
+    public GetDeviceInfoReply.GetDeviceInfoReplyBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -414,7 +412,7 @@ public final class GetDeviceInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetDeviceInfoReply.GetDeviceInfoReplyBuilder btnActions(final ImmutableList<ActionUnion> btnActions) {
+    public GetDeviceInfoReply.GetDeviceInfoReplyBuilder btnActions(final List<ActionUnion> btnActions) {
       if (btnActions == null) {
         throw new java.lang.NullPointerException("btnActions is marked non-null but is null");
       }
@@ -426,7 +424,7 @@ public final class GetDeviceInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetDeviceInfoReply.GetDeviceInfoReplyBuilder leds(final ImmutableList<DeviceLedInfo> leds) {
+    public GetDeviceInfoReply.GetDeviceInfoReplyBuilder leds(final List<DeviceLedInfo> leds) {
       if (leds == null) {
         throw new java.lang.NullPointerException("leds is marked non-null but is null");
       }
@@ -442,12 +440,12 @@ public final class GetDeviceInfoReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetDeviceInfoReply.GetDeviceInfoReplyBuilder(deviceID=" + this.deviceID + ", sequenceNumber=" + this.sequenceNumber + ", present=" + this.present + ", supported=" + this.supported + ", unsupported=" + this.unsupported + ", firstBtnWanted=" + this.firstBtnWanted + ", nBtnsWanted=" + this.nBtnsWanted + ", firstBtnRtrn=" + this.firstBtnRtrn + ", totalBtns=" + this.totalBtns + ", hasOwnState=" + this.hasOwnState + ", dfltKbdFB=" + this.dfltKbdFB + ", dfltLedFB=" + this.dfltLedFB + ", devType=" + this.devType + ", name=" + this.name + ", btnActions=" + this.btnActions + ", leds=" + this.leds + ")";
+      return "GetDeviceInfoReply.GetDeviceInfoReplyBuilder(deviceID=" + this.deviceID + ", sequenceNumber=" + this.sequenceNumber + ", present=" + this.present + ", supported=" + this.supported + ", unsupported=" + this.unsupported + ", firstBtnWanted=" + this.firstBtnWanted + ", nBtnsWanted=" + this.nBtnsWanted + ", firstBtnRtrn=" + this.firstBtnRtrn + ", totalBtns=" + this.totalBtns + ", hasOwnState=" + this.hasOwnState + ", dfltKbdFB=" + this.dfltKbdFB + ", dfltLedFB=" + this.dfltLedFB + ", devType=" + this.devType + ", name=" + java.util.Arrays.toString(this.name) + ", btnActions=" + this.btnActions + ", leds=" + this.leds + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetDeviceInfoReply(final byte deviceID, final short sequenceNumber, final short present, final short supported, final short unsupported, final byte firstBtnWanted, final byte nBtnsWanted, final byte firstBtnRtrn, final byte totalBtns, final boolean hasOwnState, final short dfltKbdFB, final short dfltLedFB, final int devType, final ByteList name, final ImmutableList<ActionUnion> btnActions, final ImmutableList<DeviceLedInfo> leds) {
+  GetDeviceInfoReply(final byte deviceID, final short sequenceNumber, final short present, final short supported, final short unsupported, final byte firstBtnWanted, final byte nBtnsWanted, final byte firstBtnRtrn, final byte totalBtns, final boolean hasOwnState, final short dfltKbdFB, final short dfltLedFB, final int devType, final byte[] name, final List<ActionUnion> btnActions, final List<DeviceLedInfo> leds) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -546,17 +544,17 @@ public final class GetDeviceInfoReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ActionUnion> getBtnActions() {
+  public List<ActionUnion> getBtnActions() {
     return this.btnActions;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<DeviceLedInfo> getLeds() {
+  public List<DeviceLedInfo> getLeds() {
     return this.leds;
   }
 
@@ -579,9 +577,7 @@ public final class GetDeviceInfoReply implements XReply {
     if (this.getDfltKbdFB() != other.getDfltKbdFB()) return false;
     if (this.getDfltLedFB() != other.getDfltLedFB()) return false;
     if (this.getDevType() != other.getDevType()) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     final java.lang.Object this$btnActions = this.getBtnActions();
     final java.lang.Object other$btnActions = other.getBtnActions();
     if (this$btnActions == null ? other$btnActions != null : !this$btnActions.equals(other$btnActions)) return false;
@@ -609,8 +605,7 @@ public final class GetDeviceInfoReply implements XReply {
     result = result * PRIME + this.getDfltKbdFB();
     result = result * PRIME + this.getDfltLedFB();
     result = result * PRIME + this.getDevType();
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     final java.lang.Object $btnActions = this.getBtnActions();
     result = result * PRIME + ($btnActions == null ? 43 : $btnActions.hashCode());
     final java.lang.Object $leds = this.getLeds();
@@ -621,6 +616,6 @@ public final class GetDeviceInfoReply implements XReply {
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetDeviceInfoReply(deviceID=" + this.getDeviceID() + ", sequenceNumber=" + this.getSequenceNumber() + ", present=" + this.getPresent() + ", supported=" + this.getSupported() + ", unsupported=" + this.getUnsupported() + ", firstBtnWanted=" + this.getFirstBtnWanted() + ", nBtnsWanted=" + this.getNBtnsWanted() + ", firstBtnRtrn=" + this.getFirstBtnRtrn() + ", totalBtns=" + this.getTotalBtns() + ", hasOwnState=" + this.isHasOwnState() + ", dfltKbdFB=" + this.getDfltKbdFB() + ", dfltLedFB=" + this.getDfltLedFB() + ", devType=" + this.getDevType() + ", name=" + this.getName() + ", btnActions=" + this.getBtnActions() + ", leds=" + this.getLeds() + ")";
+    return "GetDeviceInfoReply(deviceID=" + this.getDeviceID() + ", sequenceNumber=" + this.getSequenceNumber() + ", present=" + this.getPresent() + ", supported=" + this.getSupported() + ", unsupported=" + this.getUnsupported() + ", firstBtnWanted=" + this.getFirstBtnWanted() + ", nBtnsWanted=" + this.getNBtnsWanted() + ", firstBtnRtrn=" + this.getFirstBtnRtrn() + ", totalBtns=" + this.getTotalBtns() + ", hasOwnState=" + this.isHasOwnState() + ", dfltKbdFB=" + this.getDfltKbdFB() + ", dfltLedFB=" + this.getDfltLedFB() + ", devType=" + this.getDevType() + ", name=" + java.util.Arrays.toString(this.getName()) + ", btnActions=" + this.getBtnActions() + ", leds=" + this.getLeds() + ")";
   }
 }

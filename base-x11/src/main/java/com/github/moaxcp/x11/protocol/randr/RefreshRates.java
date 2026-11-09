@@ -4,30 +4,29 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ShortList;
 
 public final class RefreshRates implements XStruct {
   public static final String PLUGIN_NAME = "randr";
-  private final ShortList rates;
+  private final short[] rates;
 
   public static RefreshRates readRefreshRates(X11Input in) throws IOException {
     RefreshRates.RefreshRatesBuilder javaBuilder = RefreshRates.builder();
     short nRates = in.readCard16();
-    ShortList rates = in.readCard16(Short.toUnsignedInt(nRates));
-    javaBuilder.rates(rates.toImmutable());
+    short[] rates = in.readCard16(Short.toUnsignedInt(nRates));
+    javaBuilder.rates(rates);
     return javaBuilder.build();
   }
 
   @Override
   public void write(X11Output out) throws IOException {
-    short nRates = (short) rates.size();
+    short nRates = (short) rates.length;
     out.writeCard16(nRates);
     out.writeCard16(rates);
   }
 
   @Override
   public int getSize() {
-    return 2 + 2 * rates.size();
+    return 2 + 2 * rates.length;
   }
 
   public String getPluginName() {
@@ -37,10 +36,10 @@ public final class RefreshRates implements XStruct {
 
   public static class RefreshRatesBuilder {
     @java.lang.SuppressWarnings("all")
-    private ShortList rates;
+    private short[] rates;
 
     public int getSize() {
-      return 2 + 2 * rates.size();
+      return 2 + 2 * rates.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -51,7 +50,7 @@ public final class RefreshRates implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public RefreshRates.RefreshRatesBuilder rates(final ShortList rates) {
+    public RefreshRates.RefreshRatesBuilder rates(final short[] rates) {
       if (rates == null) {
         throw new java.lang.NullPointerException("rates is marked non-null but is null");
       }
@@ -67,12 +66,12 @@ public final class RefreshRates implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "RefreshRates.RefreshRatesBuilder(rates=" + this.rates + ")";
+      return "RefreshRates.RefreshRatesBuilder(rates=" + java.util.Arrays.toString(this.rates) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  RefreshRates(final ShortList rates) {
+  RefreshRates(final short[] rates) {
     if (rates == null) {
       throw new java.lang.NullPointerException("rates is marked non-null but is null");
     }
@@ -85,7 +84,7 @@ public final class RefreshRates implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getRates() {
+  public short[] getRates() {
     return this.rates;
   }
 
@@ -95,9 +94,7 @@ public final class RefreshRates implements XStruct {
     if (o == this) return true;
     if (!(o instanceof RefreshRates)) return false;
     final RefreshRates other = (RefreshRates) o;
-    final java.lang.Object this$rates = this.getRates();
-    final java.lang.Object other$rates = other.getRates();
-    if (this$rates == null ? other$rates != null : !this$rates.equals(other$rates)) return false;
+    if (!java.util.Arrays.equals(this.getRates(), other.getRates())) return false;
     return true;
   }
 
@@ -106,14 +103,13 @@ public final class RefreshRates implements XStruct {
   public int hashCode() {
     final int PRIME = 59;
     int result = 1;
-    final java.lang.Object $rates = this.getRates();
-    result = result * PRIME + ($rates == null ? 43 : $rates.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getRates());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "RefreshRates(rates=" + this.getRates() + ")";
+    return "RefreshRates(rates=" + java.util.Arrays.toString(this.getRates()) + ")";
   }
 }

@@ -1,30 +1,29 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class QueryColorsReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final ImmutableList<Rgb> colors;
+  private final List<Rgb> colors;
 
   public static QueryColorsReply readQueryColorsReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryColorsReply.QueryColorsReplyBuilder javaBuilder = QueryColorsReply.builder();
     int length = in.readCard32();
     short colorsLen = in.readCard16();
     byte[] pad5 = in.readPad(22);
-    MutableList<Rgb> colors = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(colorsLen));
+    List<Rgb> colors = new ArrayList<>(Short.toUnsignedInt(colorsLen));
     for (int i = 0; i < Short.toUnsignedInt(colorsLen); i++) {
       colors.add(Rgb.readRgb(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.colors(colors.toImmutable());
+    javaBuilder.colors(List.copyOf(colors));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -61,7 +60,7 @@ public final class QueryColorsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Rgb> colors;
+    private List<Rgb> colors;
 
     public int getSize() {
       return 32 + XObject.sizeOf(colors);
@@ -84,7 +83,7 @@ public final class QueryColorsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryColorsReply.QueryColorsReplyBuilder colors(final ImmutableList<Rgb> colors) {
+    public QueryColorsReply.QueryColorsReplyBuilder colors(final List<Rgb> colors) {
       if (colors == null) {
         throw new java.lang.NullPointerException("colors is marked non-null but is null");
       }
@@ -105,7 +104,7 @@ public final class QueryColorsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryColorsReply(final short sequenceNumber, final ImmutableList<Rgb> colors) {
+  QueryColorsReply(final short sequenceNumber, final List<Rgb> colors) {
     if (colors == null) {
       throw new java.lang.NullPointerException("colors is marked non-null but is null");
     }
@@ -124,7 +123,7 @@ public final class QueryColorsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Rgb> getColors() {
+  public List<Rgb> getColors() {
     return this.colors;
   }
 

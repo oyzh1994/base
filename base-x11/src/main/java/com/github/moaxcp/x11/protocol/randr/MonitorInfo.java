@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class MonitorInfo implements XStruct {
   public static final String PLUGIN_NAME = "randr";
@@ -17,7 +16,7 @@ public final class MonitorInfo implements XStruct {
   private final short height;
   private final int widthInMillimeters;
   private final int heightInMillimeters;
-  private final IntList outputs;
+  private final int[] outputs;
 
   public static MonitorInfo readMonitorInfo(X11Input in) throws IOException {
     MonitorInfo.MonitorInfoBuilder javaBuilder = MonitorInfo.builder();
@@ -31,7 +30,7 @@ public final class MonitorInfo implements XStruct {
     short height = in.readCard16();
     int widthInMillimeters = in.readCard32();
     int heightInMillimeters = in.readCard32();
-    IntList outputs = in.readCard32(Short.toUnsignedInt(nOutput));
+    int[] outputs = in.readCard32(Short.toUnsignedInt(nOutput));
     javaBuilder.name(name);
     javaBuilder.primary(primary);
     javaBuilder.automatic(automatic);
@@ -41,7 +40,7 @@ public final class MonitorInfo implements XStruct {
     javaBuilder.height(height);
     javaBuilder.widthInMillimeters(widthInMillimeters);
     javaBuilder.heightInMillimeters(heightInMillimeters);
-    javaBuilder.outputs(outputs.toImmutable());
+    javaBuilder.outputs(outputs);
     return javaBuilder.build();
   }
 
@@ -50,7 +49,7 @@ public final class MonitorInfo implements XStruct {
     out.writeCard32(name);
     out.writeBool(primary);
     out.writeBool(automatic);
-    short nOutput = (short) outputs.size();
+    short nOutput = (short) outputs.length;
     out.writeCard16(nOutput);
     out.writeInt16(x);
     out.writeInt16(y);
@@ -63,7 +62,7 @@ public final class MonitorInfo implements XStruct {
 
   @Override
   public int getSize() {
-    return 24 + 4 * outputs.size();
+    return 24 + 4 * outputs.length;
   }
 
   public String getPluginName() {
@@ -91,10 +90,10 @@ public final class MonitorInfo implements XStruct {
     @java.lang.SuppressWarnings("all")
     private int heightInMillimeters;
     @java.lang.SuppressWarnings("all")
-    private IntList outputs;
+    private int[] outputs;
 
     public int getSize() {
-      return 24 + 4 * outputs.size();
+      return 24 + 4 * outputs.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -186,7 +185,7 @@ public final class MonitorInfo implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public MonitorInfo.MonitorInfoBuilder outputs(final IntList outputs) {
+    public MonitorInfo.MonitorInfoBuilder outputs(final int[] outputs) {
       if (outputs == null) {
         throw new java.lang.NullPointerException("outputs is marked non-null but is null");
       }
@@ -202,12 +201,12 @@ public final class MonitorInfo implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "MonitorInfo.MonitorInfoBuilder(name=" + this.name + ", primary=" + this.primary + ", automatic=" + this.automatic + ", x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", widthInMillimeters=" + this.widthInMillimeters + ", heightInMillimeters=" + this.heightInMillimeters + ", outputs=" + this.outputs + ")";
+      return "MonitorInfo.MonitorInfoBuilder(name=" + this.name + ", primary=" + this.primary + ", automatic=" + this.automatic + ", x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", widthInMillimeters=" + this.widthInMillimeters + ", heightInMillimeters=" + this.heightInMillimeters + ", outputs=" + java.util.Arrays.toString(this.outputs) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  MonitorInfo(final int name, final boolean primary, final boolean automatic, final short x, final short y, final short width, final short height, final int widthInMillimeters, final int heightInMillimeters, final IntList outputs) {
+  MonitorInfo(final int name, final boolean primary, final boolean automatic, final short x, final short y, final short width, final short height, final int widthInMillimeters, final int heightInMillimeters, final int[] outputs) {
     if (outputs == null) {
       throw new java.lang.NullPointerException("outputs is marked non-null but is null");
     }
@@ -274,7 +273,7 @@ public final class MonitorInfo implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getOutputs() {
+  public int[] getOutputs() {
     return this.outputs;
   }
 
@@ -293,9 +292,7 @@ public final class MonitorInfo implements XStruct {
     if (this.getHeight() != other.getHeight()) return false;
     if (this.getWidthInMillimeters() != other.getWidthInMillimeters()) return false;
     if (this.getHeightInMillimeters() != other.getHeightInMillimeters()) return false;
-    final java.lang.Object this$outputs = this.getOutputs();
-    final java.lang.Object other$outputs = other.getOutputs();
-    if (this$outputs == null ? other$outputs != null : !this$outputs.equals(other$outputs)) return false;
+    if (!java.util.Arrays.equals(this.getOutputs(), other.getOutputs())) return false;
     return true;
   }
 
@@ -313,14 +310,13 @@ public final class MonitorInfo implements XStruct {
     result = result * PRIME + this.getHeight();
     result = result * PRIME + this.getWidthInMillimeters();
     result = result * PRIME + this.getHeightInMillimeters();
-    final java.lang.Object $outputs = this.getOutputs();
-    result = result * PRIME + ($outputs == null ? 43 : $outputs.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getOutputs());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "MonitorInfo(name=" + this.getName() + ", primary=" + this.isPrimary() + ", automatic=" + this.isAutomatic() + ", x=" + this.getX() + ", y=" + this.getY() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", widthInMillimeters=" + this.getWidthInMillimeters() + ", heightInMillimeters=" + this.getHeightInMillimeters() + ", outputs=" + this.getOutputs() + ")";
+    return "MonitorInfo(name=" + this.getName() + ", primary=" + this.isPrimary() + ", automatic=" + this.isAutomatic() + ", x=" + this.getX() + ", y=" + this.getY() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", widthInMillimeters=" + this.getWidthInMillimeters() + ", heightInMillimeters=" + this.getHeightInMillimeters() + ", outputs=" + java.util.Arrays.toString(this.getOutputs()) + ")";
   }
 }

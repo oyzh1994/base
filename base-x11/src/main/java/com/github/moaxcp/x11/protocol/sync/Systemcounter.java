@@ -5,24 +5,23 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class Systemcounter implements XStruct {
   public static final String PLUGIN_NAME = "sync";
   private final int counter;
   private final Int64 resolution;
-  private final ByteList name;
+  private final byte[] name;
 
   public static Systemcounter readSystemcounter(X11Input in) throws IOException {
     Systemcounter.SystemcounterBuilder javaBuilder = Systemcounter.builder();
     int counter = in.readCard32();
     Int64 resolution = Int64.readInt64(in);
     short nameLen = in.readCard16();
-    ByteList name = in.readChar(Short.toUnsignedInt(nameLen));
+    byte[] name = in.readChar(Short.toUnsignedInt(nameLen));
     in.readPadAlign(Short.toUnsignedInt(nameLen));
     javaBuilder.counter(counter);
     javaBuilder.resolution(resolution);
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     return javaBuilder.build();
   }
 
@@ -30,7 +29,7 @@ public final class Systemcounter implements XStruct {
   public void write(X11Output out) throws IOException {
     out.writeCard32(counter);
     resolution.write(out);
-    short nameLen = (short) name.size();
+    short nameLen = (short) name.length;
     out.writeCard16(nameLen);
     out.writeChar(name);
     out.writePadAlign(Short.toUnsignedInt(nameLen));
@@ -38,7 +37,7 @@ public final class Systemcounter implements XStruct {
 
   @Override
   public int getSize() {
-    return 14 + 1 * name.size() + XObject.getSizeForPadAlign(4, 1 * name.size());
+    return 14 + 1 * name.length + XObject.getSizeForPadAlign(4, 1 * name.length);
   }
 
   public String getPluginName() {
@@ -52,10 +51,10 @@ public final class Systemcounter implements XStruct {
     @java.lang.SuppressWarnings("all")
     private Int64 resolution;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public int getSize() {
-      return 14 + 1 * name.size() + XObject.getSizeForPadAlign(4, 1 * name.size());
+      return 14 + 1 * name.length + XObject.getSizeForPadAlign(4, 1 * name.length);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -87,7 +86,7 @@ public final class Systemcounter implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Systemcounter.SystemcounterBuilder name(final ByteList name) {
+    public Systemcounter.SystemcounterBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -103,12 +102,12 @@ public final class Systemcounter implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "Systemcounter.SystemcounterBuilder(counter=" + this.counter + ", resolution=" + this.resolution + ", name=" + this.name + ")";
+      return "Systemcounter.SystemcounterBuilder(counter=" + this.counter + ", resolution=" + this.resolution + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  Systemcounter(final int counter, final Int64 resolution, final ByteList name) {
+  Systemcounter(final int counter, final Int64 resolution, final byte[] name) {
     if (resolution == null) {
       throw new java.lang.NullPointerException("resolution is marked non-null but is null");
     }
@@ -136,7 +135,7 @@ public final class Systemcounter implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -150,9 +149,7 @@ public final class Systemcounter implements XStruct {
     final java.lang.Object this$resolution = this.getResolution();
     final java.lang.Object other$resolution = other.getResolution();
     if (this$resolution == null ? other$resolution != null : !this$resolution.equals(other$resolution)) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -164,14 +161,13 @@ public final class Systemcounter implements XStruct {
     result = result * PRIME + this.getCounter();
     final java.lang.Object $resolution = this.getResolution();
     result = result * PRIME + ($resolution == null ? 43 : $resolution.hashCode());
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "Systemcounter(counter=" + this.getCounter() + ", resolution=" + this.getResolution() + ", name=" + this.getName() + ")";
+    return "Systemcounter(counter=" + this.getCounter() + ", resolution=" + this.getResolution() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

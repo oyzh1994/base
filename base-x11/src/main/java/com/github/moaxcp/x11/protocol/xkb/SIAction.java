@@ -4,19 +4,18 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SIAction implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
   private final byte type;
-  private final ByteList data;
+  private final byte[] data;
 
   public static SIAction readSIAction(X11Input in) throws IOException {
     SIAction.SIActionBuilder javaBuilder = SIAction.builder();
     byte type = in.readCard8();
-    ByteList data = in.readCard8(7);
+    byte[] data = in.readCard8(7);
     javaBuilder.type(type);
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.data(data);
     return javaBuilder.build();
   }
 
@@ -28,7 +27,7 @@ public final class SIAction implements XStruct {
 
   @Override
   public int getSize() {
-    return 1 + 1 * data.size();
+    return 1 + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -40,7 +39,7 @@ public final class SIAction implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte type;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public SIAction.SIActionBuilder type(SAType type) {
       this.type = (byte) type.getValue();
@@ -53,7 +52,7 @@ public final class SIAction implements XStruct {
     }
 
     public int getSize() {
-      return 1 + 1 * data.size();
+      return 1 + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -64,7 +63,7 @@ public final class SIAction implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SIAction.SIActionBuilder data(final ByteList data) {
+    public SIAction.SIActionBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -80,12 +79,12 @@ public final class SIAction implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SIAction.SIActionBuilder(type=" + this.type + ", data=" + this.data + ")";
+      return "SIAction.SIActionBuilder(type=" + this.type + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SIAction(final byte type, final ByteList data) {
+  SIAction(final byte type, final byte[] data) {
     if (data == null) {
       throw new java.lang.NullPointerException("data is marked non-null but is null");
     }
@@ -104,7 +103,7 @@ public final class SIAction implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -115,9 +114,7 @@ public final class SIAction implements XStruct {
     if (!(o instanceof SIAction)) return false;
     final SIAction other = (SIAction) o;
     if (this.getType() != other.getType()) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -127,14 +124,13 @@ public final class SIAction implements XStruct {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getType();
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SIAction(type=" + this.getType() + ", data=" + this.getData() + ")";
+    return "SIAction(type=" + this.getType() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

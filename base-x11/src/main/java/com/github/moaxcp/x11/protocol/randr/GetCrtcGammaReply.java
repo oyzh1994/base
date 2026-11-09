@@ -4,27 +4,26 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ShortList;
 
 public final class GetCrtcGammaReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
   private final short sequenceNumber;
-  private final ShortList red;
-  private final ShortList green;
-  private final ShortList blue;
+  private final short[] red;
+  private final short[] green;
+  private final short[] blue;
 
   public static GetCrtcGammaReply readGetCrtcGammaReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetCrtcGammaReply.GetCrtcGammaReplyBuilder javaBuilder = GetCrtcGammaReply.builder();
     int length = in.readCard32();
     short size = in.readCard16();
     byte[] pad5 = in.readPad(22);
-    ShortList red = in.readCard16(Short.toUnsignedInt(size));
-    ShortList green = in.readCard16(Short.toUnsignedInt(size));
-    ShortList blue = in.readCard16(Short.toUnsignedInt(size));
+    short[] red = in.readCard16(Short.toUnsignedInt(size));
+    short[] green = in.readCard16(Short.toUnsignedInt(size));
+    short[] blue = in.readCard16(Short.toUnsignedInt(size));
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.red(red.toImmutable());
-    javaBuilder.green(green.toImmutable());
-    javaBuilder.blue(blue.toImmutable());
+    javaBuilder.red(red);
+    javaBuilder.green(green);
+    javaBuilder.blue(blue);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -38,7 +37,7 @@ public final class GetCrtcGammaReply implements XReply {
     out.writePad(1);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
-    short size = (short) blue.size();
+    short size = (short) blue.length;
     out.writeCard16(size);
     out.writePad(22);
     out.writeCard16(red);
@@ -49,7 +48,7 @@ public final class GetCrtcGammaReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 2 * red.size() + 2 * green.size() + 2 * blue.size();
+    return 32 + 2 * red.length + 2 * green.length + 2 * blue.length;
   }
 
   public String getPluginName() {
@@ -61,14 +60,14 @@ public final class GetCrtcGammaReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ShortList red;
+    private short[] red;
     @java.lang.SuppressWarnings("all")
-    private ShortList green;
+    private short[] green;
     @java.lang.SuppressWarnings("all")
-    private ShortList blue;
+    private short[] blue;
 
     public int getSize() {
-      return 32 + 2 * red.size() + 2 * green.size() + 2 * blue.size();
+      return 32 + 2 * red.length + 2 * green.length + 2 * blue.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -88,7 +87,7 @@ public final class GetCrtcGammaReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcGammaReply.GetCrtcGammaReplyBuilder red(final ShortList red) {
+    public GetCrtcGammaReply.GetCrtcGammaReplyBuilder red(final short[] red) {
       if (red == null) {
         throw new java.lang.NullPointerException("red is marked non-null but is null");
       }
@@ -100,7 +99,7 @@ public final class GetCrtcGammaReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcGammaReply.GetCrtcGammaReplyBuilder green(final ShortList green) {
+    public GetCrtcGammaReply.GetCrtcGammaReplyBuilder green(final short[] green) {
       if (green == null) {
         throw new java.lang.NullPointerException("green is marked non-null but is null");
       }
@@ -112,7 +111,7 @@ public final class GetCrtcGammaReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCrtcGammaReply.GetCrtcGammaReplyBuilder blue(final ShortList blue) {
+    public GetCrtcGammaReply.GetCrtcGammaReplyBuilder blue(final short[] blue) {
       if (blue == null) {
         throw new java.lang.NullPointerException("blue is marked non-null but is null");
       }
@@ -128,12 +127,12 @@ public final class GetCrtcGammaReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetCrtcGammaReply.GetCrtcGammaReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", red=" + this.red + ", green=" + this.green + ", blue=" + this.blue + ")";
+      return "GetCrtcGammaReply.GetCrtcGammaReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", red=" + java.util.Arrays.toString(this.red) + ", green=" + java.util.Arrays.toString(this.green) + ", blue=" + java.util.Arrays.toString(this.blue) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetCrtcGammaReply(final short sequenceNumber, final ShortList red, final ShortList green, final ShortList blue) {
+  GetCrtcGammaReply(final short sequenceNumber, final short[] red, final short[] green, final short[] blue) {
     if (red == null) {
       throw new java.lang.NullPointerException("red is marked non-null but is null");
     }
@@ -160,17 +159,17 @@ public final class GetCrtcGammaReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getRed() {
+  public short[] getRed() {
     return this.red;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getGreen() {
+  public short[] getGreen() {
     return this.green;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ShortList getBlue() {
+  public short[] getBlue() {
     return this.blue;
   }
 
@@ -181,15 +180,9 @@ public final class GetCrtcGammaReply implements XReply {
     if (!(o instanceof GetCrtcGammaReply)) return false;
     final GetCrtcGammaReply other = (GetCrtcGammaReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$red = this.getRed();
-    final java.lang.Object other$red = other.getRed();
-    if (this$red == null ? other$red != null : !this$red.equals(other$red)) return false;
-    final java.lang.Object this$green = this.getGreen();
-    final java.lang.Object other$green = other.getGreen();
-    if (this$green == null ? other$green != null : !this$green.equals(other$green)) return false;
-    final java.lang.Object this$blue = this.getBlue();
-    final java.lang.Object other$blue = other.getBlue();
-    if (this$blue == null ? other$blue != null : !this$blue.equals(other$blue)) return false;
+    if (!java.util.Arrays.equals(this.getRed(), other.getRed())) return false;
+    if (!java.util.Arrays.equals(this.getGreen(), other.getGreen())) return false;
+    if (!java.util.Arrays.equals(this.getBlue(), other.getBlue())) return false;
     return true;
   }
 
@@ -199,18 +192,15 @@ public final class GetCrtcGammaReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $red = this.getRed();
-    result = result * PRIME + ($red == null ? 43 : $red.hashCode());
-    final java.lang.Object $green = this.getGreen();
-    result = result * PRIME + ($green == null ? 43 : $green.hashCode());
-    final java.lang.Object $blue = this.getBlue();
-    result = result * PRIME + ($blue == null ? 43 : $blue.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getRed());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getGreen());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getBlue());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetCrtcGammaReply(sequenceNumber=" + this.getSequenceNumber() + ", red=" + this.getRed() + ", green=" + this.getGreen() + ", blue=" + this.getBlue() + ")";
+    return "GetCrtcGammaReply(sequenceNumber=" + this.getSequenceNumber() + ", red=" + java.util.Arrays.toString(this.getRed()) + ", green=" + java.util.Arrays.toString(this.getGreen()) + ", blue=" + java.util.Arrays.toString(this.getBlue()) + ")";
   }
 }

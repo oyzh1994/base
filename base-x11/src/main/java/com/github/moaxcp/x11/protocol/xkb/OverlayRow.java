@@ -1,30 +1,29 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class OverlayRow implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
   private final byte rowUnder;
-  private final ImmutableList<OverlayKey> keys;
+  private final List<OverlayKey> keys;
 
   public static OverlayRow readOverlayRow(X11Input in) throws IOException {
     OverlayRow.OverlayRowBuilder javaBuilder = OverlayRow.builder();
     byte rowUnder = in.readCard8();
     byte nKeys = in.readCard8();
     byte[] pad2 = in.readPad(2);
-    MutableList<OverlayKey> keys = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nKeys));
+    List<OverlayKey> keys = new ArrayList<>(Byte.toUnsignedInt(nKeys));
     for (int i = 0; i < Byte.toUnsignedInt(nKeys); i++) {
       keys.add(OverlayKey.readOverlayKey(in));
     }
     javaBuilder.rowUnder(rowUnder);
-    javaBuilder.keys(keys.toImmutable());
+    javaBuilder.keys(List.copyOf(keys));
     return javaBuilder.build();
   }
 
@@ -53,7 +52,7 @@ public final class OverlayRow implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte rowUnder;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<OverlayKey> keys;
+    private List<OverlayKey> keys;
 
     public int getSize() {
       return 4 + XObject.sizeOf(keys);
@@ -76,7 +75,7 @@ public final class OverlayRow implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public OverlayRow.OverlayRowBuilder keys(final ImmutableList<OverlayKey> keys) {
+    public OverlayRow.OverlayRowBuilder keys(final List<OverlayKey> keys) {
       if (keys == null) {
         throw new java.lang.NullPointerException("keys is marked non-null but is null");
       }
@@ -97,7 +96,7 @@ public final class OverlayRow implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  OverlayRow(final byte rowUnder, final ImmutableList<OverlayKey> keys) {
+  OverlayRow(final byte rowUnder, final List<OverlayKey> keys) {
     if (keys == null) {
       throw new java.lang.NullPointerException("keys is marked non-null but is null");
     }
@@ -116,7 +115,7 @@ public final class OverlayRow implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<OverlayKey> getKeys() {
+  public List<OverlayKey> getKeys() {
     return this.keys;
   }
 

@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class ConfigureOutputProperty implements OneWayRequest {
   public static final String PLUGIN_NAME = "randr";
@@ -13,7 +12,7 @@ public final class ConfigureOutputProperty implements OneWayRequest {
   private final int property;
   private final boolean pending;
   private final boolean range;
-  private final IntList values;
+  private final int[] values;
 
   public byte getOpCode() {
     return OPCODE;
@@ -36,12 +35,12 @@ public final class ConfigureOutputProperty implements OneWayRequest {
     javaStart += 1;
     byte[] pad7 = in.readPad(2);
     javaStart += 2;
-    IntList values = in.readInt32(Short.toUnsignedInt(length) - javaStart);
+    int[] values = in.readInt32(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.output(output);
     javaBuilder.property(property);
     javaBuilder.pending(pending);
     javaBuilder.range(range);
-    javaBuilder.values(values.toImmutable());
+    javaBuilder.values(values);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -62,7 +61,7 @@ public final class ConfigureOutputProperty implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 16 + 4 * values.size();
+    return 16 + 4 * values.length;
   }
 
   public String getPluginName() {
@@ -80,10 +79,10 @@ public final class ConfigureOutputProperty implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private boolean range;
     @java.lang.SuppressWarnings("all")
-    private IntList values;
+    private int[] values;
 
     public int getSize() {
-      return 16 + 4 * values.size();
+      return 16 + 4 * values.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -130,7 +129,7 @@ public final class ConfigureOutputProperty implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ConfigureOutputProperty.ConfigureOutputPropertyBuilder values(final IntList values) {
+    public ConfigureOutputProperty.ConfigureOutputPropertyBuilder values(final int[] values) {
       if (values == null) {
         throw new java.lang.NullPointerException("values is marked non-null but is null");
       }
@@ -146,12 +145,12 @@ public final class ConfigureOutputProperty implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ConfigureOutputProperty.ConfigureOutputPropertyBuilder(output=" + this.output + ", property=" + this.property + ", pending=" + this.pending + ", range=" + this.range + ", values=" + this.values + ")";
+      return "ConfigureOutputProperty.ConfigureOutputPropertyBuilder(output=" + this.output + ", property=" + this.property + ", pending=" + this.pending + ", range=" + this.range + ", values=" + java.util.Arrays.toString(this.values) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ConfigureOutputProperty(final int output, final int property, final boolean pending, final boolean range, final IntList values) {
+  ConfigureOutputProperty(final int output, final int property, final boolean pending, final boolean range, final int[] values) {
     if (values == null) {
       throw new java.lang.NullPointerException("values is marked non-null but is null");
     }
@@ -188,7 +187,7 @@ public final class ConfigureOutputProperty implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getValues() {
+  public int[] getValues() {
     return this.values;
   }
 
@@ -202,9 +201,7 @@ public final class ConfigureOutputProperty implements OneWayRequest {
     if (this.getProperty() != other.getProperty()) return false;
     if (this.isPending() != other.isPending()) return false;
     if (this.isRange() != other.isRange()) return false;
-    final java.lang.Object this$values = this.getValues();
-    final java.lang.Object other$values = other.getValues();
-    if (this$values == null ? other$values != null : !this$values.equals(other$values)) return false;
+    if (!java.util.Arrays.equals(this.getValues(), other.getValues())) return false;
     return true;
   }
 
@@ -217,14 +214,13 @@ public final class ConfigureOutputProperty implements OneWayRequest {
     result = result * PRIME + this.getProperty();
     result = result * PRIME + (this.isPending() ? 79 : 97);
     result = result * PRIME + (this.isRange() ? 79 : 97);
-    final java.lang.Object $values = this.getValues();
-    result = result * PRIME + ($values == null ? 43 : $values.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getValues());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ConfigureOutputProperty(output=" + this.getOutput() + ", property=" + this.getProperty() + ", pending=" + this.isPending() + ", range=" + this.isRange() + ", values=" + this.getValues() + ")";
+    return "ConfigureOutputProperty(output=" + this.getOutput() + ", property=" + this.getProperty() + ", pending=" + this.isPending() + ", range=" + this.isRange() + ", values=" + java.util.Arrays.toString(this.getValues()) + ")";
   }
 }

@@ -1,37 +1,21 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
 import com.github.moaxcp.x11.protocol.X11Output;
-import org.eclipse.collections.api.factory.primitive.IntLists;
-import org.eclipse.collections.api.list.primitive.IntList;
 import java.io.IOException;
+import java.util.Arrays;
 
 public final class ClientMessageData32 implements ClientMessageDataUnion {
   public static final String PLUGIN_NAME = "xproto";
-  private final IntList data32;
+  private final int[] data32;
   private final byte format = 32;
 
   public ClientMessageData32(int... data32) {
     if (data32.length > 5) {
       throw new IllegalArgumentException("data32 must have length < 20 bytes. Got: \"" + data32.length + "\"");
     }
-    var list = IntLists.mutable.withInitialCapacity(data32.length);
-    for (int data : data32) {
-      list.add(data);
-    }
-    for (int i = data32.length; i < 5; i++) {
-      list.add(0);
-    }
-    this.data32 = list.toImmutable();
-  }
-
-  public ClientMessageData32(IntList data32) {
-    if (data32 == null) {
-      throw new java.lang.NullPointerException("data32 is marked non-null but is null");
-    }
-    if (data32.size() != 5) {
-      throw new IllegalArgumentException("data32 must have length of 5. Got: \"" + data32.size() + "\"");
-    }
-    this.data32 = data32;
+    int[] values = new int[5];
+    System.arraycopy(data32, 0, values, 0, data32.length);
+    this.data32 = values;
   }
 
   @Override
@@ -49,7 +33,7 @@ public final class ClientMessageData32 implements ClientMessageDataUnion {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getData32() {
+  public int[] getData32() {
     return this.data32;
   }
 
@@ -65,9 +49,7 @@ public final class ClientMessageData32 implements ClientMessageDataUnion {
     if (!(o instanceof ClientMessageData32)) return false;
     final ClientMessageData32 other = (ClientMessageData32) o;
     if (this.getFormat() != other.getFormat()) return false;
-    final java.lang.Object this$data32 = this.getData32();
-    final java.lang.Object other$data32 = other.getData32();
-    if (this$data32 == null ? other$data32 != null : !this$data32.equals(other$data32)) return false;
+    if (!Arrays.equals(this.getData32(), other.getData32())) return false;
     return true;
   }
 
@@ -77,14 +59,13 @@ public final class ClientMessageData32 implements ClientMessageDataUnion {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getFormat();
-    final java.lang.Object $data32 = this.getData32();
-    result = result * PRIME + ($data32 == null ? 43 : $data32.hashCode());
+    result = result * PRIME + Arrays.hashCode(this.getData32());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ClientMessageData32(data32=" + this.getData32() + ", format=" + this.getFormat() + ")";
+    return "ClientMessageData32(data32=" + Arrays.toString(this.getData32()) + ", format=" + this.getFormat() + ")";
   }
 }

@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class SetupFailed implements XStruct {
   public static final String PLUGIN_NAME = "xproto";
@@ -12,7 +11,7 @@ public final class SetupFailed implements XStruct {
   private final short protocolMajorVersion;
   private final short protocolMinorVersion;
   private final short length;
-  private final ByteList reason;
+  private final byte[] reason;
 
   public static SetupFailed readSetupFailed(X11Input in) throws IOException {
     SetupFailed.SetupFailedBuilder javaBuilder = SetupFailed.builder();
@@ -21,19 +20,19 @@ public final class SetupFailed implements XStruct {
     short protocolMajorVersion = in.readCard16();
     short protocolMinorVersion = in.readCard16();
     short length = in.readCard16();
-    ByteList reason = in.readChar(Byte.toUnsignedInt(reasonLen));
+    byte[] reason = in.readChar(Byte.toUnsignedInt(reasonLen));
     javaBuilder.status(status);
     javaBuilder.protocolMajorVersion(protocolMajorVersion);
     javaBuilder.protocolMinorVersion(protocolMinorVersion);
     javaBuilder.length(length);
-    javaBuilder.reason(reason.toImmutable());
+    javaBuilder.reason(reason);
     return javaBuilder.build();
   }
 
   @Override
   public void write(X11Output out) throws IOException {
     out.writeCard8(status);
-    byte reasonLen = (byte) reason.size();
+    byte reasonLen = (byte) reason.length;
     out.writeCard8(reasonLen);
     out.writeCard16(protocolMajorVersion);
     out.writeCard16(protocolMinorVersion);
@@ -43,7 +42,7 @@ public final class SetupFailed implements XStruct {
 
   @Override
   public int getSize() {
-    return 8 + 1 * reason.size();
+    return 8 + 1 * reason.length;
   }
 
   public String getPluginName() {
@@ -61,10 +60,10 @@ public final class SetupFailed implements XStruct {
     @java.lang.SuppressWarnings("all")
     private short length;
     @java.lang.SuppressWarnings("all")
-    private ByteList reason;
+    private byte[] reason;
 
     public int getSize() {
-      return 8 + 1 * reason.size();
+      return 8 + 1 * reason.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -111,7 +110,7 @@ public final class SetupFailed implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetupFailed.SetupFailedBuilder reason(final ByteList reason) {
+    public SetupFailed.SetupFailedBuilder reason(final byte[] reason) {
       if (reason == null) {
         throw new java.lang.NullPointerException("reason is marked non-null but is null");
       }
@@ -127,12 +126,12 @@ public final class SetupFailed implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "SetupFailed.SetupFailedBuilder(status=" + this.status + ", protocolMajorVersion=" + this.protocolMajorVersion + ", protocolMinorVersion=" + this.protocolMinorVersion + ", length=" + this.length + ", reason=" + this.reason + ")";
+      return "SetupFailed.SetupFailedBuilder(status=" + this.status + ", protocolMajorVersion=" + this.protocolMajorVersion + ", protocolMinorVersion=" + this.protocolMinorVersion + ", length=" + this.length + ", reason=" + java.util.Arrays.toString(this.reason) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  SetupFailed(final byte status, final short protocolMajorVersion, final short protocolMinorVersion, final short length, final ByteList reason) {
+  SetupFailed(final byte status, final short protocolMajorVersion, final short protocolMinorVersion, final short length, final byte[] reason) {
     if (reason == null) {
       throw new java.lang.NullPointerException("reason is marked non-null but is null");
     }
@@ -169,7 +168,7 @@ public final class SetupFailed implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getReason() {
+  public byte[] getReason() {
     return this.reason;
   }
 
@@ -183,9 +182,7 @@ public final class SetupFailed implements XStruct {
     if (this.getProtocolMajorVersion() != other.getProtocolMajorVersion()) return false;
     if (this.getProtocolMinorVersion() != other.getProtocolMinorVersion()) return false;
     if (this.getLength() != other.getLength()) return false;
-    final java.lang.Object this$reason = this.getReason();
-    final java.lang.Object other$reason = other.getReason();
-    if (this$reason == null ? other$reason != null : !this$reason.equals(other$reason)) return false;
+    if (!java.util.Arrays.equals(this.getReason(), other.getReason())) return false;
     return true;
   }
 
@@ -198,14 +195,13 @@ public final class SetupFailed implements XStruct {
     result = result * PRIME + this.getProtocolMajorVersion();
     result = result * PRIME + this.getProtocolMinorVersion();
     result = result * PRIME + this.getLength();
-    final java.lang.Object $reason = this.getReason();
-    result = result * PRIME + ($reason == null ? 43 : $reason.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getReason());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "SetupFailed(status=" + this.getStatus() + ", protocolMajorVersion=" + this.getProtocolMajorVersion() + ", protocolMinorVersion=" + this.getProtocolMinorVersion() + ", length=" + this.getLength() + ", reason=" + this.getReason() + ")";
+    return "SetupFailed(status=" + this.getStatus() + ", protocolMajorVersion=" + this.getProtocolMajorVersion() + ", protocolMinorVersion=" + this.getProtocolMinorVersion() + ", length=" + this.getLength() + ", reason=" + java.util.Arrays.toString(this.getReason()) + ")";
   }
 }

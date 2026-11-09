@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class SetDeviceInfo implements OneWayRequest {
   public static final String PLUGIN_NAME = "xkb";
@@ -15,8 +14,8 @@ public final class SetDeviceInfo implements OneWayRequest {
   private final short deviceSpec;
   private final byte firstBtn;
   private final short change;
-  private final ImmutableList<ActionUnion> btnActions;
-  private final ImmutableList<DeviceLedInfo> leds;
+  private final List<ActionUnion> btnActions;
+  private final List<DeviceLedInfo> leds;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,19 +30,19 @@ public final class SetDeviceInfo implements OneWayRequest {
     byte nBtns = in.readCard8();
     short change = in.readCard16();
     short nDeviceLedFBs = in.readCard16();
-    MutableList<ActionUnion> btnActions = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nBtns));
+    List<ActionUnion> btnActions = new ArrayList<>(Byte.toUnsignedInt(nBtns));
     for (int i = 0; i < Byte.toUnsignedInt(nBtns); i++) {
       btnActions.add(ActionUnion.readActionUnion(in));
     }
-    MutableList<DeviceLedInfo> leds = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nDeviceLedFBs));
+    List<DeviceLedInfo> leds = new ArrayList<>(Short.toUnsignedInt(nDeviceLedFBs));
     for (int i = 0; i < Short.toUnsignedInt(nDeviceLedFBs); i++) {
       leds.add(DeviceLedInfo.readDeviceLedInfo(in));
     }
     javaBuilder.deviceSpec(deviceSpec);
     javaBuilder.firstBtn(firstBtn);
     javaBuilder.change(change);
-    javaBuilder.btnActions(btnActions.toImmutable());
-    javaBuilder.leds(leds.toImmutable());
+    javaBuilder.btnActions(List.copyOf(btnActions));
+    javaBuilder.leds(List.copyOf(leds));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -99,9 +98,9 @@ public final class SetDeviceInfo implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short change;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ActionUnion> btnActions;
+    private List<ActionUnion> btnActions;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<DeviceLedInfo> leds;
+    private List<DeviceLedInfo> leds;
 
     public boolean isChangeEnabled(XIFeature... maskEnums) {
       if (maskEnums == null) {
@@ -168,7 +167,7 @@ public final class SetDeviceInfo implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetDeviceInfo.SetDeviceInfoBuilder btnActions(final ImmutableList<ActionUnion> btnActions) {
+    public SetDeviceInfo.SetDeviceInfoBuilder btnActions(final List<ActionUnion> btnActions) {
       if (btnActions == null) {
         throw new java.lang.NullPointerException("btnActions is marked non-null but is null");
       }
@@ -180,7 +179,7 @@ public final class SetDeviceInfo implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public SetDeviceInfo.SetDeviceInfoBuilder leds(final ImmutableList<DeviceLedInfo> leds) {
+    public SetDeviceInfo.SetDeviceInfoBuilder leds(final List<DeviceLedInfo> leds) {
       if (leds == null) {
         throw new java.lang.NullPointerException("leds is marked non-null but is null");
       }
@@ -201,7 +200,7 @@ public final class SetDeviceInfo implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  SetDeviceInfo(final short deviceSpec, final byte firstBtn, final short change, final ImmutableList<ActionUnion> btnActions, final ImmutableList<DeviceLedInfo> leds) {
+  SetDeviceInfo(final short deviceSpec, final byte firstBtn, final short change, final List<ActionUnion> btnActions, final List<DeviceLedInfo> leds) {
     if (btnActions == null) {
       throw new java.lang.NullPointerException("btnActions is marked non-null but is null");
     }
@@ -236,12 +235,12 @@ public final class SetDeviceInfo implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ActionUnion> getBtnActions() {
+  public List<ActionUnion> getBtnActions() {
     return this.btnActions;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<DeviceLedInfo> getLeds() {
+  public List<DeviceLedInfo> getLeds() {
     return this.leds;
   }
 

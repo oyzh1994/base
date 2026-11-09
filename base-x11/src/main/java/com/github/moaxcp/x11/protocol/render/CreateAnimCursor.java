@@ -1,19 +1,18 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class CreateAnimCursor implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
   public static final byte OPCODE = 31;
   private final int cid;
-  private final ImmutableList<Animcursorelt> cursors;
+  private final List<Animcursorelt> cursors;
 
   public byte getOpCode() {
     return OPCODE;
@@ -28,14 +27,14 @@ public final class CreateAnimCursor implements OneWayRequest {
     javaStart += 2;
     int cid = in.readCard32();
     javaStart += 4;
-    MutableList<Animcursorelt> cursors = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Animcursorelt> cursors = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Animcursorelt baseObject = Animcursorelt.readAnimcursorelt(in);
       cursors.add(baseObject);
       javaStart += baseObject.getSize();
     }
     javaBuilder.cid(cid);
-    javaBuilder.cursors(cursors.toImmutable());
+    javaBuilder.cursors(List.copyOf(cursors));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -66,7 +65,7 @@ public final class CreateAnimCursor implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int cid;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Animcursorelt> cursors;
+    private List<Animcursorelt> cursors;
 
     public int getSize() {
       return 8 + XObject.sizeOf(cursors);
@@ -89,7 +88,7 @@ public final class CreateAnimCursor implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateAnimCursor.CreateAnimCursorBuilder cursors(final ImmutableList<Animcursorelt> cursors) {
+    public CreateAnimCursor.CreateAnimCursorBuilder cursors(final List<Animcursorelt> cursors) {
       if (cursors == null) {
         throw new java.lang.NullPointerException("cursors is marked non-null but is null");
       }
@@ -110,7 +109,7 @@ public final class CreateAnimCursor implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  CreateAnimCursor(final int cid, final ImmutableList<Animcursorelt> cursors) {
+  CreateAnimCursor(final int cid, final List<Animcursorelt> cursors) {
     if (cursors == null) {
       throw new java.lang.NullPointerException("cursors is marked non-null but is null");
     }
@@ -129,7 +128,7 @@ public final class CreateAnimCursor implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Animcursorelt> getCursors() {
+  public List<Animcursorelt> getCursors() {
     return this.cursors;
   }
 

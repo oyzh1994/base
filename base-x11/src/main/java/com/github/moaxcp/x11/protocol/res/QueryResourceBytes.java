@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.res;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.TwoWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class QueryResourceBytes implements TwoWayRequest<QueryResourceBytesReply> {
   public static final String PLUGIN_NAME = "res";
   public static final byte OPCODE = 5;
   private final int client;
-  private final ImmutableList<ResourceIdSpec> specs;
+  private final List<ResourceIdSpec> specs;
 
   public XReplyFunction<QueryResourceBytesReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> QueryResourceBytesReply.readQueryResourceBytesReply(field, sequenceNumber, in);
@@ -30,12 +29,12 @@ public final class QueryResourceBytes implements TwoWayRequest<QueryResourceByte
     short length = in.readCard16();
     int client = in.readCard32();
     int numSpecs = in.readCard32();
-    MutableList<ResourceIdSpec> specs = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numSpecs)));
+    List<ResourceIdSpec> specs = new ArrayList<>((int) (Integer.toUnsignedLong(numSpecs)));
     for (int i = 0; i < Integer.toUnsignedLong(numSpecs); i++) {
       specs.add(ResourceIdSpec.readResourceIdSpec(in));
     }
     javaBuilder.client(client);
-    javaBuilder.specs(specs.toImmutable());
+    javaBuilder.specs(List.copyOf(specs));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -68,7 +67,7 @@ public final class QueryResourceBytes implements TwoWayRequest<QueryResourceByte
     @java.lang.SuppressWarnings("all")
     private int client;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ResourceIdSpec> specs;
+    private List<ResourceIdSpec> specs;
 
     public int getSize() {
       return 12 + XObject.sizeOf(specs);
@@ -91,7 +90,7 @@ public final class QueryResourceBytes implements TwoWayRequest<QueryResourceByte
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryResourceBytes.QueryResourceBytesBuilder specs(final ImmutableList<ResourceIdSpec> specs) {
+    public QueryResourceBytes.QueryResourceBytesBuilder specs(final List<ResourceIdSpec> specs) {
       if (specs == null) {
         throw new java.lang.NullPointerException("specs is marked non-null but is null");
       }
@@ -112,7 +111,7 @@ public final class QueryResourceBytes implements TwoWayRequest<QueryResourceByte
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryResourceBytes(final int client, final ImmutableList<ResourceIdSpec> specs) {
+  QueryResourceBytes(final int client, final List<ResourceIdSpec> specs) {
     if (specs == null) {
       throw new java.lang.NullPointerException("specs is marked non-null but is null");
     }
@@ -131,7 +130,7 @@ public final class QueryResourceBytes implements TwoWayRequest<QueryResourceByte
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ResourceIdSpec> getSpecs() {
+  public List<ResourceIdSpec> getSpecs() {
     return this.specs;
   }
 

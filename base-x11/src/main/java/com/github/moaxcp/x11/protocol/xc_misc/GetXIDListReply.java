@@ -4,21 +4,20 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class GetXIDListReply implements XReply {
   public static final String PLUGIN_NAME = "xc_misc";
   private final short sequenceNumber;
-  private final IntList ids;
+  private final int[] ids;
 
   public static GetXIDListReply readGetXIDListReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetXIDListReply.GetXIDListReplyBuilder javaBuilder = GetXIDListReply.builder();
     int length = in.readCard32();
     int idsLen = in.readCard32();
     byte[] pad5 = in.readPad(20);
-    IntList ids = in.readCard32((int) (Integer.toUnsignedLong(idsLen)));
+    int[] ids = in.readCard32((int) (Integer.toUnsignedLong(idsLen)));
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.ids(ids.toImmutable());
+    javaBuilder.ids(ids);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -32,7 +31,7 @@ public final class GetXIDListReply implements XReply {
     out.writePad(1);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
-    int idsLen = ids.size();
+    int idsLen = ids.length;
     out.writeCard32(idsLen);
     out.writePad(20);
     out.writeCard32(ids);
@@ -41,7 +40,7 @@ public final class GetXIDListReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * ids.size();
+    return 32 + 4 * ids.length;
   }
 
   public String getPluginName() {
@@ -53,10 +52,10 @@ public final class GetXIDListReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private IntList ids;
+    private int[] ids;
 
     public int getSize() {
-      return 32 + 4 * ids.size();
+      return 32 + 4 * ids.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -76,7 +75,7 @@ public final class GetXIDListReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetXIDListReply.GetXIDListReplyBuilder ids(final IntList ids) {
+    public GetXIDListReply.GetXIDListReplyBuilder ids(final int[] ids) {
       if (ids == null) {
         throw new java.lang.NullPointerException("ids is marked non-null but is null");
       }
@@ -92,12 +91,12 @@ public final class GetXIDListReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetXIDListReply.GetXIDListReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", ids=" + this.ids + ")";
+      return "GetXIDListReply.GetXIDListReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", ids=" + java.util.Arrays.toString(this.ids) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetXIDListReply(final short sequenceNumber, final IntList ids) {
+  GetXIDListReply(final short sequenceNumber, final int[] ids) {
     if (ids == null) {
       throw new java.lang.NullPointerException("ids is marked non-null but is null");
     }
@@ -116,7 +115,7 @@ public final class GetXIDListReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getIds() {
+  public int[] getIds() {
     return this.ids;
   }
 
@@ -127,9 +126,7 @@ public final class GetXIDListReply implements XReply {
     if (!(o instanceof GetXIDListReply)) return false;
     final GetXIDListReply other = (GetXIDListReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$ids = this.getIds();
-    final java.lang.Object other$ids = other.getIds();
-    if (this$ids == null ? other$ids != null : !this$ids.equals(other$ids)) return false;
+    if (!java.util.Arrays.equals(this.getIds(), other.getIds())) return false;
     return true;
   }
 
@@ -139,14 +136,13 @@ public final class GetXIDListReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $ids = this.getIds();
-    result = result * PRIME + ($ids == null ? 43 : $ids.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getIds());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetXIDListReply(sequenceNumber=" + this.getSequenceNumber() + ", ids=" + this.getIds() + ")";
+    return "GetXIDListReply(sequenceNumber=" + this.getSequenceNumber() + ", ids=" + java.util.Arrays.toString(this.getIds()) + ")";
   }
 }

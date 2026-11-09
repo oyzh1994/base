@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.randr;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class GetScreenInfoReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
@@ -20,8 +19,8 @@ public final class GetScreenInfoReply implements XReply {
   private final short rotation;
   private final short rate;
   private final short nInfo;
-  private final ImmutableList<ScreenSize> sizes;
-  private final ImmutableList<RefreshRates> rates;
+  private final List<ScreenSize> sizes;
+  private final List<RefreshRates> rates;
 
   public static GetScreenInfoReply readGetScreenInfoReply(byte rotations, short sequenceNumber, X11Input in) throws IOException {
     GetScreenInfoReply.GetScreenInfoReplyBuilder javaBuilder = GetScreenInfoReply.builder();
@@ -35,11 +34,11 @@ public final class GetScreenInfoReply implements XReply {
     short rate = in.readCard16();
     short nInfo = in.readCard16();
     byte[] pad12 = in.readPad(2);
-    MutableList<ScreenSize> sizes = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nSizes));
+    List<ScreenSize> sizes = new ArrayList<>(Short.toUnsignedInt(nSizes));
     for (int i = 0; i < Short.toUnsignedInt(nSizes); i++) {
       sizes.add(ScreenSize.readScreenSize(in));
     }
-    MutableList<RefreshRates> rates = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nInfo) - Short.toUnsignedInt(nSizes));
+    List<RefreshRates> rates = new ArrayList<>(Short.toUnsignedInt(nInfo) - Short.toUnsignedInt(nSizes));
     for (int i = 0; i < Short.toUnsignedInt(nInfo) - Short.toUnsignedInt(nSizes); i++) {
       rates.add(RefreshRates.readRefreshRates(in));
     }
@@ -52,8 +51,8 @@ public final class GetScreenInfoReply implements XReply {
     javaBuilder.rotation(rotation);
     javaBuilder.rate(rate);
     javaBuilder.nInfo(nInfo);
-    javaBuilder.sizes(sizes.toImmutable());
-    javaBuilder.rates(rates.toImmutable());
+    javaBuilder.sizes(List.copyOf(sizes));
+    javaBuilder.rates(List.copyOf(rates));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -140,9 +139,9 @@ public final class GetScreenInfoReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short nInfo;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ScreenSize> sizes;
+    private List<ScreenSize> sizes;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<RefreshRates> rates;
+    private List<RefreshRates> rates;
 
     public boolean isRotationsEnabled(Rotation... maskEnums) {
       if (maskEnums == null) {
@@ -289,7 +288,7 @@ public final class GetScreenInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetScreenInfoReply.GetScreenInfoReplyBuilder sizes(final ImmutableList<ScreenSize> sizes) {
+    public GetScreenInfoReply.GetScreenInfoReplyBuilder sizes(final List<ScreenSize> sizes) {
       if (sizes == null) {
         throw new java.lang.NullPointerException("sizes is marked non-null but is null");
       }
@@ -301,7 +300,7 @@ public final class GetScreenInfoReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetScreenInfoReply.GetScreenInfoReplyBuilder rates(final ImmutableList<RefreshRates> rates) {
+    public GetScreenInfoReply.GetScreenInfoReplyBuilder rates(final List<RefreshRates> rates) {
       if (rates == null) {
         throw new java.lang.NullPointerException("rates is marked non-null but is null");
       }
@@ -322,7 +321,7 @@ public final class GetScreenInfoReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  GetScreenInfoReply(final byte rotations, final short sequenceNumber, final int root, final int timestamp, final int configTimestamp, final short sizeID, final short rotation, final short rate, final short nInfo, final ImmutableList<ScreenSize> sizes, final ImmutableList<RefreshRates> rates) {
+  GetScreenInfoReply(final byte rotations, final short sequenceNumber, final int root, final int timestamp, final int configTimestamp, final short sizeID, final short rotation, final short rate, final short nInfo, final List<ScreenSize> sizes, final List<RefreshRates> rates) {
     if (sizes == null) {
       throw new java.lang.NullPointerException("sizes is marked non-null but is null");
     }
@@ -393,12 +392,12 @@ public final class GetScreenInfoReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ScreenSize> getSizes() {
+  public List<ScreenSize> getSizes() {
     return this.sizes;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<RefreshRates> getRates() {
+  public List<RefreshRates> getRates() {
     return this.rates;
   }
 

@@ -1,11 +1,11 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
-import org.eclipse.collections.api.list.ImmutableList;
-import static org.eclipse.collections.impl.collector.Collectors2.toImmutableList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class XprotoUtilities {
-  public static ImmutableList<Char2b> toChar2bString(String string) {
-    return string.chars().mapToObj(c -> Char2b.builder().byte1((byte) (c >> 8)).byte2((byte) c).build()).collect(toImmutableList());
+  public static List<Char2b> toChar2bString(String string) {
+    return string.chars().mapToObj(c -> Char2b.builder().byte1((byte) (c >> 8)).byte2((byte) c).build()).collect(Collectors.toUnmodifiableList());
   }
 
   @java.lang.SuppressWarnings("all")

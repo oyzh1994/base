@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class FillPoly implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -16,7 +15,7 @@ public final class FillPoly implements OneWayRequest {
   private final int gc;
   private final byte shape;
   private final byte coordinateMode;
-  private final ImmutableList<Point> points;
+  private final List<Point> points;
 
   public byte getOpCode() {
     return OPCODE;
@@ -39,7 +38,7 @@ public final class FillPoly implements OneWayRequest {
     javaStart += 1;
     byte[] pad7 = in.readPad(2);
     javaStart += 2;
-    MutableList<Point> points = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Point> points = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Point baseObject = Point.readPoint(in);
       points.add(baseObject);
@@ -49,7 +48,7 @@ public final class FillPoly implements OneWayRequest {
     javaBuilder.gc(gc);
     javaBuilder.shape(shape);
     javaBuilder.coordinateMode(coordinateMode);
-    javaBuilder.points(points.toImmutable());
+    javaBuilder.points(List.copyOf(points));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -90,7 +89,7 @@ public final class FillPoly implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private byte coordinateMode;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Point> points;
+    private List<Point> points;
 
     public FillPoly.FillPolyBuilder shape(PolyShape shape) {
       this.shape = (byte) shape.getValue();
@@ -142,7 +141,7 @@ public final class FillPoly implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public FillPoly.FillPolyBuilder points(final ImmutableList<Point> points) {
+    public FillPoly.FillPolyBuilder points(final List<Point> points) {
       if (points == null) {
         throw new java.lang.NullPointerException("points is marked non-null but is null");
       }
@@ -163,7 +162,7 @@ public final class FillPoly implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  FillPoly(final int drawable, final int gc, final byte shape, final byte coordinateMode, final ImmutableList<Point> points) {
+  FillPoly(final int drawable, final int gc, final byte shape, final byte coordinateMode, final List<Point> points) {
     if (points == null) {
       throw new java.lang.NullPointerException("points is marked non-null but is null");
     }
@@ -200,7 +199,7 @@ public final class FillPoly implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Point> getPoints() {
+  public List<Point> getPoints() {
     return this.points;
   }
 

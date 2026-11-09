@@ -1,6 +1,5 @@
 package com.github.moaxcp.x11.protocol;
 
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -93,7 +92,7 @@ public class X11BigEndianInputStream implements X11InputStream {
   }
 
   @Override
-  public ByteList readVoid(int length) throws IOException {
+  public byte[] readVoid(int length) throws IOException {
     return readByte(length);
   }
 

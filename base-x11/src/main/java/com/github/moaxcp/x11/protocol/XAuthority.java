@@ -1,15 +1,14 @@
 package com.github.moaxcp.x11.protocol;
 
-import org.eclipse.collections.api.list.primitive.ByteList;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import static com.github.moaxcp.x11.protocol.ParametersCheck.requireNonEmpty;
-import static com.github.moaxcp.x11.protocol.Utilities.toList;
 
 /**
  * An X11 Authority defines a secret key used when authenticating with the x11 server. family, address and displayNumber
@@ -17,11 +16,10 @@ import static com.github.moaxcp.x11.protocol.Utilities.toList;
  */
 public final class XAuthority {
   private final Family family;
-  private final ByteList address;
+  private final byte[] address;
   private final int displayNumber;
-  private final ByteList protocolName;
-  private final ByteList protocolData;
-
+  private final byte[] protocolName;
+  private final byte[] protocolData;
 
   /**
    * Represents a Family or connection type used in authentication.
@@ -74,7 +72,7 @@ public final class XAuthority {
    * @throws NullPointerException if any parameter is null.
    * @throws IllegalArgumentException if displayNumber is less than 0 or protocolName is empty.
    */
-  public XAuthority(Family family, ByteList address, int displayNumber, ByteList protocolName, ByteList protocolData) {
+  public XAuthority(Family family, byte[] address, int displayNumber, byte[] protocolName, byte[] protocolData) {
     if (family == null) {
       throw new java.lang.NullPointerException("family is marked non-null but is null");
     }
@@ -101,16 +99,16 @@ public final class XAuthority {
     try {
       Family family = Family.getByCode(in.readUnsignedShort());
       int length = in.readUnsignedShort();
-      var address = readBytesList(in, length);
+      byte[] address = readBytes(in, length);
       length = in.readUnsignedShort();
       int number = 0;
       if (length != 0) {
         number = Integer.parseInt(new String(readBytes(in, length)));
       }
       length = in.readUnsignedShort();
-      var name = readBytesList(in, length);
+      byte[] name = readBytes(in, length);
       length = in.readUnsignedShort();
-      var data = readBytesList(in, length);
+      byte[] data = readBytes(in, length);
       return Optional.of(new XAuthority(family, address, number, name, data));
     } catch (IOException ex) {
       return Optional.empty();
@@ -123,19 +121,13 @@ public final class XAuthority {
     return bytes;
   }
 
-  private static ByteList readBytesList(DataInput in, int length) throws IOException {
-    byte[] bytes = new byte[length];
-    in.readFully(bytes);
-    return toList(bytes);
-  }
-
   public static Optional<XAuthority> getAuthority(List<XAuthority> authorities, DisplayName displayName) throws UnknownHostException {
     for (int i = 0; i < authorities.size(); i++) {
       XAuthority auth = authorities.get(i);
       switch (auth.getFamily()) {
-      case WILD: 
+      case WILD:
         return Optional.of(auth);
-      default: 
+      default:
         InetAddress hostNameAddress;
         if (displayName.getHostName() == null || displayName.getHostName().equals("localhost")) {
           hostNameAddress = InetAddress.getLocalHost();
@@ -190,7 +182,7 @@ public final class XAuthority {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getAddress() {
+  public byte[] getAddress() {
     return this.address;
   }
 
@@ -200,12 +192,12 @@ public final class XAuthority {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getProtocolName() {
+  public byte[] getProtocolName() {
     return this.protocolName;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getProtocolData() {
+  public byte[] getProtocolData() {
     return this.protocolData;
   }
 
@@ -216,18 +208,10 @@ public final class XAuthority {
     if (!(o instanceof XAuthority)) return false;
     final XAuthority other = (XAuthority) o;
     if (this.getDisplayNumber() != other.getDisplayNumber()) return false;
-    final java.lang.Object this$family = this.getFamily();
-    final java.lang.Object other$family = other.getFamily();
-    if (this$family == null ? other$family != null : !this$family.equals(other$family)) return false;
-    final java.lang.Object this$address = this.getAddress();
-    final java.lang.Object other$address = other.getAddress();
-    if (this$address == null ? other$address != null : !this$address.equals(other$address)) return false;
-    final java.lang.Object this$protocolName = this.getProtocolName();
-    final java.lang.Object other$protocolName = other.getProtocolName();
-    if (this$protocolName == null ? other$protocolName != null : !this$protocolName.equals(other$protocolName)) return false;
-    final java.lang.Object this$protocolData = this.getProtocolData();
-    final java.lang.Object other$protocolData = other.getProtocolData();
-    if (this$protocolData == null ? other$protocolData != null : !this$protocolData.equals(other$protocolData)) return false;
+    if (this.getFamily() != other.getFamily()) return false;
+    if (!Arrays.equals(this.getAddress(), other.getAddress())) return false;
+    if (!Arrays.equals(this.getProtocolName(), other.getProtocolName())) return false;
+    if (!Arrays.equals(this.getProtocolData(), other.getProtocolData())) return false;
     return true;
   }
 
@@ -237,20 +221,16 @@ public final class XAuthority {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getDisplayNumber();
-    final java.lang.Object $family = this.getFamily();
-    result = result * PRIME + ($family == null ? 43 : $family.hashCode());
-    final java.lang.Object $address = this.getAddress();
-    result = result * PRIME + ($address == null ? 43 : $address.hashCode());
-    final java.lang.Object $protocolName = this.getProtocolName();
-    result = result * PRIME + ($protocolName == null ? 43 : $protocolName.hashCode());
-    final java.lang.Object $protocolData = this.getProtocolData();
-    result = result * PRIME + ($protocolData == null ? 43 : $protocolData.hashCode());
+    result = result * PRIME + (this.getFamily() == null ? 43 : this.getFamily().hashCode());
+    result = result * PRIME + Arrays.hashCode(this.getAddress());
+    result = result * PRIME + Arrays.hashCode(this.getProtocolName());
+    result = result * PRIME + Arrays.hashCode(this.getProtocolData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "XAuthority(family=" + this.getFamily() + ", address=" + this.getAddress() + ", displayNumber=" + this.getDisplayNumber() + ", protocolName=" + this.getProtocolName() + ", protocolData=" + this.getProtocolData() + ")";
+    return "XAuthority(family=" + this.getFamily() + ", address=" + Arrays.toString(this.getAddress()) + ", displayNumber=" + this.getDisplayNumber() + ", protocolName=" + Arrays.toString(this.getProtocolName()) + ", protocolData=" + Arrays.toString(this.getProtocolData()) + ")";
   }
 }

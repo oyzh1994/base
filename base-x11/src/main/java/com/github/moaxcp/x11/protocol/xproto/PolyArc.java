@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class PolyArc implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 68;
   private final int drawable;
   private final int gc;
-  private final ImmutableList<Arc> arcs;
+  private final List<Arc> arcs;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,7 +30,7 @@ public final class PolyArc implements OneWayRequest {
     javaStart += 4;
     int gc = in.readCard32();
     javaStart += 4;
-    MutableList<Arc> arcs = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Arc> arcs = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Arc baseObject = Arc.readArc(in);
       arcs.add(baseObject);
@@ -39,7 +38,7 @@ public final class PolyArc implements OneWayRequest {
     }
     javaBuilder.drawable(drawable);
     javaBuilder.gc(gc);
-    javaBuilder.arcs(arcs.toImmutable());
+    javaBuilder.arcs(List.copyOf(arcs));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -73,7 +72,7 @@ public final class PolyArc implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int gc;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Arc> arcs;
+    private List<Arc> arcs;
 
     public int getSize() {
       return 12 + XObject.sizeOf(arcs);
@@ -105,7 +104,7 @@ public final class PolyArc implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public PolyArc.PolyArcBuilder arcs(final ImmutableList<Arc> arcs) {
+    public PolyArc.PolyArcBuilder arcs(final List<Arc> arcs) {
       if (arcs == null) {
         throw new java.lang.NullPointerException("arcs is marked non-null but is null");
       }
@@ -126,7 +125,7 @@ public final class PolyArc implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  PolyArc(final int drawable, final int gc, final ImmutableList<Arc> arcs) {
+  PolyArc(final int drawable, final int gc, final List<Arc> arcs) {
     if (arcs == null) {
       throw new java.lang.NullPointerException("arcs is marked non-null but is null");
     }
@@ -151,7 +150,7 @@ public final class PolyArc implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Arc> getArcs() {
+  public List<Arc> getArcs() {
     return this.arcs;
   }
 

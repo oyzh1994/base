@@ -1,30 +1,29 @@
 package com.github.moaxcp.x11.protocol.sync;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class ListSystemCountersReply implements XReply {
   public static final String PLUGIN_NAME = "sync";
   private final short sequenceNumber;
-  private final ImmutableList<Systemcounter> counters;
+  private final List<Systemcounter> counters;
 
   public static ListSystemCountersReply readListSystemCountersReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     ListSystemCountersReply.ListSystemCountersReplyBuilder javaBuilder = ListSystemCountersReply.builder();
     int length = in.readCard32();
     int countersLen = in.readCard32();
     byte[] pad5 = in.readPad(20);
-    MutableList<Systemcounter> counters = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(countersLen)));
+    List<Systemcounter> counters = new ArrayList<>((int) (Integer.toUnsignedLong(countersLen)));
     for (int i = 0; i < Integer.toUnsignedLong(countersLen); i++) {
       counters.add(Systemcounter.readSystemcounter(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.counters(counters.toImmutable());
+    javaBuilder.counters(List.copyOf(counters));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -61,7 +60,7 @@ public final class ListSystemCountersReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Systemcounter> counters;
+    private List<Systemcounter> counters;
 
     public int getSize() {
       return 32 + XObject.sizeOf(counters);
@@ -84,7 +83,7 @@ public final class ListSystemCountersReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListSystemCountersReply.ListSystemCountersReplyBuilder counters(final ImmutableList<Systemcounter> counters) {
+    public ListSystemCountersReply.ListSystemCountersReplyBuilder counters(final List<Systemcounter> counters) {
       if (counters == null) {
         throw new java.lang.NullPointerException("counters is marked non-null but is null");
       }
@@ -105,7 +104,7 @@ public final class ListSystemCountersReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  ListSystemCountersReply(final short sequenceNumber, final ImmutableList<Systemcounter> counters) {
+  ListSystemCountersReply(final short sequenceNumber, final List<Systemcounter> counters) {
     if (counters == null) {
       throw new java.lang.NullPointerException("counters is marked non-null but is null");
     }
@@ -124,7 +123,7 @@ public final class ListSystemCountersReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Systemcounter> getCounters() {
+  public List<Systemcounter> getCounters() {
     return this.counters;
   }
 

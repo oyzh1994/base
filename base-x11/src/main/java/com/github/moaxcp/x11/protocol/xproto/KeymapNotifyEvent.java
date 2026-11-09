@@ -4,14 +4,13 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XEvent;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class KeymapNotifyEvent implements XEvent {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte NUMBER = 11;
   private final byte firstEventOffset;
   private final boolean sentEvent;
-  private final ByteList keys;
+  private final byte[] keys;
 
   @Override
   public byte getResponseCode() {
@@ -30,8 +29,8 @@ public final class KeymapNotifyEvent implements XEvent {
 
   public static KeymapNotifyEvent readKeymapNotifyEvent(byte firstEventOffset, boolean sentEvent, X11Input in) throws IOException {
     KeymapNotifyEvent.KeymapNotifyEventBuilder javaBuilder = KeymapNotifyEvent.builder();
-    ByteList keys = in.readCard8(31);
-    javaBuilder.keys(keys.toImmutable());
+    byte[] keys = in.readCard8(31);
+    javaBuilder.keys(keys);
     javaBuilder.sentEvent(sentEvent);
     javaBuilder.firstEventOffset(firstEventOffset);
     if (javaBuilder.getSize() < 32) {
@@ -49,7 +48,7 @@ public final class KeymapNotifyEvent implements XEvent {
 
   @Override
   public int getSize() {
-    return 1 + 1 * keys.size();
+    return 1 + 1 * keys.length;
   }
 
   public String getPluginName() {
@@ -63,10 +62,10 @@ public final class KeymapNotifyEvent implements XEvent {
     @java.lang.SuppressWarnings("all")
     private boolean sentEvent;
     @java.lang.SuppressWarnings("all")
-    private ByteList keys;
+    private byte[] keys;
 
     public int getSize() {
-      return 1 + 1 * keys.size();
+      return 1 + 1 * keys.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -95,7 +94,7 @@ public final class KeymapNotifyEvent implements XEvent {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public KeymapNotifyEvent.KeymapNotifyEventBuilder keys(final ByteList keys) {
+    public KeymapNotifyEvent.KeymapNotifyEventBuilder keys(final byte[] keys) {
       if (keys == null) {
         throw new java.lang.NullPointerException("keys is marked non-null but is null");
       }
@@ -111,12 +110,12 @@ public final class KeymapNotifyEvent implements XEvent {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "KeymapNotifyEvent.KeymapNotifyEventBuilder(firstEventOffset=" + this.firstEventOffset + ", sentEvent=" + this.sentEvent + ", keys=" + this.keys + ")";
+      return "KeymapNotifyEvent.KeymapNotifyEventBuilder(firstEventOffset=" + this.firstEventOffset + ", sentEvent=" + this.sentEvent + ", keys=" + java.util.Arrays.toString(this.keys) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  KeymapNotifyEvent(final byte firstEventOffset, final boolean sentEvent, final ByteList keys) {
+  KeymapNotifyEvent(final byte firstEventOffset, final boolean sentEvent, final byte[] keys) {
     if (keys == null) {
       throw new java.lang.NullPointerException("keys is marked non-null but is null");
     }
@@ -141,7 +140,7 @@ public final class KeymapNotifyEvent implements XEvent {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getKeys() {
+  public byte[] getKeys() {
     return this.keys;
   }
 
@@ -153,9 +152,7 @@ public final class KeymapNotifyEvent implements XEvent {
     final KeymapNotifyEvent other = (KeymapNotifyEvent) o;
     if (this.getFirstEventOffset() != other.getFirstEventOffset()) return false;
     if (this.isSentEvent() != other.isSentEvent()) return false;
-    final java.lang.Object this$keys = this.getKeys();
-    final java.lang.Object other$keys = other.getKeys();
-    if (this$keys == null ? other$keys != null : !this$keys.equals(other$keys)) return false;
+    if (!java.util.Arrays.equals(this.getKeys(), other.getKeys())) return false;
     return true;
   }
 
@@ -166,14 +163,13 @@ public final class KeymapNotifyEvent implements XEvent {
     int result = 1;
     result = result * PRIME + this.getFirstEventOffset();
     result = result * PRIME + (this.isSentEvent() ? 79 : 97);
-    final java.lang.Object $keys = this.getKeys();
-    result = result * PRIME + ($keys == null ? 43 : $keys.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getKeys());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "KeymapNotifyEvent(firstEventOffset=" + this.getFirstEventOffset() + ", sentEvent=" + this.isSentEvent() + ", keys=" + this.getKeys() + ")";
+    return "KeymapNotifyEvent(firstEventOffset=" + this.getFirstEventOffset() + ", sentEvent=" + this.isSentEvent() + ", keys=" + java.util.Arrays.toString(this.getKeys()) + ")";
   }
 }

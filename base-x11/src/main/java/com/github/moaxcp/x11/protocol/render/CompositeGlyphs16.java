@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class CompositeGlyphs16 implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
@@ -16,7 +15,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
   private final int glyphset;
   private final short srcX;
   private final short srcY;
-  private final ByteList glyphcmds;
+  private final byte[] glyphcmds;
 
   public byte getOpCode() {
     return OPCODE;
@@ -45,7 +44,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
     javaStart += 2;
     short srcY = in.readInt16();
     javaStart += 2;
-    ByteList glyphcmds = in.readByte(Short.toUnsignedInt(length) - javaStart);
+    byte[] glyphcmds = in.readByte(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.op(op);
     javaBuilder.src(src);
     javaBuilder.dst(dst);
@@ -53,7 +52,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
     javaBuilder.glyphset(glyphset);
     javaBuilder.srcX(srcX);
     javaBuilder.srcY(srcY);
-    javaBuilder.glyphcmds(glyphcmds.toImmutable());
+    javaBuilder.glyphcmds(glyphcmds);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -77,7 +76,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 28 + 1 * glyphcmds.size();
+    return 28 + 1 * glyphcmds.length;
   }
 
   public String getPluginName() {
@@ -101,7 +100,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short srcY;
     @java.lang.SuppressWarnings("all")
-    private ByteList glyphcmds;
+    private byte[] glyphcmds;
 
     public CompositeGlyphs16.CompositeGlyphs16Builder op(PictOp op) {
       this.op = (byte) op.getValue();
@@ -114,7 +113,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
     }
 
     public int getSize() {
-      return 28 + 1 * glyphcmds.size();
+      return 28 + 1 * glyphcmds.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -179,7 +178,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CompositeGlyphs16.CompositeGlyphs16Builder glyphcmds(final ByteList glyphcmds) {
+    public CompositeGlyphs16.CompositeGlyphs16Builder glyphcmds(final byte[] glyphcmds) {
       if (glyphcmds == null) {
         throw new java.lang.NullPointerException("glyphcmds is marked non-null but is null");
       }
@@ -195,12 +194,12 @@ public final class CompositeGlyphs16 implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "CompositeGlyphs16.CompositeGlyphs16Builder(op=" + this.op + ", src=" + this.src + ", dst=" + this.dst + ", maskFormat=" + this.maskFormat + ", glyphset=" + this.glyphset + ", srcX=" + this.srcX + ", srcY=" + this.srcY + ", glyphcmds=" + this.glyphcmds + ")";
+      return "CompositeGlyphs16.CompositeGlyphs16Builder(op=" + this.op + ", src=" + this.src + ", dst=" + this.dst + ", maskFormat=" + this.maskFormat + ", glyphset=" + this.glyphset + ", srcX=" + this.srcX + ", srcY=" + this.srcY + ", glyphcmds=" + java.util.Arrays.toString(this.glyphcmds) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  CompositeGlyphs16(final byte op, final int src, final int dst, final int maskFormat, final int glyphset, final short srcX, final short srcY, final ByteList glyphcmds) {
+  CompositeGlyphs16(final byte op, final int src, final int dst, final int maskFormat, final int glyphset, final short srcX, final short srcY, final byte[] glyphcmds) {
     if (glyphcmds == null) {
       throw new java.lang.NullPointerException("glyphcmds is marked non-null but is null");
     }
@@ -255,7 +254,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getGlyphcmds() {
+  public byte[] getGlyphcmds() {
     return this.glyphcmds;
   }
 
@@ -272,9 +271,7 @@ public final class CompositeGlyphs16 implements OneWayRequest {
     if (this.getGlyphset() != other.getGlyphset()) return false;
     if (this.getSrcX() != other.getSrcX()) return false;
     if (this.getSrcY() != other.getSrcY()) return false;
-    final java.lang.Object this$glyphcmds = this.getGlyphcmds();
-    final java.lang.Object other$glyphcmds = other.getGlyphcmds();
-    if (this$glyphcmds == null ? other$glyphcmds != null : !this$glyphcmds.equals(other$glyphcmds)) return false;
+    if (!java.util.Arrays.equals(this.getGlyphcmds(), other.getGlyphcmds())) return false;
     return true;
   }
 
@@ -290,14 +287,13 @@ public final class CompositeGlyphs16 implements OneWayRequest {
     result = result * PRIME + this.getGlyphset();
     result = result * PRIME + this.getSrcX();
     result = result * PRIME + this.getSrcY();
-    final java.lang.Object $glyphcmds = this.getGlyphcmds();
-    result = result * PRIME + ($glyphcmds == null ? 43 : $glyphcmds.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getGlyphcmds());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "CompositeGlyphs16(op=" + this.getOp() + ", src=" + this.getSrc() + ", dst=" + this.getDst() + ", maskFormat=" + this.getMaskFormat() + ", glyphset=" + this.getGlyphset() + ", srcX=" + this.getSrcX() + ", srcY=" + this.getSrcY() + ", glyphcmds=" + this.getGlyphcmds() + ")";
+    return "CompositeGlyphs16(op=" + this.getOp() + ", src=" + this.getSrc() + ", dst=" + this.getDst() + ", maskFormat=" + this.getMaskFormat() + ", glyphset=" + this.getGlyphset() + ", srcX=" + this.getSrcX() + ", srcY=" + this.getSrcY() + ", glyphcmds=" + java.util.Arrays.toString(this.getGlyphcmds()) + ")";
   }
 }

@@ -1,18 +1,17 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Depth implements XStruct {
   public static final String PLUGIN_NAME = "xproto";
   private final byte depth;
-  private final ImmutableList<Visualtype> visuals;
+  private final List<Visualtype> visuals;
 
   public static Depth readDepth(X11Input in) throws IOException {
     Depth.DepthBuilder javaBuilder = Depth.builder();
@@ -20,12 +19,12 @@ public final class Depth implements XStruct {
     byte[] pad1 = in.readPad(1);
     short visualsLen = in.readCard16();
     byte[] pad3 = in.readPad(4);
-    MutableList<Visualtype> visuals = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(visualsLen));
+    List<Visualtype> visuals = new ArrayList<>(Short.toUnsignedInt(visualsLen));
     for (int i = 0; i < Short.toUnsignedInt(visualsLen); i++) {
       visuals.add(Visualtype.readVisualtype(in));
     }
     javaBuilder.depth(depth);
-    javaBuilder.visuals(visuals.toImmutable());
+    javaBuilder.visuals(List.copyOf(visuals));
     return javaBuilder.build();
   }
 
@@ -55,7 +54,7 @@ public final class Depth implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte depth;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Visualtype> visuals;
+    private List<Visualtype> visuals;
 
     public int getSize() {
       return 8 + XObject.sizeOf(visuals);
@@ -78,7 +77,7 @@ public final class Depth implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Depth.DepthBuilder visuals(final ImmutableList<Visualtype> visuals) {
+    public Depth.DepthBuilder visuals(final List<Visualtype> visuals) {
       if (visuals == null) {
         throw new java.lang.NullPointerException("visuals is marked non-null but is null");
       }
@@ -99,7 +98,7 @@ public final class Depth implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  Depth(final byte depth, final ImmutableList<Visualtype> visuals) {
+  Depth(final byte depth, final List<Visualtype> visuals) {
     if (visuals == null) {
       throw new java.lang.NullPointerException("visuals is marked non-null but is null");
     }
@@ -118,7 +117,7 @@ public final class Depth implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Visualtype> getVisuals() {
+  public List<Visualtype> getVisuals() {
     return this.visuals;
   }
 

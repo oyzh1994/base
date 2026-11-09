@@ -4,13 +4,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class AllocColorCellsReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final IntList pixels;
-  private final IntList masks;
+  private final int[] pixels;
+  private final int[] masks;
 
   public static AllocColorCellsReply readAllocColorCellsReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     AllocColorCellsReply.AllocColorCellsReplyBuilder javaBuilder = AllocColorCellsReply.builder();
@@ -18,11 +17,11 @@ public final class AllocColorCellsReply implements XReply {
     short pixelsLen = in.readCard16();
     short masksLen = in.readCard16();
     byte[] pad6 = in.readPad(20);
-    IntList pixels = in.readCard32(Short.toUnsignedInt(pixelsLen));
-    IntList masks = in.readCard32(Short.toUnsignedInt(masksLen));
+    int[] pixels = in.readCard32(Short.toUnsignedInt(pixelsLen));
+    int[] masks = in.readCard32(Short.toUnsignedInt(masksLen));
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.pixels(pixels.toImmutable());
-    javaBuilder.masks(masks.toImmutable());
+    javaBuilder.pixels(pixels);
+    javaBuilder.masks(masks);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -36,9 +35,9 @@ public final class AllocColorCellsReply implements XReply {
     out.writePad(1);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
-    short pixelsLen = (short) pixels.size();
+    short pixelsLen = (short) pixels.length;
     out.writeCard16(pixelsLen);
-    short masksLen = (short) masks.size();
+    short masksLen = (short) masks.length;
     out.writeCard16(masksLen);
     out.writePad(20);
     out.writeCard32(pixels);
@@ -48,7 +47,7 @@ public final class AllocColorCellsReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * pixels.size() + 4 * masks.size();
+    return 32 + 4 * pixels.length + 4 * masks.length;
   }
 
   public String getPluginName() {
@@ -60,12 +59,12 @@ public final class AllocColorCellsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private IntList pixels;
+    private int[] pixels;
     @java.lang.SuppressWarnings("all")
-    private IntList masks;
+    private int[] masks;
 
     public int getSize() {
-      return 32 + 4 * pixels.size() + 4 * masks.size();
+      return 32 + 4 * pixels.length + 4 * masks.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -85,7 +84,7 @@ public final class AllocColorCellsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AllocColorCellsReply.AllocColorCellsReplyBuilder pixels(final IntList pixels) {
+    public AllocColorCellsReply.AllocColorCellsReplyBuilder pixels(final int[] pixels) {
       if (pixels == null) {
         throw new java.lang.NullPointerException("pixels is marked non-null but is null");
       }
@@ -97,7 +96,7 @@ public final class AllocColorCellsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AllocColorCellsReply.AllocColorCellsReplyBuilder masks(final IntList masks) {
+    public AllocColorCellsReply.AllocColorCellsReplyBuilder masks(final int[] masks) {
       if (masks == null) {
         throw new java.lang.NullPointerException("masks is marked non-null but is null");
       }
@@ -113,12 +112,12 @@ public final class AllocColorCellsReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "AllocColorCellsReply.AllocColorCellsReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", pixels=" + this.pixels + ", masks=" + this.masks + ")";
+      return "AllocColorCellsReply.AllocColorCellsReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", pixels=" + java.util.Arrays.toString(this.pixels) + ", masks=" + java.util.Arrays.toString(this.masks) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  AllocColorCellsReply(final short sequenceNumber, final IntList pixels, final IntList masks) {
+  AllocColorCellsReply(final short sequenceNumber, final int[] pixels, final int[] masks) {
     if (pixels == null) {
       throw new java.lang.NullPointerException("pixels is marked non-null but is null");
     }
@@ -141,12 +140,12 @@ public final class AllocColorCellsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getPixels() {
+  public int[] getPixels() {
     return this.pixels;
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getMasks() {
+  public int[] getMasks() {
     return this.masks;
   }
 
@@ -157,12 +156,8 @@ public final class AllocColorCellsReply implements XReply {
     if (!(o instanceof AllocColorCellsReply)) return false;
     final AllocColorCellsReply other = (AllocColorCellsReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$pixels = this.getPixels();
-    final java.lang.Object other$pixels = other.getPixels();
-    if (this$pixels == null ? other$pixels != null : !this$pixels.equals(other$pixels)) return false;
-    final java.lang.Object this$masks = this.getMasks();
-    final java.lang.Object other$masks = other.getMasks();
-    if (this$masks == null ? other$masks != null : !this$masks.equals(other$masks)) return false;
+    if (!java.util.Arrays.equals(this.getPixels(), other.getPixels())) return false;
+    if (!java.util.Arrays.equals(this.getMasks(), other.getMasks())) return false;
     return true;
   }
 
@@ -172,16 +167,14 @@ public final class AllocColorCellsReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $pixels = this.getPixels();
-    result = result * PRIME + ($pixels == null ? 43 : $pixels.hashCode());
-    final java.lang.Object $masks = this.getMasks();
-    result = result * PRIME + ($masks == null ? 43 : $masks.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getPixels());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getMasks());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "AllocColorCellsReply(sequenceNumber=" + this.getSequenceNumber() + ", pixels=" + this.getPixels() + ", masks=" + this.getMasks() + ")";
+    return "AllocColorCellsReply(sequenceNumber=" + this.getSequenceNumber() + ", pixels=" + java.util.Arrays.toString(this.getPixels()) + ", masks=" + java.util.Arrays.toString(this.getMasks()) + ")";
   }
 }

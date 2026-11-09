@@ -1,14 +1,13 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.xproto.Rectangle;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class FillRectangles implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
@@ -16,7 +15,7 @@ public final class FillRectangles implements OneWayRequest {
   private final byte op;
   private final int dst;
   private final Color color;
-  private final ImmutableList<Rectangle> rects;
+  private final List<Rectangle> rects;
 
   public byte getOpCode() {
     return OPCODE;
@@ -37,7 +36,7 @@ public final class FillRectangles implements OneWayRequest {
     javaStart += 4;
     Color color = Color.readColor(in);
     javaStart += color.getSize();
-    MutableList<Rectangle> rects = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Rectangle> rects = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Rectangle baseObject = Rectangle.readRectangle(in);
       rects.add(baseObject);
@@ -46,7 +45,7 @@ public final class FillRectangles implements OneWayRequest {
     javaBuilder.op(op);
     javaBuilder.dst(dst);
     javaBuilder.color(color);
-    javaBuilder.rects(rects.toImmutable());
+    javaBuilder.rects(List.copyOf(rects));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -84,7 +83,7 @@ public final class FillRectangles implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private Color color;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Rectangle> rects;
+    private List<Rectangle> rects;
 
     public FillRectangles.FillRectanglesBuilder op(PictOp op) {
       this.op = (byte) op.getValue();
@@ -129,7 +128,7 @@ public final class FillRectangles implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public FillRectangles.FillRectanglesBuilder rects(final ImmutableList<Rectangle> rects) {
+    public FillRectangles.FillRectanglesBuilder rects(final List<Rectangle> rects) {
       if (rects == null) {
         throw new java.lang.NullPointerException("rects is marked non-null but is null");
       }
@@ -150,7 +149,7 @@ public final class FillRectangles implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  FillRectangles(final byte op, final int dst, final Color color, final ImmutableList<Rectangle> rects) {
+  FillRectangles(final byte op, final int dst, final Color color, final List<Rectangle> rects) {
     if (color == null) {
       throw new java.lang.NullPointerException("color is marked non-null but is null");
     }
@@ -184,7 +183,7 @@ public final class FillRectangles implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Rectangle> getRects() {
+  public List<Rectangle> getRects() {
     return this.rects;
   }
 

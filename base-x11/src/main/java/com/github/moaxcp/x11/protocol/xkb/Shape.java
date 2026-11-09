@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Shape implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
   private final int name;
   private final byte primaryNdx;
   private final byte approxNdx;
-  private final ImmutableList<Outline> outlines;
+  private final List<Outline> outlines;
 
   public static Shape readShape(X11Input in) throws IOException {
     Shape.ShapeBuilder javaBuilder = Shape.builder();
@@ -23,14 +22,14 @@ public final class Shape implements XStruct {
     byte primaryNdx = in.readCard8();
     byte approxNdx = in.readCard8();
     byte[] pad4 = in.readPad(1);
-    MutableList<Outline> outlines = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nOutlines));
+    List<Outline> outlines = new ArrayList<>(Byte.toUnsignedInt(nOutlines));
     for (int i = 0; i < Byte.toUnsignedInt(nOutlines); i++) {
       outlines.add(Outline.readOutline(in));
     }
     javaBuilder.name(name);
     javaBuilder.primaryNdx(primaryNdx);
     javaBuilder.approxNdx(approxNdx);
-    javaBuilder.outlines(outlines.toImmutable());
+    javaBuilder.outlines(List.copyOf(outlines));
     return javaBuilder.build();
   }
 
@@ -65,7 +64,7 @@ public final class Shape implements XStruct {
     @java.lang.SuppressWarnings("all")
     private byte approxNdx;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Outline> outlines;
+    private List<Outline> outlines;
 
     public int getSize() {
       return 8 + XObject.sizeOf(outlines);
@@ -106,7 +105,7 @@ public final class Shape implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Shape.ShapeBuilder outlines(final ImmutableList<Outline> outlines) {
+    public Shape.ShapeBuilder outlines(final List<Outline> outlines) {
       if (outlines == null) {
         throw new java.lang.NullPointerException("outlines is marked non-null but is null");
       }
@@ -127,7 +126,7 @@ public final class Shape implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  Shape(final int name, final byte primaryNdx, final byte approxNdx, final ImmutableList<Outline> outlines) {
+  Shape(final int name, final byte primaryNdx, final byte approxNdx, final List<Outline> outlines) {
     if (outlines == null) {
       throw new java.lang.NullPointerException("outlines is marked non-null but is null");
     }
@@ -158,7 +157,7 @@ public final class Shape implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Outline> getOutlines() {
+  public List<Outline> getOutlines() {
     return this.outlines;
   }
 

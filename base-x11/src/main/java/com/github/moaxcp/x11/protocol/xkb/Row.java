@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xkb;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Row implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
   private final short top;
   private final short left;
   private final boolean vertical;
-  private final ImmutableList<Key> keys;
+  private final List<Key> keys;
 
   public static Row readRow(X11Input in) throws IOException {
     Row.RowBuilder javaBuilder = Row.builder();
@@ -23,14 +22,14 @@ public final class Row implements XStruct {
     byte nKeys = in.readCard8();
     boolean vertical = in.readBool();
     byte[] pad4 = in.readPad(2);
-    MutableList<Key> keys = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nKeys));
+    List<Key> keys = new ArrayList<>(Byte.toUnsignedInt(nKeys));
     for (int i = 0; i < Byte.toUnsignedInt(nKeys); i++) {
       keys.add(Key.readKey(in));
     }
     javaBuilder.top(top);
     javaBuilder.left(left);
     javaBuilder.vertical(vertical);
-    javaBuilder.keys(keys.toImmutable());
+    javaBuilder.keys(List.copyOf(keys));
     return javaBuilder.build();
   }
 
@@ -65,7 +64,7 @@ public final class Row implements XStruct {
     @java.lang.SuppressWarnings("all")
     private boolean vertical;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Key> keys;
+    private List<Key> keys;
 
     public int getSize() {
       return 8 + XObject.sizeOf(keys);
@@ -106,7 +105,7 @@ public final class Row implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Row.RowBuilder keys(final ImmutableList<Key> keys) {
+    public Row.RowBuilder keys(final List<Key> keys) {
       if (keys == null) {
         throw new java.lang.NullPointerException("keys is marked non-null but is null");
       }
@@ -127,7 +126,7 @@ public final class Row implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  Row(final short top, final short left, final boolean vertical, final ImmutableList<Key> keys) {
+  Row(final short top, final short left, final boolean vertical, final List<Key> keys) {
     if (keys == null) {
       throw new java.lang.NullPointerException("keys is marked non-null but is null");
     }
@@ -158,7 +157,7 @@ public final class Row implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Key> getKeys() {
+  public List<Key> getKeys() {
     return this.keys;
   }
 

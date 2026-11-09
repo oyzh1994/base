@@ -4,14 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ChangeHosts implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 109;
   private final byte mode;
   private final byte family;
-  private final ByteList address;
+  private final byte[] address;
 
   public byte getOpCode() {
     return OPCODE;
@@ -24,10 +23,10 @@ public final class ChangeHosts implements OneWayRequest {
     byte family = in.readCard8();
     byte[] pad4 = in.readPad(1);
     short addressLen = in.readCard16();
-    ByteList address = in.readByte(Short.toUnsignedInt(addressLen));
+    byte[] address = in.readByte(Short.toUnsignedInt(addressLen));
     javaBuilder.mode(mode);
     javaBuilder.family(family);
-    javaBuilder.address(address.toImmutable());
+    javaBuilder.address(address);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -39,7 +38,7 @@ public final class ChangeHosts implements OneWayRequest {
     out.writeCard16((short) getLength());
     out.writeCard8(family);
     out.writePad(1);
-    short addressLen = (short) address.size();
+    short addressLen = (short) address.length;
     out.writeCard16(addressLen);
     out.writeByte(address);
     out.writePadAlign(getSize());
@@ -47,7 +46,7 @@ public final class ChangeHosts implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 8 + 1 * address.size();
+    return 8 + 1 * address.length;
   }
 
   public String getPluginName() {
@@ -61,7 +60,7 @@ public final class ChangeHosts implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private byte family;
     @java.lang.SuppressWarnings("all")
-    private ByteList address;
+    private byte[] address;
 
     public ChangeHosts.ChangeHostsBuilder mode(HostMode mode) {
       this.mode = (byte) mode.getValue();
@@ -84,7 +83,7 @@ public final class ChangeHosts implements OneWayRequest {
     }
 
     public int getSize() {
-      return 8 + 1 * address.size();
+      return 8 + 1 * address.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -95,7 +94,7 @@ public final class ChangeHosts implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ChangeHosts.ChangeHostsBuilder address(final ByteList address) {
+    public ChangeHosts.ChangeHostsBuilder address(final byte[] address) {
       if (address == null) {
         throw new java.lang.NullPointerException("address is marked non-null but is null");
       }
@@ -111,12 +110,12 @@ public final class ChangeHosts implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ChangeHosts.ChangeHostsBuilder(mode=" + this.mode + ", family=" + this.family + ", address=" + this.address + ")";
+      return "ChangeHosts.ChangeHostsBuilder(mode=" + this.mode + ", family=" + this.family + ", address=" + java.util.Arrays.toString(this.address) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ChangeHosts(final byte mode, final byte family, final ByteList address) {
+  ChangeHosts(final byte mode, final byte family, final byte[] address) {
     if (address == null) {
       throw new java.lang.NullPointerException("address is marked non-null but is null");
     }
@@ -141,7 +140,7 @@ public final class ChangeHosts implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getAddress() {
+  public byte[] getAddress() {
     return this.address;
   }
 
@@ -153,9 +152,7 @@ public final class ChangeHosts implements OneWayRequest {
     final ChangeHosts other = (ChangeHosts) o;
     if (this.getMode() != other.getMode()) return false;
     if (this.getFamily() != other.getFamily()) return false;
-    final java.lang.Object this$address = this.getAddress();
-    final java.lang.Object other$address = other.getAddress();
-    if (this$address == null ? other$address != null : !this$address.equals(other$address)) return false;
+    if (!java.util.Arrays.equals(this.getAddress(), other.getAddress())) return false;
     return true;
   }
 
@@ -166,14 +163,13 @@ public final class ChangeHosts implements OneWayRequest {
     int result = 1;
     result = result * PRIME + this.getMode();
     result = result * PRIME + this.getFamily();
-    final java.lang.Object $address = this.getAddress();
-    result = result * PRIME + ($address == null ? 43 : $address.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getAddress());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ChangeHosts(mode=" + this.getMode() + ", family=" + this.getFamily() + ", address=" + this.getAddress() + ")";
+    return "ChangeHosts(mode=" + this.getMode() + ", family=" + this.getFamily() + ", address=" + java.util.Arrays.toString(this.getAddress()) + ")";
   }
 }

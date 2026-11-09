@@ -1,8 +1,5 @@
 package com.github.moaxcp.x11.protocol;
 
-import org.eclipse.collections.api.list.primitive.ByteList;
-import org.eclipse.collections.impl.factory.primitive.ByteLists;
-
 public final class BigEndian {
     public static byte[] write(int value, byte[] bytes) {
         bytes[0] = (byte) (value >> 24);
@@ -12,8 +9,8 @@ public final class BigEndian {
         return bytes;
     }
 
-    public static ByteList writeList(int value) {
-        return ByteLists.immutable.of((byte) (value >> 24), (byte) (value >> 16), (byte) (value >> 8), (byte) value);
+    public static byte[] writeList(int value) {
+        return new byte[]{(byte) (value >> 24), (byte) (value >> 16), (byte) (value >> 8), (byte) value};
     }
 
     @java.lang.SuppressWarnings("all")

@@ -1,29 +1,28 @@
 package com.github.moaxcp.x11.protocol.res;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class ResourceSizeValue implements XStruct {
   public static final String PLUGIN_NAME = "res";
   private final ResourceSizeSpec size;
-  private final ImmutableList<ResourceSizeSpec> crossReferences;
+  private final List<ResourceSizeSpec> crossReferences;
 
   public static ResourceSizeValue readResourceSizeValue(X11Input in) throws IOException {
     ResourceSizeValue.ResourceSizeValueBuilder javaBuilder = ResourceSizeValue.builder();
     ResourceSizeSpec size = ResourceSizeSpec.readResourceSizeSpec(in);
     int numCrossReferences = in.readCard32();
-    MutableList<ResourceSizeSpec> crossReferences = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numCrossReferences)));
+    List<ResourceSizeSpec> crossReferences = new ArrayList<>((int) (Integer.toUnsignedLong(numCrossReferences)));
     for (int i = 0; i < Integer.toUnsignedLong(numCrossReferences); i++) {
       crossReferences.add(ResourceSizeSpec.readResourceSizeSpec(in));
     }
     javaBuilder.size(size);
-    javaBuilder.crossReferences(crossReferences.toImmutable());
+    javaBuilder.crossReferences(List.copyOf(crossReferences));
     return javaBuilder.build();
   }
 
@@ -51,7 +50,7 @@ public final class ResourceSizeValue implements XStruct {
     @java.lang.SuppressWarnings("all")
     private ResourceSizeSpec size;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ResourceSizeSpec> crossReferences;
+    private List<ResourceSizeSpec> crossReferences;
 
     public int getSize() {
       return 24 + XObject.sizeOf(crossReferences);
@@ -77,7 +76,7 @@ public final class ResourceSizeValue implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ResourceSizeValue.ResourceSizeValueBuilder crossReferences(final ImmutableList<ResourceSizeSpec> crossReferences) {
+    public ResourceSizeValue.ResourceSizeValueBuilder crossReferences(final List<ResourceSizeSpec> crossReferences) {
       if (crossReferences == null) {
         throw new java.lang.NullPointerException("crossReferences is marked non-null but is null");
       }
@@ -98,7 +97,7 @@ public final class ResourceSizeValue implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  ResourceSizeValue(final ResourceSizeSpec size, final ImmutableList<ResourceSizeSpec> crossReferences) {
+  ResourceSizeValue(final ResourceSizeSpec size, final List<ResourceSizeSpec> crossReferences) {
     if (size == null) {
       throw new java.lang.NullPointerException("size is marked non-null but is null");
     }
@@ -115,7 +114,7 @@ public final class ResourceSizeValue implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ResourceSizeSpec> getCrossReferences() {
+  public List<ResourceSizeSpec> getCrossReferences() {
     return this.crossReferences;
   }
 

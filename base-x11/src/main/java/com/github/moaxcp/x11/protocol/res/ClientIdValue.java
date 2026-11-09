@@ -4,34 +4,33 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class ClientIdValue implements XStruct {
   public static final String PLUGIN_NAME = "res";
   private final ClientIdSpec spec;
-  private final IntList value;
+  private final int[] value;
 
   public static ClientIdValue readClientIdValue(X11Input in) throws IOException {
     ClientIdValue.ClientIdValueBuilder javaBuilder = ClientIdValue.builder();
     ClientIdSpec spec = ClientIdSpec.readClientIdSpec(in);
     int length = in.readCard32();
-    IntList value = in.readCard32((int) (Integer.toUnsignedLong(length) / 4));
+    int[] value = in.readCard32((int) (Integer.toUnsignedLong(length) / 4));
     javaBuilder.spec(spec);
-    javaBuilder.value(value.toImmutable());
+    javaBuilder.value(value);
     return javaBuilder.build();
   }
 
   @Override
   public void write(X11Output out) throws IOException {
     spec.write(out);
-    int length = value.size();
+    int length = value.length;
     out.writeCard32(length);
     out.writeCard32(value);
   }
 
   @Override
   public int getSize() {
-    return 12 + 4 * value.size();
+    return 12 + 4 * value.length;
   }
 
   public String getPluginName() {
@@ -43,10 +42,10 @@ public final class ClientIdValue implements XStruct {
     @java.lang.SuppressWarnings("all")
     private ClientIdSpec spec;
     @java.lang.SuppressWarnings("all")
-    private IntList value;
+    private int[] value;
 
     public int getSize() {
-      return 12 + 4 * value.size();
+      return 12 + 4 * value.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -69,7 +68,7 @@ public final class ClientIdValue implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ClientIdValue.ClientIdValueBuilder value(final IntList value) {
+    public ClientIdValue.ClientIdValueBuilder value(final int[] value) {
       if (value == null) {
         throw new java.lang.NullPointerException("value is marked non-null but is null");
       }
@@ -85,12 +84,12 @@ public final class ClientIdValue implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ClientIdValue.ClientIdValueBuilder(spec=" + this.spec + ", value=" + this.value + ")";
+      return "ClientIdValue.ClientIdValueBuilder(spec=" + this.spec + ", value=" + java.util.Arrays.toString(this.value) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ClientIdValue(final ClientIdSpec spec, final IntList value) {
+  ClientIdValue(final ClientIdSpec spec, final int[] value) {
     if (spec == null) {
       throw new java.lang.NullPointerException("spec is marked non-null but is null");
     }
@@ -112,7 +111,7 @@ public final class ClientIdValue implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getValue() {
+  public int[] getValue() {
     return this.value;
   }
 
@@ -125,9 +124,7 @@ public final class ClientIdValue implements XStruct {
     final java.lang.Object this$spec = this.getSpec();
     final java.lang.Object other$spec = other.getSpec();
     if (this$spec == null ? other$spec != null : !this$spec.equals(other$spec)) return false;
-    final java.lang.Object this$value = this.getValue();
-    final java.lang.Object other$value = other.getValue();
-    if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
+    if (!java.util.Arrays.equals(this.getValue(), other.getValue())) return false;
     return true;
   }
 
@@ -138,14 +135,13 @@ public final class ClientIdValue implements XStruct {
     int result = 1;
     final java.lang.Object $spec = this.getSpec();
     result = result * PRIME + ($spec == null ? 43 : $spec.hashCode());
-    final java.lang.Object $value = this.getValue();
-    result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getValue());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ClientIdValue(spec=" + this.getSpec() + ", value=" + this.getValue() + ")";
+    return "ClientIdValue(spec=" + this.getSpec() + ", value=" + java.util.Arrays.toString(this.getValue()) + ")";
   }
 }

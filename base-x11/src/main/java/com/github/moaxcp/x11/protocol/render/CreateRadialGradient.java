@@ -1,14 +1,12 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class CreateRadialGradient implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
@@ -18,8 +16,8 @@ public final class CreateRadialGradient implements OneWayRequest {
   private final Pointfix outer;
   private final int innerRadius;
   private final int outerRadius;
-  private final IntList stops;
-  private final ImmutableList<Color> colors;
+  private final int[] stops;
+  private final List<Color> colors;
 
   public byte getOpCode() {
     return OPCODE;
@@ -35,8 +33,8 @@ public final class CreateRadialGradient implements OneWayRequest {
     int innerRadius = in.readInt32();
     int outerRadius = in.readInt32();
     int numStops = in.readCard32();
-    IntList stops = in.readInt32((int) (Integer.toUnsignedLong(numStops)));
-    MutableList<Color> colors = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numStops)));
+    int[] stops = in.readInt32((int) (Integer.toUnsignedLong(numStops)));
+    List<Color> colors = new ArrayList<>((int) (Integer.toUnsignedLong(numStops)));
     for (int i = 0; i < Integer.toUnsignedLong(numStops); i++) {
       colors.add(Color.readColor(in));
     }
@@ -45,8 +43,8 @@ public final class CreateRadialGradient implements OneWayRequest {
     javaBuilder.outer(outer);
     javaBuilder.innerRadius(innerRadius);
     javaBuilder.outerRadius(outerRadius);
-    javaBuilder.stops(stops.toImmutable());
-    javaBuilder.colors(colors.toImmutable());
+    javaBuilder.stops(stops);
+    javaBuilder.colors(List.copyOf(colors));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -72,7 +70,7 @@ public final class CreateRadialGradient implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 36 + 4 * stops.size() + XObject.sizeOf(colors);
+    return 36 + 4 * stops.length + XObject.sizeOf(colors);
   }
 
   public String getPluginName() {
@@ -92,12 +90,12 @@ public final class CreateRadialGradient implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int outerRadius;
     @java.lang.SuppressWarnings("all")
-    private IntList stops;
+    private int[] stops;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Color> colors;
+    private List<Color> colors;
 
     public int getSize() {
-      return 36 + 4 * stops.size() + XObject.sizeOf(colors);
+      return 36 + 4 * stops.length + XObject.sizeOf(colors);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -159,7 +157,7 @@ public final class CreateRadialGradient implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateRadialGradient.CreateRadialGradientBuilder stops(final IntList stops) {
+    public CreateRadialGradient.CreateRadialGradientBuilder stops(final int[] stops) {
       if (stops == null) {
         throw new java.lang.NullPointerException("stops is marked non-null but is null");
       }
@@ -171,7 +169,7 @@ public final class CreateRadialGradient implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateRadialGradient.CreateRadialGradientBuilder colors(final ImmutableList<Color> colors) {
+    public CreateRadialGradient.CreateRadialGradientBuilder colors(final List<Color> colors) {
       if (colors == null) {
         throw new java.lang.NullPointerException("colors is marked non-null but is null");
       }
@@ -187,12 +185,12 @@ public final class CreateRadialGradient implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "CreateRadialGradient.CreateRadialGradientBuilder(picture=" + this.picture + ", inner=" + this.inner + ", outer=" + this.outer + ", innerRadius=" + this.innerRadius + ", outerRadius=" + this.outerRadius + ", stops=" + this.stops + ", colors=" + this.colors + ")";
+      return "CreateRadialGradient.CreateRadialGradientBuilder(picture=" + this.picture + ", inner=" + this.inner + ", outer=" + this.outer + ", innerRadius=" + this.innerRadius + ", outerRadius=" + this.outerRadius + ", stops=" + java.util.Arrays.toString(this.stops) + ", colors=" + this.colors + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  CreateRadialGradient(final int picture, final Pointfix inner, final Pointfix outer, final int innerRadius, final int outerRadius, final IntList stops, final ImmutableList<Color> colors) {
+  CreateRadialGradient(final int picture, final Pointfix inner, final Pointfix outer, final int innerRadius, final int outerRadius, final int[] stops, final List<Color> colors) {
     if (inner == null) {
       throw new java.lang.NullPointerException("inner is marked non-null but is null");
     }
@@ -245,12 +243,12 @@ public final class CreateRadialGradient implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getStops() {
+  public int[] getStops() {
     return this.stops;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Color> getColors() {
+  public List<Color> getColors() {
     return this.colors;
   }
 
@@ -269,9 +267,7 @@ public final class CreateRadialGradient implements OneWayRequest {
     final java.lang.Object this$outer = this.getOuter();
     final java.lang.Object other$outer = other.getOuter();
     if (this$outer == null ? other$outer != null : !this$outer.equals(other$outer)) return false;
-    final java.lang.Object this$stops = this.getStops();
-    final java.lang.Object other$stops = other.getStops();
-    if (this$stops == null ? other$stops != null : !this$stops.equals(other$stops)) return false;
+    if (!java.util.Arrays.equals(this.getStops(), other.getStops())) return false;
     final java.lang.Object this$colors = this.getColors();
     final java.lang.Object other$colors = other.getColors();
     if (this$colors == null ? other$colors != null : !this$colors.equals(other$colors)) return false;
@@ -290,8 +286,7 @@ public final class CreateRadialGradient implements OneWayRequest {
     result = result * PRIME + ($inner == null ? 43 : $inner.hashCode());
     final java.lang.Object $outer = this.getOuter();
     result = result * PRIME + ($outer == null ? 43 : $outer.hashCode());
-    final java.lang.Object $stops = this.getStops();
-    result = result * PRIME + ($stops == null ? 43 : $stops.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getStops());
     final java.lang.Object $colors = this.getColors();
     result = result * PRIME + ($colors == null ? 43 : $colors.hashCode());
     return result;
@@ -300,6 +295,6 @@ public final class CreateRadialGradient implements OneWayRequest {
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "CreateRadialGradient(picture=" + this.getPicture() + ", inner=" + this.getInner() + ", outer=" + this.getOuter() + ", innerRadius=" + this.getInnerRadius() + ", outerRadius=" + this.getOuterRadius() + ", stops=" + this.getStops() + ", colors=" + this.getColors() + ")";
+    return "CreateRadialGradient(picture=" + this.getPicture() + ", inner=" + this.getInner() + ", outer=" + this.getOuter() + ", innerRadius=" + this.getInnerRadius() + ", outerRadius=" + this.getOuterRadius() + ", stops=" + java.util.Arrays.toString(this.getStops()) + ", colors=" + this.getColors() + ")";
   }
 }

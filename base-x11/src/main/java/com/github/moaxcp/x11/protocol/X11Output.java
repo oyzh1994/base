@@ -1,16 +1,13 @@
 package com.github.moaxcp.x11.protocol;
 
-import org.eclipse.collections.api.list.primitive.*;
-import org.eclipse.collections.impl.factory.primitive.ByteLists;
-
 import java.io.IOException;
 
 public interface X11Output {
   void writeBool(boolean bool) throws IOException;
 
-  default void writeBool(BooleanList bool) throws IOException{
-    for(int i = 0; i < bool.size(); i++) {
-      writeBool(bool.get(i));
+  default void writeBool(boolean[] bool) throws IOException {
+    for (boolean value : bool) {
+      writeBool(value);
     }
   }
 
@@ -22,9 +19,9 @@ public interface X11Output {
 
   void writeInt32(int int32) throws IOException;
 
-  default void writeInt32(IntList int32) throws IOException {
-    for(int i = 0; i < int32.size(); i++) {
-      writeInt32(int32.get(i));
+  default void writeInt32(int[] int32) throws IOException {
+    for (int value : int32) {
+      writeInt32(value);
     }
   }
 
@@ -32,80 +29,76 @@ public interface X11Output {
 
   void writeCard8(byte card8) throws IOException;
 
-  default void writeCard8(ByteList card8) throws IOException {
-    for(int i = 0; i < card8.size(); i++) {
-      writeCard8(card8.get(i));
+  default void writeCard8(byte[] card8) throws IOException {
+    for (byte value : card8) {
+      writeCard8(value);
     }
   }
 
   void writeCard16(short card16) throws IOException;
 
-  default void writeCard16(ShortList card16) throws IOException {
-    for(int i = 0; i < card16.size(); i++) {
-      writeCard16(card16.get(i));
+  default void writeCard16(short[] card16) throws IOException {
+    for (short value : card16) {
+      writeCard16(value);
     }
   }
 
   void writeCard32(int card32) throws IOException;
 
-  default void writeCard32(IntList card32) throws IOException {
-    for(int i = 0; i < card32.size(); i++) {
-      writeCard32(card32.get(i));
+  default void writeCard32(int[] card32) throws IOException {
+    for (int value : card32) {
+      writeCard32(value);
     }
   }
 
   void writeCard64(long card64) throws IOException;
 
-  default void writeCard64(LongList card64) throws IOException {
-    for(int i = 0; i < card64.size(); i++) {
-      writeCard64(card64.get(i));
+  default void writeCard64(long[] card64) throws IOException {
+    for (long value : card64) {
+      writeCard64(value);
     }
   }
 
   void writeFloat(float f) throws IOException;
 
-  default void writeFloat(FloatList f) throws IOException {
-    for(int i = 0; i < f.size(); i++) {
-      writeFloat(f.get(i));
+  default void writeFloat(float[] f) throws IOException {
+    for (float value : f) {
+      writeFloat(value);
     }
   }
 
   void writeDouble(double d) throws IOException;
 
-  default void writeDouble(DoubleList d) throws IOException {
-    for(int i = 0; i < d.size(); i++) {
-      writeDouble(d.get(i));
+  default void writeDouble(double[] d) throws IOException {
+    for (double value : d) {
+      writeDouble(value);
     }
   }
 
-  default void writeChar(ByteList string) throws IOException {
+  default void writeChar(byte[] string) throws IOException {
     writeByte(string);
   }
 
   void writeString8(String string) throws IOException;
 
-  default void writeByte(ByteList bytes) throws IOException {
-    for(int i = 0; i < bytes.size(); i++) {
-      writeByte(bytes.get(i));
+  default void writeByte(byte[] bytes) throws IOException {
+    for (byte value : bytes) {
+      writeByte(value);
     }
   }
 
-  default void writeVoid(ByteList bytes) throws IOException {
+  default void writeVoid(byte[] bytes) throws IOException {
     writeByte(bytes);
   }
 
   void writeFd(int fd) throws IOException;
 
-  default void writeFd(IntList fd) throws IOException {
+  default void writeFd(int[] fd) throws IOException {
     writeInt32(fd);
   }
 
   default void writePad(int length) throws IOException {
-    var result = ByteLists.mutable.withInitialCapacity(length);
-    for (int i = 0; i < length; i++) {
-      result.add((byte) 0);
-    }
-    writeByte(result.toImmutable());
+    writeByte(new byte[length]);
   }
 
   default void writePadAlign(int forLength) throws IOException {

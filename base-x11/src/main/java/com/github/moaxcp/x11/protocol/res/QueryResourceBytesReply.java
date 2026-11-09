@@ -1,30 +1,29 @@
 package com.github.moaxcp.x11.protocol.res;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class QueryResourceBytesReply implements XReply {
   public static final String PLUGIN_NAME = "res";
   private final short sequenceNumber;
-  private final ImmutableList<ResourceSizeValue> sizes;
+  private final List<ResourceSizeValue> sizes;
 
   public static QueryResourceBytesReply readQueryResourceBytesReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryResourceBytesReply.QueryResourceBytesReplyBuilder javaBuilder = QueryResourceBytesReply.builder();
     int length = in.readCard32();
     int numSizes = in.readCard32();
     byte[] pad5 = in.readPad(20);
-    MutableList<ResourceSizeValue> sizes = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numSizes)));
+    List<ResourceSizeValue> sizes = new ArrayList<>((int) (Integer.toUnsignedLong(numSizes)));
     for (int i = 0; i < Integer.toUnsignedLong(numSizes); i++) {
       sizes.add(ResourceSizeValue.readResourceSizeValue(in));
     }
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.sizes(sizes.toImmutable());
+    javaBuilder.sizes(List.copyOf(sizes));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -61,7 +60,7 @@ public final class QueryResourceBytesReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<ResourceSizeValue> sizes;
+    private List<ResourceSizeValue> sizes;
 
     public int getSize() {
       return 32 + XObject.sizeOf(sizes);
@@ -84,7 +83,7 @@ public final class QueryResourceBytesReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public QueryResourceBytesReply.QueryResourceBytesReplyBuilder sizes(final ImmutableList<ResourceSizeValue> sizes) {
+    public QueryResourceBytesReply.QueryResourceBytesReplyBuilder sizes(final List<ResourceSizeValue> sizes) {
       if (sizes == null) {
         throw new java.lang.NullPointerException("sizes is marked non-null but is null");
       }
@@ -105,7 +104,7 @@ public final class QueryResourceBytesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  QueryResourceBytesReply(final short sequenceNumber, final ImmutableList<ResourceSizeValue> sizes) {
+  QueryResourceBytesReply(final short sequenceNumber, final List<ResourceSizeValue> sizes) {
     if (sizes == null) {
       throw new java.lang.NullPointerException("sizes is marked non-null but is null");
     }
@@ -124,7 +123,7 @@ public final class QueryResourceBytesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<ResourceSizeValue> getSizes() {
+  public List<ResourceSizeValue> getSizes() {
     return this.sizes;
   }
 

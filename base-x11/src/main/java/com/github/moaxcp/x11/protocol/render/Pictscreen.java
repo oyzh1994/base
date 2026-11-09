@@ -1,29 +1,28 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class Pictscreen implements XStruct {
   public static final String PLUGIN_NAME = "render";
   private final int fallback;
-  private final ImmutableList<Pictdepth> depths;
+  private final List<Pictdepth> depths;
 
   public static Pictscreen readPictscreen(X11Input in) throws IOException {
     Pictscreen.PictscreenBuilder javaBuilder = Pictscreen.builder();
     int numDepths = in.readCard32();
     int fallback = in.readCard32();
-    MutableList<Pictdepth> depths = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numDepths)));
+    List<Pictdepth> depths = new ArrayList<>((int) (Integer.toUnsignedLong(numDepths)));
     for (int i = 0; i < Integer.toUnsignedLong(numDepths); i++) {
       depths.add(Pictdepth.readPictdepth(in));
     }
     javaBuilder.fallback(fallback);
-    javaBuilder.depths(depths.toImmutable());
+    javaBuilder.depths(List.copyOf(depths));
     return javaBuilder.build();
   }
 
@@ -51,7 +50,7 @@ public final class Pictscreen implements XStruct {
     @java.lang.SuppressWarnings("all")
     private int fallback;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Pictdepth> depths;
+    private List<Pictdepth> depths;
 
     public int getSize() {
       return 8 + XObject.sizeOf(depths);
@@ -74,7 +73,7 @@ public final class Pictscreen implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Pictscreen.PictscreenBuilder depths(final ImmutableList<Pictdepth> depths) {
+    public Pictscreen.PictscreenBuilder depths(final List<Pictdepth> depths) {
       if (depths == null) {
         throw new java.lang.NullPointerException("depths is marked non-null but is null");
       }
@@ -95,7 +94,7 @@ public final class Pictscreen implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  Pictscreen(final int fallback, final ImmutableList<Pictdepth> depths) {
+  Pictscreen(final int fallback, final List<Pictdepth> depths) {
     if (depths == null) {
       throw new java.lang.NullPointerException("depths is marked non-null but is null");
     }
@@ -114,7 +113,7 @@ public final class Pictscreen implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Pictdepth> getDepths() {
+  public List<Pictdepth> getDepths() {
     return this.depths;
   }
 

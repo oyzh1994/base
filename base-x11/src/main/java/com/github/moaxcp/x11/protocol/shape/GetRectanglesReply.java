@@ -1,5 +1,7 @@
 package com.github.moaxcp.x11.protocol.shape;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
@@ -7,28 +9,25 @@ import com.github.moaxcp.x11.protocol.XReply;
 import com.github.moaxcp.x11.protocol.xproto.ClipOrdering;
 import com.github.moaxcp.x11.protocol.xproto.Rectangle;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class GetRectanglesReply implements XReply {
   public static final String PLUGIN_NAME = "shape";
   private final byte ordering;
   private final short sequenceNumber;
-  private final ImmutableList<Rectangle> rectangles;
+  private final List<Rectangle> rectangles;
 
   public static GetRectanglesReply readGetRectanglesReply(byte ordering, short sequenceNumber, X11Input in) throws IOException {
     GetRectanglesReply.GetRectanglesReplyBuilder javaBuilder = GetRectanglesReply.builder();
     int length = in.readCard32();
     int rectanglesLen = in.readCard32();
     byte[] pad5 = in.readPad(20);
-    MutableList<Rectangle> rectangles = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(rectanglesLen)));
+    List<Rectangle> rectangles = new ArrayList<>((int) (Integer.toUnsignedLong(rectanglesLen)));
     for (int i = 0; i < Integer.toUnsignedLong(rectanglesLen); i++) {
       rectangles.add(Rectangle.readRectangle(in));
     }
     javaBuilder.ordering(ordering);
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.rectangles(rectangles.toImmutable());
+    javaBuilder.rectangles(List.copyOf(rectangles));
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -67,7 +66,7 @@ public final class GetRectanglesReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Rectangle> rectangles;
+    private List<Rectangle> rectangles;
 
     public GetRectanglesReply.GetRectanglesReplyBuilder ordering(ClipOrdering ordering) {
       this.ordering = (byte) ordering.getValue();
@@ -100,7 +99,7 @@ public final class GetRectanglesReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetRectanglesReply.GetRectanglesReplyBuilder rectangles(final ImmutableList<Rectangle> rectangles) {
+    public GetRectanglesReply.GetRectanglesReplyBuilder rectangles(final List<Rectangle> rectangles) {
       if (rectangles == null) {
         throw new java.lang.NullPointerException("rectangles is marked non-null but is null");
       }
@@ -121,7 +120,7 @@ public final class GetRectanglesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  GetRectanglesReply(final byte ordering, final short sequenceNumber, final ImmutableList<Rectangle> rectangles) {
+  GetRectanglesReply(final byte ordering, final short sequenceNumber, final List<Rectangle> rectangles) {
     if (rectangles == null) {
       throw new java.lang.NullPointerException("rectangles is marked non-null but is null");
     }
@@ -146,7 +145,7 @@ public final class GetRectanglesReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Rectangle> getRectangles() {
+  public List<Rectangle> getRectangles() {
     return this.rectangles;
   }
 

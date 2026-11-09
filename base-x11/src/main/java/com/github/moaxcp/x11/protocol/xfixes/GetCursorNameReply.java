@@ -4,13 +4,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class GetCursorNameReply implements XReply {
   public static final String PLUGIN_NAME = "xfixes";
   private final short sequenceNumber;
   private final int atom;
-  private final ByteList name;
+  private final byte[] name;
 
   public static GetCursorNameReply readGetCursorNameReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetCursorNameReply.GetCursorNameReplyBuilder javaBuilder = GetCursorNameReply.builder();
@@ -18,10 +17,10 @@ public final class GetCursorNameReply implements XReply {
     int atom = in.readCard32();
     short nbytes = in.readCard16();
     byte[] pad6 = in.readPad(18);
-    ByteList name = in.readChar(Short.toUnsignedInt(nbytes));
+    byte[] name = in.readChar(Short.toUnsignedInt(nbytes));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.atom(atom);
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -36,7 +35,7 @@ public final class GetCursorNameReply implements XReply {
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
     out.writeCard32(atom);
-    short nbytes = (short) name.size();
+    short nbytes = (short) name.length;
     out.writeCard16(nbytes);
     out.writePad(18);
     out.writeChar(name);
@@ -45,7 +44,7 @@ public final class GetCursorNameReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 1 * name.size();
+    return 32 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -59,10 +58,10 @@ public final class GetCursorNameReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int atom;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public int getSize() {
-      return 32 + 1 * name.size();
+      return 32 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -91,7 +90,7 @@ public final class GetCursorNameReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCursorNameReply.GetCursorNameReplyBuilder name(final ByteList name) {
+    public GetCursorNameReply.GetCursorNameReplyBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -107,12 +106,12 @@ public final class GetCursorNameReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetCursorNameReply.GetCursorNameReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", atom=" + this.atom + ", name=" + this.name + ")";
+      return "GetCursorNameReply.GetCursorNameReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", atom=" + this.atom + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetCursorNameReply(final short sequenceNumber, final int atom, final ByteList name) {
+  GetCursorNameReply(final short sequenceNumber, final int atom, final byte[] name) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -137,7 +136,7 @@ public final class GetCursorNameReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -149,9 +148,7 @@ public final class GetCursorNameReply implements XReply {
     final GetCursorNameReply other = (GetCursorNameReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
     if (this.getAtom() != other.getAtom()) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -162,14 +159,13 @@ public final class GetCursorNameReply implements XReply {
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
     result = result * PRIME + this.getAtom();
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetCursorNameReply(sequenceNumber=" + this.getSequenceNumber() + ", atom=" + this.getAtom() + ", name=" + this.getName() + ")";
+    return "GetCursorNameReply(sequenceNumber=" + this.getSequenceNumber() + ", atom=" + this.getAtom() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

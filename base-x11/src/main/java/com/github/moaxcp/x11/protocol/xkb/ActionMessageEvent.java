@@ -5,7 +5,6 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XEvent;
 import com.github.moaxcp.x11.protocol.xproto.ModMask;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class ActionMessageEvent implements XEvent {
   public static final String PLUGIN_NAME = "xkb";
@@ -21,7 +20,7 @@ public final class ActionMessageEvent implements XEvent {
   private final boolean keyEventFollows;
   private final byte mods;
   private final byte group;
-  private final ByteList message;
+  private final byte[] message;
 
   @Override
   public byte getResponseCode() {
@@ -44,7 +43,7 @@ public final class ActionMessageEvent implements XEvent {
     boolean keyEventFollows = in.readBool();
     byte mods = in.readCard8();
     byte group = in.readCard8();
-    ByteList message = in.readChar(8);
+    byte[] message = in.readChar(8);
     byte[] pad11 = in.readPad(10);
     javaBuilder.xkbType(xkbType);
     javaBuilder.sequenceNumber(sequenceNumber);
@@ -55,7 +54,7 @@ public final class ActionMessageEvent implements XEvent {
     javaBuilder.keyEventFollows(keyEventFollows);
     javaBuilder.mods(mods);
     javaBuilder.group(group);
-    javaBuilder.message(message.toImmutable());
+    javaBuilder.message(message);
     javaBuilder.sentEvent(sentEvent);
     javaBuilder.firstEventOffset(firstEventOffset);
     if (javaBuilder.getSize() < 32) {
@@ -95,7 +94,7 @@ public final class ActionMessageEvent implements XEvent {
 
   @Override
   public int getSize() {
-    return 24 + 1 * message.size();
+    return 24 + 1 * message.length;
   }
 
   public String getPluginName() {
@@ -127,7 +126,7 @@ public final class ActionMessageEvent implements XEvent {
     @java.lang.SuppressWarnings("all")
     private byte group;
     @java.lang.SuppressWarnings("all")
-    private ByteList message;
+    private byte[] message;
 
     public boolean isModsEnabled(ModMask... maskEnums) {
       if (maskEnums == null) {
@@ -166,7 +165,7 @@ public final class ActionMessageEvent implements XEvent {
     }
 
     public int getSize() {
-      return 24 + 1 * message.size();
+      return 24 + 1 * message.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -267,7 +266,7 @@ public final class ActionMessageEvent implements XEvent {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ActionMessageEvent.ActionMessageEventBuilder message(final ByteList message) {
+    public ActionMessageEvent.ActionMessageEventBuilder message(final byte[] message) {
       if (message == null) {
         throw new java.lang.NullPointerException("message is marked non-null but is null");
       }
@@ -283,12 +282,12 @@ public final class ActionMessageEvent implements XEvent {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ActionMessageEvent.ActionMessageEventBuilder(firstEventOffset=" + this.firstEventOffset + ", sentEvent=" + this.sentEvent + ", xkbType=" + this.xkbType + ", sequenceNumber=" + this.sequenceNumber + ", time=" + this.time + ", deviceID=" + this.deviceID + ", keycode=" + this.keycode + ", press=" + this.press + ", keyEventFollows=" + this.keyEventFollows + ", mods=" + this.mods + ", group=" + this.group + ", message=" + this.message + ")";
+      return "ActionMessageEvent.ActionMessageEventBuilder(firstEventOffset=" + this.firstEventOffset + ", sentEvent=" + this.sentEvent + ", xkbType=" + this.xkbType + ", sequenceNumber=" + this.sequenceNumber + ", time=" + this.time + ", deviceID=" + this.deviceID + ", keycode=" + this.keycode + ", press=" + this.press + ", keyEventFollows=" + this.keyEventFollows + ", mods=" + this.mods + ", group=" + this.group + ", message=" + java.util.Arrays.toString(this.message) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ActionMessageEvent(final byte firstEventOffset, final boolean sentEvent, final byte xkbType, final short sequenceNumber, final int time, final byte deviceID, final byte keycode, final boolean press, final boolean keyEventFollows, final byte mods, final byte group, final ByteList message) {
+  ActionMessageEvent(final byte firstEventOffset, final boolean sentEvent, final byte xkbType, final short sequenceNumber, final int time, final byte deviceID, final byte keycode, final boolean press, final boolean keyEventFollows, final byte mods, final byte group, final byte[] message) {
     if (message == null) {
       throw new java.lang.NullPointerException("message is marked non-null but is null");
     }
@@ -367,7 +366,7 @@ public final class ActionMessageEvent implements XEvent {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getMessage() {
+  public byte[] getMessage() {
     return this.message;
   }
 
@@ -388,9 +387,7 @@ public final class ActionMessageEvent implements XEvent {
     if (this.isKeyEventFollows() != other.isKeyEventFollows()) return false;
     if (this.getMods() != other.getMods()) return false;
     if (this.getGroup() != other.getGroup()) return false;
-    final java.lang.Object this$message = this.getMessage();
-    final java.lang.Object other$message = other.getMessage();
-    if (this$message == null ? other$message != null : !this$message.equals(other$message)) return false;
+    if (!java.util.Arrays.equals(this.getMessage(), other.getMessage())) return false;
     return true;
   }
 
@@ -410,14 +407,13 @@ public final class ActionMessageEvent implements XEvent {
     result = result * PRIME + (this.isKeyEventFollows() ? 79 : 97);
     result = result * PRIME + this.getMods();
     result = result * PRIME + this.getGroup();
-    final java.lang.Object $message = this.getMessage();
-    result = result * PRIME + ($message == null ? 43 : $message.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getMessage());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ActionMessageEvent(firstEventOffset=" + this.getFirstEventOffset() + ", sentEvent=" + this.isSentEvent() + ", xkbType=" + this.getXkbType() + ", sequenceNumber=" + this.getSequenceNumber() + ", time=" + this.getTime() + ", deviceID=" + this.getDeviceID() + ", keycode=" + this.getKeycode() + ", press=" + this.isPress() + ", keyEventFollows=" + this.isKeyEventFollows() + ", mods=" + this.getMods() + ", group=" + this.getGroup() + ", message=" + this.getMessage() + ")";
+    return "ActionMessageEvent(firstEventOffset=" + this.getFirstEventOffset() + ", sentEvent=" + this.isSentEvent() + ", xkbType=" + this.getXkbType() + ", sequenceNumber=" + this.getSequenceNumber() + ", time=" + this.getTime() + ", deviceID=" + this.getDeviceID() + ", keycode=" + this.getKeycode() + ", press=" + this.isPress() + ", keyEventFollows=" + this.isKeyEventFollows() + ", mods=" + this.getMods() + ", group=" + this.getGroup() + ", message=" + java.util.Arrays.toString(this.getMessage()) + ")";
   }
 }

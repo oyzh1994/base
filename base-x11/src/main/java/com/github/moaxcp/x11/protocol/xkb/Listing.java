@@ -5,28 +5,27 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class Listing implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
   private final short flags;
-  private final ByteList string;
+  private final byte[] string;
 
   public static Listing readListing(X11Input in) throws IOException {
     Listing.ListingBuilder javaBuilder = Listing.builder();
     short flags = in.readCard16();
     short length = in.readCard16();
-    ByteList string = in.readChar(Short.toUnsignedInt(length));
+    byte[] string = in.readChar(Short.toUnsignedInt(length));
     in.readPadAlign(2, Short.toUnsignedInt(length));
     javaBuilder.flags(flags);
-    javaBuilder.string(string.toImmutable());
+    javaBuilder.string(string);
     return javaBuilder.build();
   }
 
   @Override
   public void write(X11Output out) throws IOException {
     out.writeCard16(flags);
-    short length = (short) string.size();
+    short length = (short) string.length;
     out.writeCard16(length);
     out.writeChar(string);
     out.writePadAlign(2, Short.toUnsignedInt(length));
@@ -34,7 +33,7 @@ public final class Listing implements XStruct {
 
   @Override
   public int getSize() {
-    return 4 + 1 * string.size() + XObject.getSizeForPadAlign(2, 1 * string.size());
+    return 4 + 1 * string.length + XObject.getSizeForPadAlign(2, 1 * string.length);
   }
 
   public String getPluginName() {
@@ -46,10 +45,10 @@ public final class Listing implements XStruct {
     @java.lang.SuppressWarnings("all")
     private short flags;
     @java.lang.SuppressWarnings("all")
-    private ByteList string;
+    private byte[] string;
 
     public int getSize() {
-      return 4 + 1 * string.size() + XObject.getSizeForPadAlign(2, 1 * string.size());
+      return 4 + 1 * string.length + XObject.getSizeForPadAlign(2, 1 * string.length);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -69,7 +68,7 @@ public final class Listing implements XStruct {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public Listing.ListingBuilder string(final ByteList string) {
+    public Listing.ListingBuilder string(final byte[] string) {
       if (string == null) {
         throw new java.lang.NullPointerException("string is marked non-null but is null");
       }
@@ -85,12 +84,12 @@ public final class Listing implements XStruct {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "Listing.ListingBuilder(flags=" + this.flags + ", string=" + this.string + ")";
+      return "Listing.ListingBuilder(flags=" + this.flags + ", string=" + java.util.Arrays.toString(this.string) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  Listing(final short flags, final ByteList string) {
+  Listing(final short flags, final byte[] string) {
     if (string == null) {
       throw new java.lang.NullPointerException("string is marked non-null but is null");
     }
@@ -109,7 +108,7 @@ public final class Listing implements XStruct {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getString() {
+  public byte[] getString() {
     return this.string;
   }
 
@@ -120,9 +119,7 @@ public final class Listing implements XStruct {
     if (!(o instanceof Listing)) return false;
     final Listing other = (Listing) o;
     if (this.getFlags() != other.getFlags()) return false;
-    final java.lang.Object this$string = this.getString();
-    final java.lang.Object other$string = other.getString();
-    if (this$string == null ? other$string != null : !this$string.equals(other$string)) return false;
+    if (!java.util.Arrays.equals(this.getString(), other.getString())) return false;
     return true;
   }
 
@@ -132,14 +129,13 @@ public final class Listing implements XStruct {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getFlags();
-    final java.lang.Object $string = this.getString();
-    result = result * PRIME + ($string == null ? 43 : $string.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getString());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "Listing(flags=" + this.getFlags() + ", string=" + this.getString() + ")";
+    return "Listing(flags=" + this.getFlags() + ", string=" + java.util.Arrays.toString(this.getString()) + ")";
   }
 }

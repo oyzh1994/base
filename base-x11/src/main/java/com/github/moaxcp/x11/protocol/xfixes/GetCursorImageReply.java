@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class GetCursorImageReply implements XReply {
   public static final String PLUGIN_NAME = "xfixes";
@@ -16,7 +15,7 @@ public final class GetCursorImageReply implements XReply {
   private final short xhot;
   private final short yhot;
   private final int cursorSerial;
-  private final IntList cursorImage;
+  private final int[] cursorImage;
 
   public static GetCursorImageReply readGetCursorImageReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     GetCursorImageReply.GetCursorImageReplyBuilder javaBuilder = GetCursorImageReply.builder();
@@ -29,7 +28,7 @@ public final class GetCursorImageReply implements XReply {
     short yhot = in.readCard16();
     int cursorSerial = in.readCard32();
     byte[] pad11 = in.readPad(8);
-    IntList cursorImage = in.readCard32(Short.toUnsignedInt(width) * Short.toUnsignedInt(height));
+    int[] cursorImage = in.readCard32(Short.toUnsignedInt(width) * Short.toUnsignedInt(height));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.x(x);
     javaBuilder.y(y);
@@ -38,7 +37,7 @@ public final class GetCursorImageReply implements XReply {
     javaBuilder.xhot(xhot);
     javaBuilder.yhot(yhot);
     javaBuilder.cursorSerial(cursorSerial);
-    javaBuilder.cursorImage(cursorImage.toImmutable());
+    javaBuilder.cursorImage(cursorImage);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -66,7 +65,7 @@ public final class GetCursorImageReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * cursorImage.size();
+    return 32 + 4 * cursorImage.length;
   }
 
   public String getPluginName() {
@@ -92,10 +91,10 @@ public final class GetCursorImageReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private int cursorSerial;
     @java.lang.SuppressWarnings("all")
-    private IntList cursorImage;
+    private int[] cursorImage;
 
     public int getSize() {
-      return 32 + 4 * cursorImage.size();
+      return 32 + 4 * cursorImage.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -178,7 +177,7 @@ public final class GetCursorImageReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public GetCursorImageReply.GetCursorImageReplyBuilder cursorImage(final IntList cursorImage) {
+    public GetCursorImageReply.GetCursorImageReplyBuilder cursorImage(final int[] cursorImage) {
       if (cursorImage == null) {
         throw new java.lang.NullPointerException("cursorImage is marked non-null but is null");
       }
@@ -194,12 +193,12 @@ public final class GetCursorImageReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "GetCursorImageReply.GetCursorImageReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", xhot=" + this.xhot + ", yhot=" + this.yhot + ", cursorSerial=" + this.cursorSerial + ", cursorImage=" + this.cursorImage + ")";
+      return "GetCursorImageReply.GetCursorImageReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", xhot=" + this.xhot + ", yhot=" + this.yhot + ", cursorSerial=" + this.cursorSerial + ", cursorImage=" + java.util.Arrays.toString(this.cursorImage) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  GetCursorImageReply(final short sequenceNumber, final short x, final short y, final short width, final short height, final short xhot, final short yhot, final int cursorSerial, final IntList cursorImage) {
+  GetCursorImageReply(final short sequenceNumber, final short x, final short y, final short width, final short height, final short xhot, final short yhot, final int cursorSerial, final int[] cursorImage) {
     if (cursorImage == null) {
       throw new java.lang.NullPointerException("cursorImage is marked non-null but is null");
     }
@@ -260,7 +259,7 @@ public final class GetCursorImageReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getCursorImage() {
+  public int[] getCursorImage() {
     return this.cursorImage;
   }
 
@@ -278,9 +277,7 @@ public final class GetCursorImageReply implements XReply {
     if (this.getXhot() != other.getXhot()) return false;
     if (this.getYhot() != other.getYhot()) return false;
     if (this.getCursorSerial() != other.getCursorSerial()) return false;
-    final java.lang.Object this$cursorImage = this.getCursorImage();
-    final java.lang.Object other$cursorImage = other.getCursorImage();
-    if (this$cursorImage == null ? other$cursorImage != null : !this$cursorImage.equals(other$cursorImage)) return false;
+    if (!java.util.Arrays.equals(this.getCursorImage(), other.getCursorImage())) return false;
     return true;
   }
 
@@ -297,14 +294,13 @@ public final class GetCursorImageReply implements XReply {
     result = result * PRIME + this.getXhot();
     result = result * PRIME + this.getYhot();
     result = result * PRIME + this.getCursorSerial();
-    final java.lang.Object $cursorImage = this.getCursorImage();
-    result = result * PRIME + ($cursorImage == null ? 43 : $cursorImage.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getCursorImage());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "GetCursorImageReply(sequenceNumber=" + this.getSequenceNumber() + ", x=" + this.getX() + ", y=" + this.getY() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", xhot=" + this.getXhot() + ", yhot=" + this.getYhot() + ", cursorSerial=" + this.getCursorSerial() + ", cursorImage=" + this.getCursorImage() + ")";
+    return "GetCursorImageReply(sequenceNumber=" + this.getSequenceNumber() + ", x=" + this.getX() + ", y=" + this.getY() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", xhot=" + this.getXhot() + ", yhot=" + this.getYhot() + ", cursorSerial=" + this.getCursorSerial() + ", cursorImage=" + java.util.Arrays.toString(this.getCursorImage()) + ")";
   }
 }

@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class AddTraps implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
@@ -15,7 +14,7 @@ public final class AddTraps implements OneWayRequest {
   private final int picture;
   private final short xOff;
   private final short yOff;
-  private final ImmutableList<Trap> traps;
+  private final List<Trap> traps;
 
   public byte getOpCode() {
     return OPCODE;
@@ -34,7 +33,7 @@ public final class AddTraps implements OneWayRequest {
     javaStart += 2;
     short yOff = in.readInt16();
     javaStart += 2;
-    MutableList<Trap> traps = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Trap> traps = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Trap baseObject = Trap.readTrap(in);
       traps.add(baseObject);
@@ -43,7 +42,7 @@ public final class AddTraps implements OneWayRequest {
     javaBuilder.picture(picture);
     javaBuilder.xOff(xOff);
     javaBuilder.yOff(yOff);
-    javaBuilder.traps(traps.toImmutable());
+    javaBuilder.traps(List.copyOf(traps));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -80,7 +79,7 @@ public final class AddTraps implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short yOff;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Trap> traps;
+    private List<Trap> traps;
 
     public int getSize() {
       return 12 + XObject.sizeOf(traps);
@@ -121,7 +120,7 @@ public final class AddTraps implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AddTraps.AddTrapsBuilder traps(final ImmutableList<Trap> traps) {
+    public AddTraps.AddTrapsBuilder traps(final List<Trap> traps) {
       if (traps == null) {
         throw new java.lang.NullPointerException("traps is marked non-null but is null");
       }
@@ -142,7 +141,7 @@ public final class AddTraps implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  AddTraps(final int picture, final short xOff, final short yOff, final ImmutableList<Trap> traps) {
+  AddTraps(final int picture, final short xOff, final short yOff, final List<Trap> traps) {
     if (traps == null) {
       throw new java.lang.NullPointerException("traps is marked non-null but is null");
     }
@@ -173,7 +172,7 @@ public final class AddTraps implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Trap> getTraps() {
+  public List<Trap> getTraps() {
     return this.traps;
   }
 

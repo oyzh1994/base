@@ -1,14 +1,12 @@
 package com.github.moaxcp.x11.protocol.render;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class CreateLinearGradient implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
@@ -16,8 +14,8 @@ public final class CreateLinearGradient implements OneWayRequest {
   private final int picture;
   private final Pointfix p1;
   private final Pointfix p2;
-  private final IntList stops;
-  private final ImmutableList<Color> colors;
+  private final int[] stops;
+  private final List<Color> colors;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,16 +29,16 @@ public final class CreateLinearGradient implements OneWayRequest {
     Pointfix p1 = Pointfix.readPointfix(in);
     Pointfix p2 = Pointfix.readPointfix(in);
     int numStops = in.readCard32();
-    IntList stops = in.readInt32((int) (Integer.toUnsignedLong(numStops)));
-    MutableList<Color> colors = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numStops)));
+    int[] stops = in.readInt32((int) (Integer.toUnsignedLong(numStops)));
+    List<Color> colors = new ArrayList<>((int) (Integer.toUnsignedLong(numStops)));
     for (int i = 0; i < Integer.toUnsignedLong(numStops); i++) {
       colors.add(Color.readColor(in));
     }
     javaBuilder.picture(picture);
     javaBuilder.p1(p1);
     javaBuilder.p2(p2);
-    javaBuilder.stops(stops.toImmutable());
-    javaBuilder.colors(colors.toImmutable());
+    javaBuilder.stops(stops);
+    javaBuilder.colors(List.copyOf(colors));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -64,7 +62,7 @@ public final class CreateLinearGradient implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 28 + 4 * stops.size() + XObject.sizeOf(colors);
+    return 28 + 4 * stops.length + XObject.sizeOf(colors);
   }
 
   public String getPluginName() {
@@ -80,12 +78,12 @@ public final class CreateLinearGradient implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private Pointfix p2;
     @java.lang.SuppressWarnings("all")
-    private IntList stops;
+    private int[] stops;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Color> colors;
+    private List<Color> colors;
 
     public int getSize() {
-      return 28 + 4 * stops.size() + XObject.sizeOf(colors);
+      return 28 + 4 * stops.length + XObject.sizeOf(colors);
     }
 
     @java.lang.SuppressWarnings("all")
@@ -129,7 +127,7 @@ public final class CreateLinearGradient implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateLinearGradient.CreateLinearGradientBuilder stops(final IntList stops) {
+    public CreateLinearGradient.CreateLinearGradientBuilder stops(final int[] stops) {
       if (stops == null) {
         throw new java.lang.NullPointerException("stops is marked non-null but is null");
       }
@@ -141,7 +139,7 @@ public final class CreateLinearGradient implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public CreateLinearGradient.CreateLinearGradientBuilder colors(final ImmutableList<Color> colors) {
+    public CreateLinearGradient.CreateLinearGradientBuilder colors(final List<Color> colors) {
       if (colors == null) {
         throw new java.lang.NullPointerException("colors is marked non-null but is null");
       }
@@ -157,12 +155,12 @@ public final class CreateLinearGradient implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "CreateLinearGradient.CreateLinearGradientBuilder(picture=" + this.picture + ", p1=" + this.p1 + ", p2=" + this.p2 + ", stops=" + this.stops + ", colors=" + this.colors + ")";
+      return "CreateLinearGradient.CreateLinearGradientBuilder(picture=" + this.picture + ", p1=" + this.p1 + ", p2=" + this.p2 + ", stops=" + java.util.Arrays.toString(this.stops) + ", colors=" + this.colors + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  CreateLinearGradient(final int picture, final Pointfix p1, final Pointfix p2, final IntList stops, final ImmutableList<Color> colors) {
+  CreateLinearGradient(final int picture, final Pointfix p1, final Pointfix p2, final int[] stops, final List<Color> colors) {
     if (p1 == null) {
       throw new java.lang.NullPointerException("p1 is marked non-null but is null");
     }
@@ -203,12 +201,12 @@ public final class CreateLinearGradient implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getStops() {
+  public int[] getStops() {
     return this.stops;
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Color> getColors() {
+  public List<Color> getColors() {
     return this.colors;
   }
 
@@ -225,9 +223,7 @@ public final class CreateLinearGradient implements OneWayRequest {
     final java.lang.Object this$p2 = this.getP2();
     final java.lang.Object other$p2 = other.getP2();
     if (this$p2 == null ? other$p2 != null : !this$p2.equals(other$p2)) return false;
-    final java.lang.Object this$stops = this.getStops();
-    final java.lang.Object other$stops = other.getStops();
-    if (this$stops == null ? other$stops != null : !this$stops.equals(other$stops)) return false;
+    if (!java.util.Arrays.equals(this.getStops(), other.getStops())) return false;
     final java.lang.Object this$colors = this.getColors();
     final java.lang.Object other$colors = other.getColors();
     if (this$colors == null ? other$colors != null : !this$colors.equals(other$colors)) return false;
@@ -244,8 +240,7 @@ public final class CreateLinearGradient implements OneWayRequest {
     result = result * PRIME + ($p1 == null ? 43 : $p1.hashCode());
     final java.lang.Object $p2 = this.getP2();
     result = result * PRIME + ($p2 == null ? 43 : $p2.hashCode());
-    final java.lang.Object $stops = this.getStops();
-    result = result * PRIME + ($stops == null ? 43 : $stops.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getStops());
     final java.lang.Object $colors = this.getColors();
     result = result * PRIME + ($colors == null ? 43 : $colors.hashCode());
     return result;
@@ -254,6 +249,6 @@ public final class CreateLinearGradient implements OneWayRequest {
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "CreateLinearGradient(picture=" + this.getPicture() + ", p1=" + this.getP1() + ", p2=" + this.getP2() + ", stops=" + this.getStops() + ", colors=" + this.getColors() + ")";
+    return "CreateLinearGradient(picture=" + this.getPicture() + ", p1=" + this.getP1() + ", p2=" + this.getP2() + ", stops=" + java.util.Arrays.toString(this.getStops()) + ", colors=" + this.getColors() + ")";
   }
 }

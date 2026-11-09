@@ -1,13 +1,12 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class ImageText16 implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -16,7 +15,7 @@ public final class ImageText16 implements OneWayRequest {
   private final int gc;
   private final short x;
   private final short y;
-  private final ImmutableList<Char2b> string;
+  private final List<Char2b> string;
 
   public byte getOpCode() {
     return OPCODE;
@@ -30,7 +29,7 @@ public final class ImageText16 implements OneWayRequest {
     int gc = in.readCard32();
     short x = in.readInt16();
     short y = in.readInt16();
-    MutableList<Char2b> string = Lists.mutable.withInitialCapacity(stringLen);
+    List<Char2b> string = new ArrayList<>(stringLen);
     for (int i = 0; i < stringLen; i++) {
       string.add(Char2b.readChar2b(in));
     }
@@ -38,7 +37,7 @@ public final class ImageText16 implements OneWayRequest {
     javaBuilder.gc(gc);
     javaBuilder.x(x);
     javaBuilder.y(y);
-    javaBuilder.string(string.toImmutable());
+    javaBuilder.string(List.copyOf(string));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -79,7 +78,7 @@ public final class ImageText16 implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private short y;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Char2b> string;
+    private List<Char2b> string;
 
     public int getSize() {
       return 16 + XObject.sizeOf(string);
@@ -129,7 +128,7 @@ public final class ImageText16 implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ImageText16.ImageText16Builder string(final ImmutableList<Char2b> string) {
+    public ImageText16.ImageText16Builder string(final List<Char2b> string) {
       if (string == null) {
         throw new java.lang.NullPointerException("string is marked non-null but is null");
       }
@@ -150,7 +149,7 @@ public final class ImageText16 implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  ImageText16(final int drawable, final int gc, final short x, final short y, final ImmutableList<Char2b> string) {
+  ImageText16(final int drawable, final int gc, final short x, final short y, final List<Char2b> string) {
     if (string == null) {
       throw new java.lang.NullPointerException("string is marked non-null but is null");
     }
@@ -187,7 +186,7 @@ public final class ImageText16 implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Char2b> getString() {
+  public List<Char2b> getString() {
     return this.string;
   }
 

@@ -4,7 +4,6 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class PutImage implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
@@ -18,7 +17,7 @@ public final class PutImage implements OneWayRequest {
   private final short dstY;
   private final byte leftPad;
   private final byte depth;
-  private final ByteList data;
+  private final byte[] data;
 
   public byte getOpCode() {
     return OPCODE;
@@ -49,7 +48,7 @@ public final class PutImage implements OneWayRequest {
     javaStart += 1;
     byte[] pad11 = in.readPad(2);
     javaStart += 2;
-    ByteList data = in.readByte(Short.toUnsignedInt(length) - javaStart);
+    byte[] data = in.readByte(Short.toUnsignedInt(length) - javaStart);
     javaBuilder.format(format);
     javaBuilder.drawable(drawable);
     javaBuilder.gc(gc);
@@ -59,7 +58,7 @@ public final class PutImage implements OneWayRequest {
     javaBuilder.dstY(dstY);
     javaBuilder.leftPad(leftPad);
     javaBuilder.depth(depth);
-    javaBuilder.data(data.toImmutable());
+    javaBuilder.data(data);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -84,7 +83,7 @@ public final class PutImage implements OneWayRequest {
 
   @Override
   public int getSize() {
-    return 24 + 1 * data.size();
+    return 24 + 1 * data.length;
   }
 
   public String getPluginName() {
@@ -112,7 +111,7 @@ public final class PutImage implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private byte depth;
     @java.lang.SuppressWarnings("all")
-    private ByteList data;
+    private byte[] data;
 
     public PutImage.PutImageBuilder format(ImageFormat format) {
       this.format = (byte) format.getValue();
@@ -125,7 +124,7 @@ public final class PutImage implements OneWayRequest {
     }
 
     public int getSize() {
-      return 24 + 1 * data.size();
+      return 24 + 1 * data.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -208,7 +207,7 @@ public final class PutImage implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public PutImage.PutImageBuilder data(final ByteList data) {
+    public PutImage.PutImageBuilder data(final byte[] data) {
       if (data == null) {
         throw new java.lang.NullPointerException("data is marked non-null but is null");
       }
@@ -224,12 +223,12 @@ public final class PutImage implements OneWayRequest {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "PutImage.PutImageBuilder(format=" + this.format + ", drawable=" + this.drawable + ", gc=" + this.gc + ", width=" + this.width + ", height=" + this.height + ", dstX=" + this.dstX + ", dstY=" + this.dstY + ", leftPad=" + this.leftPad + ", depth=" + this.depth + ", data=" + this.data + ")";
+      return "PutImage.PutImageBuilder(format=" + this.format + ", drawable=" + this.drawable + ", gc=" + this.gc + ", width=" + this.width + ", height=" + this.height + ", dstX=" + this.dstX + ", dstY=" + this.dstY + ", leftPad=" + this.leftPad + ", depth=" + this.depth + ", data=" + java.util.Arrays.toString(this.data) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  PutImage(final byte format, final int drawable, final int gc, final short width, final short height, final short dstX, final short dstY, final byte leftPad, final byte depth, final ByteList data) {
+  PutImage(final byte format, final int drawable, final int gc, final short width, final short height, final short dstX, final short dstY, final byte leftPad, final byte depth, final byte[] data) {
     if (data == null) {
       throw new java.lang.NullPointerException("data is marked non-null but is null");
     }
@@ -296,7 +295,7 @@ public final class PutImage implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getData() {
+  public byte[] getData() {
     return this.data;
   }
 
@@ -315,9 +314,7 @@ public final class PutImage implements OneWayRequest {
     if (this.getDstY() != other.getDstY()) return false;
     if (this.getLeftPad() != other.getLeftPad()) return false;
     if (this.getDepth() != other.getDepth()) return false;
-    final java.lang.Object this$data = this.getData();
-    final java.lang.Object other$data = other.getData();
-    if (this$data == null ? other$data != null : !this$data.equals(other$data)) return false;
+    if (!java.util.Arrays.equals(this.getData(), other.getData())) return false;
     return true;
   }
 
@@ -335,14 +332,13 @@ public final class PutImage implements OneWayRequest {
     result = result * PRIME + this.getDstY();
     result = result * PRIME + this.getLeftPad();
     result = result * PRIME + this.getDepth();
-    final java.lang.Object $data = this.getData();
-    result = result * PRIME + ($data == null ? 43 : $data.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getData());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "PutImage(format=" + this.getFormat() + ", drawable=" + this.getDrawable() + ", gc=" + this.getGc() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", dstX=" + this.getDstX() + ", dstY=" + this.getDstY() + ", leftPad=" + this.getLeftPad() + ", depth=" + this.getDepth() + ", data=" + this.getData() + ")";
+    return "PutImage(format=" + this.getFormat() + ", drawable=" + this.getDrawable() + ", gc=" + this.getGc() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ", dstX=" + this.getDstX() + ", dstY=" + this.getDstY() + ", leftPad=" + this.getLeftPad() + ", depth=" + this.getDepth() + ", data=" + java.util.Arrays.toString(this.getData()) + ")";
   }
 }

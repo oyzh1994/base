@@ -5,13 +5,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.ByteList;
 
 public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply> {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 85;
   private final int cmap;
-  private final ByteList name;
+  private final byte[] name;
 
   public XReplyFunction<AllocNamedColorReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> AllocNamedColorReply.readAllocNamedColorReply(field, sequenceNumber, in);
@@ -28,9 +27,9 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
     int cmap = in.readCard32();
     short nameLen = in.readCard16();
     byte[] pad5 = in.readPad(2);
-    ByteList name = in.readChar(Short.toUnsignedInt(nameLen));
+    byte[] name = in.readChar(Short.toUnsignedInt(nameLen));
     javaBuilder.cmap(cmap);
-    javaBuilder.name(name.toImmutable());
+    javaBuilder.name(name);
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -41,7 +40,7 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard32(cmap);
-    short nameLen = (short) name.size();
+    short nameLen = (short) name.length;
     out.writeCard16(nameLen);
     out.writePad(2);
     out.writeChar(name);
@@ -50,7 +49,7 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
 
   @Override
   public int getSize() {
-    return 12 + 1 * name.size();
+    return 12 + 1 * name.length;
   }
 
   public String getPluginName() {
@@ -62,10 +61,10 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
     @java.lang.SuppressWarnings("all")
     private int cmap;
     @java.lang.SuppressWarnings("all")
-    private ByteList name;
+    private byte[] name;
 
     public int getSize() {
-      return 12 + 1 * name.size();
+      return 12 + 1 * name.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -85,7 +84,7 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public AllocNamedColor.AllocNamedColorBuilder name(final ByteList name) {
+    public AllocNamedColor.AllocNamedColorBuilder name(final byte[] name) {
       if (name == null) {
         throw new java.lang.NullPointerException("name is marked non-null but is null");
       }
@@ -101,12 +100,12 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "AllocNamedColor.AllocNamedColorBuilder(cmap=" + this.cmap + ", name=" + this.name + ")";
+      return "AllocNamedColor.AllocNamedColorBuilder(cmap=" + this.cmap + ", name=" + java.util.Arrays.toString(this.name) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  AllocNamedColor(final int cmap, final ByteList name) {
+  AllocNamedColor(final int cmap, final byte[] name) {
     if (name == null) {
       throw new java.lang.NullPointerException("name is marked non-null but is null");
     }
@@ -125,7 +124,7 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
   }
 
   @java.lang.SuppressWarnings("all")
-  public ByteList getName() {
+  public byte[] getName() {
     return this.name;
   }
 
@@ -136,9 +135,7 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
     if (!(o instanceof AllocNamedColor)) return false;
     final AllocNamedColor other = (AllocNamedColor) o;
     if (this.getCmap() != other.getCmap()) return false;
-    final java.lang.Object this$name = this.getName();
-    final java.lang.Object other$name = other.getName();
-    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    if (!java.util.Arrays.equals(this.getName(), other.getName())) return false;
     return true;
   }
 
@@ -148,14 +145,13 @@ public final class AllocNamedColor implements TwoWayRequest<AllocNamedColorReply
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getCmap();
-    final java.lang.Object $name = this.getName();
-    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getName());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "AllocNamedColor(cmap=" + this.getCmap() + ", name=" + this.getName() + ")";
+    return "AllocNamedColor(cmap=" + this.getCmap() + ", name=" + java.util.Arrays.toString(this.getName()) + ")";
   }
 }

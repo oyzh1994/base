@@ -1,20 +1,19 @@
 package com.github.moaxcp.x11.protocol.xproto;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import org.eclipse.collections.api.factory.Lists;
-import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.MutableList;
 
 public final class PolyRectangle implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
   public static final byte OPCODE = 67;
   private final int drawable;
   private final int gc;
-  private final ImmutableList<Rectangle> rectangles;
+  private final List<Rectangle> rectangles;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,7 +30,7 @@ public final class PolyRectangle implements OneWayRequest {
     javaStart += 4;
     int gc = in.readCard32();
     javaStart += 4;
-    MutableList<Rectangle> rectangles = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
+    List<Rectangle> rectangles = new ArrayList<>(Short.toUnsignedInt(length) - javaStart);
     while (javaStart < Short.toUnsignedInt(length) * 4) {
       Rectangle baseObject = Rectangle.readRectangle(in);
       rectangles.add(baseObject);
@@ -39,7 +38,7 @@ public final class PolyRectangle implements OneWayRequest {
     }
     javaBuilder.drawable(drawable);
     javaBuilder.gc(gc);
-    javaBuilder.rectangles(rectangles.toImmutable());
+    javaBuilder.rectangles(List.copyOf(rectangles));
     in.readPadAlign(javaBuilder.getSize());
     return javaBuilder.build();
   }
@@ -73,7 +72,7 @@ public final class PolyRectangle implements OneWayRequest {
     @java.lang.SuppressWarnings("all")
     private int gc;
     @java.lang.SuppressWarnings("all")
-    private ImmutableList<Rectangle> rectangles;
+    private List<Rectangle> rectangles;
 
     public int getSize() {
       return 12 + XObject.sizeOf(rectangles);
@@ -105,7 +104,7 @@ public final class PolyRectangle implements OneWayRequest {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public PolyRectangle.PolyRectangleBuilder rectangles(final ImmutableList<Rectangle> rectangles) {
+    public PolyRectangle.PolyRectangleBuilder rectangles(final List<Rectangle> rectangles) {
       if (rectangles == null) {
         throw new java.lang.NullPointerException("rectangles is marked non-null but is null");
       }
@@ -126,7 +125,7 @@ public final class PolyRectangle implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  PolyRectangle(final int drawable, final int gc, final ImmutableList<Rectangle> rectangles) {
+  PolyRectangle(final int drawable, final int gc, final List<Rectangle> rectangles) {
     if (rectangles == null) {
       throw new java.lang.NullPointerException("rectangles is marked non-null but is null");
     }
@@ -151,7 +150,7 @@ public final class PolyRectangle implements OneWayRequest {
   }
 
   @java.lang.SuppressWarnings("all")
-  public ImmutableList<Rectangle> getRectangles() {
+  public List<Rectangle> getRectangles() {
     return this.rectangles;
   }
 

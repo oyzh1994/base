@@ -4,21 +4,20 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import org.eclipse.collections.api.list.primitive.IntList;
 
 public final class ListInstalledColormapsReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
   private final short sequenceNumber;
-  private final IntList cmaps;
+  private final int[] cmaps;
 
   public static ListInstalledColormapsReply readListInstalledColormapsReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     ListInstalledColormapsReply.ListInstalledColormapsReplyBuilder javaBuilder = ListInstalledColormapsReply.builder();
     int length = in.readCard32();
     short cmapsLen = in.readCard16();
     byte[] pad5 = in.readPad(22);
-    IntList cmaps = in.readCard32(Short.toUnsignedInt(cmapsLen));
+    int[] cmaps = in.readCard32(Short.toUnsignedInt(cmapsLen));
     javaBuilder.sequenceNumber(sequenceNumber);
-    javaBuilder.cmaps(cmaps.toImmutable());
+    javaBuilder.cmaps(cmaps);
     if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
@@ -32,7 +31,7 @@ public final class ListInstalledColormapsReply implements XReply {
     out.writePad(1);
     out.writeCard16(sequenceNumber);
     out.writeCard32(getLength());
-    short cmapsLen = (short) cmaps.size();
+    short cmapsLen = (short) cmaps.length;
     out.writeCard16(cmapsLen);
     out.writePad(22);
     out.writeCard32(cmaps);
@@ -41,7 +40,7 @@ public final class ListInstalledColormapsReply implements XReply {
 
   @Override
   public int getSize() {
-    return 32 + 4 * cmaps.size();
+    return 32 + 4 * cmaps.length;
   }
 
   public String getPluginName() {
@@ -53,10 +52,10 @@ public final class ListInstalledColormapsReply implements XReply {
     @java.lang.SuppressWarnings("all")
     private short sequenceNumber;
     @java.lang.SuppressWarnings("all")
-    private IntList cmaps;
+    private int[] cmaps;
 
     public int getSize() {
-      return 32 + 4 * cmaps.size();
+      return 32 + 4 * cmaps.length;
     }
 
     @java.lang.SuppressWarnings("all")
@@ -76,7 +75,7 @@ public final class ListInstalledColormapsReply implements XReply {
      * @return {@code this}.
      */
     @java.lang.SuppressWarnings("all")
-    public ListInstalledColormapsReply.ListInstalledColormapsReplyBuilder cmaps(final IntList cmaps) {
+    public ListInstalledColormapsReply.ListInstalledColormapsReplyBuilder cmaps(final int[] cmaps) {
       if (cmaps == null) {
         throw new java.lang.NullPointerException("cmaps is marked non-null but is null");
       }
@@ -92,12 +91,12 @@ public final class ListInstalledColormapsReply implements XReply {
     @java.lang.Override
     @java.lang.SuppressWarnings("all")
     public java.lang.String toString() {
-      return "ListInstalledColormapsReply.ListInstalledColormapsReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", cmaps=" + this.cmaps + ")";
+      return "ListInstalledColormapsReply.ListInstalledColormapsReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", cmaps=" + java.util.Arrays.toString(this.cmaps) + ")";
     }
   }
 
   @java.lang.SuppressWarnings("all")
-  ListInstalledColormapsReply(final short sequenceNumber, final IntList cmaps) {
+  ListInstalledColormapsReply(final short sequenceNumber, final int[] cmaps) {
     if (cmaps == null) {
       throw new java.lang.NullPointerException("cmaps is marked non-null but is null");
     }
@@ -116,7 +115,7 @@ public final class ListInstalledColormapsReply implements XReply {
   }
 
   @java.lang.SuppressWarnings("all")
-  public IntList getCmaps() {
+  public int[] getCmaps() {
     return this.cmaps;
   }
 
@@ -127,9 +126,7 @@ public final class ListInstalledColormapsReply implements XReply {
     if (!(o instanceof ListInstalledColormapsReply)) return false;
     final ListInstalledColormapsReply other = (ListInstalledColormapsReply) o;
     if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
-    final java.lang.Object this$cmaps = this.getCmaps();
-    final java.lang.Object other$cmaps = other.getCmaps();
-    if (this$cmaps == null ? other$cmaps != null : !this$cmaps.equals(other$cmaps)) return false;
+    if (!java.util.Arrays.equals(this.getCmaps(), other.getCmaps())) return false;
     return true;
   }
 
@@ -139,14 +136,13 @@ public final class ListInstalledColormapsReply implements XReply {
     final int PRIME = 59;
     int result = 1;
     result = result * PRIME + this.getSequenceNumber();
-    final java.lang.Object $cmaps = this.getCmaps();
-    result = result * PRIME + ($cmaps == null ? 43 : $cmaps.hashCode());
+    result = result * PRIME + java.util.Arrays.hashCode(this.getCmaps());
     return result;
   }
 
   @java.lang.Override
   @java.lang.SuppressWarnings("all")
   public java.lang.String toString() {
-    return "ListInstalledColormapsReply(sequenceNumber=" + this.getSequenceNumber() + ", cmaps=" + this.getCmaps() + ")";
+    return "ListInstalledColormapsReply(sequenceNumber=" + this.getSequenceNumber() + ", cmaps=" + java.util.Arrays.toString(this.getCmaps()) + ")";
   }
 }
