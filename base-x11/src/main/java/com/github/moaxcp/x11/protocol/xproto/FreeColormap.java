@@ -4,17 +4,11 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class FreeColormap implements OneWayRequest {
+public final class FreeColormap implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 79;
-
-  private int cmap;
+  private final int cmap;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,7 +25,7 @@ public class FreeColormap implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard32(cmap);
@@ -46,9 +40,77 @@ public class FreeColormap implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class FreeColormapBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int cmap;
+
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    FreeColormapBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public FreeColormap.FreeColormapBuilder cmap(final int cmap) {
+      this.cmap = cmap;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public FreeColormap build() {
+      return new FreeColormap(this.cmap);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "FreeColormap.FreeColormapBuilder(cmap=" + this.cmap + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  FreeColormap(final int cmap) {
+    this.cmap = cmap;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static FreeColormap.FreeColormapBuilder builder() {
+    return new FreeColormap.FreeColormapBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getCmap() {
+    return this.cmap;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof FreeColormap)) return false;
+    final FreeColormap other = (FreeColormap) o;
+    if (this.getCmap() != other.getCmap()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getCmap();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "FreeColormap(cmap=" + this.getCmap() + ")";
   }
 }

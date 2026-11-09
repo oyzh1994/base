@@ -5,17 +5,11 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class QueryInfo implements TwoWayRequest<QueryInfoReply> {
+public final class QueryInfo implements TwoWayRequest<QueryInfoReply> {
   public static final String PLUGIN_NAME = "screensaver";
-
   public static final byte OPCODE = 1;
-
-  private int drawable;
+  private final int drawable;
 
   public XReplyFunction<QueryInfoReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> QueryInfoReply.readQueryInfoReply(field, sequenceNumber, in);
@@ -37,7 +31,7 @@ public class QueryInfo implements TwoWayRequest<QueryInfoReply> {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(drawable);
   }
@@ -51,9 +45,77 @@ public class QueryInfo implements TwoWayRequest<QueryInfoReply> {
     return PLUGIN_NAME;
   }
 
+
   public static class QueryInfoBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int drawable;
+
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    QueryInfoBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public QueryInfo.QueryInfoBuilder drawable(final int drawable) {
+      this.drawable = drawable;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public QueryInfo build() {
+      return new QueryInfo(this.drawable);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "QueryInfo.QueryInfoBuilder(drawable=" + this.drawable + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  QueryInfo(final int drawable) {
+    this.drawable = drawable;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static QueryInfo.QueryInfoBuilder builder() {
+    return new QueryInfo.QueryInfoBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getDrawable() {
+    return this.drawable;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof QueryInfo)) return false;
+    final QueryInfo other = (QueryInfo) o;
+    if (this.getDrawable() != other.getDrawable()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDrawable();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "QueryInfo(drawable=" + this.getDrawable() + ")";
   }
 }

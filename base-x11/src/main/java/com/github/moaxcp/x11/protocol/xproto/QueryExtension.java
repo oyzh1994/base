@@ -5,20 +5,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class QueryExtension implements TwoWayRequest<QueryExtensionReply> {
+public final class QueryExtension implements TwoWayRequest<QueryExtensionReply> {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 98;
-
-  @NonNull
-  private ByteList name;
+  private final ByteList name;
 
   public XReplyFunction<QueryExtensionReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> QueryExtensionReply.readQueryExtensionReply(field, sequenceNumber, in);
@@ -42,7 +34,7 @@ public class QueryExtension implements TwoWayRequest<QueryExtensionReply> {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
     short nameLen = (short) name.size();
@@ -61,9 +53,86 @@ public class QueryExtension implements TwoWayRequest<QueryExtensionReply> {
     return PLUGIN_NAME;
   }
 
+
   public static class QueryExtensionBuilder {
+    @java.lang.SuppressWarnings("all")
+    private ByteList name;
+
     public int getSize() {
       return 8 + 1 * name.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    QueryExtensionBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public QueryExtension.QueryExtensionBuilder name(final ByteList name) {
+      if (name == null) {
+        throw new java.lang.NullPointerException("name is marked non-null but is null");
+      }
+      this.name = name;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public QueryExtension build() {
+      return new QueryExtension(this.name);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "QueryExtension.QueryExtensionBuilder(name=" + this.name + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  QueryExtension(final ByteList name) {
+    if (name == null) {
+      throw new java.lang.NullPointerException("name is marked non-null but is null");
+    }
+    this.name = name;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static QueryExtension.QueryExtensionBuilder builder() {
+    return new QueryExtension.QueryExtensionBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getName() {
+    return this.name;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof QueryExtension)) return false;
+    final QueryExtension other = (QueryExtension) o;
+    final java.lang.Object this$name = this.getName();
+    final java.lang.Object other$name = other.getName();
+    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final java.lang.Object $name = this.getName();
+    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "QueryExtension(name=" + this.getName() + ")";
   }
 }

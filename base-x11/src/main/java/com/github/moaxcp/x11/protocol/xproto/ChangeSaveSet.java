@@ -4,19 +4,12 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class ChangeSaveSet implements OneWayRequest {
+public final class ChangeSaveSet implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 6;
-
-  private byte mode;
-
-  private int window;
+  private final byte mode;
+  private final int window;
 
   public byte getOpCode() {
     return OPCODE;
@@ -34,7 +27,7 @@ public class ChangeSaveSet implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeByte(mode);
     out.writeCard16((short) getLength());
     out.writeCard32(window);
@@ -49,7 +42,13 @@ public class ChangeSaveSet implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class ChangeSaveSetBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte mode;
+    @java.lang.SuppressWarnings("all")
+    private int window;
+
     public ChangeSaveSet.ChangeSaveSetBuilder mode(SetMode mode) {
       this.mode = (byte) mode.getValue();
       return this;
@@ -63,5 +62,77 @@ public class ChangeSaveSet implements OneWayRequest {
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    ChangeSaveSetBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ChangeSaveSet.ChangeSaveSetBuilder window(final int window) {
+      this.window = window;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ChangeSaveSet build() {
+      return new ChangeSaveSet(this.mode, this.window);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ChangeSaveSet.ChangeSaveSetBuilder(mode=" + this.mode + ", window=" + this.window + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ChangeSaveSet(final byte mode, final int window) {
+    this.mode = mode;
+    this.window = window;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ChangeSaveSet.ChangeSaveSetBuilder builder() {
+    return new ChangeSaveSet.ChangeSaveSetBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMode() {
+    return this.mode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getWindow() {
+    return this.window;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ChangeSaveSet)) return false;
+    final ChangeSaveSet other = (ChangeSaveSet) o;
+    if (this.getMode() != other.getMode()) return false;
+    if (this.getWindow() != other.getWindow()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getMode();
+    result = result * PRIME + this.getWindow();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ChangeSaveSet(mode=" + this.getMode() + ", window=" + this.getWindow() + ")";
   }
 }

@@ -4,44 +4,24 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XEvent;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 
-@Value
-@Builder
-public class MotionNotifyEvent implements XEvent {
+public final class MotionNotifyEvent implements XEvent {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte NUMBER = 6;
-
-  private byte firstEventOffset;
-
-  private boolean sentEvent;
-
-  private byte detail;
-
-  private short sequenceNumber;
-
-  private int time;
-
-  private int root;
-
-  private int event;
-
-  private int child;
-
-  private short rootX;
-
-  private short rootY;
-
-  private short eventX;
-
-  private short eventY;
-
-  private short state;
-
-  private boolean sameScreen;
+  private final byte firstEventOffset;
+  private final boolean sentEvent;
+  private final byte detail;
+  private final short sequenceNumber;
+  private final int time;
+  private final int root;
+  private final int event;
+  private final int child;
+  private final short rootX;
+  private final short rootY;
+  private final short eventX;
+  private final short eventY;
+  private final short state;
+  private final boolean sameScreen;
 
   @Override
   public byte getResponseCode() {
@@ -53,8 +33,7 @@ public class MotionNotifyEvent implements XEvent {
     return NUMBER;
   }
 
-  public static MotionNotifyEvent readMotionNotifyEvent(byte firstEventOffset, boolean sentEvent,
-      X11Input in) throws IOException {
+  public static MotionNotifyEvent readMotionNotifyEvent(byte firstEventOffset, boolean sentEvent, X11Input in) throws IOException {
     MotionNotifyEvent.MotionNotifyEventBuilder javaBuilder = MotionNotifyEvent.builder();
     byte detail = in.readByte();
     short sequenceNumber = in.readCard16();
@@ -81,7 +60,6 @@ public class MotionNotifyEvent implements XEvent {
     javaBuilder.eventY(eventY);
     javaBuilder.state(state);
     javaBuilder.sameScreen(sameScreen);
-
     javaBuilder.sentEvent(sentEvent);
     javaBuilder.firstEventOffset(firstEventOffset);
     return javaBuilder.build();
@@ -89,7 +67,7 @@ public class MotionNotifyEvent implements XEvent {
 
   @Override
   public void write(X11Output out) throws IOException {
-    out.writeCard8(sentEvent ? (byte) (0b10000000 | getResponseCode()) : getResponseCode());
+    out.writeCard8(sentEvent ? (byte) (128 | getResponseCode()) : getResponseCode());
     out.writeByte(detail);
     out.writeCard16(sequenceNumber);
     out.writeCard32(time);
@@ -105,9 +83,12 @@ public class MotionNotifyEvent implements XEvent {
     out.writePad(1);
   }
 
-  public boolean isStateEnabled(@NonNull KeyButMask... maskEnums) {
-    for(KeyButMask m : maskEnums) {
-      if(!m.isEnabled(state)) {
+  public boolean isStateEnabled(KeyButMask... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (KeyButMask m : maskEnums) {
+      if (!m.isEnabled(state)) {
         return false;
       }
     }
@@ -123,7 +104,37 @@ public class MotionNotifyEvent implements XEvent {
     return PLUGIN_NAME;
   }
 
+
   public static class MotionNotifyEventBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte firstEventOffset;
+    @java.lang.SuppressWarnings("all")
+    private boolean sentEvent;
+    @java.lang.SuppressWarnings("all")
+    private byte detail;
+    @java.lang.SuppressWarnings("all")
+    private short sequenceNumber;
+    @java.lang.SuppressWarnings("all")
+    private int time;
+    @java.lang.SuppressWarnings("all")
+    private int root;
+    @java.lang.SuppressWarnings("all")
+    private int event;
+    @java.lang.SuppressWarnings("all")
+    private int child;
+    @java.lang.SuppressWarnings("all")
+    private short rootX;
+    @java.lang.SuppressWarnings("all")
+    private short rootY;
+    @java.lang.SuppressWarnings("all")
+    private short eventX;
+    @java.lang.SuppressWarnings("all")
+    private short eventY;
+    @java.lang.SuppressWarnings("all")
+    private short state;
+    @java.lang.SuppressWarnings("all")
+    private boolean sameScreen;
+
     public MotionNotifyEvent.MotionNotifyEventBuilder detail(Motion detail) {
       this.detail = (byte) detail.getValue();
       return this;
@@ -134,9 +145,12 @@ public class MotionNotifyEvent implements XEvent {
       return this;
     }
 
-    public boolean isStateEnabled(@NonNull KeyButMask... maskEnums) {
-      for(KeyButMask m : maskEnums) {
-        if(!m.isEnabled(state)) {
+    public boolean isStateEnabled(KeyButMask... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (KeyButMask m : maskEnums) {
+        if (!m.isEnabled(state)) {
           return false;
         }
       }
@@ -144,14 +158,14 @@ public class MotionNotifyEvent implements XEvent {
     }
 
     public MotionNotifyEvent.MotionNotifyEventBuilder stateEnable(KeyButMask... maskEnums) {
-      for(KeyButMask m : maskEnums) {
+      for (KeyButMask m : maskEnums) {
         state((short) m.enableFor(state));
       }
       return this;
     }
 
     public MotionNotifyEvent.MotionNotifyEventBuilder stateDisable(KeyButMask... maskEnums) {
-      for(KeyButMask m : maskEnums) {
+      for (KeyButMask m : maskEnums) {
         state((short) m.disableFor(state));
       }
       return this;
@@ -160,5 +174,281 @@ public class MotionNotifyEvent implements XEvent {
     public int getSize() {
       return 32;
     }
+
+    @java.lang.SuppressWarnings("all")
+    MotionNotifyEventBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder firstEventOffset(final byte firstEventOffset) {
+      this.firstEventOffset = firstEventOffset;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder sentEvent(final boolean sentEvent) {
+      this.sentEvent = sentEvent;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder sequenceNumber(final short sequenceNumber) {
+      this.sequenceNumber = sequenceNumber;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder time(final int time) {
+      this.time = time;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder root(final int root) {
+      this.root = root;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder event(final int event) {
+      this.event = event;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder child(final int child) {
+      this.child = child;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder rootX(final short rootX) {
+      this.rootX = rootX;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder rootY(final short rootY) {
+      this.rootY = rootY;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder eventX(final short eventX) {
+      this.eventX = eventX;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder eventY(final short eventY) {
+      this.eventY = eventY;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder state(final short state) {
+      this.state = state;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent.MotionNotifyEventBuilder sameScreen(final boolean sameScreen) {
+      this.sameScreen = sameScreen;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public MotionNotifyEvent build() {
+      return new MotionNotifyEvent(this.firstEventOffset, this.sentEvent, this.detail, this.sequenceNumber, this.time, this.root, this.event, this.child, this.rootX, this.rootY, this.eventX, this.eventY, this.state, this.sameScreen);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "MotionNotifyEvent.MotionNotifyEventBuilder(firstEventOffset=" + this.firstEventOffset + ", sentEvent=" + this.sentEvent + ", detail=" + this.detail + ", sequenceNumber=" + this.sequenceNumber + ", time=" + this.time + ", root=" + this.root + ", event=" + this.event + ", child=" + this.child + ", rootX=" + this.rootX + ", rootY=" + this.rootY + ", eventX=" + this.eventX + ", eventY=" + this.eventY + ", state=" + this.state + ", sameScreen=" + this.sameScreen + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  MotionNotifyEvent(final byte firstEventOffset, final boolean sentEvent, final byte detail, final short sequenceNumber, final int time, final int root, final int event, final int child, final short rootX, final short rootY, final short eventX, final short eventY, final short state, final boolean sameScreen) {
+    this.firstEventOffset = firstEventOffset;
+    this.sentEvent = sentEvent;
+    this.detail = detail;
+    this.sequenceNumber = sequenceNumber;
+    this.time = time;
+    this.root = root;
+    this.event = event;
+    this.child = child;
+    this.rootX = rootX;
+    this.rootY = rootY;
+    this.eventX = eventX;
+    this.eventY = eventY;
+    this.state = state;
+    this.sameScreen = sameScreen;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static MotionNotifyEvent.MotionNotifyEventBuilder builder() {
+    return new MotionNotifyEvent.MotionNotifyEventBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEventOffset() {
+    return this.firstEventOffset;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public boolean isSentEvent() {
+    return this.sentEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getDetail() {
+    return this.detail;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSequenceNumber() {
+    return this.sequenceNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getTime() {
+    return this.time;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getRoot() {
+    return this.root;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getEvent() {
+    return this.event;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getChild() {
+    return this.child;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getRootX() {
+    return this.rootX;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getRootY() {
+    return this.rootY;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getEventX() {
+    return this.eventX;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getEventY() {
+    return this.eventY;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getState() {
+    return this.state;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public boolean isSameScreen() {
+    return this.sameScreen;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof MotionNotifyEvent)) return false;
+    final MotionNotifyEvent other = (MotionNotifyEvent) o;
+    if (this.getFirstEventOffset() != other.getFirstEventOffset()) return false;
+    if (this.isSentEvent() != other.isSentEvent()) return false;
+    if (this.getDetail() != other.getDetail()) return false;
+    if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
+    if (this.getTime() != other.getTime()) return false;
+    if (this.getRoot() != other.getRoot()) return false;
+    if (this.getEvent() != other.getEvent()) return false;
+    if (this.getChild() != other.getChild()) return false;
+    if (this.getRootX() != other.getRootX()) return false;
+    if (this.getRootY() != other.getRootY()) return false;
+    if (this.getEventX() != other.getEventX()) return false;
+    if (this.getEventY() != other.getEventY()) return false;
+    if (this.getState() != other.getState()) return false;
+    if (this.isSameScreen() != other.isSameScreen()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getFirstEventOffset();
+    result = result * PRIME + (this.isSentEvent() ? 79 : 97);
+    result = result * PRIME + this.getDetail();
+    result = result * PRIME + this.getSequenceNumber();
+    result = result * PRIME + this.getTime();
+    result = result * PRIME + this.getRoot();
+    result = result * PRIME + this.getEvent();
+    result = result * PRIME + this.getChild();
+    result = result * PRIME + this.getRootX();
+    result = result * PRIME + this.getRootY();
+    result = result * PRIME + this.getEventX();
+    result = result * PRIME + this.getEventY();
+    result = result * PRIME + this.getState();
+    result = result * PRIME + (this.isSameScreen() ? 79 : 97);
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "MotionNotifyEvent(firstEventOffset=" + this.getFirstEventOffset() + ", sentEvent=" + this.isSentEvent() + ", detail=" + this.getDetail() + ", sequenceNumber=" + this.getSequenceNumber() + ", time=" + this.getTime() + ", root=" + this.getRoot() + ", event=" + this.getEvent() + ", child=" + this.getChild() + ", rootX=" + this.getRootX() + ", rootY=" + this.getRootY() + ", eventX=" + this.getEventX() + ", eventY=" + this.getEventY() + ", state=" + this.getState() + ", sameScreen=" + this.isSameScreen() + ")";
   }
 }

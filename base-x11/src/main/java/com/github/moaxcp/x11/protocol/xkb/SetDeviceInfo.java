@@ -5,31 +5,18 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 
-@Value
-@Builder
-public class SetDeviceInfo implements OneWayRequest {
+public final class SetDeviceInfo implements OneWayRequest {
   public static final String PLUGIN_NAME = "xkb";
-
   public static final byte OPCODE = 25;
-
-  private short deviceSpec;
-
-  private byte firstBtn;
-
-  private short change;
-
-  @NonNull
-  private ImmutableList<ActionUnion> btnActions;
-
-  @NonNull
-  private ImmutableList<DeviceLedInfo> leds;
+  private final short deviceSpec;
+  private final byte firstBtn;
+  private final short change;
+  private final ImmutableList<ActionUnion> btnActions;
+  private final ImmutableList<DeviceLedInfo> leds;
 
   public byte getOpCode() {
     return OPCODE;
@@ -45,11 +32,11 @@ public class SetDeviceInfo implements OneWayRequest {
     short change = in.readCard16();
     short nDeviceLedFBs = in.readCard16();
     MutableList<ActionUnion> btnActions = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nBtns));
-    for(int i = 0; i < Byte.toUnsignedInt(nBtns); i++) {
+    for (int i = 0; i < Byte.toUnsignedInt(nBtns); i++) {
       btnActions.add(ActionUnion.readActionUnion(in));
     }
     MutableList<DeviceLedInfo> leds = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nDeviceLedFBs));
-    for(int i = 0; i < Short.toUnsignedInt(nDeviceLedFBs); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(nDeviceLedFBs); i++) {
       leds.add(DeviceLedInfo.readDeviceLedInfo(in));
     }
     javaBuilder.deviceSpec(deviceSpec);
@@ -64,7 +51,7 @@ public class SetDeviceInfo implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard16(deviceSpec);
     out.writeCard8(firstBtn);
@@ -73,18 +60,21 @@ public class SetDeviceInfo implements OneWayRequest {
     out.writeCard16(change);
     short nDeviceLedFBs = (short) leds.size();
     out.writeCard16(nDeviceLedFBs);
-    for(ActionUnion t : btnActions) {
+    for (ActionUnion t : btnActions) {
       t.write(out);
     }
-    for(DeviceLedInfo t : leds) {
+    for (DeviceLedInfo t : leds) {
       t.write(out);
     }
     out.writePadAlign(getSize());
   }
 
-  public boolean isChangeEnabled(@NonNull XIFeature... maskEnums) {
-    for(XIFeature m : maskEnums) {
-      if(!m.isEnabled(change)) {
+  public boolean isChangeEnabled(XIFeature... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (XIFeature m : maskEnums) {
+      if (!m.isEnabled(change)) {
         return false;
       }
     }
@@ -100,10 +90,25 @@ public class SetDeviceInfo implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class SetDeviceInfoBuilder {
-    public boolean isChangeEnabled(@NonNull XIFeature... maskEnums) {
-      for(XIFeature m : maskEnums) {
-        if(!m.isEnabled(change)) {
+    @java.lang.SuppressWarnings("all")
+    private short deviceSpec;
+    @java.lang.SuppressWarnings("all")
+    private byte firstBtn;
+    @java.lang.SuppressWarnings("all")
+    private short change;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<ActionUnion> btnActions;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<DeviceLedInfo> leds;
+
+    public boolean isChangeEnabled(XIFeature... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (XIFeature m : maskEnums) {
+        if (!m.isEnabled(change)) {
           return false;
         }
       }
@@ -111,14 +116,14 @@ public class SetDeviceInfo implements OneWayRequest {
     }
 
     public SetDeviceInfo.SetDeviceInfoBuilder changeEnable(XIFeature... maskEnums) {
-      for(XIFeature m : maskEnums) {
+      for (XIFeature m : maskEnums) {
         change((short) m.enableFor(change));
       }
       return this;
     }
 
     public SetDeviceInfo.SetDeviceInfoBuilder changeDisable(XIFeature... maskEnums) {
-      for(XIFeature m : maskEnums) {
+      for (XIFeature m : maskEnums) {
         change((short) m.disableFor(change));
       }
       return this;
@@ -127,5 +132,155 @@ public class SetDeviceInfo implements OneWayRequest {
     public int getSize() {
       return 12 + XObject.sizeOf(btnActions) + XObject.sizeOf(leds);
     }
+
+    @java.lang.SuppressWarnings("all")
+    SetDeviceInfoBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetDeviceInfo.SetDeviceInfoBuilder deviceSpec(final short deviceSpec) {
+      this.deviceSpec = deviceSpec;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetDeviceInfo.SetDeviceInfoBuilder firstBtn(final byte firstBtn) {
+      this.firstBtn = firstBtn;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetDeviceInfo.SetDeviceInfoBuilder change(final short change) {
+      this.change = change;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetDeviceInfo.SetDeviceInfoBuilder btnActions(final ImmutableList<ActionUnion> btnActions) {
+      if (btnActions == null) {
+        throw new java.lang.NullPointerException("btnActions is marked non-null but is null");
+      }
+      this.btnActions = btnActions;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetDeviceInfo.SetDeviceInfoBuilder leds(final ImmutableList<DeviceLedInfo> leds) {
+      if (leds == null) {
+        throw new java.lang.NullPointerException("leds is marked non-null but is null");
+      }
+      this.leds = leds;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SetDeviceInfo build() {
+      return new SetDeviceInfo(this.deviceSpec, this.firstBtn, this.change, this.btnActions, this.leds);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SetDeviceInfo.SetDeviceInfoBuilder(deviceSpec=" + this.deviceSpec + ", firstBtn=" + this.firstBtn + ", change=" + this.change + ", btnActions=" + this.btnActions + ", leds=" + this.leds + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SetDeviceInfo(final short deviceSpec, final byte firstBtn, final short change, final ImmutableList<ActionUnion> btnActions, final ImmutableList<DeviceLedInfo> leds) {
+    if (btnActions == null) {
+      throw new java.lang.NullPointerException("btnActions is marked non-null but is null");
+    }
+    if (leds == null) {
+      throw new java.lang.NullPointerException("leds is marked non-null but is null");
+    }
+    this.deviceSpec = deviceSpec;
+    this.firstBtn = firstBtn;
+    this.change = change;
+    this.btnActions = btnActions;
+    this.leds = leds;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SetDeviceInfo.SetDeviceInfoBuilder builder() {
+    return new SetDeviceInfo.SetDeviceInfoBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getDeviceSpec() {
+    return this.deviceSpec;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstBtn() {
+    return this.firstBtn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getChange() {
+    return this.change;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<ActionUnion> getBtnActions() {
+    return this.btnActions;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<DeviceLedInfo> getLeds() {
+    return this.leds;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SetDeviceInfo)) return false;
+    final SetDeviceInfo other = (SetDeviceInfo) o;
+    if (this.getDeviceSpec() != other.getDeviceSpec()) return false;
+    if (this.getFirstBtn() != other.getFirstBtn()) return false;
+    if (this.getChange() != other.getChange()) return false;
+    final java.lang.Object this$btnActions = this.getBtnActions();
+    final java.lang.Object other$btnActions = other.getBtnActions();
+    if (this$btnActions == null ? other$btnActions != null : !this$btnActions.equals(other$btnActions)) return false;
+    final java.lang.Object this$leds = this.getLeds();
+    final java.lang.Object other$leds = other.getLeds();
+    if (this$leds == null ? other$leds != null : !this$leds.equals(other$leds)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDeviceSpec();
+    result = result * PRIME + this.getFirstBtn();
+    result = result * PRIME + this.getChange();
+    final java.lang.Object $btnActions = this.getBtnActions();
+    result = result * PRIME + ($btnActions == null ? 43 : $btnActions.hashCode());
+    final java.lang.Object $leds = this.getLeds();
+    result = result * PRIME + ($leds == null ? 43 : $leds.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SetDeviceInfo(deviceSpec=" + this.getDeviceSpec() + ", firstBtn=" + this.getFirstBtn() + ", change=" + this.getChange() + ", btnActions=" + this.getBtnActions() + ", leds=" + this.getLeds() + ")";
   }
 }

@@ -4,31 +4,18 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class Transform implements XStruct {
+public final class Transform implements XStruct {
   public static final String PLUGIN_NAME = "render";
-
-  private int matrix11;
-
-  private int matrix12;
-
-  private int matrix13;
-
-  private int matrix21;
-
-  private int matrix22;
-
-  private int matrix23;
-
-  private int matrix31;
-
-  private int matrix32;
-
-  private int matrix33;
+  private final int matrix11;
+  private final int matrix12;
+  private final int matrix13;
+  private final int matrix21;
+  private final int matrix22;
+  private final int matrix23;
+  private final int matrix31;
+  private final int matrix32;
+  private final int matrix33;
 
   public static Transform readTransform(X11Input in) throws IOException {
     Transform.TransformBuilder javaBuilder = Transform.builder();
@@ -75,9 +62,229 @@ public class Transform implements XStruct {
     return PLUGIN_NAME;
   }
 
+
   public static class TransformBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int matrix11;
+    @java.lang.SuppressWarnings("all")
+    private int matrix12;
+    @java.lang.SuppressWarnings("all")
+    private int matrix13;
+    @java.lang.SuppressWarnings("all")
+    private int matrix21;
+    @java.lang.SuppressWarnings("all")
+    private int matrix22;
+    @java.lang.SuppressWarnings("all")
+    private int matrix23;
+    @java.lang.SuppressWarnings("all")
+    private int matrix31;
+    @java.lang.SuppressWarnings("all")
+    private int matrix32;
+    @java.lang.SuppressWarnings("all")
+    private int matrix33;
+
     public int getSize() {
       return 36;
     }
+
+    @java.lang.SuppressWarnings("all")
+    TransformBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix11(final int matrix11) {
+      this.matrix11 = matrix11;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix12(final int matrix12) {
+      this.matrix12 = matrix12;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix13(final int matrix13) {
+      this.matrix13 = matrix13;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix21(final int matrix21) {
+      this.matrix21 = matrix21;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix22(final int matrix22) {
+      this.matrix22 = matrix22;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix23(final int matrix23) {
+      this.matrix23 = matrix23;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix31(final int matrix31) {
+      this.matrix31 = matrix31;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix32(final int matrix32) {
+      this.matrix32 = matrix32;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Transform.TransformBuilder matrix33(final int matrix33) {
+      this.matrix33 = matrix33;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public Transform build() {
+      return new Transform(this.matrix11, this.matrix12, this.matrix13, this.matrix21, this.matrix22, this.matrix23, this.matrix31, this.matrix32, this.matrix33);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "Transform.TransformBuilder(matrix11=" + this.matrix11 + ", matrix12=" + this.matrix12 + ", matrix13=" + this.matrix13 + ", matrix21=" + this.matrix21 + ", matrix22=" + this.matrix22 + ", matrix23=" + this.matrix23 + ", matrix31=" + this.matrix31 + ", matrix32=" + this.matrix32 + ", matrix33=" + this.matrix33 + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  Transform(final int matrix11, final int matrix12, final int matrix13, final int matrix21, final int matrix22, final int matrix23, final int matrix31, final int matrix32, final int matrix33) {
+    this.matrix11 = matrix11;
+    this.matrix12 = matrix12;
+    this.matrix13 = matrix13;
+    this.matrix21 = matrix21;
+    this.matrix22 = matrix22;
+    this.matrix23 = matrix23;
+    this.matrix31 = matrix31;
+    this.matrix32 = matrix32;
+    this.matrix33 = matrix33;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static Transform.TransformBuilder builder() {
+    return new Transform.TransformBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix11() {
+    return this.matrix11;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix12() {
+    return this.matrix12;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix13() {
+    return this.matrix13;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix21() {
+    return this.matrix21;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix22() {
+    return this.matrix22;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix23() {
+    return this.matrix23;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix31() {
+    return this.matrix31;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix32() {
+    return this.matrix32;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMatrix33() {
+    return this.matrix33;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Transform)) return false;
+    final Transform other = (Transform) o;
+    if (this.getMatrix11() != other.getMatrix11()) return false;
+    if (this.getMatrix12() != other.getMatrix12()) return false;
+    if (this.getMatrix13() != other.getMatrix13()) return false;
+    if (this.getMatrix21() != other.getMatrix21()) return false;
+    if (this.getMatrix22() != other.getMatrix22()) return false;
+    if (this.getMatrix23() != other.getMatrix23()) return false;
+    if (this.getMatrix31() != other.getMatrix31()) return false;
+    if (this.getMatrix32() != other.getMatrix32()) return false;
+    if (this.getMatrix33() != other.getMatrix33()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getMatrix11();
+    result = result * PRIME + this.getMatrix12();
+    result = result * PRIME + this.getMatrix13();
+    result = result * PRIME + this.getMatrix21();
+    result = result * PRIME + this.getMatrix22();
+    result = result * PRIME + this.getMatrix23();
+    result = result * PRIME + this.getMatrix31();
+    result = result * PRIME + this.getMatrix32();
+    result = result * PRIME + this.getMatrix33();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "Transform(matrix11=" + this.getMatrix11() + ", matrix12=" + this.getMatrix12() + ", matrix13=" + this.getMatrix13() + ", matrix21=" + this.getMatrix21() + ", matrix22=" + this.getMatrix22() + ", matrix23=" + this.getMatrix23() + ", matrix31=" + this.getMatrix31() + ", matrix32=" + this.getMatrix32() + ", matrix33=" + this.getMatrix33() + ")";
   }
 }

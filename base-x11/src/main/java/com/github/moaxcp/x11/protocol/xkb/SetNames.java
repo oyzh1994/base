@@ -6,72 +6,35 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.primitive.ByteList;
 import org.eclipse.collections.api.list.primitive.IntList;
 
-@Value
-@Builder
-public class SetNames implements OneWayRequest {
+public final class SetNames implements OneWayRequest {
   public static final String PLUGIN_NAME = "xkb";
-
   public static final byte OPCODE = 18;
-
-  private short deviceSpec;
-
-  private int which;
-
-  private byte firstType;
-
-  private byte firstKTLevelt;
-
-  private byte nKTLevels;
-
-  private byte firstKey;
-
-  private short totalKTLevelNames;
-
-  private int keycodesName;
-
-  private int geometryName;
-
-  private int symbolsName;
-
-  private int physSymbolsName;
-
-  private int typesName;
-
-  private int compatName;
-
-  @NonNull
-  private IntList typeNames;
-
-  @NonNull
-  private ByteList nLevelsPerType;
-
-  @NonNull
-  private IntList ktLevelNames;
-
-  @NonNull
-  private IntList indicatorNames;
-
-  @NonNull
-  private IntList virtualModNames;
-
-  @NonNull
-  private IntList groups;
-
-  @NonNull
-  private ImmutableList<KeyName> keyNames;
-
-  @NonNull
-  private ImmutableList<KeyAlias> keyAliases;
-
-  @NonNull
-  private IntList radioGroupNames;
+  private final short deviceSpec;
+  private final int which;
+  private final byte firstType;
+  private final byte firstKTLevelt;
+  private final byte nKTLevels;
+  private final byte firstKey;
+  private final short totalKTLevelNames;
+  private final int keycodesName;
+  private final int geometryName;
+  private final int symbolsName;
+  private final int physSymbolsName;
+  private final int typesName;
+  private final int compatName;
+  private final IntList typeNames;
+  private final ByteList nLevelsPerType;
+  private final IntList ktLevelNames;
+  private final IntList indicatorNames;
+  private final IntList virtualModNames;
+  private final IntList groups;
+  private final ImmutableList<KeyName> keyNames;
+  private final ImmutableList<KeyAlias> keyAliases;
+  private final IntList radioGroupNames;
 
   public byte getOpCode() {
     return OPCODE;
@@ -119,63 +82,63 @@ public class SetNames implements OneWayRequest {
     javaBuilder.nKTLevels(nKTLevels);
     javaBuilder.firstKey(firstKey);
     javaBuilder.totalKTLevelNames(totalKTLevelNames);
-    if(NameDetail.KEYCODES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.KEYCODES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       keycodesName = in.readCard32();
       javaBuilder.keycodesName(keycodesName);
     }
-    if(NameDetail.GEOMETRY.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.GEOMETRY.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       geometryName = in.readCard32();
       javaBuilder.geometryName(geometryName);
     }
-    if(NameDetail.SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       symbolsName = in.readCard32();
       javaBuilder.symbolsName(symbolsName);
     }
-    if(NameDetail.PHYS_SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.PHYS_SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       physSymbolsName = in.readCard32();
       javaBuilder.physSymbolsName(physSymbolsName);
     }
-    if(NameDetail.TYPES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.TYPES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       typesName = in.readCard32();
       javaBuilder.typesName(typesName);
     }
-    if(NameDetail.COMPAT.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.COMPAT.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       compatName = in.readCard32();
       javaBuilder.compatName(compatName);
     }
-    if(NameDetail.KEY_TYPE_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.KEY_TYPE_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       typeNames = in.readCard32(Byte.toUnsignedInt(nTypes));
       javaBuilder.typeNames(typeNames);
     }
-    if(NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       nLevelsPerType = in.readCard8(Byte.toUnsignedInt(nTypes));
       javaBuilder.nLevelsPerType(nLevelsPerType);
     }
-    if(NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       ktLevelNames = in.readCard32((int) nLevelsPerType.sum());
       javaBuilder.ktLevelNames(ktLevelNames);
     }
-    if(NameDetail.INDICATOR_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.INDICATOR_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       indicatorNames = in.readCard32(Popcount.popcount(Integer.toUnsignedLong(indicators)));
       javaBuilder.indicatorNames(indicatorNames);
     }
-    if(NameDetail.VIRTUAL_MOD_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.VIRTUAL_MOD_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       virtualModNames = in.readCard32(Popcount.popcount(Short.toUnsignedInt(virtualMods)));
       javaBuilder.virtualModNames(virtualModNames);
     }
-    if(NameDetail.GROUP_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.GROUP_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       groups = in.readCard32(Popcount.popcount(Byte.toUnsignedInt(groupNames)));
       javaBuilder.groups(groups);
     }
-    if(NameDetail.KEY_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.KEY_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       keyNames = in.readObject(KeyName::readKeyName, Byte.toUnsignedInt(nKeys));
       javaBuilder.keyNames(keyNames);
     }
-    if(NameDetail.KEY_ALIASES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.KEY_ALIASES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       keyAliases = in.readObject(KeyAlias::readKeyAlias, Byte.toUnsignedInt(nKeyAliases));
       javaBuilder.keyAliases(keyAliases);
     }
-    if(NameDetail.R_G_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.R_G_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       radioGroupNames = in.readCard32(Byte.toUnsignedInt(nRadioGroups));
       javaBuilder.radioGroupNames(radioGroupNames);
     }
@@ -186,7 +149,7 @@ public class SetNames implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard16(deviceSpec);
     short virtualMods = (short) virtualModNames.size();
@@ -210,62 +173,65 @@ public class SetNames implements OneWayRequest {
     out.writeCard8(nKeyAliases);
     out.writePad(1);
     out.writeCard16(totalKTLevelNames);
-    if(NameDetail.KEYCODES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.KEYCODES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(keycodesName);
     }
-    if(NameDetail.GEOMETRY.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.GEOMETRY.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(geometryName);
     }
-    if(NameDetail.SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(symbolsName);
     }
-    if(NameDetail.PHYS_SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.PHYS_SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(physSymbolsName);
     }
-    if(NameDetail.TYPES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.TYPES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(typesName);
     }
-    if(NameDetail.COMPAT.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.COMPAT.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(compatName);
     }
-    if(NameDetail.KEY_TYPE_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.KEY_TYPE_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(typeNames);
     }
-    if(NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard8(nLevelsPerType);
     }
     out.writePadAlign(Byte.toUnsignedInt(nTypes));
-    if(NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(ktLevelNames);
     }
-    if(NameDetail.INDICATOR_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.INDICATOR_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(indicatorNames);
     }
-    if(NameDetail.VIRTUAL_MOD_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.VIRTUAL_MOD_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(virtualModNames);
     }
-    if(NameDetail.GROUP_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.GROUP_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(groups);
     }
-    if(NameDetail.KEY_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
-      for(KeyName t : keyNames) {
+    if (NameDetail.KEY_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+      for (KeyName t : keyNames) {
         t.write(out);
       }
     }
-    if(NameDetail.KEY_ALIASES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
-      for(KeyAlias t : keyAliases) {
+    if (NameDetail.KEY_ALIASES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+      for (KeyAlias t : keyAliases) {
         t.write(out);
       }
     }
-    if(NameDetail.R_G_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
+    if (NameDetail.R_G_NAMES.isEnabled((int) (Integer.toUnsignedLong(which)))) {
       out.writeCard32(radioGroupNames);
     }
     out.writePadAlign(getSize());
   }
 
-  public boolean isWhichEnabled(@NonNull NameDetail... maskEnums) {
-    for(NameDetail m : maskEnums) {
-      if(!m.isEnabled(which)) {
+  public boolean isWhichEnabled(NameDetail... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (NameDetail m : maskEnums) {
+      if (!m.isEnabled(which)) {
         return false;
       }
     }
@@ -281,10 +247,59 @@ public class SetNames implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class SetNamesBuilder {
-    public boolean isWhichEnabled(@NonNull NameDetail... maskEnums) {
-      for(NameDetail m : maskEnums) {
-        if(!m.isEnabled(which)) {
+    @java.lang.SuppressWarnings("all")
+    private short deviceSpec;
+    @java.lang.SuppressWarnings("all")
+    private int which;
+    @java.lang.SuppressWarnings("all")
+    private byte firstType;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKTLevelt;
+    @java.lang.SuppressWarnings("all")
+    private byte nKTLevels;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKey;
+    @java.lang.SuppressWarnings("all")
+    private short totalKTLevelNames;
+    @java.lang.SuppressWarnings("all")
+    private int keycodesName;
+    @java.lang.SuppressWarnings("all")
+    private int geometryName;
+    @java.lang.SuppressWarnings("all")
+    private int symbolsName;
+    @java.lang.SuppressWarnings("all")
+    private int physSymbolsName;
+    @java.lang.SuppressWarnings("all")
+    private int typesName;
+    @java.lang.SuppressWarnings("all")
+    private int compatName;
+    @java.lang.SuppressWarnings("all")
+    private IntList typeNames;
+    @java.lang.SuppressWarnings("all")
+    private ByteList nLevelsPerType;
+    @java.lang.SuppressWarnings("all")
+    private IntList ktLevelNames;
+    @java.lang.SuppressWarnings("all")
+    private IntList indicatorNames;
+    @java.lang.SuppressWarnings("all")
+    private IntList virtualModNames;
+    @java.lang.SuppressWarnings("all")
+    private IntList groups;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeyName> keyNames;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeyAlias> keyAliases;
+    @java.lang.SuppressWarnings("all")
+    private IntList radioGroupNames;
+
+    public boolean isWhichEnabled(NameDetail... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (NameDetail m : maskEnums) {
+        if (!m.isEnabled(which)) {
           return false;
         }
       }
@@ -292,14 +307,14 @@ public class SetNames implements OneWayRequest {
     }
 
     public SetNames.SetNamesBuilder whichEnable(NameDetail... maskEnums) {
-      for(NameDetail m : maskEnums) {
+      for (NameDetail m : maskEnums) {
         which((int) m.enableFor(which));
       }
       return this;
     }
 
     public SetNames.SetNamesBuilder whichDisable(NameDetail... maskEnums) {
-      for(NameDetail m : maskEnums) {
+      for (NameDetail m : maskEnums) {
         which((int) m.disableFor(which));
       }
       return this;
@@ -398,5 +413,345 @@ public class SetNames implements OneWayRequest {
     public int getSize() {
       return 28 + (NameDetail.KEYCODES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 : 0) + (NameDetail.GEOMETRY.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 : 0) + (NameDetail.SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 : 0) + (NameDetail.PHYS_SYMBOLS.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 : 0) + (NameDetail.TYPES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 : 0) + (NameDetail.COMPAT.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 : 0) + (NameDetail.KEY_TYPE_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 * typeNames.size() : 0) + (NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 1 * nLevelsPerType.size() : 0) + XObject.getSizeForPadAlign(4, (NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 1 * nLevelsPerType.size() : 0)) + (NameDetail.K_T_LEVEL_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 * ktLevelNames.size() : 0) + (NameDetail.INDICATOR_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 * indicatorNames.size() : 0) + (NameDetail.VIRTUAL_MOD_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 * virtualModNames.size() : 0) + (NameDetail.GROUP_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 * groups.size() : 0) + (NameDetail.KEY_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? XObject.sizeOf(keyNames) : 0) + (NameDetail.KEY_ALIASES.isEnabled((int) (Integer.toUnsignedLong(which))) ? XObject.sizeOf(keyAliases) : 0) + (NameDetail.R_G_NAMES.isEnabled((int) (Integer.toUnsignedLong(which))) ? 4 * radioGroupNames.size() : 0);
     }
+
+    @java.lang.SuppressWarnings("all")
+    SetNamesBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetNames.SetNamesBuilder deviceSpec(final short deviceSpec) {
+      this.deviceSpec = deviceSpec;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetNames.SetNamesBuilder which(final int which) {
+      this.which = which;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetNames.SetNamesBuilder firstType(final byte firstType) {
+      this.firstType = firstType;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetNames.SetNamesBuilder firstKTLevelt(final byte firstKTLevelt) {
+      this.firstKTLevelt = firstKTLevelt;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetNames.SetNamesBuilder nKTLevels(final byte nKTLevels) {
+      this.nKTLevels = nKTLevels;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetNames.SetNamesBuilder firstKey(final byte firstKey) {
+      this.firstKey = firstKey;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetNames.SetNamesBuilder totalKTLevelNames(final short totalKTLevelNames) {
+      this.totalKTLevelNames = totalKTLevelNames;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SetNames build() {
+      return new SetNames(this.deviceSpec, this.which, this.firstType, this.firstKTLevelt, this.nKTLevels, this.firstKey, this.totalKTLevelNames, this.keycodesName, this.geometryName, this.symbolsName, this.physSymbolsName, this.typesName, this.compatName, this.typeNames, this.nLevelsPerType, this.ktLevelNames, this.indicatorNames, this.virtualModNames, this.groups, this.keyNames, this.keyAliases, this.radioGroupNames);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SetNames.SetNamesBuilder(deviceSpec=" + this.deviceSpec + ", which=" + this.which + ", firstType=" + this.firstType + ", firstKTLevelt=" + this.firstKTLevelt + ", nKTLevels=" + this.nKTLevels + ", firstKey=" + this.firstKey + ", totalKTLevelNames=" + this.totalKTLevelNames + ", keycodesName=" + this.keycodesName + ", geometryName=" + this.geometryName + ", symbolsName=" + this.symbolsName + ", physSymbolsName=" + this.physSymbolsName + ", typesName=" + this.typesName + ", compatName=" + this.compatName + ", typeNames=" + this.typeNames + ", nLevelsPerType=" + this.nLevelsPerType + ", ktLevelNames=" + this.ktLevelNames + ", indicatorNames=" + this.indicatorNames + ", virtualModNames=" + this.virtualModNames + ", groups=" + this.groups + ", keyNames=" + this.keyNames + ", keyAliases=" + this.keyAliases + ", radioGroupNames=" + this.radioGroupNames + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SetNames(final short deviceSpec, final int which, final byte firstType, final byte firstKTLevelt, final byte nKTLevels, final byte firstKey, final short totalKTLevelNames, final int keycodesName, final int geometryName, final int symbolsName, final int physSymbolsName, final int typesName, final int compatName, final IntList typeNames, final ByteList nLevelsPerType, final IntList ktLevelNames, final IntList indicatorNames, final IntList virtualModNames, final IntList groups, final ImmutableList<KeyName> keyNames, final ImmutableList<KeyAlias> keyAliases, final IntList radioGroupNames) {
+    if (typeNames == null) {
+      throw new java.lang.NullPointerException("typeNames is marked non-null but is null");
+    }
+    if (nLevelsPerType == null) {
+      throw new java.lang.NullPointerException("nLevelsPerType is marked non-null but is null");
+    }
+    if (ktLevelNames == null) {
+      throw new java.lang.NullPointerException("ktLevelNames is marked non-null but is null");
+    }
+    if (indicatorNames == null) {
+      throw new java.lang.NullPointerException("indicatorNames is marked non-null but is null");
+    }
+    if (virtualModNames == null) {
+      throw new java.lang.NullPointerException("virtualModNames is marked non-null but is null");
+    }
+    if (groups == null) {
+      throw new java.lang.NullPointerException("groups is marked non-null but is null");
+    }
+    if (keyNames == null) {
+      throw new java.lang.NullPointerException("keyNames is marked non-null but is null");
+    }
+    if (keyAliases == null) {
+      throw new java.lang.NullPointerException("keyAliases is marked non-null but is null");
+    }
+    if (radioGroupNames == null) {
+      throw new java.lang.NullPointerException("radioGroupNames is marked non-null but is null");
+    }
+    this.deviceSpec = deviceSpec;
+    this.which = which;
+    this.firstType = firstType;
+    this.firstKTLevelt = firstKTLevelt;
+    this.nKTLevels = nKTLevels;
+    this.firstKey = firstKey;
+    this.totalKTLevelNames = totalKTLevelNames;
+    this.keycodesName = keycodesName;
+    this.geometryName = geometryName;
+    this.symbolsName = symbolsName;
+    this.physSymbolsName = physSymbolsName;
+    this.typesName = typesName;
+    this.compatName = compatName;
+    this.typeNames = typeNames;
+    this.nLevelsPerType = nLevelsPerType;
+    this.ktLevelNames = ktLevelNames;
+    this.indicatorNames = indicatorNames;
+    this.virtualModNames = virtualModNames;
+    this.groups = groups;
+    this.keyNames = keyNames;
+    this.keyAliases = keyAliases;
+    this.radioGroupNames = radioGroupNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SetNames.SetNamesBuilder builder() {
+    return new SetNames.SetNamesBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getDeviceSpec() {
+    return this.deviceSpec;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getWhich() {
+    return this.which;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstType() {
+    return this.firstType;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKTLevelt() {
+    return this.firstKTLevelt;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNKTLevels() {
+    return this.nKTLevels;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKey() {
+    return this.firstKey;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getTotalKTLevelNames() {
+    return this.totalKTLevelNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getKeycodesName() {
+    return this.keycodesName;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getGeometryName() {
+    return this.geometryName;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getSymbolsName() {
+    return this.symbolsName;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getPhysSymbolsName() {
+    return this.physSymbolsName;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getTypesName() {
+    return this.typesName;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getCompatName() {
+    return this.compatName;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public IntList getTypeNames() {
+    return this.typeNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getNLevelsPerType() {
+    return this.nLevelsPerType;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public IntList getKtLevelNames() {
+    return this.ktLevelNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public IntList getIndicatorNames() {
+    return this.indicatorNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public IntList getVirtualModNames() {
+    return this.virtualModNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public IntList getGroups() {
+    return this.groups;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeyName> getKeyNames() {
+    return this.keyNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeyAlias> getKeyAliases() {
+    return this.keyAliases;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public IntList getRadioGroupNames() {
+    return this.radioGroupNames;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SetNames)) return false;
+    final SetNames other = (SetNames) o;
+    if (this.getDeviceSpec() != other.getDeviceSpec()) return false;
+    if (this.getWhich() != other.getWhich()) return false;
+    if (this.getFirstType() != other.getFirstType()) return false;
+    if (this.getFirstKTLevelt() != other.getFirstKTLevelt()) return false;
+    if (this.getNKTLevels() != other.getNKTLevels()) return false;
+    if (this.getFirstKey() != other.getFirstKey()) return false;
+    if (this.getTotalKTLevelNames() != other.getTotalKTLevelNames()) return false;
+    if (this.getKeycodesName() != other.getKeycodesName()) return false;
+    if (this.getGeometryName() != other.getGeometryName()) return false;
+    if (this.getSymbolsName() != other.getSymbolsName()) return false;
+    if (this.getPhysSymbolsName() != other.getPhysSymbolsName()) return false;
+    if (this.getTypesName() != other.getTypesName()) return false;
+    if (this.getCompatName() != other.getCompatName()) return false;
+    final java.lang.Object this$typeNames = this.getTypeNames();
+    final java.lang.Object other$typeNames = other.getTypeNames();
+    if (this$typeNames == null ? other$typeNames != null : !this$typeNames.equals(other$typeNames)) return false;
+    final java.lang.Object this$nLevelsPerType = this.getNLevelsPerType();
+    final java.lang.Object other$nLevelsPerType = other.getNLevelsPerType();
+    if (this$nLevelsPerType == null ? other$nLevelsPerType != null : !this$nLevelsPerType.equals(other$nLevelsPerType)) return false;
+    final java.lang.Object this$ktLevelNames = this.getKtLevelNames();
+    final java.lang.Object other$ktLevelNames = other.getKtLevelNames();
+    if (this$ktLevelNames == null ? other$ktLevelNames != null : !this$ktLevelNames.equals(other$ktLevelNames)) return false;
+    final java.lang.Object this$indicatorNames = this.getIndicatorNames();
+    final java.lang.Object other$indicatorNames = other.getIndicatorNames();
+    if (this$indicatorNames == null ? other$indicatorNames != null : !this$indicatorNames.equals(other$indicatorNames)) return false;
+    final java.lang.Object this$virtualModNames = this.getVirtualModNames();
+    final java.lang.Object other$virtualModNames = other.getVirtualModNames();
+    if (this$virtualModNames == null ? other$virtualModNames != null : !this$virtualModNames.equals(other$virtualModNames)) return false;
+    final java.lang.Object this$groups = this.getGroups();
+    final java.lang.Object other$groups = other.getGroups();
+    if (this$groups == null ? other$groups != null : !this$groups.equals(other$groups)) return false;
+    final java.lang.Object this$keyNames = this.getKeyNames();
+    final java.lang.Object other$keyNames = other.getKeyNames();
+    if (this$keyNames == null ? other$keyNames != null : !this$keyNames.equals(other$keyNames)) return false;
+    final java.lang.Object this$keyAliases = this.getKeyAliases();
+    final java.lang.Object other$keyAliases = other.getKeyAliases();
+    if (this$keyAliases == null ? other$keyAliases != null : !this$keyAliases.equals(other$keyAliases)) return false;
+    final java.lang.Object this$radioGroupNames = this.getRadioGroupNames();
+    final java.lang.Object other$radioGroupNames = other.getRadioGroupNames();
+    if (this$radioGroupNames == null ? other$radioGroupNames != null : !this$radioGroupNames.equals(other$radioGroupNames)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDeviceSpec();
+    result = result * PRIME + this.getWhich();
+    result = result * PRIME + this.getFirstType();
+    result = result * PRIME + this.getFirstKTLevelt();
+    result = result * PRIME + this.getNKTLevels();
+    result = result * PRIME + this.getFirstKey();
+    result = result * PRIME + this.getTotalKTLevelNames();
+    result = result * PRIME + this.getKeycodesName();
+    result = result * PRIME + this.getGeometryName();
+    result = result * PRIME + this.getSymbolsName();
+    result = result * PRIME + this.getPhysSymbolsName();
+    result = result * PRIME + this.getTypesName();
+    result = result * PRIME + this.getCompatName();
+    final java.lang.Object $typeNames = this.getTypeNames();
+    result = result * PRIME + ($typeNames == null ? 43 : $typeNames.hashCode());
+    final java.lang.Object $nLevelsPerType = this.getNLevelsPerType();
+    result = result * PRIME + ($nLevelsPerType == null ? 43 : $nLevelsPerType.hashCode());
+    final java.lang.Object $ktLevelNames = this.getKtLevelNames();
+    result = result * PRIME + ($ktLevelNames == null ? 43 : $ktLevelNames.hashCode());
+    final java.lang.Object $indicatorNames = this.getIndicatorNames();
+    result = result * PRIME + ($indicatorNames == null ? 43 : $indicatorNames.hashCode());
+    final java.lang.Object $virtualModNames = this.getVirtualModNames();
+    result = result * PRIME + ($virtualModNames == null ? 43 : $virtualModNames.hashCode());
+    final java.lang.Object $groups = this.getGroups();
+    result = result * PRIME + ($groups == null ? 43 : $groups.hashCode());
+    final java.lang.Object $keyNames = this.getKeyNames();
+    result = result * PRIME + ($keyNames == null ? 43 : $keyNames.hashCode());
+    final java.lang.Object $keyAliases = this.getKeyAliases();
+    result = result * PRIME + ($keyAliases == null ? 43 : $keyAliases.hashCode());
+    final java.lang.Object $radioGroupNames = this.getRadioGroupNames();
+    result = result * PRIME + ($radioGroupNames == null ? 43 : $radioGroupNames.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SetNames(deviceSpec=" + this.getDeviceSpec() + ", which=" + this.getWhich() + ", firstType=" + this.getFirstType() + ", firstKTLevelt=" + this.getFirstKTLevelt() + ", nKTLevels=" + this.getNKTLevels() + ", firstKey=" + this.getFirstKey() + ", totalKTLevelNames=" + this.getTotalKTLevelNames() + ", keycodesName=" + this.getKeycodesName() + ", geometryName=" + this.getGeometryName() + ", symbolsName=" + this.getSymbolsName() + ", physSymbolsName=" + this.getPhysSymbolsName() + ", typesName=" + this.getTypesName() + ", compatName=" + this.getCompatName() + ", typeNames=" + this.getTypeNames() + ", nLevelsPerType=" + this.getNLevelsPerType() + ", ktLevelNames=" + this.getKtLevelNames() + ", indicatorNames=" + this.getIndicatorNames() + ", virtualModNames=" + this.getVirtualModNames() + ", groups=" + this.getGroups() + ", keyNames=" + this.getKeyNames() + ", keyAliases=" + this.getKeyAliases() + ", radioGroupNames=" + this.getRadioGroupNames() + ")";
   }
 }

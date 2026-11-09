@@ -4,24 +4,14 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class ChangeHosts implements OneWayRequest {
+public final class ChangeHosts implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 109;
-
-  private byte mode;
-
-  private byte family;
-
-  @NonNull
-  private ByteList address;
+  private final byte mode;
+  private final byte family;
+  private final ByteList address;
 
   public byte getOpCode() {
     return OPCODE;
@@ -44,7 +34,7 @@ public class ChangeHosts implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard8(mode);
     out.writeCard16((short) getLength());
     out.writeCard8(family);
@@ -64,7 +54,15 @@ public class ChangeHosts implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class ChangeHostsBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte mode;
+    @java.lang.SuppressWarnings("all")
+    private byte family;
+    @java.lang.SuppressWarnings("all")
+    private ByteList address;
+
     public ChangeHosts.ChangeHostsBuilder mode(HostMode mode) {
       this.mode = (byte) mode.getValue();
       return this;
@@ -88,5 +86,94 @@ public class ChangeHosts implements OneWayRequest {
     public int getSize() {
       return 8 + 1 * address.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    ChangeHostsBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ChangeHosts.ChangeHostsBuilder address(final ByteList address) {
+      if (address == null) {
+        throw new java.lang.NullPointerException("address is marked non-null but is null");
+      }
+      this.address = address;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ChangeHosts build() {
+      return new ChangeHosts(this.mode, this.family, this.address);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ChangeHosts.ChangeHostsBuilder(mode=" + this.mode + ", family=" + this.family + ", address=" + this.address + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ChangeHosts(final byte mode, final byte family, final ByteList address) {
+    if (address == null) {
+      throw new java.lang.NullPointerException("address is marked non-null but is null");
+    }
+    this.mode = mode;
+    this.family = family;
+    this.address = address;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ChangeHosts.ChangeHostsBuilder builder() {
+    return new ChangeHosts.ChangeHostsBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMode() {
+    return this.mode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFamily() {
+    return this.family;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getAddress() {
+    return this.address;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ChangeHosts)) return false;
+    final ChangeHosts other = (ChangeHosts) o;
+    if (this.getMode() != other.getMode()) return false;
+    if (this.getFamily() != other.getFamily()) return false;
+    final java.lang.Object this$address = this.getAddress();
+    final java.lang.Object other$address = other.getAddress();
+    if (this$address == null ? other$address != null : !this$address.equals(other$address)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getMode();
+    result = result * PRIME + this.getFamily();
+    final java.lang.Object $address = this.getAddress();
+    result = result * PRIME + ($address == null ? 43 : $address.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ChangeHosts(mode=" + this.getMode() + ", family=" + this.getFamily() + ", address=" + this.getAddress() + ")";
   }
 }

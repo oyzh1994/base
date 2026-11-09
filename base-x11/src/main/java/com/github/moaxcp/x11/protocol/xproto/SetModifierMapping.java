@@ -5,20 +5,12 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class SetModifierMapping implements TwoWayRequest<SetModifierMappingReply> {
+public final class SetModifierMapping implements TwoWayRequest<SetModifierMappingReply> {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 118;
-
-  @NonNull
-  private ByteList keycodes;
+  private final ByteList keycodes;
 
   public XReplyFunction<SetModifierMappingReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> SetModifierMappingReply.readSetModifierMappingReply(field, sequenceNumber, in);
@@ -40,7 +32,7 @@ public class SetModifierMapping implements TwoWayRequest<SetModifierMappingReply
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     byte keycodesPerModifier = (byte) keycodes.size();
     out.writeCard8(keycodesPerModifier);
     out.writeCard16((short) getLength());
@@ -57,9 +49,86 @@ public class SetModifierMapping implements TwoWayRequest<SetModifierMappingReply
     return PLUGIN_NAME;
   }
 
+
   public static class SetModifierMappingBuilder {
+    @java.lang.SuppressWarnings("all")
+    private ByteList keycodes;
+
     public int getSize() {
       return 4 + 1 * keycodes.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    SetModifierMappingBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetModifierMapping.SetModifierMappingBuilder keycodes(final ByteList keycodes) {
+      if (keycodes == null) {
+        throw new java.lang.NullPointerException("keycodes is marked non-null but is null");
+      }
+      this.keycodes = keycodes;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SetModifierMapping build() {
+      return new SetModifierMapping(this.keycodes);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SetModifierMapping.SetModifierMappingBuilder(keycodes=" + this.keycodes + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SetModifierMapping(final ByteList keycodes) {
+    if (keycodes == null) {
+      throw new java.lang.NullPointerException("keycodes is marked non-null but is null");
+    }
+    this.keycodes = keycodes;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SetModifierMapping.SetModifierMappingBuilder builder() {
+    return new SetModifierMapping.SetModifierMappingBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getKeycodes() {
+    return this.keycodes;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SetModifierMapping)) return false;
+    final SetModifierMapping other = (SetModifierMapping) o;
+    final java.lang.Object this$keycodes = this.getKeycodes();
+    final java.lang.Object other$keycodes = other.getKeycodes();
+    if (this$keycodes == null ? other$keycodes != null : !this$keycodes.equals(other$keycodes)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final java.lang.Object $keycodes = this.getKeycodes();
+    result = result * PRIME + ($keycodes == null ? 43 : $keycodes.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SetModifierMapping(keycodes=" + this.getKeycodes() + ")";
   }
 }

@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class PresentPlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,19 +46,19 @@ public class PresentPlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 1) {
+    if (minorOpcode == 1) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 2) {
+    if (minorOpcode == 2) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 3) {
+    if (minorOpcode == 3) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
     return false;
@@ -76,7 +66,7 @@ public class PresentPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedEvent(byte number) {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return true;
     }
     return false;
@@ -89,19 +79,19 @@ public class PresentPlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == QueryVersion.OPCODE) {
+    if (minorOpcode == QueryVersion.OPCODE) {
       return QueryVersion.readQueryVersion(in);
     }
-    if(minorOpcode == Pixmap.OPCODE) {
+    if (minorOpcode == Pixmap.OPCODE) {
       return Pixmap.readPixmap(in);
     }
-    if(minorOpcode == NotifyMSC.OPCODE) {
+    if (minorOpcode == NotifyMSC.OPCODE) {
       return NotifyMSC.readNotifyMSC(in);
     }
-    if(minorOpcode == SelectInput.OPCODE) {
+    if (minorOpcode == SelectInput.OPCODE) {
       return SelectInput.readSelectInput(in);
     }
-    if(minorOpcode == QueryCapabilities.OPCODE) {
+    if (minorOpcode == QueryCapabilities.OPCODE) {
       return QueryCapabilities.readQueryCapabilities(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -109,7 +99,7 @@ public class PresentPlugin implements XProtocolPlugin {
 
   @Override
   public XEvent readEvent(byte number, boolean sentEvent, X11Input in) throws IOException {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return GenericEvent.readGenericEvent(firstEvent, sentEvent, in);
     }
     throw new IllegalArgumentException("number " + number + " is not supported");
@@ -121,20 +111,49 @@ public class PresentPlugin implements XProtocolPlugin {
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
-    if(eventType == 0) {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+    if (eventType == 0) {
       return ConfigureNotifyEvent.readConfigureNotifyEvent(firstEventOffset, sentEvent, extension, sequenceNumber, length, eventType, in);
     }
-    if(eventType == 1) {
+    if (eventType == 1) {
       return CompleteNotifyEvent.readCompleteNotifyEvent(firstEventOffset, sentEvent, extension, sequenceNumber, length, eventType, in);
     }
-    if(eventType == 2) {
+    if (eventType == 2) {
       return IdleNotifyEvent.readIdleNotifyEvent(firstEventOffset, sentEvent, extension, sequenceNumber, length, eventType, in);
     }
-    if(eventType == 3) {
+    if (eventType == 3) {
       return RedirectNotifyEvent.readRedirectNotifyEvent(firstEventOffset, sentEvent, extension, sequenceNumber, length, eventType, in);
     }
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }

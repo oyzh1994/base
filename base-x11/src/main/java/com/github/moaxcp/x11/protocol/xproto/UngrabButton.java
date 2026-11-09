@@ -4,22 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 
-@Value
-@Builder
-public class UngrabButton implements OneWayRequest {
+public final class UngrabButton implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 29;
-
-  private byte button;
-
-  private int grabWindow;
-
-  private short modifiers;
+  private final byte button;
+  private final int grabWindow;
+  private final short modifiers;
 
   public byte getOpCode() {
     return OPCODE;
@@ -40,7 +31,7 @@ public class UngrabButton implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard8(button);
     out.writeCard16((short) getLength());
     out.writeCard32(grabWindow);
@@ -48,9 +39,12 @@ public class UngrabButton implements OneWayRequest {
     out.writePad(2);
   }
 
-  public boolean isModifiersEnabled(@NonNull ModMask... maskEnums) {
-    for(ModMask m : maskEnums) {
-      if(!m.isEnabled(modifiers)) {
+  public boolean isModifiersEnabled(ModMask... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (ModMask m : maskEnums) {
+      if (!m.isEnabled(modifiers)) {
         return false;
       }
     }
@@ -66,7 +60,15 @@ public class UngrabButton implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class UngrabButtonBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte button;
+    @java.lang.SuppressWarnings("all")
+    private int grabWindow;
+    @java.lang.SuppressWarnings("all")
+    private short modifiers;
+
     public UngrabButton.UngrabButtonBuilder button(ButtonIndex button) {
       this.button = (byte) button.getValue();
       return this;
@@ -77,9 +79,12 @@ public class UngrabButton implements OneWayRequest {
       return this;
     }
 
-    public boolean isModifiersEnabled(@NonNull ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
-        if(!m.isEnabled(modifiers)) {
+    public boolean isModifiersEnabled(ModMask... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (ModMask m : maskEnums) {
+        if (!m.isEnabled(modifiers)) {
           return false;
         }
       }
@@ -87,14 +92,14 @@ public class UngrabButton implements OneWayRequest {
     }
 
     public UngrabButton.UngrabButtonBuilder modifiersEnable(ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
+      for (ModMask m : maskEnums) {
         modifiers((short) m.enableFor(modifiers));
       }
       return this;
     }
 
     public UngrabButton.UngrabButtonBuilder modifiersDisable(ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
+      for (ModMask m : maskEnums) {
         modifiers((short) m.disableFor(modifiers));
       }
       return this;
@@ -103,5 +108,94 @@ public class UngrabButton implements OneWayRequest {
     public int getSize() {
       return 12;
     }
+
+    @java.lang.SuppressWarnings("all")
+    UngrabButtonBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public UngrabButton.UngrabButtonBuilder grabWindow(final int grabWindow) {
+      this.grabWindow = grabWindow;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public UngrabButton.UngrabButtonBuilder modifiers(final short modifiers) {
+      this.modifiers = modifiers;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public UngrabButton build() {
+      return new UngrabButton(this.button, this.grabWindow, this.modifiers);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "UngrabButton.UngrabButtonBuilder(button=" + this.button + ", grabWindow=" + this.grabWindow + ", modifiers=" + this.modifiers + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  UngrabButton(final byte button, final int grabWindow, final short modifiers) {
+    this.button = button;
+    this.grabWindow = grabWindow;
+    this.modifiers = modifiers;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static UngrabButton.UngrabButtonBuilder builder() {
+    return new UngrabButton.UngrabButtonBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getButton() {
+    return this.button;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getGrabWindow() {
+    return this.grabWindow;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getModifiers() {
+    return this.modifiers;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof UngrabButton)) return false;
+    final UngrabButton other = (UngrabButton) o;
+    if (this.getButton() != other.getButton()) return false;
+    if (this.getGrabWindow() != other.getGrabWindow()) return false;
+    if (this.getModifiers() != other.getModifiers()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getButton();
+    result = result * PRIME + this.getGrabWindow();
+    result = result * PRIME + this.getModifiers();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "UngrabButton(button=" + this.getButton() + ", grabWindow=" + this.getGrabWindow() + ", modifiers=" + this.getModifiers() + ")";
   }
 }

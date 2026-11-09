@@ -4,21 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class SetProviderOffloadSink implements OneWayRequest {
+public final class SetProviderOffloadSink implements OneWayRequest {
   public static final String PLUGIN_NAME = "randr";
-
   public static final byte OPCODE = 34;
-
-  private int provider;
-
-  private int sinkProvider;
-
-  private int configTimestamp;
+  private final int provider;
+  private final int sinkProvider;
+  private final int configTimestamp;
 
   public byte getOpCode() {
     return OPCODE;
@@ -40,7 +32,7 @@ public class SetProviderOffloadSink implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(provider);
     out.writeCard32(sinkProvider);
@@ -56,9 +48,115 @@ public class SetProviderOffloadSink implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class SetProviderOffloadSinkBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int provider;
+    @java.lang.SuppressWarnings("all")
+    private int sinkProvider;
+    @java.lang.SuppressWarnings("all")
+    private int configTimestamp;
+
     public int getSize() {
       return 16;
     }
+
+    @java.lang.SuppressWarnings("all")
+    SetProviderOffloadSinkBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetProviderOffloadSink.SetProviderOffloadSinkBuilder provider(final int provider) {
+      this.provider = provider;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetProviderOffloadSink.SetProviderOffloadSinkBuilder sinkProvider(final int sinkProvider) {
+      this.sinkProvider = sinkProvider;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetProviderOffloadSink.SetProviderOffloadSinkBuilder configTimestamp(final int configTimestamp) {
+      this.configTimestamp = configTimestamp;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SetProviderOffloadSink build() {
+      return new SetProviderOffloadSink(this.provider, this.sinkProvider, this.configTimestamp);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SetProviderOffloadSink.SetProviderOffloadSinkBuilder(provider=" + this.provider + ", sinkProvider=" + this.sinkProvider + ", configTimestamp=" + this.configTimestamp + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SetProviderOffloadSink(final int provider, final int sinkProvider, final int configTimestamp) {
+    this.provider = provider;
+    this.sinkProvider = sinkProvider;
+    this.configTimestamp = configTimestamp;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SetProviderOffloadSink.SetProviderOffloadSinkBuilder builder() {
+    return new SetProviderOffloadSink.SetProviderOffloadSinkBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getProvider() {
+    return this.provider;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getSinkProvider() {
+    return this.sinkProvider;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getConfigTimestamp() {
+    return this.configTimestamp;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SetProviderOffloadSink)) return false;
+    final SetProviderOffloadSink other = (SetProviderOffloadSink) o;
+    if (this.getProvider() != other.getProvider()) return false;
+    if (this.getSinkProvider() != other.getSinkProvider()) return false;
+    if (this.getConfigTimestamp() != other.getConfigTimestamp()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getProvider();
+    result = result * PRIME + this.getSinkProvider();
+    result = result * PRIME + this.getConfigTimestamp();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SetProviderOffloadSink(provider=" + this.getProvider() + ", sinkProvider=" + this.getSinkProvider() + ", configTimestamp=" + this.getConfigTimestamp() + ")";
   }
 }

@@ -4,31 +4,21 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XError;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class PictFormatError implements XError {
+public final class PictFormatError implements XError {
   public static final String PLUGIN_NAME = "render";
-
   public static final byte CODE = 0;
-
-  private byte firstErrorOffset;
-
-  private short sequenceNumber;
-
-  private short minorOpcode;
-
-  private byte majorOpcode;
+  private final byte firstErrorOffset;
+  private final short sequenceNumber;
+  private final short minorOpcode;
+  private final byte majorOpcode;
 
   @Override
   public byte getCode() {
     return (byte) (firstErrorOffset + CODE);
   }
 
-  public static PictFormatError readPictFormatError(byte firstErrorOffset, X11Input in) throws
-      IOException {
+  public static PictFormatError readPictFormatError(byte firstErrorOffset, X11Input in) throws IOException {
     PictFormatError.PictFormatErrorBuilder javaBuilder = PictFormatError.builder();
     short sequenceNumber = in.readCard16();
     short minorOpcode = in.readCard16();
@@ -37,7 +27,6 @@ public class PictFormatError implements XError {
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.minorOpcode(minorOpcode);
     javaBuilder.majorOpcode(majorOpcode);
-
     javaBuilder.firstErrorOffset(firstErrorOffset);
     return javaBuilder.build();
   }
@@ -61,9 +50,134 @@ public class PictFormatError implements XError {
     return PLUGIN_NAME;
   }
 
+
   public static class PictFormatErrorBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte firstErrorOffset;
+    @java.lang.SuppressWarnings("all")
+    private short sequenceNumber;
+    @java.lang.SuppressWarnings("all")
+    private short minorOpcode;
+    @java.lang.SuppressWarnings("all")
+    private byte majorOpcode;
+
     public int getSize() {
       return 32;
     }
+
+    @java.lang.SuppressWarnings("all")
+    PictFormatErrorBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public PictFormatError.PictFormatErrorBuilder firstErrorOffset(final byte firstErrorOffset) {
+      this.firstErrorOffset = firstErrorOffset;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public PictFormatError.PictFormatErrorBuilder sequenceNumber(final short sequenceNumber) {
+      this.sequenceNumber = sequenceNumber;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public PictFormatError.PictFormatErrorBuilder minorOpcode(final short minorOpcode) {
+      this.minorOpcode = minorOpcode;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public PictFormatError.PictFormatErrorBuilder majorOpcode(final byte majorOpcode) {
+      this.majorOpcode = majorOpcode;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public PictFormatError build() {
+      return new PictFormatError(this.firstErrorOffset, this.sequenceNumber, this.minorOpcode, this.majorOpcode);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "PictFormatError.PictFormatErrorBuilder(firstErrorOffset=" + this.firstErrorOffset + ", sequenceNumber=" + this.sequenceNumber + ", minorOpcode=" + this.minorOpcode + ", majorOpcode=" + this.majorOpcode + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  PictFormatError(final byte firstErrorOffset, final short sequenceNumber, final short minorOpcode, final byte majorOpcode) {
+    this.firstErrorOffset = firstErrorOffset;
+    this.sequenceNumber = sequenceNumber;
+    this.minorOpcode = minorOpcode;
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static PictFormatError.PictFormatErrorBuilder builder() {
+    return new PictFormatError.PictFormatErrorBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstErrorOffset() {
+    return this.firstErrorOffset;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSequenceNumber() {
+    return this.sequenceNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getMinorOpcode() {
+    return this.minorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof PictFormatError)) return false;
+    final PictFormatError other = (PictFormatError) o;
+    if (this.getFirstErrorOffset() != other.getFirstErrorOffset()) return false;
+    if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
+    if (this.getMinorOpcode() != other.getMinorOpcode()) return false;
+    if (this.getMajorOpcode() != other.getMajorOpcode()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getFirstErrorOffset();
+    result = result * PRIME + this.getSequenceNumber();
+    result = result * PRIME + this.getMinorOpcode();
+    result = result * PRIME + this.getMajorOpcode();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "PictFormatError(firstErrorOffset=" + this.getFirstErrorOffset() + ", sequenceNumber=" + this.getSequenceNumber() + ", minorOpcode=" + this.getMinorOpcode() + ", majorOpcode=" + this.getMajorOpcode() + ")";
   }
 }

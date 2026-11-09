@@ -4,19 +4,12 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class ChangeCursor implements OneWayRequest {
+public final class ChangeCursor implements OneWayRequest {
   public static final String PLUGIN_NAME = "xfixes";
-
   public static final byte OPCODE = 26;
-
-  private int source;
-
-  private int destination;
+  private final int source;
+  private final int destination;
 
   public byte getOpCode() {
     return OPCODE;
@@ -36,7 +29,7 @@ public class ChangeCursor implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(source);
     out.writeCard32(destination);
@@ -51,9 +44,96 @@ public class ChangeCursor implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class ChangeCursorBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int source;
+    @java.lang.SuppressWarnings("all")
+    private int destination;
+
     public int getSize() {
       return 12;
     }
+
+    @java.lang.SuppressWarnings("all")
+    ChangeCursorBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ChangeCursor.ChangeCursorBuilder source(final int source) {
+      this.source = source;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ChangeCursor.ChangeCursorBuilder destination(final int destination) {
+      this.destination = destination;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ChangeCursor build() {
+      return new ChangeCursor(this.source, this.destination);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ChangeCursor.ChangeCursorBuilder(source=" + this.source + ", destination=" + this.destination + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ChangeCursor(final int source, final int destination) {
+    this.source = source;
+    this.destination = destination;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ChangeCursor.ChangeCursorBuilder builder() {
+    return new ChangeCursor.ChangeCursorBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getSource() {
+    return this.source;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getDestination() {
+    return this.destination;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ChangeCursor)) return false;
+    final ChangeCursor other = (ChangeCursor) o;
+    if (this.getSource() != other.getSource()) return false;
+    if (this.getDestination() != other.getDestination()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getSource();
+    result = result * PRIME + this.getDestination();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ChangeCursor(source=" + this.getSource() + ", destination=" + this.getDestination() + ")";
   }
 }

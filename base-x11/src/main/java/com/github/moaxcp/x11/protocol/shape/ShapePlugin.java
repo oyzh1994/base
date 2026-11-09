@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class ShapePlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,31 +46,31 @@ public class ShapePlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 1) {
+    if (minorOpcode == 1) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 2) {
+    if (minorOpcode == 2) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 3) {
+    if (minorOpcode == 3) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 5) {
+    if (minorOpcode == 5) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 6) {
+    if (minorOpcode == 6) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 7) {
+    if (minorOpcode == 7) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 8) {
+    if (minorOpcode == 8) {
       return isMajorOpcode;
     }
     return false;
@@ -88,7 +78,7 @@ public class ShapePlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedEvent(byte number) {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return true;
     }
     return false;
@@ -101,31 +91,31 @@ public class ShapePlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == QueryVersion.OPCODE) {
+    if (minorOpcode == QueryVersion.OPCODE) {
       return QueryVersion.readQueryVersion(in);
     }
-    if(minorOpcode == Rectangles.OPCODE) {
+    if (minorOpcode == Rectangles.OPCODE) {
       return Rectangles.readRectangles(in);
     }
-    if(minorOpcode == Mask.OPCODE) {
+    if (minorOpcode == Mask.OPCODE) {
       return Mask.readMask(in);
     }
-    if(minorOpcode == Combine.OPCODE) {
+    if (minorOpcode == Combine.OPCODE) {
       return Combine.readCombine(in);
     }
-    if(minorOpcode == Offset.OPCODE) {
+    if (minorOpcode == Offset.OPCODE) {
       return Offset.readOffset(in);
     }
-    if(minorOpcode == QueryExtents.OPCODE) {
+    if (minorOpcode == QueryExtents.OPCODE) {
       return QueryExtents.readQueryExtents(in);
     }
-    if(minorOpcode == SelectInput.OPCODE) {
+    if (minorOpcode == SelectInput.OPCODE) {
       return SelectInput.readSelectInput(in);
     }
-    if(minorOpcode == InputSelected.OPCODE) {
+    if (minorOpcode == InputSelected.OPCODE) {
       return InputSelected.readInputSelected(in);
     }
-    if(minorOpcode == GetRectangles.OPCODE) {
+    if (minorOpcode == GetRectangles.OPCODE) {
       return GetRectangles.readGetRectangles(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -133,7 +123,7 @@ public class ShapePlugin implements XProtocolPlugin {
 
   @Override
   public XEvent readEvent(byte number, boolean sentEvent, X11Input in) throws IOException {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return NotifyEvent.readNotifyEvent(firstEvent, sentEvent, in);
     }
     throw new IllegalArgumentException("number " + number + " is not supported");
@@ -145,8 +135,37 @@ public class ShapePlugin implements XProtocolPlugin {
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }

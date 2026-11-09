@@ -5,14 +5,9 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class QueryPictFormats implements TwoWayRequest<QueryPictFormatsReply> {
+public final class QueryPictFormats implements TwoWayRequest<QueryPictFormatsReply> {
   public static final String PLUGIN_NAME = "render";
-
   public static final byte OPCODE = 1;
 
   public XReplyFunction<QueryPictFormatsReply> getReplyFunction() {
@@ -33,7 +28,7 @@ public class QueryPictFormats implements TwoWayRequest<QueryPictFormatsReply> {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
   }
 
@@ -46,9 +41,55 @@ public class QueryPictFormats implements TwoWayRequest<QueryPictFormatsReply> {
     return PLUGIN_NAME;
   }
 
+
   public static class QueryPictFormatsBuilder {
     public int getSize() {
       return 4;
     }
+
+    @java.lang.SuppressWarnings("all")
+    QueryPictFormatsBuilder() {
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public QueryPictFormats build() {
+      return new QueryPictFormats();
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "QueryPictFormats.QueryPictFormatsBuilder()";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  QueryPictFormats() {
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static QueryPictFormats.QueryPictFormatsBuilder builder() {
+    return new QueryPictFormats.QueryPictFormatsBuilder();
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof QueryPictFormats)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int result = 1;
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "QueryPictFormats()";
   }
 }

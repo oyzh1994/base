@@ -33,12 +33,14 @@ X11 协议的 Java 实现，由 [moaxcp/x11](https://github.com/moaxcp/x11) `0.2
 - 各模块的 `META-INF/services/com.github.moaxcp.x11.protocol.XProtocolPlugin` 已合并为一个文件，
   `ServiceLoader` 仍然可以发现全部协议插件（当前为 18 个）。
 - 原模块的 `module-info.java` 已删除，单模块不再使用 JPMS 描述符。
-- 生成代码中的 `lombok` 注解仅在编译期使用；`Eclipse Collections` 暂未移除，作为后续工作。
+- 已使用 delombok 展开全部 `@Value`、`@Builder`、`@Getter`、`@Setter`、`@ToString`、`@UtilityClass`、`@NonNull`，
+  源码与构建均不再依赖 Lombok；`Eclipse Collections` 暂未移除，作为后续工作。
 
 ## 依赖
 
-- `org.projectlombok:lombok:1.18.48`（`provided`，仅编译期）
 - `org.eclipse.collections:eclipse-collections:11.1.0`（暂时保留，待后续移除）
+
+Lombok 已完全移除。
 
 ## 构建
 

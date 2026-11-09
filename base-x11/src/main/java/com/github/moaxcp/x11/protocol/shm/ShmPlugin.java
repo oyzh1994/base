@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class ShmPlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,28 +46,28 @@ public class ShmPlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 1) {
+    if (minorOpcode == 1) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 2) {
+    if (minorOpcode == 2) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 3) {
+    if (minorOpcode == 3) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 5) {
+    if (minorOpcode == 5) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 6) {
+    if (minorOpcode == 6) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 7) {
+    if (minorOpcode == 7) {
       return isMajorOpcode;
     }
     return false;
@@ -85,7 +75,7 @@ public class ShmPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedEvent(byte number) {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return true;
     }
     return false;
@@ -93,7 +83,7 @@ public class ShmPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedError(byte code) {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return true;
     }
     return false;
@@ -101,28 +91,28 @@ public class ShmPlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == QueryVersion.OPCODE) {
+    if (minorOpcode == QueryVersion.OPCODE) {
       return QueryVersion.readQueryVersion(in);
     }
-    if(minorOpcode == Attach.OPCODE) {
+    if (minorOpcode == Attach.OPCODE) {
       return Attach.readAttach(in);
     }
-    if(minorOpcode == Detach.OPCODE) {
+    if (minorOpcode == Detach.OPCODE) {
       return Detach.readDetach(in);
     }
-    if(minorOpcode == PutImage.OPCODE) {
+    if (minorOpcode == PutImage.OPCODE) {
       return PutImage.readPutImage(in);
     }
-    if(minorOpcode == GetImage.OPCODE) {
+    if (minorOpcode == GetImage.OPCODE) {
       return GetImage.readGetImage(in);
     }
-    if(minorOpcode == CreatePixmap.OPCODE) {
+    if (minorOpcode == CreatePixmap.OPCODE) {
       return CreatePixmap.readCreatePixmap(in);
     }
-    if(minorOpcode == AttachFd.OPCODE) {
+    if (minorOpcode == AttachFd.OPCODE) {
       return AttachFd.readAttachFd(in);
     }
-    if(minorOpcode == CreateSegment.OPCODE) {
+    if (minorOpcode == CreateSegment.OPCODE) {
       return CreateSegment.readCreateSegment(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -130,7 +120,7 @@ public class ShmPlugin implements XProtocolPlugin {
 
   @Override
   public XEvent readEvent(byte number, boolean sentEvent, X11Input in) throws IOException {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return CompletionEvent.readCompletionEvent(firstEvent, sentEvent, in);
     }
     throw new IllegalArgumentException("number " + number + " is not supported");
@@ -138,15 +128,44 @@ public class ShmPlugin implements XProtocolPlugin {
 
   @Override
   public XError readError(byte code, X11Input in) throws IOException {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return BadSegError.readBadSegError(firstError, in);
     }
     throw new IllegalArgumentException("code " + code + " is not supported");
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }

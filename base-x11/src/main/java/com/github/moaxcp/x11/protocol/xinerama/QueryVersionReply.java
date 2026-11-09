@@ -4,22 +4,14 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class QueryVersionReply implements XReply {
+public final class QueryVersionReply implements XReply {
   public static final String PLUGIN_NAME = "xinerama";
+  private final short sequenceNumber;
+  private final short major;
+  private final short minor;
 
-  private short sequenceNumber;
-
-  private short major;
-
-  private short minor;
-
-  public static QueryVersionReply readQueryVersionReply(byte pad1, short sequenceNumber,
-      X11Input in) throws IOException {
+  public static QueryVersionReply readQueryVersionReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     QueryVersionReply.QueryVersionReplyBuilder javaBuilder = QueryVersionReply.builder();
     int length = in.readCard32();
     short major = in.readCard16();
@@ -50,9 +42,115 @@ public class QueryVersionReply implements XReply {
     return PLUGIN_NAME;
   }
 
+
   public static class QueryVersionReplyBuilder {
+    @java.lang.SuppressWarnings("all")
+    private short sequenceNumber;
+    @java.lang.SuppressWarnings("all")
+    private short major;
+    @java.lang.SuppressWarnings("all")
+    private short minor;
+
     public int getSize() {
       return 12;
     }
+
+    @java.lang.SuppressWarnings("all")
+    QueryVersionReplyBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public QueryVersionReply.QueryVersionReplyBuilder sequenceNumber(final short sequenceNumber) {
+      this.sequenceNumber = sequenceNumber;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public QueryVersionReply.QueryVersionReplyBuilder major(final short major) {
+      this.major = major;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public QueryVersionReply.QueryVersionReplyBuilder minor(final short minor) {
+      this.minor = minor;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public QueryVersionReply build() {
+      return new QueryVersionReply(this.sequenceNumber, this.major, this.minor);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "QueryVersionReply.QueryVersionReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", major=" + this.major + ", minor=" + this.minor + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  QueryVersionReply(final short sequenceNumber, final short major, final short minor) {
+    this.sequenceNumber = sequenceNumber;
+    this.major = major;
+    this.minor = minor;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static QueryVersionReply.QueryVersionReplyBuilder builder() {
+    return new QueryVersionReply.QueryVersionReplyBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSequenceNumber() {
+    return this.sequenceNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getMajor() {
+    return this.major;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getMinor() {
+    return this.minor;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof QueryVersionReply)) return false;
+    final QueryVersionReply other = (QueryVersionReply) o;
+    if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
+    if (this.getMajor() != other.getMajor()) return false;
+    if (this.getMinor() != other.getMinor()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getSequenceNumber();
+    result = result * PRIME + this.getMajor();
+    result = result * PRIME + this.getMinor();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "QueryVersionReply(sequenceNumber=" + this.getSequenceNumber() + ", major=" + this.getMajor() + ", minor=" + this.getMinor() + ")";
   }
 }

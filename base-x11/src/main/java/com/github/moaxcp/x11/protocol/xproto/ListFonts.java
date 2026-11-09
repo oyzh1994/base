@@ -5,22 +5,13 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class ListFonts implements TwoWayRequest<ListFontsReply> {
+public final class ListFonts implements TwoWayRequest<ListFontsReply> {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 49;
-
-  private short maxNames;
-
-  @NonNull
-  private ByteList pattern;
+  private final short maxNames;
+  private final ByteList pattern;
 
   public XReplyFunction<ListFontsReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> ListFontsReply.readListFontsReply(field, sequenceNumber, in);
@@ -45,7 +36,7 @@ public class ListFonts implements TwoWayRequest<ListFontsReply> {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard16(maxNames);
@@ -64,9 +55,105 @@ public class ListFonts implements TwoWayRequest<ListFontsReply> {
     return PLUGIN_NAME;
   }
 
+
   public static class ListFontsBuilder {
+    @java.lang.SuppressWarnings("all")
+    private short maxNames;
+    @java.lang.SuppressWarnings("all")
+    private ByteList pattern;
+
     public int getSize() {
       return 8 + 1 * pattern.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    ListFontsBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListFonts.ListFontsBuilder maxNames(final short maxNames) {
+      this.maxNames = maxNames;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListFonts.ListFontsBuilder pattern(final ByteList pattern) {
+      if (pattern == null) {
+        throw new java.lang.NullPointerException("pattern is marked non-null but is null");
+      }
+      this.pattern = pattern;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ListFonts build() {
+      return new ListFonts(this.maxNames, this.pattern);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ListFonts.ListFontsBuilder(maxNames=" + this.maxNames + ", pattern=" + this.pattern + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ListFonts(final short maxNames, final ByteList pattern) {
+    if (pattern == null) {
+      throw new java.lang.NullPointerException("pattern is marked non-null but is null");
+    }
+    this.maxNames = maxNames;
+    this.pattern = pattern;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ListFonts.ListFontsBuilder builder() {
+    return new ListFonts.ListFontsBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getMaxNames() {
+    return this.maxNames;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getPattern() {
+    return this.pattern;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ListFonts)) return false;
+    final ListFonts other = (ListFonts) o;
+    if (this.getMaxNames() != other.getMaxNames()) return false;
+    final java.lang.Object this$pattern = this.getPattern();
+    final java.lang.Object other$pattern = other.getPattern();
+    if (this$pattern == null ? other$pattern != null : !this$pattern.equals(other$pattern)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getMaxNames();
+    final java.lang.Object $pattern = this.getPattern();
+    result = result * PRIME + ($pattern == null ? 43 : $pattern.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ListFonts(maxNames=" + this.getMaxNames() + ", pattern=" + this.getPattern() + ")";
   }
 }

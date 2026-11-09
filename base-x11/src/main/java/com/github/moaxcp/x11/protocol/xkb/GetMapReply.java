@@ -6,82 +6,40 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class GetMapReply implements XReply {
+public final class GetMapReply implements XReply {
   public static final String PLUGIN_NAME = "xkb";
+  private final byte deviceID;
+  private final short sequenceNumber;
+  private final byte minKeyCode;
+  private final byte maxKeyCode;
+  private final short present;
+  private final byte firstType;
+  private final byte totalTypes;
+  private final byte firstKeySym;
+  private final short totalSyms;
+  private final byte firstKeyAction;
+  private final byte firstKeyBehavior;
+  private final byte nKeyBehaviors;
+  private final byte firstKeyExplicit;
+  private final byte nKeyExplicit;
+  private final byte firstModMapKey;
+  private final byte nModMapKeys;
+  private final byte firstVModMapKey;
+  private final byte nVModMapKeys;
+  private final ImmutableList<KeyType> typesRtrn;
+  private final ImmutableList<KeySymMap> symsRtrn;
+  private final ByteList actsRtrnCount;
+  private final ImmutableList<ActionUnion> actsRtrnActs;
+  private final ImmutableList<SetBehavior> behaviorsRtrn;
+  private final ByteList vmodsRtrn;
+  private final ImmutableList<SetExplicit> explicitRtrn;
+  private final ImmutableList<KeyModMap> modmapRtrn;
+  private final ImmutableList<KeyVModMap> vmodmapRtrn;
 
-  private byte deviceID;
-
-  private short sequenceNumber;
-
-  private byte minKeyCode;
-
-  private byte maxKeyCode;
-
-  private short present;
-
-  private byte firstType;
-
-  private byte totalTypes;
-
-  private byte firstKeySym;
-
-  private short totalSyms;
-
-  private byte firstKeyAction;
-
-  private byte firstKeyBehavior;
-
-  private byte nKeyBehaviors;
-
-  private byte firstKeyExplicit;
-
-  private byte nKeyExplicit;
-
-  private byte firstModMapKey;
-
-  private byte nModMapKeys;
-
-  private byte firstVModMapKey;
-
-  private byte nVModMapKeys;
-
-  @NonNull
-  private ImmutableList<KeyType> typesRtrn;
-
-  @NonNull
-  private ImmutableList<KeySymMap> symsRtrn;
-
-  @NonNull
-  private ByteList actsRtrnCount;
-
-  @NonNull
-  private ImmutableList<ActionUnion> actsRtrnActs;
-
-  @NonNull
-  private ImmutableList<SetBehavior> behaviorsRtrn;
-
-  @NonNull
-  private ByteList vmodsRtrn;
-
-  @NonNull
-  private ImmutableList<SetExplicit> explicitRtrn;
-
-  @NonNull
-  private ImmutableList<KeyModMap> modmapRtrn;
-
-  @NonNull
-  private ImmutableList<KeyVModMap> vmodmapRtrn;
-
-  public static GetMapReply readGetMapReply(byte deviceID, short sequenceNumber, X11Input in) throws
-      IOException {
+  public static GetMapReply readGetMapReply(byte deviceID, short sequenceNumber, X11Input in) throws IOException {
     GetMapReply.GetMapReplyBuilder javaBuilder = GetMapReply.builder();
     int length = in.readCard32();
     byte[] pad4 = in.readPad(2);
@@ -142,43 +100,43 @@ public class GetMapReply implements XReply {
     javaBuilder.nModMapKeys(nModMapKeys);
     javaBuilder.firstVModMapKey(firstVModMapKey);
     javaBuilder.nVModMapKeys(nVModMapKeys);
-    if(MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
       typesRtrn = in.readObject(KeyType::readKeyType, Byte.toUnsignedInt(nTypes));
       javaBuilder.typesRtrn(typesRtrn);
     }
-    if(MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
       symsRtrn = in.readObject(KeySymMap::readKeySymMap, Byte.toUnsignedInt(nKeySyms));
       javaBuilder.symsRtrn(symsRtrn);
     }
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
       actsRtrnCount = in.readCard8(Byte.toUnsignedInt(nKeyActions));
       javaBuilder.actsRtrnCount(actsRtrnCount);
     }
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
       actsRtrnActs = in.readObject(ActionUnion::readActionUnion, Short.toUnsignedInt(totalActions));
       javaBuilder.actsRtrnActs(actsRtrnActs);
     }
-    if(MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
       behaviorsRtrn = in.readObject(SetBehavior::readSetBehavior, Byte.toUnsignedInt(totalKeyBehaviors));
       javaBuilder.behaviorsRtrn(behaviorsRtrn);
     }
-    if(MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
       vmodsRtrn = in.readCard8(Popcount.popcount(Short.toUnsignedInt(virtualMods)));
       javaBuilder.vmodsRtrn(vmodsRtrn);
     }
-    if(MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
       explicitRtrn = in.readObject(SetExplicit::readSetExplicit, Byte.toUnsignedInt(totalKeyExplicit));
       javaBuilder.explicitRtrn(explicitRtrn);
     }
-    if(MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
       modmapRtrn = in.readObject(KeyModMap::readKeyModMap, Byte.toUnsignedInt(totalModMapKeys));
       javaBuilder.modmapRtrn(modmapRtrn);
     }
-    if(MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
       vmodmapRtrn = in.readObject(KeyVModMap::readKeyVModMap, Byte.toUnsignedInt(totalVModMapKeys));
       javaBuilder.vmodmapRtrn(vmodmapRtrn);
     }
-    if(javaBuilder.getSize() < 32) {
+    if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
     in.readPadAlign(javaBuilder.getSize());
@@ -227,57 +185,60 @@ public class GetMapReply implements XReply {
     out.writePad(1);
     short virtualMods = (short) vmodsRtrn.size();
     out.writeCard16(virtualMods);
-    if(MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
-      for(KeyType t : typesRtrn) {
+    if (MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
+      for (KeyType t : typesRtrn) {
         t.write(out);
       }
     }
-    if(MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
-      for(KeySymMap t : symsRtrn) {
+    if (MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
+      for (KeySymMap t : symsRtrn) {
         t.write(out);
       }
     }
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
       out.writeCard8(actsRtrnCount);
     }
     out.writePadAlign(Byte.toUnsignedInt(nKeyActions));
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
-      for(ActionUnion t : actsRtrnActs) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+      for (ActionUnion t : actsRtrnActs) {
         t.write(out);
       }
     }
-    if(MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
-      for(SetBehavior t : behaviorsRtrn) {
+    if (MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
+      for (SetBehavior t : behaviorsRtrn) {
         t.write(out);
       }
     }
-    if(MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
       out.writeCard8(vmodsRtrn);
     }
     out.writePadAlign(com.github.moaxcp.x11.protocol.Popcount.popcount(Short.toUnsignedInt(virtualMods)));
-    if(MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
-      for(SetExplicit t : explicitRtrn) {
+    if (MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
+      for (SetExplicit t : explicitRtrn) {
         t.write(out);
       }
     }
     out.writePadAlign(Byte.toUnsignedInt(totalKeyExplicit));
-    if(MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
-      for(KeyModMap t : modmapRtrn) {
+    if (MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
+      for (KeyModMap t : modmapRtrn) {
         t.write(out);
       }
     }
     out.writePadAlign(Byte.toUnsignedInt(totalModMapKeys));
-    if(MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
-      for(KeyVModMap t : vmodmapRtrn) {
+    if (MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
+      for (KeyVModMap t : vmodmapRtrn) {
         t.write(out);
       }
     }
     out.writePadAlign(getSize());
   }
 
-  public boolean isPresentEnabled(@NonNull MapPart... maskEnums) {
-    for(MapPart m : maskEnums) {
-      if(!m.isEnabled(present)) {
+  public boolean isPresentEnabled(MapPart... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (MapPart m : maskEnums) {
+      if (!m.isEnabled(present)) {
         return false;
       }
     }
@@ -293,10 +254,69 @@ public class GetMapReply implements XReply {
     return PLUGIN_NAME;
   }
 
+
   public static class GetMapReplyBuilder {
-    public boolean isPresentEnabled(@NonNull MapPart... maskEnums) {
-      for(MapPart m : maskEnums) {
-        if(!m.isEnabled(present)) {
+    @java.lang.SuppressWarnings("all")
+    private byte deviceID;
+    @java.lang.SuppressWarnings("all")
+    private short sequenceNumber;
+    @java.lang.SuppressWarnings("all")
+    private byte minKeyCode;
+    @java.lang.SuppressWarnings("all")
+    private byte maxKeyCode;
+    @java.lang.SuppressWarnings("all")
+    private short present;
+    @java.lang.SuppressWarnings("all")
+    private byte firstType;
+    @java.lang.SuppressWarnings("all")
+    private byte totalTypes;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeySym;
+    @java.lang.SuppressWarnings("all")
+    private short totalSyms;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeyAction;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeyBehavior;
+    @java.lang.SuppressWarnings("all")
+    private byte nKeyBehaviors;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeyExplicit;
+    @java.lang.SuppressWarnings("all")
+    private byte nKeyExplicit;
+    @java.lang.SuppressWarnings("all")
+    private byte firstModMapKey;
+    @java.lang.SuppressWarnings("all")
+    private byte nModMapKeys;
+    @java.lang.SuppressWarnings("all")
+    private byte firstVModMapKey;
+    @java.lang.SuppressWarnings("all")
+    private byte nVModMapKeys;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeyType> typesRtrn;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeySymMap> symsRtrn;
+    @java.lang.SuppressWarnings("all")
+    private ByteList actsRtrnCount;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<ActionUnion> actsRtrnActs;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<SetBehavior> behaviorsRtrn;
+    @java.lang.SuppressWarnings("all")
+    private ByteList vmodsRtrn;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<SetExplicit> explicitRtrn;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeyModMap> modmapRtrn;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeyVModMap> vmodmapRtrn;
+
+    public boolean isPresentEnabled(MapPart... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (MapPart m : maskEnums) {
+        if (!m.isEnabled(present)) {
           return false;
         }
       }
@@ -304,14 +324,14 @@ public class GetMapReply implements XReply {
     }
 
     public GetMapReply.GetMapReplyBuilder presentEnable(MapPart... maskEnums) {
-      for(MapPart m : maskEnums) {
+      for (MapPart m : maskEnums) {
         present((short) m.enableFor(present));
       }
       return this;
     }
 
     public GetMapReply.GetMapReplyBuilder presentDisable(MapPart... maskEnums) {
-      for(MapPart m : maskEnums) {
+      for (MapPart m : maskEnums) {
         present((short) m.disableFor(present));
       }
       return this;
@@ -374,5 +394,484 @@ public class GetMapReply implements XReply {
     public int getSize() {
       return 40 + (MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(typesRtrn) : 0) + (MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(symsRtrn) : 0) + (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present)) ? 1 * actsRtrnCount.size() : 0) + XObject.getSizeForPadAlign(4, (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present)) ? 1 * actsRtrnCount.size() : 0)) + (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(actsRtrnActs) : 0) + (MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(behaviorsRtrn) : 0) + (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present)) ? 1 * vmodsRtrn.size() : 0) + XObject.getSizeForPadAlign(4, (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present)) ? 1 * vmodsRtrn.size() : 0)) + (MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(explicitRtrn) : 0) + XObject.getSizeForPadAlign(4, (MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(explicitRtrn) : 0)) + (MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(modmapRtrn) : 0) + XObject.getSizeForPadAlign(4, (MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(modmapRtrn) : 0)) + (MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(vmodmapRtrn) : 0);
     }
+
+    @java.lang.SuppressWarnings("all")
+    GetMapReplyBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder deviceID(final byte deviceID) {
+      this.deviceID = deviceID;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder sequenceNumber(final short sequenceNumber) {
+      this.sequenceNumber = sequenceNumber;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder minKeyCode(final byte minKeyCode) {
+      this.minKeyCode = minKeyCode;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder maxKeyCode(final byte maxKeyCode) {
+      this.maxKeyCode = maxKeyCode;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder present(final short present) {
+      this.present = present;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder firstType(final byte firstType) {
+      this.firstType = firstType;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder totalTypes(final byte totalTypes) {
+      this.totalTypes = totalTypes;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder firstKeySym(final byte firstKeySym) {
+      this.firstKeySym = firstKeySym;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder totalSyms(final short totalSyms) {
+      this.totalSyms = totalSyms;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder firstKeyAction(final byte firstKeyAction) {
+      this.firstKeyAction = firstKeyAction;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder firstKeyBehavior(final byte firstKeyBehavior) {
+      this.firstKeyBehavior = firstKeyBehavior;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder nKeyBehaviors(final byte nKeyBehaviors) {
+      this.nKeyBehaviors = nKeyBehaviors;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder firstKeyExplicit(final byte firstKeyExplicit) {
+      this.firstKeyExplicit = firstKeyExplicit;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder nKeyExplicit(final byte nKeyExplicit) {
+      this.nKeyExplicit = nKeyExplicit;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder firstModMapKey(final byte firstModMapKey) {
+      this.firstModMapKey = firstModMapKey;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder nModMapKeys(final byte nModMapKeys) {
+      this.nModMapKeys = nModMapKeys;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder firstVModMapKey(final byte firstVModMapKey) {
+      this.firstVModMapKey = firstVModMapKey;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply.GetMapReplyBuilder nVModMapKeys(final byte nVModMapKeys) {
+      this.nVModMapKeys = nVModMapKeys;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public GetMapReply build() {
+      return new GetMapReply(this.deviceID, this.sequenceNumber, this.minKeyCode, this.maxKeyCode, this.present, this.firstType, this.totalTypes, this.firstKeySym, this.totalSyms, this.firstKeyAction, this.firstKeyBehavior, this.nKeyBehaviors, this.firstKeyExplicit, this.nKeyExplicit, this.firstModMapKey, this.nModMapKeys, this.firstVModMapKey, this.nVModMapKeys, this.typesRtrn, this.symsRtrn, this.actsRtrnCount, this.actsRtrnActs, this.behaviorsRtrn, this.vmodsRtrn, this.explicitRtrn, this.modmapRtrn, this.vmodmapRtrn);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "GetMapReply.GetMapReplyBuilder(deviceID=" + this.deviceID + ", sequenceNumber=" + this.sequenceNumber + ", minKeyCode=" + this.minKeyCode + ", maxKeyCode=" + this.maxKeyCode + ", present=" + this.present + ", firstType=" + this.firstType + ", totalTypes=" + this.totalTypes + ", firstKeySym=" + this.firstKeySym + ", totalSyms=" + this.totalSyms + ", firstKeyAction=" + this.firstKeyAction + ", firstKeyBehavior=" + this.firstKeyBehavior + ", nKeyBehaviors=" + this.nKeyBehaviors + ", firstKeyExplicit=" + this.firstKeyExplicit + ", nKeyExplicit=" + this.nKeyExplicit + ", firstModMapKey=" + this.firstModMapKey + ", nModMapKeys=" + this.nModMapKeys + ", firstVModMapKey=" + this.firstVModMapKey + ", nVModMapKeys=" + this.nVModMapKeys + ", typesRtrn=" + this.typesRtrn + ", symsRtrn=" + this.symsRtrn + ", actsRtrnCount=" + this.actsRtrnCount + ", actsRtrnActs=" + this.actsRtrnActs + ", behaviorsRtrn=" + this.behaviorsRtrn + ", vmodsRtrn=" + this.vmodsRtrn + ", explicitRtrn=" + this.explicitRtrn + ", modmapRtrn=" + this.modmapRtrn + ", vmodmapRtrn=" + this.vmodmapRtrn + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  GetMapReply(final byte deviceID, final short sequenceNumber, final byte minKeyCode, final byte maxKeyCode, final short present, final byte firstType, final byte totalTypes, final byte firstKeySym, final short totalSyms, final byte firstKeyAction, final byte firstKeyBehavior, final byte nKeyBehaviors, final byte firstKeyExplicit, final byte nKeyExplicit, final byte firstModMapKey, final byte nModMapKeys, final byte firstVModMapKey, final byte nVModMapKeys, final ImmutableList<KeyType> typesRtrn, final ImmutableList<KeySymMap> symsRtrn, final ByteList actsRtrnCount, final ImmutableList<ActionUnion> actsRtrnActs, final ImmutableList<SetBehavior> behaviorsRtrn, final ByteList vmodsRtrn, final ImmutableList<SetExplicit> explicitRtrn, final ImmutableList<KeyModMap> modmapRtrn, final ImmutableList<KeyVModMap> vmodmapRtrn) {
+    if (typesRtrn == null) {
+      throw new java.lang.NullPointerException("typesRtrn is marked non-null but is null");
+    }
+    if (symsRtrn == null) {
+      throw new java.lang.NullPointerException("symsRtrn is marked non-null but is null");
+    }
+    if (actsRtrnCount == null) {
+      throw new java.lang.NullPointerException("actsRtrnCount is marked non-null but is null");
+    }
+    if (actsRtrnActs == null) {
+      throw new java.lang.NullPointerException("actsRtrnActs is marked non-null but is null");
+    }
+    if (behaviorsRtrn == null) {
+      throw new java.lang.NullPointerException("behaviorsRtrn is marked non-null but is null");
+    }
+    if (vmodsRtrn == null) {
+      throw new java.lang.NullPointerException("vmodsRtrn is marked non-null but is null");
+    }
+    if (explicitRtrn == null) {
+      throw new java.lang.NullPointerException("explicitRtrn is marked non-null but is null");
+    }
+    if (modmapRtrn == null) {
+      throw new java.lang.NullPointerException("modmapRtrn is marked non-null but is null");
+    }
+    if (vmodmapRtrn == null) {
+      throw new java.lang.NullPointerException("vmodmapRtrn is marked non-null but is null");
+    }
+    this.deviceID = deviceID;
+    this.sequenceNumber = sequenceNumber;
+    this.minKeyCode = minKeyCode;
+    this.maxKeyCode = maxKeyCode;
+    this.present = present;
+    this.firstType = firstType;
+    this.totalTypes = totalTypes;
+    this.firstKeySym = firstKeySym;
+    this.totalSyms = totalSyms;
+    this.firstKeyAction = firstKeyAction;
+    this.firstKeyBehavior = firstKeyBehavior;
+    this.nKeyBehaviors = nKeyBehaviors;
+    this.firstKeyExplicit = firstKeyExplicit;
+    this.nKeyExplicit = nKeyExplicit;
+    this.firstModMapKey = firstModMapKey;
+    this.nModMapKeys = nModMapKeys;
+    this.firstVModMapKey = firstVModMapKey;
+    this.nVModMapKeys = nVModMapKeys;
+    this.typesRtrn = typesRtrn;
+    this.symsRtrn = symsRtrn;
+    this.actsRtrnCount = actsRtrnCount;
+    this.actsRtrnActs = actsRtrnActs;
+    this.behaviorsRtrn = behaviorsRtrn;
+    this.vmodsRtrn = vmodsRtrn;
+    this.explicitRtrn = explicitRtrn;
+    this.modmapRtrn = modmapRtrn;
+    this.vmodmapRtrn = vmodmapRtrn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static GetMapReply.GetMapReplyBuilder builder() {
+    return new GetMapReply.GetMapReplyBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getDeviceID() {
+    return this.deviceID;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSequenceNumber() {
+    return this.sequenceNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMinKeyCode() {
+    return this.minKeyCode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMaxKeyCode() {
+    return this.maxKeyCode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getPresent() {
+    return this.present;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstType() {
+    return this.firstType;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getTotalTypes() {
+    return this.totalTypes;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeySym() {
+    return this.firstKeySym;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getTotalSyms() {
+    return this.totalSyms;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeyAction() {
+    return this.firstKeyAction;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeyBehavior() {
+    return this.firstKeyBehavior;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNKeyBehaviors() {
+    return this.nKeyBehaviors;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeyExplicit() {
+    return this.firstKeyExplicit;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNKeyExplicit() {
+    return this.nKeyExplicit;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstModMapKey() {
+    return this.firstModMapKey;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNModMapKeys() {
+    return this.nModMapKeys;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstVModMapKey() {
+    return this.firstVModMapKey;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNVModMapKeys() {
+    return this.nVModMapKeys;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeyType> getTypesRtrn() {
+    return this.typesRtrn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeySymMap> getSymsRtrn() {
+    return this.symsRtrn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getActsRtrnCount() {
+    return this.actsRtrnCount;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<ActionUnion> getActsRtrnActs() {
+    return this.actsRtrnActs;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<SetBehavior> getBehaviorsRtrn() {
+    return this.behaviorsRtrn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getVmodsRtrn() {
+    return this.vmodsRtrn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<SetExplicit> getExplicitRtrn() {
+    return this.explicitRtrn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeyModMap> getModmapRtrn() {
+    return this.modmapRtrn;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeyVModMap> getVmodmapRtrn() {
+    return this.vmodmapRtrn;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GetMapReply)) return false;
+    final GetMapReply other = (GetMapReply) o;
+    if (this.getDeviceID() != other.getDeviceID()) return false;
+    if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
+    if (this.getMinKeyCode() != other.getMinKeyCode()) return false;
+    if (this.getMaxKeyCode() != other.getMaxKeyCode()) return false;
+    if (this.getPresent() != other.getPresent()) return false;
+    if (this.getFirstType() != other.getFirstType()) return false;
+    if (this.getTotalTypes() != other.getTotalTypes()) return false;
+    if (this.getFirstKeySym() != other.getFirstKeySym()) return false;
+    if (this.getTotalSyms() != other.getTotalSyms()) return false;
+    if (this.getFirstKeyAction() != other.getFirstKeyAction()) return false;
+    if (this.getFirstKeyBehavior() != other.getFirstKeyBehavior()) return false;
+    if (this.getNKeyBehaviors() != other.getNKeyBehaviors()) return false;
+    if (this.getFirstKeyExplicit() != other.getFirstKeyExplicit()) return false;
+    if (this.getNKeyExplicit() != other.getNKeyExplicit()) return false;
+    if (this.getFirstModMapKey() != other.getFirstModMapKey()) return false;
+    if (this.getNModMapKeys() != other.getNModMapKeys()) return false;
+    if (this.getFirstVModMapKey() != other.getFirstVModMapKey()) return false;
+    if (this.getNVModMapKeys() != other.getNVModMapKeys()) return false;
+    final java.lang.Object this$typesRtrn = this.getTypesRtrn();
+    final java.lang.Object other$typesRtrn = other.getTypesRtrn();
+    if (this$typesRtrn == null ? other$typesRtrn != null : !this$typesRtrn.equals(other$typesRtrn)) return false;
+    final java.lang.Object this$symsRtrn = this.getSymsRtrn();
+    final java.lang.Object other$symsRtrn = other.getSymsRtrn();
+    if (this$symsRtrn == null ? other$symsRtrn != null : !this$symsRtrn.equals(other$symsRtrn)) return false;
+    final java.lang.Object this$actsRtrnCount = this.getActsRtrnCount();
+    final java.lang.Object other$actsRtrnCount = other.getActsRtrnCount();
+    if (this$actsRtrnCount == null ? other$actsRtrnCount != null : !this$actsRtrnCount.equals(other$actsRtrnCount)) return false;
+    final java.lang.Object this$actsRtrnActs = this.getActsRtrnActs();
+    final java.lang.Object other$actsRtrnActs = other.getActsRtrnActs();
+    if (this$actsRtrnActs == null ? other$actsRtrnActs != null : !this$actsRtrnActs.equals(other$actsRtrnActs)) return false;
+    final java.lang.Object this$behaviorsRtrn = this.getBehaviorsRtrn();
+    final java.lang.Object other$behaviorsRtrn = other.getBehaviorsRtrn();
+    if (this$behaviorsRtrn == null ? other$behaviorsRtrn != null : !this$behaviorsRtrn.equals(other$behaviorsRtrn)) return false;
+    final java.lang.Object this$vmodsRtrn = this.getVmodsRtrn();
+    final java.lang.Object other$vmodsRtrn = other.getVmodsRtrn();
+    if (this$vmodsRtrn == null ? other$vmodsRtrn != null : !this$vmodsRtrn.equals(other$vmodsRtrn)) return false;
+    final java.lang.Object this$explicitRtrn = this.getExplicitRtrn();
+    final java.lang.Object other$explicitRtrn = other.getExplicitRtrn();
+    if (this$explicitRtrn == null ? other$explicitRtrn != null : !this$explicitRtrn.equals(other$explicitRtrn)) return false;
+    final java.lang.Object this$modmapRtrn = this.getModmapRtrn();
+    final java.lang.Object other$modmapRtrn = other.getModmapRtrn();
+    if (this$modmapRtrn == null ? other$modmapRtrn != null : !this$modmapRtrn.equals(other$modmapRtrn)) return false;
+    final java.lang.Object this$vmodmapRtrn = this.getVmodmapRtrn();
+    final java.lang.Object other$vmodmapRtrn = other.getVmodmapRtrn();
+    if (this$vmodmapRtrn == null ? other$vmodmapRtrn != null : !this$vmodmapRtrn.equals(other$vmodmapRtrn)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDeviceID();
+    result = result * PRIME + this.getSequenceNumber();
+    result = result * PRIME + this.getMinKeyCode();
+    result = result * PRIME + this.getMaxKeyCode();
+    result = result * PRIME + this.getPresent();
+    result = result * PRIME + this.getFirstType();
+    result = result * PRIME + this.getTotalTypes();
+    result = result * PRIME + this.getFirstKeySym();
+    result = result * PRIME + this.getTotalSyms();
+    result = result * PRIME + this.getFirstKeyAction();
+    result = result * PRIME + this.getFirstKeyBehavior();
+    result = result * PRIME + this.getNKeyBehaviors();
+    result = result * PRIME + this.getFirstKeyExplicit();
+    result = result * PRIME + this.getNKeyExplicit();
+    result = result * PRIME + this.getFirstModMapKey();
+    result = result * PRIME + this.getNModMapKeys();
+    result = result * PRIME + this.getFirstVModMapKey();
+    result = result * PRIME + this.getNVModMapKeys();
+    final java.lang.Object $typesRtrn = this.getTypesRtrn();
+    result = result * PRIME + ($typesRtrn == null ? 43 : $typesRtrn.hashCode());
+    final java.lang.Object $symsRtrn = this.getSymsRtrn();
+    result = result * PRIME + ($symsRtrn == null ? 43 : $symsRtrn.hashCode());
+    final java.lang.Object $actsRtrnCount = this.getActsRtrnCount();
+    result = result * PRIME + ($actsRtrnCount == null ? 43 : $actsRtrnCount.hashCode());
+    final java.lang.Object $actsRtrnActs = this.getActsRtrnActs();
+    result = result * PRIME + ($actsRtrnActs == null ? 43 : $actsRtrnActs.hashCode());
+    final java.lang.Object $behaviorsRtrn = this.getBehaviorsRtrn();
+    result = result * PRIME + ($behaviorsRtrn == null ? 43 : $behaviorsRtrn.hashCode());
+    final java.lang.Object $vmodsRtrn = this.getVmodsRtrn();
+    result = result * PRIME + ($vmodsRtrn == null ? 43 : $vmodsRtrn.hashCode());
+    final java.lang.Object $explicitRtrn = this.getExplicitRtrn();
+    result = result * PRIME + ($explicitRtrn == null ? 43 : $explicitRtrn.hashCode());
+    final java.lang.Object $modmapRtrn = this.getModmapRtrn();
+    result = result * PRIME + ($modmapRtrn == null ? 43 : $modmapRtrn.hashCode());
+    final java.lang.Object $vmodmapRtrn = this.getVmodmapRtrn();
+    result = result * PRIME + ($vmodmapRtrn == null ? 43 : $vmodmapRtrn.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "GetMapReply(deviceID=" + this.getDeviceID() + ", sequenceNumber=" + this.getSequenceNumber() + ", minKeyCode=" + this.getMinKeyCode() + ", maxKeyCode=" + this.getMaxKeyCode() + ", present=" + this.getPresent() + ", firstType=" + this.getFirstType() + ", totalTypes=" + this.getTotalTypes() + ", firstKeySym=" + this.getFirstKeySym() + ", totalSyms=" + this.getTotalSyms() + ", firstKeyAction=" + this.getFirstKeyAction() + ", firstKeyBehavior=" + this.getFirstKeyBehavior() + ", nKeyBehaviors=" + this.getNKeyBehaviors() + ", firstKeyExplicit=" + this.getFirstKeyExplicit() + ", nKeyExplicit=" + this.getNKeyExplicit() + ", firstModMapKey=" + this.getFirstModMapKey() + ", nModMapKeys=" + this.getNModMapKeys() + ", firstVModMapKey=" + this.getFirstVModMapKey() + ", nVModMapKeys=" + this.getNVModMapKeys() + ", typesRtrn=" + this.getTypesRtrn() + ", symsRtrn=" + this.getSymsRtrn() + ", actsRtrnCount=" + this.getActsRtrnCount() + ", actsRtrnActs=" + this.getActsRtrnActs() + ", behaviorsRtrn=" + this.getBehaviorsRtrn() + ", vmodsRtrn=" + this.getVmodsRtrn() + ", explicitRtrn=" + this.getExplicitRtrn() + ", modmapRtrn=" + this.getModmapRtrn() + ", vmodmapRtrn=" + this.getVmodmapRtrn() + ")";
   }
 }

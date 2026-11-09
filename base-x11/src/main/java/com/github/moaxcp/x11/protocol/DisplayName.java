@@ -1,8 +1,5 @@
 package com.github.moaxcp.x11.protocol;
 
-import lombok.NonNull;
-import lombok.Value;
-
 import java.util.Objects;
 
 /**
@@ -10,11 +7,10 @@ import java.util.Objects;
  * convention is to use a unix socket if the hostName is null. If the connection is a unix socket the socket file is
  * "/tmp/.X11-unix/X" + displayNumber. If the connection is tcp the port is 6000 + displayNumber.
  */
-@Value
-public class DisplayName {
-  String hostName;
-  int displayNumber;
-  int screenNumber;
+public final class DisplayName {
+  private final String hostName;
+  private final int displayNumber;
+  private final int screenNumber;
 
   /**
    * Returns the standard {@link DisplayName} based on the environment variable "DISPLAY".
@@ -40,10 +36,13 @@ public class DisplayName {
    * @throws NullPointerException if displayName is null
    * @throws NumberFormatException if displayNumber or screenNumber is not a number
    */
-  public DisplayName(@NonNull String displayName) {
+  public DisplayName(String displayName) {
+    if (displayName == null) {
+      throw new java.lang.NullPointerException("displayName is marked non-null but is null");
+    }
     ParametersCheck.requireNonBlank("displayName", displayName);
     int colonIndex = displayName.indexOf(':');
-    if(colonIndex == -1) {
+    if (colonIndex == -1) {
       hostName = displayName;
       displayNumber = 0;
       screenNumber = 0;
@@ -51,7 +50,7 @@ public class DisplayName {
     }
     hostName = colonIndex == 0 ? null : displayName.substring(0, colonIndex);
     int dotIndex = displayName.indexOf('.');
-    if(dotIndex == -1) {
+    if (dotIndex == -1) {
       displayNumber = Integer.parseInt(displayName.substring(colonIndex + 1));
       screenNumber = 0;
     } else {
@@ -99,5 +98,46 @@ public class DisplayName {
    */
   public String toString() {
     return String.format("%s:%d.%d", Objects.toString(hostName, ""), displayNumber, screenNumber);
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public String getHostName() {
+    return this.hostName;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getDisplayNumber() {
+    return this.displayNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getScreenNumber() {
+    return this.screenNumber;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof DisplayName)) return false;
+    final DisplayName other = (DisplayName) o;
+    if (this.getDisplayNumber() != other.getDisplayNumber()) return false;
+    if (this.getScreenNumber() != other.getScreenNumber()) return false;
+    final java.lang.Object this$hostName = this.getHostName();
+    final java.lang.Object other$hostName = other.getHostName();
+    if (this$hostName == null ? other$hostName != null : !this$hostName.equals(other$hostName)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDisplayNumber();
+    result = result * PRIME + this.getScreenNumber();
+    final java.lang.Object $hostName = this.getHostName();
+    result = result * PRIME + ($hostName == null ? 43 : $hostName.hashCode());
+    return result;
   }
 }

@@ -1,32 +1,36 @@
 package com.github.moaxcp.x11.protocol;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 import org.eclipse.collections.api.iterator.ByteIterator;
 import org.eclipse.collections.api.list.primitive.ByteList;
 import org.eclipse.collections.api.list.primitive.IntList;
 import org.eclipse.collections.impl.factory.primitive.ByteLists;
 import org.eclipse.collections.impl.factory.primitive.IntLists;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.List;
 
-@UtilityClass
-public class Utilities {
-  public static ByteList toList(@NonNull byte[] bytes) {
+public final class Utilities {
+  public static ByteList toList(byte[] bytes) {
+    if (bytes == null) {
+      throw new java.lang.NullPointerException("bytes is marked non-null but is null");
+    }
     return ByteLists.immutable.of(bytes);
   }
 
-  public static X11Input toX11Input(@NonNull ByteList bytes) {
+  public static X11Input toX11Input(ByteList bytes) {
+    if (bytes == null) {
+      throw new java.lang.NullPointerException("bytes is marked non-null but is null");
+    }
     return toX11Input(false, bytes);
   }
 
-  public static X11Input toX11Input(boolean bigEndian, @NonNull ByteList bytes) {
+  public static X11Input toX11Input(boolean bigEndian, ByteList bytes) {
+    if (bytes == null) {
+      throw new java.lang.NullPointerException("bytes is marked non-null but is null");
+    }
     if (bigEndian) {
       return new X11BigEndianInputStream(new BufferedInputStream(new InputStream() {
         private ByteIterator iterator = bytes.byteIterator();
-
         @Override
         public int read() throws IOException {
           if (iterator.hasNext()) {
@@ -38,7 +42,6 @@ public class Utilities {
     } else {
       return new X11LittleEndianInputStream(new BufferedInputStream(new InputStream() {
         private ByteIterator iterator = bytes.byteIterator();
-
         @Override
         public int read() throws IOException {
           if (iterator.hasNext()) {
@@ -50,35 +53,59 @@ public class Utilities {
     }
   }
 
-  public static String toString(@NonNull ByteList byteList) {
+  public static String toString(ByteList byteList) {
+    if (byteList == null) {
+      throw new java.lang.NullPointerException("byteList is marked non-null but is null");
+    }
     byte[] bytes = new byte[byteList.size()];
-    for(int i = 0; i < bytes.length; i++) {
+    for (int i = 0; i < bytes.length; i++) {
       bytes[i] = byteList.get(i);
     }
     return new String(bytes);
   }
 
-  public static String toString(@NonNull ByteList byteList, @NonNull Charset charset) {
+  public static String toString(ByteList byteList, Charset charset) {
+    if (byteList == null) {
+      throw new java.lang.NullPointerException("byteList is marked non-null but is null");
+    }
+    if (charset == null) {
+      throw new java.lang.NullPointerException("charset is marked non-null but is null");
+    }
     byte[] bytes = new byte[byteList.size()];
-    for(int i = 0; i < bytes.length; i++) {
+    for (int i = 0; i < bytes.length; i++) {
       bytes[i] = byteList.get(i);
     }
     return new String(bytes, charset);
   }
 
-  public static String toString(@NonNull List<Byte> byteList, @NonNull Charset charset) {
+  public static String toString(List<Byte> byteList, Charset charset) {
+    if (byteList == null) {
+      throw new java.lang.NullPointerException("byteList is marked non-null but is null");
+    }
+    if (charset == null) {
+      throw new java.lang.NullPointerException("charset is marked non-null but is null");
+    }
     byte[] bytes = new byte[byteList.size()];
-    for(int i = 0; i < bytes.length; i++) {
+    for (int i = 0; i < bytes.length; i++) {
       bytes[i] = byteList.get(i);
     }
     return new String(bytes, charset);
   }
 
-  public static ByteList toByteList(@NonNull String string) {
+  public static ByteList toByteList(String string) {
+    if (string == null) {
+      throw new java.lang.NullPointerException("string is marked non-null but is null");
+    }
     return toList(string.getBytes());
   }
 
-  public static ByteList toByteList(@NonNull String string, @NonNull Charset charset) {
+  public static ByteList toByteList(String string, Charset charset) {
+    if (string == null) {
+      throw new java.lang.NullPointerException("string is marked non-null but is null");
+    }
+    if (charset == null) {
+      throw new java.lang.NullPointerException("charset is marked non-null but is null");
+    }
     return toList(string.getBytes(charset));
   }
 
@@ -104,20 +131,26 @@ public class Utilities {
     return toList(saved.toByteArray());
   }
 
-  public static IntList toIntegers(@NonNull ByteList bytes) {
-    if(bytes.size() % 4 != 0) {
+  public static IntList toIntegers(ByteList bytes) {
+    if (bytes == null) {
+      throw new java.lang.NullPointerException("bytes is marked non-null but is null");
+    }
+    if (bytes.size() % 4 != 0) {
       throw new IllegalArgumentException("bytes must have size divisible by 4 to be converted to integers got: " + bytes.size());
     }
-
     var result = IntLists.mutable.empty();
-    for(int i = 0; i < bytes.size(); i += 4) {
+    for (int i = 0; i < bytes.size(); i += 4) {
       int first = bytes.get(i) << 24;
       int second = bytes.get(i + 1) << 24 >>> 8;
       int third = bytes.get(i + 2) << 24 >>> 16;
       int fourth = bytes.get(i + 3) << 24 >>> 24;
       result.add(first | second | third | fourth);
     }
-
     return result.toImmutable();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  private Utilities() {
+    throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
   }
 }

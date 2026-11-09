@@ -1,11 +1,8 @@
 package com.github.moaxcp.x11.protocol;
 
-import lombok.NonNull;
-import lombok.experimental.UtilityClass;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@UtilityClass
-class ParametersCheck {
+final class ParametersCheck {
   /**
    * Checks that a variable is not blank and returns its value.
    * @param name of variable to check
@@ -14,15 +11,22 @@ class ParametersCheck {
    * @throws IllegalArgumentException if name or value is blank
    * @throws NullPointerException if name or value is null
    */
-  public static String requireNonBlank(@NonNull String name, @NonNull String value) {
-    if(name.trim().isEmpty()) {
+  public static String requireNonBlank(String name, String value) {
+    if (name == null) {
+      throw new java.lang.NullPointerException("name is marked non-null but is null");
+    }
+    if (value == null) {
+      throw new java.lang.NullPointerException("value is marked non-null but is null");
+    }
+    if (name.trim().isEmpty()) {
       throw new IllegalArgumentException("name must not be blank");
     }
-    if(value.trim().isEmpty()) {
+    if (value.trim().isEmpty()) {
       throw new IllegalArgumentException(String.format("%s must not be blank", name));
     }
     return value;
   }
+
   /**
    * Checks that a variable is not empty and returns its value.
    * @param name of variable to check
@@ -31,11 +35,17 @@ class ParametersCheck {
    * @throws IllegalArgumentException if name or value is blank
    * @throws NullPointerException if name or value is null
    */
-  public static byte[] requireNonEmpty(@NonNull String name, @NonNull byte[] value) {
-    if(name.trim().isEmpty()) {
+  public static byte[] requireNonEmpty(String name, byte[] value) {
+    if (name == null) {
+      throw new java.lang.NullPointerException("name is marked non-null but is null");
+    }
+    if (value == null) {
+      throw new java.lang.NullPointerException("value is marked non-null but is null");
+    }
+    if (name.trim().isEmpty()) {
       throw new IllegalArgumentException("name must not be blank");
     }
-    if(value.length == 0) {
+    if (value.length == 0) {
       throw new IllegalArgumentException(String.format("%s must not be empty", name));
     }
     return value;
@@ -49,13 +59,24 @@ class ParametersCheck {
    * @throws IllegalArgumentException if name is blank or if value is empty
    * @throws NullPointerException if name or value is null
    */
-  public static ByteList requireNonEmpty(@NonNull String name, @NonNull ByteList value) {
-    if(name.trim().isEmpty()) {
+  public static ByteList requireNonEmpty(String name, ByteList value) {
+    if (name == null) {
+      throw new java.lang.NullPointerException("name is marked non-null but is null");
+    }
+    if (value == null) {
+      throw new java.lang.NullPointerException("value is marked non-null but is null");
+    }
+    if (name.trim().isEmpty()) {
       throw new IllegalArgumentException("name must not be blank");
     }
-    if(value.isEmpty()) {
+    if (value.isEmpty()) {
       throw new IllegalArgumentException(String.format("%s must not be empty", name));
     }
     return value;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  private ParametersCheck() {
+    throw new java.lang.UnsupportedOperationException("This is a utility class and cannot be instantiated");
   }
 }

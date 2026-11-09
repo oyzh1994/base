@@ -5,25 +5,15 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class GrabKeyboard implements TwoWayRequest<GrabKeyboardReply> {
+public final class GrabKeyboard implements TwoWayRequest<GrabKeyboardReply> {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 31;
-
-  private boolean ownerEvents;
-
-  private int grabWindow;
-
-  private int time;
-
-  private byte pointerMode;
-
-  private byte keyboardMode;
+  private final boolean ownerEvents;
+  private final int grabWindow;
+  private final int time;
+  private final byte pointerMode;
+  private final byte keyboardMode;
 
   public XReplyFunction<GrabKeyboardReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> GrabKeyboardReply.readGrabKeyboardReply(field, sequenceNumber, in);
@@ -52,7 +42,7 @@ public class GrabKeyboard implements TwoWayRequest<GrabKeyboardReply> {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeBool(ownerEvents);
     out.writeCard16((short) getLength());
     out.writeCard32(grabWindow);
@@ -71,7 +61,19 @@ public class GrabKeyboard implements TwoWayRequest<GrabKeyboardReply> {
     return PLUGIN_NAME;
   }
 
+
   public static class GrabKeyboardBuilder {
+    @java.lang.SuppressWarnings("all")
+    private boolean ownerEvents;
+    @java.lang.SuppressWarnings("all")
+    private int grabWindow;
+    @java.lang.SuppressWarnings("all")
+    private int time;
+    @java.lang.SuppressWarnings("all")
+    private byte pointerMode;
+    @java.lang.SuppressWarnings("all")
+    private byte keyboardMode;
+
     public GrabKeyboard.GrabKeyboardBuilder pointerMode(GrabMode pointerMode) {
       this.pointerMode = (byte) pointerMode.getValue();
       return this;
@@ -95,5 +97,119 @@ public class GrabKeyboard implements TwoWayRequest<GrabKeyboardReply> {
     public int getSize() {
       return 16;
     }
+
+    @java.lang.SuppressWarnings("all")
+    GrabKeyboardBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GrabKeyboard.GrabKeyboardBuilder ownerEvents(final boolean ownerEvents) {
+      this.ownerEvents = ownerEvents;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GrabKeyboard.GrabKeyboardBuilder grabWindow(final int grabWindow) {
+      this.grabWindow = grabWindow;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GrabKeyboard.GrabKeyboardBuilder time(final int time) {
+      this.time = time;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public GrabKeyboard build() {
+      return new GrabKeyboard(this.ownerEvents, this.grabWindow, this.time, this.pointerMode, this.keyboardMode);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "GrabKeyboard.GrabKeyboardBuilder(ownerEvents=" + this.ownerEvents + ", grabWindow=" + this.grabWindow + ", time=" + this.time + ", pointerMode=" + this.pointerMode + ", keyboardMode=" + this.keyboardMode + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  GrabKeyboard(final boolean ownerEvents, final int grabWindow, final int time, final byte pointerMode, final byte keyboardMode) {
+    this.ownerEvents = ownerEvents;
+    this.grabWindow = grabWindow;
+    this.time = time;
+    this.pointerMode = pointerMode;
+    this.keyboardMode = keyboardMode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static GrabKeyboard.GrabKeyboardBuilder builder() {
+    return new GrabKeyboard.GrabKeyboardBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public boolean isOwnerEvents() {
+    return this.ownerEvents;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getGrabWindow() {
+    return this.grabWindow;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getTime() {
+    return this.time;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getPointerMode() {
+    return this.pointerMode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getKeyboardMode() {
+    return this.keyboardMode;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GrabKeyboard)) return false;
+    final GrabKeyboard other = (GrabKeyboard) o;
+    if (this.isOwnerEvents() != other.isOwnerEvents()) return false;
+    if (this.getGrabWindow() != other.getGrabWindow()) return false;
+    if (this.getTime() != other.getTime()) return false;
+    if (this.getPointerMode() != other.getPointerMode()) return false;
+    if (this.getKeyboardMode() != other.getKeyboardMode()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + (this.isOwnerEvents() ? 79 : 97);
+    result = result * PRIME + this.getGrabWindow();
+    result = result * PRIME + this.getTime();
+    result = result * PRIME + this.getPointerMode();
+    result = result * PRIME + this.getKeyboardMode();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "GrabKeyboard(ownerEvents=" + this.isOwnerEvents() + ", grabWindow=" + this.getGrabWindow() + ", time=" + this.getTime() + ", pointerMode=" + this.getPointerMode() + ", keyboardMode=" + this.getKeyboardMode() + ")";
   }
 }

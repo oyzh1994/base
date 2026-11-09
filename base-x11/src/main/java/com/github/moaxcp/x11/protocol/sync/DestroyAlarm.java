@@ -4,17 +4,11 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class DestroyAlarm implements OneWayRequest {
+public final class DestroyAlarm implements OneWayRequest {
   public static final String PLUGIN_NAME = "sync";
-
   public static final byte OPCODE = 11;
-
-  private int alarm;
+  private final int alarm;
 
   public byte getOpCode() {
     return OPCODE;
@@ -32,7 +26,7 @@ public class DestroyAlarm implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(alarm);
   }
@@ -46,9 +40,77 @@ public class DestroyAlarm implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class DestroyAlarmBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int alarm;
+
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    DestroyAlarmBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public DestroyAlarm.DestroyAlarmBuilder alarm(final int alarm) {
+      this.alarm = alarm;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public DestroyAlarm build() {
+      return new DestroyAlarm(this.alarm);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "DestroyAlarm.DestroyAlarmBuilder(alarm=" + this.alarm + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  DestroyAlarm(final int alarm) {
+    this.alarm = alarm;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static DestroyAlarm.DestroyAlarmBuilder builder() {
+    return new DestroyAlarm.DestroyAlarmBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getAlarm() {
+    return this.alarm;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof DestroyAlarm)) return false;
+    final DestroyAlarm other = (DestroyAlarm) o;
+    if (this.getAlarm() != other.getAlarm()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getAlarm();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "DestroyAlarm(alarm=" + this.getAlarm() + ")";
   }
 }

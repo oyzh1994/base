@@ -5,34 +5,20 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 
-@Value
-@Builder
-public class TriFan implements OneWayRequest {
+public final class TriFan implements OneWayRequest {
   public static final String PLUGIN_NAME = "render";
-
   public static final byte OPCODE = 13;
-
-  private byte op;
-
-  private int src;
-
-  private int dst;
-
-  private int maskFormat;
-
-  private short srcX;
-
-  private short srcY;
-
-  @NonNull
-  private ImmutableList<Pointfix> points;
+  private final byte op;
+  private final int src;
+  private final int dst;
+  private final int maskFormat;
+  private final short srcX;
+  private final short srcY;
+  private final ImmutableList<Pointfix> points;
 
   public byte getOpCode() {
     return OPCODE;
@@ -60,7 +46,7 @@ public class TriFan implements OneWayRequest {
     short srcY = in.readInt16();
     javaStart += 2;
     MutableList<Pointfix> points = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
-    while(javaStart < Short.toUnsignedInt(length) * 4) {
+    while (javaStart < Short.toUnsignedInt(length) * 4) {
       Pointfix baseObject = Pointfix.readPointfix(in);
       points.add(baseObject);
       javaStart += baseObject.getSize();
@@ -79,7 +65,7 @@ public class TriFan implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard8(op);
     out.writePad(3);
@@ -88,7 +74,7 @@ public class TriFan implements OneWayRequest {
     out.writeCard32(maskFormat);
     out.writeInt16(srcX);
     out.writeInt16(srcY);
-    for(Pointfix t : points) {
+    for (Pointfix t : points) {
       t.write(out);
     }
     out.writePadAlign(getSize());
@@ -103,7 +89,23 @@ public class TriFan implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class TriFanBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte op;
+    @java.lang.SuppressWarnings("all")
+    private int src;
+    @java.lang.SuppressWarnings("all")
+    private int dst;
+    @java.lang.SuppressWarnings("all")
+    private int maskFormat;
+    @java.lang.SuppressWarnings("all")
+    private short srcX;
+    @java.lang.SuppressWarnings("all")
+    private short srcY;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Pointfix> points;
+
     public TriFan.TriFanBuilder op(PictOp op) {
       this.op = (byte) op.getValue();
       return this;
@@ -117,5 +119,171 @@ public class TriFan implements OneWayRequest {
     public int getSize() {
       return 24 + XObject.sizeOf(points);
     }
+
+    @java.lang.SuppressWarnings("all")
+    TriFanBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public TriFan.TriFanBuilder src(final int src) {
+      this.src = src;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public TriFan.TriFanBuilder dst(final int dst) {
+      this.dst = dst;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public TriFan.TriFanBuilder maskFormat(final int maskFormat) {
+      this.maskFormat = maskFormat;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public TriFan.TriFanBuilder srcX(final short srcX) {
+      this.srcX = srcX;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public TriFan.TriFanBuilder srcY(final short srcY) {
+      this.srcY = srcY;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public TriFan.TriFanBuilder points(final ImmutableList<Pointfix> points) {
+      if (points == null) {
+        throw new java.lang.NullPointerException("points is marked non-null but is null");
+      }
+      this.points = points;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public TriFan build() {
+      return new TriFan(this.op, this.src, this.dst, this.maskFormat, this.srcX, this.srcY, this.points);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "TriFan.TriFanBuilder(op=" + this.op + ", src=" + this.src + ", dst=" + this.dst + ", maskFormat=" + this.maskFormat + ", srcX=" + this.srcX + ", srcY=" + this.srcY + ", points=" + this.points + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  TriFan(final byte op, final int src, final int dst, final int maskFormat, final short srcX, final short srcY, final ImmutableList<Pointfix> points) {
+    if (points == null) {
+      throw new java.lang.NullPointerException("points is marked non-null but is null");
+    }
+    this.op = op;
+    this.src = src;
+    this.dst = dst;
+    this.maskFormat = maskFormat;
+    this.srcX = srcX;
+    this.srcY = srcY;
+    this.points = points;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static TriFan.TriFanBuilder builder() {
+    return new TriFan.TriFanBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getOp() {
+    return this.op;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getSrc() {
+    return this.src;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getDst() {
+    return this.dst;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMaskFormat() {
+    return this.maskFormat;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSrcX() {
+    return this.srcX;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSrcY() {
+    return this.srcY;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Pointfix> getPoints() {
+    return this.points;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof TriFan)) return false;
+    final TriFan other = (TriFan) o;
+    if (this.getOp() != other.getOp()) return false;
+    if (this.getSrc() != other.getSrc()) return false;
+    if (this.getDst() != other.getDst()) return false;
+    if (this.getMaskFormat() != other.getMaskFormat()) return false;
+    if (this.getSrcX() != other.getSrcX()) return false;
+    if (this.getSrcY() != other.getSrcY()) return false;
+    final java.lang.Object this$points = this.getPoints();
+    final java.lang.Object other$points = other.getPoints();
+    if (this$points == null ? other$points != null : !this$points.equals(other$points)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getOp();
+    result = result * PRIME + this.getSrc();
+    result = result * PRIME + this.getDst();
+    result = result * PRIME + this.getMaskFormat();
+    result = result * PRIME + this.getSrcX();
+    result = result * PRIME + this.getSrcY();
+    final java.lang.Object $points = this.getPoints();
+    result = result * PRIME + ($points == null ? 43 : $points.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "TriFan(op=" + this.getOp() + ", src=" + this.getSrc() + ", dst=" + this.getDst() + ", maskFormat=" + this.getMaskFormat() + ", srcX=" + this.getSrcX() + ", srcY=" + this.getSrcY() + ", points=" + this.getPoints() + ")";
   }
 }

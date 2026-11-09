@@ -4,32 +4,19 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class AllocNamedColorReply implements XReply {
+public final class AllocNamedColorReply implements XReply {
   public static final String PLUGIN_NAME = "xproto";
+  private final short sequenceNumber;
+  private final int pixel;
+  private final short exactRed;
+  private final short exactGreen;
+  private final short exactBlue;
+  private final short visualRed;
+  private final short visualGreen;
+  private final short visualBlue;
 
-  private short sequenceNumber;
-
-  private int pixel;
-
-  private short exactRed;
-
-  private short exactGreen;
-
-  private short exactBlue;
-
-  private short visualRed;
-
-  private short visualGreen;
-
-  private short visualBlue;
-
-  public static AllocNamedColorReply readAllocNamedColorReply(byte pad1, short sequenceNumber,
-      X11Input in) throws IOException {
+  public static AllocNamedColorReply readAllocNamedColorReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     AllocNamedColorReply.AllocNamedColorReplyBuilder javaBuilder = AllocNamedColorReply.builder();
     int length = in.readCard32();
     int pixel = in.readCard32();
@@ -75,9 +62,210 @@ public class AllocNamedColorReply implements XReply {
     return PLUGIN_NAME;
   }
 
+
   public static class AllocNamedColorReplyBuilder {
+    @java.lang.SuppressWarnings("all")
+    private short sequenceNumber;
+    @java.lang.SuppressWarnings("all")
+    private int pixel;
+    @java.lang.SuppressWarnings("all")
+    private short exactRed;
+    @java.lang.SuppressWarnings("all")
+    private short exactGreen;
+    @java.lang.SuppressWarnings("all")
+    private short exactBlue;
+    @java.lang.SuppressWarnings("all")
+    private short visualRed;
+    @java.lang.SuppressWarnings("all")
+    private short visualGreen;
+    @java.lang.SuppressWarnings("all")
+    private short visualBlue;
+
     public int getSize() {
       return 24;
     }
+
+    @java.lang.SuppressWarnings("all")
+    AllocNamedColorReplyBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder sequenceNumber(final short sequenceNumber) {
+      this.sequenceNumber = sequenceNumber;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder pixel(final int pixel) {
+      this.pixel = pixel;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder exactRed(final short exactRed) {
+      this.exactRed = exactRed;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder exactGreen(final short exactGreen) {
+      this.exactGreen = exactGreen;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder exactBlue(final short exactBlue) {
+      this.exactBlue = exactBlue;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder visualRed(final short visualRed) {
+      this.visualRed = visualRed;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder visualGreen(final short visualGreen) {
+      this.visualGreen = visualGreen;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply.AllocNamedColorReplyBuilder visualBlue(final short visualBlue) {
+      this.visualBlue = visualBlue;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public AllocNamedColorReply build() {
+      return new AllocNamedColorReply(this.sequenceNumber, this.pixel, this.exactRed, this.exactGreen, this.exactBlue, this.visualRed, this.visualGreen, this.visualBlue);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "AllocNamedColorReply.AllocNamedColorReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", pixel=" + this.pixel + ", exactRed=" + this.exactRed + ", exactGreen=" + this.exactGreen + ", exactBlue=" + this.exactBlue + ", visualRed=" + this.visualRed + ", visualGreen=" + this.visualGreen + ", visualBlue=" + this.visualBlue + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  AllocNamedColorReply(final short sequenceNumber, final int pixel, final short exactRed, final short exactGreen, final short exactBlue, final short visualRed, final short visualGreen, final short visualBlue) {
+    this.sequenceNumber = sequenceNumber;
+    this.pixel = pixel;
+    this.exactRed = exactRed;
+    this.exactGreen = exactGreen;
+    this.exactBlue = exactBlue;
+    this.visualRed = visualRed;
+    this.visualGreen = visualGreen;
+    this.visualBlue = visualBlue;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static AllocNamedColorReply.AllocNamedColorReplyBuilder builder() {
+    return new AllocNamedColorReply.AllocNamedColorReplyBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSequenceNumber() {
+    return this.sequenceNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getPixel() {
+    return this.pixel;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getExactRed() {
+    return this.exactRed;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getExactGreen() {
+    return this.exactGreen;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getExactBlue() {
+    return this.exactBlue;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getVisualRed() {
+    return this.visualRed;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getVisualGreen() {
+    return this.visualGreen;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getVisualBlue() {
+    return this.visualBlue;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof AllocNamedColorReply)) return false;
+    final AllocNamedColorReply other = (AllocNamedColorReply) o;
+    if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
+    if (this.getPixel() != other.getPixel()) return false;
+    if (this.getExactRed() != other.getExactRed()) return false;
+    if (this.getExactGreen() != other.getExactGreen()) return false;
+    if (this.getExactBlue() != other.getExactBlue()) return false;
+    if (this.getVisualRed() != other.getVisualRed()) return false;
+    if (this.getVisualGreen() != other.getVisualGreen()) return false;
+    if (this.getVisualBlue() != other.getVisualBlue()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getSequenceNumber();
+    result = result * PRIME + this.getPixel();
+    result = result * PRIME + this.getExactRed();
+    result = result * PRIME + this.getExactGreen();
+    result = result * PRIME + this.getExactBlue();
+    result = result * PRIME + this.getVisualRed();
+    result = result * PRIME + this.getVisualGreen();
+    result = result * PRIME + this.getVisualBlue();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "AllocNamedColorReply(sequenceNumber=" + this.getSequenceNumber() + ", pixel=" + this.getPixel() + ", exactRed=" + this.getExactRed() + ", exactGreen=" + this.getExactGreen() + ", exactBlue=" + this.getExactBlue() + ", visualRed=" + this.getVisualRed() + ", visualGreen=" + this.getVisualGreen() + ", visualBlue=" + this.getVisualBlue() + ")";
   }
 }

@@ -4,29 +4,17 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XStruct;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class SADeviceValuator implements ActionUnion, XStruct {
+public final class SADeviceValuator implements ActionUnion, XStruct {
   public static final String PLUGIN_NAME = "xkb";
-
-  private byte type;
-
-  private byte device;
-
-  private byte val1what;
-
-  private byte val1index;
-
-  private byte val1value;
-
-  private byte val2what;
-
-  private byte val2index;
-
-  private byte val2value;
+  private final byte type;
+  private final byte device;
+  private final byte val1what;
+  private final byte val1index;
+  private final byte val1value;
+  private final byte val2what;
+  private final byte val2index;
+  private final byte val2value;
 
   public static SADeviceValuator readSADeviceValuator(X11Input in) throws IOException {
     SADeviceValuator.SADeviceValuatorBuilder javaBuilder = SADeviceValuator.builder();
@@ -70,7 +58,25 @@ public class SADeviceValuator implements ActionUnion, XStruct {
     return PLUGIN_NAME;
   }
 
+
   public static class SADeviceValuatorBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte type;
+    @java.lang.SuppressWarnings("all")
+    private byte device;
+    @java.lang.SuppressWarnings("all")
+    private byte val1what;
+    @java.lang.SuppressWarnings("all")
+    private byte val1index;
+    @java.lang.SuppressWarnings("all")
+    private byte val1value;
+    @java.lang.SuppressWarnings("all")
+    private byte val2what;
+    @java.lang.SuppressWarnings("all")
+    private byte val2index;
+    @java.lang.SuppressWarnings("all")
+    private byte val2value;
+
     public SADeviceValuator.SADeviceValuatorBuilder type(SAType type) {
       this.type = (byte) type.getValue();
       return this;
@@ -104,5 +110,161 @@ public class SADeviceValuator implements ActionUnion, XStruct {
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    SADeviceValuatorBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SADeviceValuator.SADeviceValuatorBuilder device(final byte device) {
+      this.device = device;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SADeviceValuator.SADeviceValuatorBuilder val1index(final byte val1index) {
+      this.val1index = val1index;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SADeviceValuator.SADeviceValuatorBuilder val1value(final byte val1value) {
+      this.val1value = val1value;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SADeviceValuator.SADeviceValuatorBuilder val2index(final byte val2index) {
+      this.val2index = val2index;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SADeviceValuator.SADeviceValuatorBuilder val2value(final byte val2value) {
+      this.val2value = val2value;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SADeviceValuator build() {
+      return new SADeviceValuator(this.type, this.device, this.val1what, this.val1index, this.val1value, this.val2what, this.val2index, this.val2value);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SADeviceValuator.SADeviceValuatorBuilder(type=" + this.type + ", device=" + this.device + ", val1what=" + this.val1what + ", val1index=" + this.val1index + ", val1value=" + this.val1value + ", val2what=" + this.val2what + ", val2index=" + this.val2index + ", val2value=" + this.val2value + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SADeviceValuator(final byte type, final byte device, final byte val1what, final byte val1index, final byte val1value, final byte val2what, final byte val2index, final byte val2value) {
+    this.type = type;
+    this.device = device;
+    this.val1what = val1what;
+    this.val1index = val1index;
+    this.val1value = val1value;
+    this.val2what = val2what;
+    this.val2index = val2index;
+    this.val2value = val2value;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SADeviceValuator.SADeviceValuatorBuilder builder() {
+    return new SADeviceValuator.SADeviceValuatorBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getType() {
+    return this.type;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getDevice() {
+    return this.device;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getVal1what() {
+    return this.val1what;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getVal1index() {
+    return this.val1index;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getVal1value() {
+    return this.val1value;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getVal2what() {
+    return this.val2what;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getVal2index() {
+    return this.val2index;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getVal2value() {
+    return this.val2value;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SADeviceValuator)) return false;
+    final SADeviceValuator other = (SADeviceValuator) o;
+    if (this.getType() != other.getType()) return false;
+    if (this.getDevice() != other.getDevice()) return false;
+    if (this.getVal1what() != other.getVal1what()) return false;
+    if (this.getVal1index() != other.getVal1index()) return false;
+    if (this.getVal1value() != other.getVal1value()) return false;
+    if (this.getVal2what() != other.getVal2what()) return false;
+    if (this.getVal2index() != other.getVal2index()) return false;
+    if (this.getVal2value() != other.getVal2value()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getType();
+    result = result * PRIME + this.getDevice();
+    result = result * PRIME + this.getVal1what();
+    result = result * PRIME + this.getVal1index();
+    result = result * PRIME + this.getVal1value();
+    result = result * PRIME + this.getVal2what();
+    result = result * PRIME + this.getVal2index();
+    result = result * PRIME + this.getVal2value();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SADeviceValuator(type=" + this.getType() + ", device=" + this.getDevice() + ", val1what=" + this.getVal1what() + ", val1index=" + this.getVal1index() + ", val1value=" + this.getVal1value() + ", val2what=" + this.getVal2what() + ", val2index=" + this.getVal2index() + ", val2value=" + this.getVal2value() + ")";
   }
 }

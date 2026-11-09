@@ -5,22 +5,14 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 
-@Value
-@Builder
-public class SetFontPath implements OneWayRequest {
+public final class SetFontPath implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 51;
-
-  @NonNull
-  private ImmutableList<Str> font;
+  private final ImmutableList<Str> font;
 
   public byte getOpCode() {
     return OPCODE;
@@ -33,7 +25,7 @@ public class SetFontPath implements OneWayRequest {
     short fontQty = in.readCard16();
     byte[] pad4 = in.readPad(2);
     MutableList<Str> font = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(fontQty));
-    for(int i = 0; i < Short.toUnsignedInt(fontQty); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(fontQty); i++) {
       font.add(Str.readStr(in));
     }
     javaBuilder.font(font.toImmutable());
@@ -43,13 +35,13 @@ public class SetFontPath implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
     short fontQty = (short) font.size();
     out.writeCard16(fontQty);
     out.writePad(2);
-    for(Str t : font) {
+    for (Str t : font) {
       t.write(out);
     }
     out.writePadAlign(getSize());
@@ -64,9 +56,86 @@ public class SetFontPath implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class SetFontPathBuilder {
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Str> font;
+
     public int getSize() {
       return 8 + XObject.sizeOf(font);
     }
+
+    @java.lang.SuppressWarnings("all")
+    SetFontPathBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetFontPath.SetFontPathBuilder font(final ImmutableList<Str> font) {
+      if (font == null) {
+        throw new java.lang.NullPointerException("font is marked non-null but is null");
+      }
+      this.font = font;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SetFontPath build() {
+      return new SetFontPath(this.font);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SetFontPath.SetFontPathBuilder(font=" + this.font + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SetFontPath(final ImmutableList<Str> font) {
+    if (font == null) {
+      throw new java.lang.NullPointerException("font is marked non-null but is null");
+    }
+    this.font = font;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SetFontPath.SetFontPathBuilder builder() {
+    return new SetFontPath.SetFontPathBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Str> getFont() {
+    return this.font;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SetFontPath)) return false;
+    final SetFontPath other = (SetFontPath) o;
+    final java.lang.Object this$font = this.getFont();
+    final java.lang.Object other$font = other.getFont();
+    if (this$font == null ? other$font != null : !this$font.equals(other$font)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    final java.lang.Object $font = this.getFont();
+    result = result * PRIME + ($font == null ? 43 : $font.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SetFontPath(font=" + this.getFont() + ")";
   }
 }

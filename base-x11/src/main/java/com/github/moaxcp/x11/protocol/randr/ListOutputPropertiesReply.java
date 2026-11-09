@@ -4,23 +4,14 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.IntList;
 
-@Value
-@Builder
-public class ListOutputPropertiesReply implements XReply {
+public final class ListOutputPropertiesReply implements XReply {
   public static final String PLUGIN_NAME = "randr";
+  private final short sequenceNumber;
+  private final IntList atoms;
 
-  private short sequenceNumber;
-
-  @NonNull
-  private IntList atoms;
-
-  public static ListOutputPropertiesReply readListOutputPropertiesReply(byte pad1,
-      short sequenceNumber, X11Input in) throws IOException {
+  public static ListOutputPropertiesReply readListOutputPropertiesReply(byte pad1, short sequenceNumber, X11Input in) throws IOException {
     ListOutputPropertiesReply.ListOutputPropertiesReplyBuilder javaBuilder = ListOutputPropertiesReply.builder();
     int length = in.readCard32();
     short numAtoms = in.readCard16();
@@ -28,7 +19,7 @@ public class ListOutputPropertiesReply implements XReply {
     IntList atoms = in.readCard32(Short.toUnsignedInt(numAtoms));
     javaBuilder.sequenceNumber(sequenceNumber);
     javaBuilder.atoms(atoms.toImmutable());
-    if(javaBuilder.getSize() < 32) {
+    if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
     in.readPadAlign(javaBuilder.getSize());
@@ -57,9 +48,105 @@ public class ListOutputPropertiesReply implements XReply {
     return PLUGIN_NAME;
   }
 
+
   public static class ListOutputPropertiesReplyBuilder {
+    @java.lang.SuppressWarnings("all")
+    private short sequenceNumber;
+    @java.lang.SuppressWarnings("all")
+    private IntList atoms;
+
     public int getSize() {
       return 32 + 4 * atoms.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    ListOutputPropertiesReplyBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListOutputPropertiesReply.ListOutputPropertiesReplyBuilder sequenceNumber(final short sequenceNumber) {
+      this.sequenceNumber = sequenceNumber;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListOutputPropertiesReply.ListOutputPropertiesReplyBuilder atoms(final IntList atoms) {
+      if (atoms == null) {
+        throw new java.lang.NullPointerException("atoms is marked non-null but is null");
+      }
+      this.atoms = atoms;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ListOutputPropertiesReply build() {
+      return new ListOutputPropertiesReply(this.sequenceNumber, this.atoms);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ListOutputPropertiesReply.ListOutputPropertiesReplyBuilder(sequenceNumber=" + this.sequenceNumber + ", atoms=" + this.atoms + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ListOutputPropertiesReply(final short sequenceNumber, final IntList atoms) {
+    if (atoms == null) {
+      throw new java.lang.NullPointerException("atoms is marked non-null but is null");
+    }
+    this.sequenceNumber = sequenceNumber;
+    this.atoms = atoms;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ListOutputPropertiesReply.ListOutputPropertiesReplyBuilder builder() {
+    return new ListOutputPropertiesReply.ListOutputPropertiesReplyBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSequenceNumber() {
+    return this.sequenceNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public IntList getAtoms() {
+    return this.atoms;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ListOutputPropertiesReply)) return false;
+    final ListOutputPropertiesReply other = (ListOutputPropertiesReply) o;
+    if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
+    final java.lang.Object this$atoms = this.getAtoms();
+    final java.lang.Object other$atoms = other.getAtoms();
+    if (this$atoms == null ? other$atoms != null : !this$atoms.equals(other$atoms)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getSequenceNumber();
+    final java.lang.Object $atoms = this.getAtoms();
+    result = result * PRIME + ($atoms == null ? 43 : $atoms.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ListOutputPropertiesReply(sequenceNumber=" + this.getSequenceNumber() + ", atoms=" + this.getAtoms() + ")";
   }
 }

@@ -4,28 +4,16 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class ImageText8 implements OneWayRequest {
+public final class ImageText8 implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 76;
-
-  private int drawable;
-
-  private int gc;
-
-  private short x;
-
-  private short y;
-
-  @NonNull
-  private ByteList string;
+  private final int drawable;
+  private final int gc;
+  private final short x;
+  private final short y;
+  private final ByteList string;
 
   public byte getOpCode() {
     return OPCODE;
@@ -51,7 +39,7 @@ public class ImageText8 implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     byte stringLen = (byte) string.size();
     out.writeByte(stringLen);
     out.writeCard16((short) getLength());
@@ -72,9 +60,162 @@ public class ImageText8 implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class ImageText8Builder {
+    @java.lang.SuppressWarnings("all")
+    private int drawable;
+    @java.lang.SuppressWarnings("all")
+    private int gc;
+    @java.lang.SuppressWarnings("all")
+    private short x;
+    @java.lang.SuppressWarnings("all")
+    private short y;
+    @java.lang.SuppressWarnings("all")
+    private ByteList string;
+
     public int getSize() {
       return 16 + 1 * string.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    ImageText8Builder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ImageText8.ImageText8Builder drawable(final int drawable) {
+      this.drawable = drawable;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ImageText8.ImageText8Builder gc(final int gc) {
+      this.gc = gc;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ImageText8.ImageText8Builder x(final short x) {
+      this.x = x;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ImageText8.ImageText8Builder y(final short y) {
+      this.y = y;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ImageText8.ImageText8Builder string(final ByteList string) {
+      if (string == null) {
+        throw new java.lang.NullPointerException("string is marked non-null but is null");
+      }
+      this.string = string;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ImageText8 build() {
+      return new ImageText8(this.drawable, this.gc, this.x, this.y, this.string);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ImageText8.ImageText8Builder(drawable=" + this.drawable + ", gc=" + this.gc + ", x=" + this.x + ", y=" + this.y + ", string=" + this.string + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ImageText8(final int drawable, final int gc, final short x, final short y, final ByteList string) {
+    if (string == null) {
+      throw new java.lang.NullPointerException("string is marked non-null but is null");
+    }
+    this.drawable = drawable;
+    this.gc = gc;
+    this.x = x;
+    this.y = y;
+    this.string = string;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ImageText8.ImageText8Builder builder() {
+    return new ImageText8.ImageText8Builder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getDrawable() {
+    return this.drawable;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getGc() {
+    return this.gc;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getX() {
+    return this.x;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getY() {
+    return this.y;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getString() {
+    return this.string;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ImageText8)) return false;
+    final ImageText8 other = (ImageText8) o;
+    if (this.getDrawable() != other.getDrawable()) return false;
+    if (this.getGc() != other.getGc()) return false;
+    if (this.getX() != other.getX()) return false;
+    if (this.getY() != other.getY()) return false;
+    final java.lang.Object this$string = this.getString();
+    final java.lang.Object other$string = other.getString();
+    if (this$string == null ? other$string != null : !this$string.equals(other$string)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDrawable();
+    result = result * PRIME + this.getGc();
+    result = result * PRIME + this.getX();
+    result = result * PRIME + this.getY();
+    final java.lang.Object $string = this.getString();
+    result = result * PRIME + ($string == null ? 43 : $string.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ImageText8(drawable=" + this.getDrawable() + ", gc=" + this.getGc() + ", x=" + this.getX() + ", y=" + this.getY() + ", string=" + this.getString() + ")";
   }
 }

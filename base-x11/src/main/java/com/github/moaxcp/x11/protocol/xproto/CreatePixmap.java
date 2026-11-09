@@ -4,25 +4,15 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class CreatePixmap implements OneWayRequest {
+public final class CreatePixmap implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 53;
-
-  private byte depth;
-
-  private int pid;
-
-  private int drawable;
-
-  private short width;
-
-  private short height;
+  private final byte depth;
+  private final int pid;
+  private final int drawable;
+  private final short width;
+  private final short height;
 
   public byte getOpCode() {
     return OPCODE;
@@ -46,7 +36,7 @@ public class CreatePixmap implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard8(depth);
     out.writeCard16((short) getLength());
     out.writeCard32(pid);
@@ -64,9 +54,153 @@ public class CreatePixmap implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class CreatePixmapBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte depth;
+    @java.lang.SuppressWarnings("all")
+    private int pid;
+    @java.lang.SuppressWarnings("all")
+    private int drawable;
+    @java.lang.SuppressWarnings("all")
+    private short width;
+    @java.lang.SuppressWarnings("all")
+    private short height;
+
     public int getSize() {
       return 16;
     }
+
+    @java.lang.SuppressWarnings("all")
+    CreatePixmapBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePixmap.CreatePixmapBuilder depth(final byte depth) {
+      this.depth = depth;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePixmap.CreatePixmapBuilder pid(final int pid) {
+      this.pid = pid;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePixmap.CreatePixmapBuilder drawable(final int drawable) {
+      this.drawable = drawable;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePixmap.CreatePixmapBuilder width(final short width) {
+      this.width = width;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePixmap.CreatePixmapBuilder height(final short height) {
+      this.height = height;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public CreatePixmap build() {
+      return new CreatePixmap(this.depth, this.pid, this.drawable, this.width, this.height);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "CreatePixmap.CreatePixmapBuilder(depth=" + this.depth + ", pid=" + this.pid + ", drawable=" + this.drawable + ", width=" + this.width + ", height=" + this.height + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  CreatePixmap(final byte depth, final int pid, final int drawable, final short width, final short height) {
+    this.depth = depth;
+    this.pid = pid;
+    this.drawable = drawable;
+    this.width = width;
+    this.height = height;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static CreatePixmap.CreatePixmapBuilder builder() {
+    return new CreatePixmap.CreatePixmapBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getDepth() {
+    return this.depth;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getPid() {
+    return this.pid;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getDrawable() {
+    return this.drawable;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getWidth() {
+    return this.width;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getHeight() {
+    return this.height;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof CreatePixmap)) return false;
+    final CreatePixmap other = (CreatePixmap) o;
+    if (this.getDepth() != other.getDepth()) return false;
+    if (this.getPid() != other.getPid()) return false;
+    if (this.getDrawable() != other.getDrawable()) return false;
+    if (this.getWidth() != other.getWidth()) return false;
+    if (this.getHeight() != other.getHeight()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDepth();
+    result = result * PRIME + this.getPid();
+    result = result * PRIME + this.getDrawable();
+    result = result * PRIME + this.getWidth();
+    result = result * PRIME + this.getHeight();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "CreatePixmap(depth=" + this.getDepth() + ", pid=" + this.getPid() + ", drawable=" + this.getDrawable() + ", width=" + this.getWidth() + ", height=" + this.getHeight() + ")";
   }
 }

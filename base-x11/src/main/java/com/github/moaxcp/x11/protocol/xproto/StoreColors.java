@@ -5,24 +5,15 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 
-@Value
-@Builder
-public class StoreColors implements OneWayRequest {
+public final class StoreColors implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 89;
-
-  private int cmap;
-
-  @NonNull
-  private ImmutableList<Coloritem> items;
+  private final int cmap;
+  private final ImmutableList<Coloritem> items;
 
   public byte getOpCode() {
     return OPCODE;
@@ -38,7 +29,7 @@ public class StoreColors implements OneWayRequest {
     int cmap = in.readCard32();
     javaStart += 4;
     MutableList<Coloritem> items = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
-    while(javaStart < Short.toUnsignedInt(length) * 4) {
+    while (javaStart < Short.toUnsignedInt(length) * 4) {
       Coloritem baseObject = Coloritem.readColoritem(in);
       items.add(baseObject);
       javaStart += baseObject.getSize();
@@ -51,11 +42,11 @@ public class StoreColors implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard32(cmap);
-    for(Coloritem t : items) {
+    for (Coloritem t : items) {
       t.write(out);
     }
     out.writePadAlign(getSize());
@@ -70,9 +61,105 @@ public class StoreColors implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class StoreColorsBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int cmap;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Coloritem> items;
+
     public int getSize() {
       return 8 + XObject.sizeOf(items);
     }
+
+    @java.lang.SuppressWarnings("all")
+    StoreColorsBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public StoreColors.StoreColorsBuilder cmap(final int cmap) {
+      this.cmap = cmap;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public StoreColors.StoreColorsBuilder items(final ImmutableList<Coloritem> items) {
+      if (items == null) {
+        throw new java.lang.NullPointerException("items is marked non-null but is null");
+      }
+      this.items = items;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public StoreColors build() {
+      return new StoreColors(this.cmap, this.items);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "StoreColors.StoreColorsBuilder(cmap=" + this.cmap + ", items=" + this.items + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  StoreColors(final int cmap, final ImmutableList<Coloritem> items) {
+    if (items == null) {
+      throw new java.lang.NullPointerException("items is marked non-null but is null");
+    }
+    this.cmap = cmap;
+    this.items = items;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static StoreColors.StoreColorsBuilder builder() {
+    return new StoreColors.StoreColorsBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getCmap() {
+    return this.cmap;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Coloritem> getItems() {
+    return this.items;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof StoreColors)) return false;
+    final StoreColors other = (StoreColors) o;
+    if (this.getCmap() != other.getCmap()) return false;
+    final java.lang.Object this$items = this.getItems();
+    final java.lang.Object other$items = other.getItems();
+    if (this$items == null ? other$items != null : !this$items.equals(other$items)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getCmap();
+    final java.lang.Object $items = this.getItems();
+    result = result * PRIME + ($items == null ? 43 : $items.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "StoreColors(cmap=" + this.getCmap() + ", items=" + this.getItems() + ")";
   }
 }

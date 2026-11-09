@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class XkbPlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,73 +46,73 @@ public class XkbPlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 1) {
+    if (minorOpcode == 1) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 3) {
+    if (minorOpcode == 3) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 5) {
+    if (minorOpcode == 5) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 6) {
+    if (minorOpcode == 6) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 7) {
+    if (minorOpcode == 7) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 8) {
+    if (minorOpcode == 8) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 9) {
+    if (minorOpcode == 9) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 10) {
+    if (minorOpcode == 10) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 11) {
+    if (minorOpcode == 11) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 12) {
+    if (minorOpcode == 12) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 13) {
+    if (minorOpcode == 13) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 14) {
+    if (minorOpcode == 14) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 15) {
+    if (minorOpcode == 15) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 16) {
+    if (minorOpcode == 16) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 17) {
+    if (minorOpcode == 17) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 18) {
+    if (minorOpcode == 18) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 21) {
+    if (minorOpcode == 21) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 22) {
+    if (minorOpcode == 22) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 24) {
+    if (minorOpcode == 24) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 25) {
+    if (minorOpcode == 25) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 101) {
+    if (minorOpcode == 101) {
       return isMajorOpcode;
     }
     return false;
@@ -130,40 +120,40 @@ public class XkbPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedEvent(byte number) {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return true;
     }
-    if(number - firstEvent == 1) {
+    if (number - firstEvent == 1) {
       return true;
     }
-    if(number - firstEvent == 2) {
+    if (number - firstEvent == 2) {
       return true;
     }
-    if(number - firstEvent == 3) {
+    if (number - firstEvent == 3) {
       return true;
     }
-    if(number - firstEvent == 4) {
+    if (number - firstEvent == 4) {
       return true;
     }
-    if(number - firstEvent == 5) {
+    if (number - firstEvent == 5) {
       return true;
     }
-    if(number - firstEvent == 6) {
+    if (number - firstEvent == 6) {
       return true;
     }
-    if(number - firstEvent == 7) {
+    if (number - firstEvent == 7) {
       return true;
     }
-    if(number - firstEvent == 8) {
+    if (number - firstEvent == 8) {
       return true;
     }
-    if(number - firstEvent == 9) {
+    if (number - firstEvent == 9) {
       return true;
     }
-    if(number - firstEvent == 10) {
+    if (number - firstEvent == 10) {
       return true;
     }
-    if(number - firstEvent == 11) {
+    if (number - firstEvent == 11) {
       return true;
     }
     return false;
@@ -171,7 +161,7 @@ public class XkbPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedError(byte code) {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return true;
     }
     return false;
@@ -179,73 +169,73 @@ public class XkbPlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == UseExtension.OPCODE) {
+    if (minorOpcode == UseExtension.OPCODE) {
       return UseExtension.readUseExtension(in);
     }
-    if(minorOpcode == SelectEvents.OPCODE) {
+    if (minorOpcode == SelectEvents.OPCODE) {
       return SelectEvents.readSelectEvents(in);
     }
-    if(minorOpcode == Bell.OPCODE) {
+    if (minorOpcode == Bell.OPCODE) {
       return Bell.readBell(in);
     }
-    if(minorOpcode == GetState.OPCODE) {
+    if (minorOpcode == GetState.OPCODE) {
       return GetState.readGetState(in);
     }
-    if(minorOpcode == LatchLockState.OPCODE) {
+    if (minorOpcode == LatchLockState.OPCODE) {
       return LatchLockState.readLatchLockState(in);
     }
-    if(minorOpcode == GetControls.OPCODE) {
+    if (minorOpcode == GetControls.OPCODE) {
       return GetControls.readGetControls(in);
     }
-    if(minorOpcode == SetControls.OPCODE) {
+    if (minorOpcode == SetControls.OPCODE) {
       return SetControls.readSetControls(in);
     }
-    if(minorOpcode == GetMap.OPCODE) {
+    if (minorOpcode == GetMap.OPCODE) {
       return GetMap.readGetMap(in);
     }
-    if(minorOpcode == SetMap.OPCODE) {
+    if (minorOpcode == SetMap.OPCODE) {
       return SetMap.readSetMap(in);
     }
-    if(minorOpcode == GetCompatMap.OPCODE) {
+    if (minorOpcode == GetCompatMap.OPCODE) {
       return GetCompatMap.readGetCompatMap(in);
     }
-    if(minorOpcode == SetCompatMap.OPCODE) {
+    if (minorOpcode == SetCompatMap.OPCODE) {
       return SetCompatMap.readSetCompatMap(in);
     }
-    if(minorOpcode == GetIndicatorState.OPCODE) {
+    if (minorOpcode == GetIndicatorState.OPCODE) {
       return GetIndicatorState.readGetIndicatorState(in);
     }
-    if(minorOpcode == GetIndicatorMap.OPCODE) {
+    if (minorOpcode == GetIndicatorMap.OPCODE) {
       return GetIndicatorMap.readGetIndicatorMap(in);
     }
-    if(minorOpcode == SetIndicatorMap.OPCODE) {
+    if (minorOpcode == SetIndicatorMap.OPCODE) {
       return SetIndicatorMap.readSetIndicatorMap(in);
     }
-    if(minorOpcode == GetNamedIndicator.OPCODE) {
+    if (minorOpcode == GetNamedIndicator.OPCODE) {
       return GetNamedIndicator.readGetNamedIndicator(in);
     }
-    if(minorOpcode == SetNamedIndicator.OPCODE) {
+    if (minorOpcode == SetNamedIndicator.OPCODE) {
       return SetNamedIndicator.readSetNamedIndicator(in);
     }
-    if(minorOpcode == GetNames.OPCODE) {
+    if (minorOpcode == GetNames.OPCODE) {
       return GetNames.readGetNames(in);
     }
-    if(minorOpcode == SetNames.OPCODE) {
+    if (minorOpcode == SetNames.OPCODE) {
       return SetNames.readSetNames(in);
     }
-    if(minorOpcode == PerClientFlags.OPCODE) {
+    if (minorOpcode == PerClientFlags.OPCODE) {
       return PerClientFlags.readPerClientFlags(in);
     }
-    if(minorOpcode == ListComponents.OPCODE) {
+    if (minorOpcode == ListComponents.OPCODE) {
       return ListComponents.readListComponents(in);
     }
-    if(minorOpcode == GetDeviceInfo.OPCODE) {
+    if (minorOpcode == GetDeviceInfo.OPCODE) {
       return GetDeviceInfo.readGetDeviceInfo(in);
     }
-    if(minorOpcode == SetDeviceInfo.OPCODE) {
+    if (minorOpcode == SetDeviceInfo.OPCODE) {
       return SetDeviceInfo.readSetDeviceInfo(in);
     }
-    if(minorOpcode == SetDebuggingFlags.OPCODE) {
+    if (minorOpcode == SetDebuggingFlags.OPCODE) {
       return SetDebuggingFlags.readSetDebuggingFlags(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -253,40 +243,40 @@ public class XkbPlugin implements XProtocolPlugin {
 
   @Override
   public XEvent readEvent(byte number, boolean sentEvent, X11Input in) throws IOException {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return NewKeyboardNotifyEvent.readNewKeyboardNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 1) {
+    if (number - firstEvent == 1) {
       return MapNotifyEvent.readMapNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 2) {
+    if (number - firstEvent == 2) {
       return StateNotifyEvent.readStateNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 3) {
+    if (number - firstEvent == 3) {
       return ControlsNotifyEvent.readControlsNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 4) {
+    if (number - firstEvent == 4) {
       return IndicatorStateNotifyEvent.readIndicatorStateNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 5) {
+    if (number - firstEvent == 5) {
       return IndicatorMapNotifyEvent.readIndicatorMapNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 6) {
+    if (number - firstEvent == 6) {
       return NamesNotifyEvent.readNamesNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 7) {
+    if (number - firstEvent == 7) {
       return CompatMapNotifyEvent.readCompatMapNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 8) {
+    if (number - firstEvent == 8) {
       return BellNotifyEvent.readBellNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 9) {
+    if (number - firstEvent == 9) {
       return ActionMessageEvent.readActionMessageEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 10) {
+    if (number - firstEvent == 10) {
       return AccessXNotifyEvent.readAccessXNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 11) {
+    if (number - firstEvent == 11) {
       return ExtensionDeviceNotifyEvent.readExtensionDeviceNotifyEvent(firstEvent, sentEvent, in);
     }
     throw new IllegalArgumentException("number " + number + " is not supported");
@@ -294,15 +284,44 @@ public class XkbPlugin implements XProtocolPlugin {
 
   @Override
   public XError readError(byte code, X11Input in) throws IOException {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return KeyboardError.readKeyboardError(firstError, in);
     }
     throw new IllegalArgumentException("code " + code + " is not supported");
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }

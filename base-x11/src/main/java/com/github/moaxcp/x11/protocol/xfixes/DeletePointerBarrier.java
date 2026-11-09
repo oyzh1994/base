@@ -4,17 +4,11 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class DeletePointerBarrier implements OneWayRequest {
+public final class DeletePointerBarrier implements OneWayRequest {
   public static final String PLUGIN_NAME = "xfixes";
-
   public static final byte OPCODE = 32;
-
-  private int barrier;
+  private final int barrier;
 
   public byte getOpCode() {
     return OPCODE;
@@ -32,7 +26,7 @@ public class DeletePointerBarrier implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(barrier);
   }
@@ -46,9 +40,77 @@ public class DeletePointerBarrier implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class DeletePointerBarrierBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int barrier;
+
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    DeletePointerBarrierBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public DeletePointerBarrier.DeletePointerBarrierBuilder barrier(final int barrier) {
+      this.barrier = barrier;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public DeletePointerBarrier build() {
+      return new DeletePointerBarrier(this.barrier);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "DeletePointerBarrier.DeletePointerBarrierBuilder(barrier=" + this.barrier + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  DeletePointerBarrier(final int barrier) {
+    this.barrier = barrier;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static DeletePointerBarrier.DeletePointerBarrierBuilder builder() {
+    return new DeletePointerBarrier.DeletePointerBarrierBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getBarrier() {
+    return this.barrier;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof DeletePointerBarrier)) return false;
+    final DeletePointerBarrier other = (DeletePointerBarrier) o;
+    if (this.getBarrier() != other.getBarrier()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getBarrier();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "DeletePointerBarrier(barrier=" + this.getBarrier() + ")";
   }
 }

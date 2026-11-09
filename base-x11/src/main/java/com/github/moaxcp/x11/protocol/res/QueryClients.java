@@ -5,14 +5,9 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class QueryClients implements TwoWayRequest<QueryClientsReply> {
+public final class QueryClients implements TwoWayRequest<QueryClientsReply> {
   public static final String PLUGIN_NAME = "res";
-
   public static final byte OPCODE = 1;
 
   public XReplyFunction<QueryClientsReply> getReplyFunction() {
@@ -33,7 +28,7 @@ public class QueryClients implements TwoWayRequest<QueryClientsReply> {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
   }
 
@@ -46,9 +41,55 @@ public class QueryClients implements TwoWayRequest<QueryClientsReply> {
     return PLUGIN_NAME;
   }
 
+
   public static class QueryClientsBuilder {
     public int getSize() {
       return 4;
     }
+
+    @java.lang.SuppressWarnings("all")
+    QueryClientsBuilder() {
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public QueryClients build() {
+      return new QueryClients();
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "QueryClients.QueryClientsBuilder()";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  QueryClients() {
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static QueryClients.QueryClientsBuilder builder() {
+    return new QueryClients.QueryClientsBuilder();
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof QueryClients)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int result = 1;
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "QueryClients()";
   }
 }

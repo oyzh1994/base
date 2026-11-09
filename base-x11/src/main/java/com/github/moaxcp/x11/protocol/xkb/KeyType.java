@@ -6,33 +6,19 @@ import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XStruct;
 import com.github.moaxcp.x11.protocol.xproto.ModMask;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 
-@Value
-@Builder
-public class KeyType implements XStruct {
+public final class KeyType implements XStruct {
   public static final String PLUGIN_NAME = "xkb";
-
-  private byte modsMask;
-
-  private byte modsMods;
-
-  private short modsVmods;
-
-  private byte numLevels;
-
-  private boolean hasPreserve;
-
-  @NonNull
-  private ImmutableList<KTMapEntry> map;
-
-  @NonNull
-  private ImmutableList<ModDef> preserve;
+  private final byte modsMask;
+  private final byte modsMods;
+  private final short modsVmods;
+  private final byte numLevels;
+  private final boolean hasPreserve;
+  private final ImmutableList<KTMapEntry> map;
+  private final ImmutableList<ModDef> preserve;
 
   public static KeyType readKeyType(X11Input in) throws IOException {
     KeyType.KeyTypeBuilder javaBuilder = KeyType.builder();
@@ -44,11 +30,11 @@ public class KeyType implements XStruct {
     boolean hasPreserve = in.readBool();
     byte[] pad6 = in.readPad(1);
     MutableList<KTMapEntry> map = Lists.mutable.withInitialCapacity(Byte.toUnsignedInt(nMapEntries));
-    for(int i = 0; i < Byte.toUnsignedInt(nMapEntries); i++) {
+    for (int i = 0; i < Byte.toUnsignedInt(nMapEntries); i++) {
       map.add(KTMapEntry.readKTMapEntry(in));
     }
     MutableList<ModDef> preserve = Lists.mutable.withInitialCapacity((hasPreserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries));
-    for(int i = 0; i < (hasPreserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries); i++) {
+    for (int i = 0; i < (hasPreserve ? 1 : 0) * Byte.toUnsignedInt(nMapEntries); i++) {
       preserve.add(ModDef.readModDef(in));
     }
     javaBuilder.modsMask(modsMask);
@@ -71,35 +57,44 @@ public class KeyType implements XStruct {
     out.writeCard8(nMapEntries);
     out.writeBool(hasPreserve);
     out.writePad(1);
-    for(KTMapEntry t : map) {
+    for (KTMapEntry t : map) {
       t.write(out);
     }
-    for(ModDef t : preserve) {
+    for (ModDef t : preserve) {
       t.write(out);
     }
   }
 
-  public boolean isModsMaskEnabled(@NonNull ModMask... maskEnums) {
-    for(ModMask m : maskEnums) {
-      if(!m.isEnabled(modsMask)) {
+  public boolean isModsMaskEnabled(ModMask... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (ModMask m : maskEnums) {
+      if (!m.isEnabled(modsMask)) {
         return false;
       }
     }
     return true;
   }
 
-  public boolean isModsModsEnabled(@NonNull ModMask... maskEnums) {
-    for(ModMask m : maskEnums) {
-      if(!m.isEnabled(modsMods)) {
+  public boolean isModsModsEnabled(ModMask... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (ModMask m : maskEnums) {
+      if (!m.isEnabled(modsMods)) {
         return false;
       }
     }
     return true;
   }
 
-  public boolean isModsVmodsEnabled(@NonNull VMod... maskEnums) {
-    for(VMod m : maskEnums) {
-      if(!m.isEnabled(modsVmods)) {
+  public boolean isModsVmodsEnabled(VMod... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (VMod m : maskEnums) {
+      if (!m.isEnabled(modsVmods)) {
         return false;
       }
     }
@@ -115,10 +110,29 @@ public class KeyType implements XStruct {
     return PLUGIN_NAME;
   }
 
+
   public static class KeyTypeBuilder {
-    public boolean isModsMaskEnabled(@NonNull ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
-        if(!m.isEnabled(modsMask)) {
+    @java.lang.SuppressWarnings("all")
+    private byte modsMask;
+    @java.lang.SuppressWarnings("all")
+    private byte modsMods;
+    @java.lang.SuppressWarnings("all")
+    private short modsVmods;
+    @java.lang.SuppressWarnings("all")
+    private byte numLevels;
+    @java.lang.SuppressWarnings("all")
+    private boolean hasPreserve;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KTMapEntry> map;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<ModDef> preserve;
+
+    public boolean isModsMaskEnabled(ModMask... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (ModMask m : maskEnums) {
+        if (!m.isEnabled(modsMask)) {
           return false;
         }
       }
@@ -126,22 +140,25 @@ public class KeyType implements XStruct {
     }
 
     public KeyType.KeyTypeBuilder modsMaskEnable(ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
+      for (ModMask m : maskEnums) {
         modsMask((byte) m.enableFor(modsMask));
       }
       return this;
     }
 
     public KeyType.KeyTypeBuilder modsMaskDisable(ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
+      for (ModMask m : maskEnums) {
         modsMask((byte) m.disableFor(modsMask));
       }
       return this;
     }
 
-    public boolean isModsModsEnabled(@NonNull ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
-        if(!m.isEnabled(modsMods)) {
+    public boolean isModsModsEnabled(ModMask... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (ModMask m : maskEnums) {
+        if (!m.isEnabled(modsMods)) {
           return false;
         }
       }
@@ -149,22 +166,25 @@ public class KeyType implements XStruct {
     }
 
     public KeyType.KeyTypeBuilder modsModsEnable(ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
+      for (ModMask m : maskEnums) {
         modsMods((byte) m.enableFor(modsMods));
       }
       return this;
     }
 
     public KeyType.KeyTypeBuilder modsModsDisable(ModMask... maskEnums) {
-      for(ModMask m : maskEnums) {
+      for (ModMask m : maskEnums) {
         modsMods((byte) m.disableFor(modsMods));
       }
       return this;
     }
 
-    public boolean isModsVmodsEnabled(@NonNull VMod... maskEnums) {
-      for(VMod m : maskEnums) {
-        if(!m.isEnabled(modsVmods)) {
+    public boolean isModsVmodsEnabled(VMod... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (VMod m : maskEnums) {
+        if (!m.isEnabled(modsVmods)) {
           return false;
         }
       }
@@ -172,14 +192,14 @@ public class KeyType implements XStruct {
     }
 
     public KeyType.KeyTypeBuilder modsVmodsEnable(VMod... maskEnums) {
-      for(VMod m : maskEnums) {
+      for (VMod m : maskEnums) {
         modsVmods((short) m.enableFor(modsVmods));
       }
       return this;
     }
 
     public KeyType.KeyTypeBuilder modsVmodsDisable(VMod... maskEnums) {
-      for(VMod m : maskEnums) {
+      for (VMod m : maskEnums) {
         modsVmods((short) m.disableFor(modsVmods));
       }
       return this;
@@ -188,5 +208,189 @@ public class KeyType implements XStruct {
     public int getSize() {
       return 8 + XObject.sizeOf(map) + XObject.sizeOf(preserve);
     }
+
+    @java.lang.SuppressWarnings("all")
+    KeyTypeBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public KeyType.KeyTypeBuilder modsMask(final byte modsMask) {
+      this.modsMask = modsMask;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public KeyType.KeyTypeBuilder modsMods(final byte modsMods) {
+      this.modsMods = modsMods;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public KeyType.KeyTypeBuilder modsVmods(final short modsVmods) {
+      this.modsVmods = modsVmods;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public KeyType.KeyTypeBuilder numLevels(final byte numLevels) {
+      this.numLevels = numLevels;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public KeyType.KeyTypeBuilder hasPreserve(final boolean hasPreserve) {
+      this.hasPreserve = hasPreserve;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public KeyType.KeyTypeBuilder map(final ImmutableList<KTMapEntry> map) {
+      if (map == null) {
+        throw new java.lang.NullPointerException("map is marked non-null but is null");
+      }
+      this.map = map;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public KeyType.KeyTypeBuilder preserve(final ImmutableList<ModDef> preserve) {
+      if (preserve == null) {
+        throw new java.lang.NullPointerException("preserve is marked non-null but is null");
+      }
+      this.preserve = preserve;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public KeyType build() {
+      return new KeyType(this.modsMask, this.modsMods, this.modsVmods, this.numLevels, this.hasPreserve, this.map, this.preserve);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "KeyType.KeyTypeBuilder(modsMask=" + this.modsMask + ", modsMods=" + this.modsMods + ", modsVmods=" + this.modsVmods + ", numLevels=" + this.numLevels + ", hasPreserve=" + this.hasPreserve + ", map=" + this.map + ", preserve=" + this.preserve + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  KeyType(final byte modsMask, final byte modsMods, final short modsVmods, final byte numLevels, final boolean hasPreserve, final ImmutableList<KTMapEntry> map, final ImmutableList<ModDef> preserve) {
+    if (map == null) {
+      throw new java.lang.NullPointerException("map is marked non-null but is null");
+    }
+    if (preserve == null) {
+      throw new java.lang.NullPointerException("preserve is marked non-null but is null");
+    }
+    this.modsMask = modsMask;
+    this.modsMods = modsMods;
+    this.modsVmods = modsVmods;
+    this.numLevels = numLevels;
+    this.hasPreserve = hasPreserve;
+    this.map = map;
+    this.preserve = preserve;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static KeyType.KeyTypeBuilder builder() {
+    return new KeyType.KeyTypeBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getModsMask() {
+    return this.modsMask;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getModsMods() {
+    return this.modsMods;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getModsVmods() {
+    return this.modsVmods;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNumLevels() {
+    return this.numLevels;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public boolean isHasPreserve() {
+    return this.hasPreserve;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KTMapEntry> getMap() {
+    return this.map;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<ModDef> getPreserve() {
+    return this.preserve;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof KeyType)) return false;
+    final KeyType other = (KeyType) o;
+    if (this.getModsMask() != other.getModsMask()) return false;
+    if (this.getModsMods() != other.getModsMods()) return false;
+    if (this.getModsVmods() != other.getModsVmods()) return false;
+    if (this.getNumLevels() != other.getNumLevels()) return false;
+    if (this.isHasPreserve() != other.isHasPreserve()) return false;
+    final java.lang.Object this$map = this.getMap();
+    final java.lang.Object other$map = other.getMap();
+    if (this$map == null ? other$map != null : !this$map.equals(other$map)) return false;
+    final java.lang.Object this$preserve = this.getPreserve();
+    final java.lang.Object other$preserve = other.getPreserve();
+    if (this$preserve == null ? other$preserve != null : !this$preserve.equals(other$preserve)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getModsMask();
+    result = result * PRIME + this.getModsMods();
+    result = result * PRIME + this.getModsVmods();
+    result = result * PRIME + this.getNumLevels();
+    result = result * PRIME + (this.isHasPreserve() ? 79 : 97);
+    final java.lang.Object $map = this.getMap();
+    result = result * PRIME + ($map == null ? 43 : $map.hashCode());
+    final java.lang.Object $preserve = this.getPreserve();
+    result = result * PRIME + ($preserve == null ? 43 : $preserve.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "KeyType(modsMask=" + this.getModsMask() + ", modsMods=" + this.getModsMods() + ", modsVmods=" + this.getModsVmods() + ", numLevels=" + this.getNumLevels() + ", hasPreserve=" + this.isHasPreserve() + ", map=" + this.getMap() + ", preserve=" + this.getPreserve() + ")";
   }
 }

@@ -5,50 +5,28 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 
-@Value
-@Builder
-public class Pixmap implements OneWayRequest {
+public final class Pixmap implements OneWayRequest {
   public static final String PLUGIN_NAME = "present";
-
   public static final byte OPCODE = 1;
-
-  private int window;
-
-  private int pixmap;
-
-  private int serial;
-
-  private int valid;
-
-  private int update;
-
-  private short xOff;
-
-  private short yOff;
-
-  private int targetCrtc;
-
-  private int waitFence;
-
-  private int idleFence;
-
-  private int options;
-
-  private long targetMsc;
-
-  private long divisor;
-
-  private long remainder;
-
-  @NonNull
-  private ImmutableList<Notify> notifies;
+  private final int window;
+  private final int pixmap;
+  private final int serial;
+  private final int valid;
+  private final int update;
+  private final short xOff;
+  private final short yOff;
+  private final int targetCrtc;
+  private final int waitFence;
+  private final int idleFence;
+  private final int options;
+  private final long targetMsc;
+  private final long divisor;
+  private final long remainder;
+  private final ImmutableList<Notify> notifies;
 
   public byte getOpCode() {
     return OPCODE;
@@ -92,7 +70,7 @@ public class Pixmap implements OneWayRequest {
     long remainder = in.readCard64();
     javaStart += 8;
     MutableList<Notify> notifies = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(length) - javaStart);
-    while(javaStart < Short.toUnsignedInt(length) * 4) {
+    while (javaStart < Short.toUnsignedInt(length) * 4) {
       Notify baseObject = Notify.readNotify(in);
       notifies.add(baseObject);
       javaStart += baseObject.getSize();
@@ -119,7 +97,7 @@ public class Pixmap implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(window);
     out.writeCard32(pixmap);
@@ -136,7 +114,7 @@ public class Pixmap implements OneWayRequest {
     out.writeCard64(targetMsc);
     out.writeCard64(divisor);
     out.writeCard64(remainder);
-    for(Notify t : notifies) {
+    for (Notify t : notifies) {
       t.write(out);
     }
     out.writePadAlign(getSize());
@@ -151,9 +129,355 @@ public class Pixmap implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class PixmapBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int window;
+    @java.lang.SuppressWarnings("all")
+    private int pixmap;
+    @java.lang.SuppressWarnings("all")
+    private int serial;
+    @java.lang.SuppressWarnings("all")
+    private int valid;
+    @java.lang.SuppressWarnings("all")
+    private int update;
+    @java.lang.SuppressWarnings("all")
+    private short xOff;
+    @java.lang.SuppressWarnings("all")
+    private short yOff;
+    @java.lang.SuppressWarnings("all")
+    private int targetCrtc;
+    @java.lang.SuppressWarnings("all")
+    private int waitFence;
+    @java.lang.SuppressWarnings("all")
+    private int idleFence;
+    @java.lang.SuppressWarnings("all")
+    private int options;
+    @java.lang.SuppressWarnings("all")
+    private long targetMsc;
+    @java.lang.SuppressWarnings("all")
+    private long divisor;
+    @java.lang.SuppressWarnings("all")
+    private long remainder;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Notify> notifies;
+
     public int getSize() {
       return 72 + XObject.sizeOf(notifies);
     }
+
+    @java.lang.SuppressWarnings("all")
+    PixmapBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder window(final int window) {
+      this.window = window;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder pixmap(final int pixmap) {
+      this.pixmap = pixmap;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder serial(final int serial) {
+      this.serial = serial;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder valid(final int valid) {
+      this.valid = valid;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder update(final int update) {
+      this.update = update;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder xOff(final short xOff) {
+      this.xOff = xOff;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder yOff(final short yOff) {
+      this.yOff = yOff;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder targetCrtc(final int targetCrtc) {
+      this.targetCrtc = targetCrtc;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder waitFence(final int waitFence) {
+      this.waitFence = waitFence;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder idleFence(final int idleFence) {
+      this.idleFence = idleFence;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder options(final int options) {
+      this.options = options;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder targetMsc(final long targetMsc) {
+      this.targetMsc = targetMsc;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder divisor(final long divisor) {
+      this.divisor = divisor;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder remainder(final long remainder) {
+      this.remainder = remainder;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public Pixmap.PixmapBuilder notifies(final ImmutableList<Notify> notifies) {
+      if (notifies == null) {
+        throw new java.lang.NullPointerException("notifies is marked non-null but is null");
+      }
+      this.notifies = notifies;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public Pixmap build() {
+      return new Pixmap(this.window, this.pixmap, this.serial, this.valid, this.update, this.xOff, this.yOff, this.targetCrtc, this.waitFence, this.idleFence, this.options, this.targetMsc, this.divisor, this.remainder, this.notifies);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "Pixmap.PixmapBuilder(window=" + this.window + ", pixmap=" + this.pixmap + ", serial=" + this.serial + ", valid=" + this.valid + ", update=" + this.update + ", xOff=" + this.xOff + ", yOff=" + this.yOff + ", targetCrtc=" + this.targetCrtc + ", waitFence=" + this.waitFence + ", idleFence=" + this.idleFence + ", options=" + this.options + ", targetMsc=" + this.targetMsc + ", divisor=" + this.divisor + ", remainder=" + this.remainder + ", notifies=" + this.notifies + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  Pixmap(final int window, final int pixmap, final int serial, final int valid, final int update, final short xOff, final short yOff, final int targetCrtc, final int waitFence, final int idleFence, final int options, final long targetMsc, final long divisor, final long remainder, final ImmutableList<Notify> notifies) {
+    if (notifies == null) {
+      throw new java.lang.NullPointerException("notifies is marked non-null but is null");
+    }
+    this.window = window;
+    this.pixmap = pixmap;
+    this.serial = serial;
+    this.valid = valid;
+    this.update = update;
+    this.xOff = xOff;
+    this.yOff = yOff;
+    this.targetCrtc = targetCrtc;
+    this.waitFence = waitFence;
+    this.idleFence = idleFence;
+    this.options = options;
+    this.targetMsc = targetMsc;
+    this.divisor = divisor;
+    this.remainder = remainder;
+    this.notifies = notifies;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static Pixmap.PixmapBuilder builder() {
+    return new Pixmap.PixmapBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getWindow() {
+    return this.window;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getPixmap() {
+    return this.pixmap;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getSerial() {
+    return this.serial;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getValid() {
+    return this.valid;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getUpdate() {
+    return this.update;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getXOff() {
+    return this.xOff;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getYOff() {
+    return this.yOff;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getTargetCrtc() {
+    return this.targetCrtc;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getWaitFence() {
+    return this.waitFence;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getIdleFence() {
+    return this.idleFence;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getOptions() {
+    return this.options;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public long getTargetMsc() {
+    return this.targetMsc;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public long getDivisor() {
+    return this.divisor;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public long getRemainder() {
+    return this.remainder;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Notify> getNotifies() {
+    return this.notifies;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof Pixmap)) return false;
+    final Pixmap other = (Pixmap) o;
+    if (this.getWindow() != other.getWindow()) return false;
+    if (this.getPixmap() != other.getPixmap()) return false;
+    if (this.getSerial() != other.getSerial()) return false;
+    if (this.getValid() != other.getValid()) return false;
+    if (this.getUpdate() != other.getUpdate()) return false;
+    if (this.getXOff() != other.getXOff()) return false;
+    if (this.getYOff() != other.getYOff()) return false;
+    if (this.getTargetCrtc() != other.getTargetCrtc()) return false;
+    if (this.getWaitFence() != other.getWaitFence()) return false;
+    if (this.getIdleFence() != other.getIdleFence()) return false;
+    if (this.getOptions() != other.getOptions()) return false;
+    if (this.getTargetMsc() != other.getTargetMsc()) return false;
+    if (this.getDivisor() != other.getDivisor()) return false;
+    if (this.getRemainder() != other.getRemainder()) return false;
+    final java.lang.Object this$notifies = this.getNotifies();
+    final java.lang.Object other$notifies = other.getNotifies();
+    if (this$notifies == null ? other$notifies != null : !this$notifies.equals(other$notifies)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getWindow();
+    result = result * PRIME + this.getPixmap();
+    result = result * PRIME + this.getSerial();
+    result = result * PRIME + this.getValid();
+    result = result * PRIME + this.getUpdate();
+    result = result * PRIME + this.getXOff();
+    result = result * PRIME + this.getYOff();
+    result = result * PRIME + this.getTargetCrtc();
+    result = result * PRIME + this.getWaitFence();
+    result = result * PRIME + this.getIdleFence();
+    result = result * PRIME + this.getOptions();
+    final long $targetMsc = this.getTargetMsc();
+    result = result * PRIME + (int) ($targetMsc >>> 32 ^ $targetMsc);
+    final long $divisor = this.getDivisor();
+    result = result * PRIME + (int) ($divisor >>> 32 ^ $divisor);
+    final long $remainder = this.getRemainder();
+    result = result * PRIME + (int) ($remainder >>> 32 ^ $remainder);
+    final java.lang.Object $notifies = this.getNotifies();
+    result = result * PRIME + ($notifies == null ? 43 : $notifies.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "Pixmap(window=" + this.getWindow() + ", pixmap=" + this.getPixmap() + ", serial=" + this.getSerial() + ", valid=" + this.getValid() + ", update=" + this.getUpdate() + ", xOff=" + this.getXOff() + ", yOff=" + this.getYOff() + ", targetCrtc=" + this.getTargetCrtc() + ", waitFence=" + this.getWaitFence() + ", idleFence=" + this.getIdleFence() + ", options=" + this.getOptions() + ", targetMsc=" + this.getTargetMsc() + ", divisor=" + this.getDivisor() + ", remainder=" + this.getRemainder() + ", notifies=" + this.getNotifies() + ")";
   }
 }

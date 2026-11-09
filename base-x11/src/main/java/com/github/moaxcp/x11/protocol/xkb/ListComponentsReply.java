@@ -5,44 +5,23 @@ import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import com.github.moaxcp.x11.protocol.XReply;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.factory.Lists;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.MutableList;
 
-@Value
-@Builder
-public class ListComponentsReply implements XReply {
+public final class ListComponentsReply implements XReply {
   public static final String PLUGIN_NAME = "xkb";
+  private final byte deviceID;
+  private final short sequenceNumber;
+  private final short extra;
+  private final ImmutableList<Listing> keymaps;
+  private final ImmutableList<Listing> keycodes;
+  private final ImmutableList<Listing> types;
+  private final ImmutableList<Listing> compatMaps;
+  private final ImmutableList<Listing> symbols;
+  private final ImmutableList<Listing> geometries;
 
-  private byte deviceID;
-
-  private short sequenceNumber;
-
-  private short extra;
-
-  @NonNull
-  private ImmutableList<Listing> keymaps;
-
-  @NonNull
-  private ImmutableList<Listing> keycodes;
-
-  @NonNull
-  private ImmutableList<Listing> types;
-
-  @NonNull
-  private ImmutableList<Listing> compatMaps;
-
-  @NonNull
-  private ImmutableList<Listing> symbols;
-
-  @NonNull
-  private ImmutableList<Listing> geometries;
-
-  public static ListComponentsReply readListComponentsReply(byte deviceID, short sequenceNumber,
-      X11Input in) throws IOException {
+  public static ListComponentsReply readListComponentsReply(byte deviceID, short sequenceNumber, X11Input in) throws IOException {
     ListComponentsReply.ListComponentsReplyBuilder javaBuilder = ListComponentsReply.builder();
     int length = in.readCard32();
     short nKeymaps = in.readCard16();
@@ -54,27 +33,27 @@ public class ListComponentsReply implements XReply {
     short extra = in.readCard16();
     byte[] pad11 = in.readPad(10);
     MutableList<Listing> keymaps = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nKeymaps));
-    for(int i = 0; i < Short.toUnsignedInt(nKeymaps); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(nKeymaps); i++) {
       keymaps.add(Listing.readListing(in));
     }
     MutableList<Listing> keycodes = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nKeycodes));
-    for(int i = 0; i < Short.toUnsignedInt(nKeycodes); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(nKeycodes); i++) {
       keycodes.add(Listing.readListing(in));
     }
     MutableList<Listing> types = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nTypes));
-    for(int i = 0; i < Short.toUnsignedInt(nTypes); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(nTypes); i++) {
       types.add(Listing.readListing(in));
     }
     MutableList<Listing> compatMaps = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nCompatMaps));
-    for(int i = 0; i < Short.toUnsignedInt(nCompatMaps); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(nCompatMaps); i++) {
       compatMaps.add(Listing.readListing(in));
     }
     MutableList<Listing> symbols = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nSymbols));
-    for(int i = 0; i < Short.toUnsignedInt(nSymbols); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(nSymbols); i++) {
       symbols.add(Listing.readListing(in));
     }
     MutableList<Listing> geometries = Lists.mutable.withInitialCapacity(Short.toUnsignedInt(nGeometries));
-    for(int i = 0; i < Short.toUnsignedInt(nGeometries); i++) {
+    for (int i = 0; i < Short.toUnsignedInt(nGeometries); i++) {
       geometries.add(Listing.readListing(in));
     }
     javaBuilder.deviceID(deviceID);
@@ -86,7 +65,7 @@ public class ListComponentsReply implements XReply {
     javaBuilder.compatMaps(compatMaps.toImmutable());
     javaBuilder.symbols(symbols.toImmutable());
     javaBuilder.geometries(geometries.toImmutable());
-    if(javaBuilder.getSize() < 32) {
+    if (javaBuilder.getSize() < 32) {
       in.readPad(32 - javaBuilder.getSize());
     }
     in.readPadAlign(javaBuilder.getSize());
@@ -113,22 +92,22 @@ public class ListComponentsReply implements XReply {
     out.writeCard16(nGeometries);
     out.writeCard16(extra);
     out.writePad(10);
-    for(Listing t : keymaps) {
+    for (Listing t : keymaps) {
       t.write(out);
     }
-    for(Listing t : keycodes) {
+    for (Listing t : keycodes) {
       t.write(out);
     }
-    for(Listing t : types) {
+    for (Listing t : types) {
       t.write(out);
     }
-    for(Listing t : compatMaps) {
+    for (Listing t : compatMaps) {
       t.write(out);
     }
-    for(Listing t : symbols) {
+    for (Listing t : symbols) {
       t.write(out);
     }
-    for(Listing t : geometries) {
+    for (Listing t : geometries) {
       t.write(out);
     }
     out.writePadAlign(getSize());
@@ -143,9 +122,283 @@ public class ListComponentsReply implements XReply {
     return PLUGIN_NAME;
   }
 
+
   public static class ListComponentsReplyBuilder {
+    @java.lang.SuppressWarnings("all")
+    private byte deviceID;
+    @java.lang.SuppressWarnings("all")
+    private short sequenceNumber;
+    @java.lang.SuppressWarnings("all")
+    private short extra;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Listing> keymaps;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Listing> keycodes;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Listing> types;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Listing> compatMaps;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Listing> symbols;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<Listing> geometries;
+
     public int getSize() {
       return 32 + XObject.sizeOf(keymaps) + XObject.sizeOf(keycodes) + XObject.sizeOf(types) + XObject.sizeOf(compatMaps) + XObject.sizeOf(symbols) + XObject.sizeOf(geometries);
     }
+
+    @java.lang.SuppressWarnings("all")
+    ListComponentsReplyBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder deviceID(final byte deviceID) {
+      this.deviceID = deviceID;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder sequenceNumber(final short sequenceNumber) {
+      this.sequenceNumber = sequenceNumber;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder extra(final short extra) {
+      this.extra = extra;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder keymaps(final ImmutableList<Listing> keymaps) {
+      if (keymaps == null) {
+        throw new java.lang.NullPointerException("keymaps is marked non-null but is null");
+      }
+      this.keymaps = keymaps;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder keycodes(final ImmutableList<Listing> keycodes) {
+      if (keycodes == null) {
+        throw new java.lang.NullPointerException("keycodes is marked non-null but is null");
+      }
+      this.keycodes = keycodes;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder types(final ImmutableList<Listing> types) {
+      if (types == null) {
+        throw new java.lang.NullPointerException("types is marked non-null but is null");
+      }
+      this.types = types;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder compatMaps(final ImmutableList<Listing> compatMaps) {
+      if (compatMaps == null) {
+        throw new java.lang.NullPointerException("compatMaps is marked non-null but is null");
+      }
+      this.compatMaps = compatMaps;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder symbols(final ImmutableList<Listing> symbols) {
+      if (symbols == null) {
+        throw new java.lang.NullPointerException("symbols is marked non-null but is null");
+      }
+      this.symbols = symbols;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply.ListComponentsReplyBuilder geometries(final ImmutableList<Listing> geometries) {
+      if (geometries == null) {
+        throw new java.lang.NullPointerException("geometries is marked non-null but is null");
+      }
+      this.geometries = geometries;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ListComponentsReply build() {
+      return new ListComponentsReply(this.deviceID, this.sequenceNumber, this.extra, this.keymaps, this.keycodes, this.types, this.compatMaps, this.symbols, this.geometries);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ListComponentsReply.ListComponentsReplyBuilder(deviceID=" + this.deviceID + ", sequenceNumber=" + this.sequenceNumber + ", extra=" + this.extra + ", keymaps=" + this.keymaps + ", keycodes=" + this.keycodes + ", types=" + this.types + ", compatMaps=" + this.compatMaps + ", symbols=" + this.symbols + ", geometries=" + this.geometries + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ListComponentsReply(final byte deviceID, final short sequenceNumber, final short extra, final ImmutableList<Listing> keymaps, final ImmutableList<Listing> keycodes, final ImmutableList<Listing> types, final ImmutableList<Listing> compatMaps, final ImmutableList<Listing> symbols, final ImmutableList<Listing> geometries) {
+    if (keymaps == null) {
+      throw new java.lang.NullPointerException("keymaps is marked non-null but is null");
+    }
+    if (keycodes == null) {
+      throw new java.lang.NullPointerException("keycodes is marked non-null but is null");
+    }
+    if (types == null) {
+      throw new java.lang.NullPointerException("types is marked non-null but is null");
+    }
+    if (compatMaps == null) {
+      throw new java.lang.NullPointerException("compatMaps is marked non-null but is null");
+    }
+    if (symbols == null) {
+      throw new java.lang.NullPointerException("symbols is marked non-null but is null");
+    }
+    if (geometries == null) {
+      throw new java.lang.NullPointerException("geometries is marked non-null but is null");
+    }
+    this.deviceID = deviceID;
+    this.sequenceNumber = sequenceNumber;
+    this.extra = extra;
+    this.keymaps = keymaps;
+    this.keycodes = keycodes;
+    this.types = types;
+    this.compatMaps = compatMaps;
+    this.symbols = symbols;
+    this.geometries = geometries;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ListComponentsReply.ListComponentsReplyBuilder builder() {
+    return new ListComponentsReply.ListComponentsReplyBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getDeviceID() {
+    return this.deviceID;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getSequenceNumber() {
+    return this.sequenceNumber;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getExtra() {
+    return this.extra;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Listing> getKeymaps() {
+    return this.keymaps;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Listing> getKeycodes() {
+    return this.keycodes;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Listing> getTypes() {
+    return this.types;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Listing> getCompatMaps() {
+    return this.compatMaps;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Listing> getSymbols() {
+    return this.symbols;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<Listing> getGeometries() {
+    return this.geometries;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ListComponentsReply)) return false;
+    final ListComponentsReply other = (ListComponentsReply) o;
+    if (this.getDeviceID() != other.getDeviceID()) return false;
+    if (this.getSequenceNumber() != other.getSequenceNumber()) return false;
+    if (this.getExtra() != other.getExtra()) return false;
+    final java.lang.Object this$keymaps = this.getKeymaps();
+    final java.lang.Object other$keymaps = other.getKeymaps();
+    if (this$keymaps == null ? other$keymaps != null : !this$keymaps.equals(other$keymaps)) return false;
+    final java.lang.Object this$keycodes = this.getKeycodes();
+    final java.lang.Object other$keycodes = other.getKeycodes();
+    if (this$keycodes == null ? other$keycodes != null : !this$keycodes.equals(other$keycodes)) return false;
+    final java.lang.Object this$types = this.getTypes();
+    final java.lang.Object other$types = other.getTypes();
+    if (this$types == null ? other$types != null : !this$types.equals(other$types)) return false;
+    final java.lang.Object this$compatMaps = this.getCompatMaps();
+    final java.lang.Object other$compatMaps = other.getCompatMaps();
+    if (this$compatMaps == null ? other$compatMaps != null : !this$compatMaps.equals(other$compatMaps)) return false;
+    final java.lang.Object this$symbols = this.getSymbols();
+    final java.lang.Object other$symbols = other.getSymbols();
+    if (this$symbols == null ? other$symbols != null : !this$symbols.equals(other$symbols)) return false;
+    final java.lang.Object this$geometries = this.getGeometries();
+    final java.lang.Object other$geometries = other.getGeometries();
+    if (this$geometries == null ? other$geometries != null : !this$geometries.equals(other$geometries)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDeviceID();
+    result = result * PRIME + this.getSequenceNumber();
+    result = result * PRIME + this.getExtra();
+    final java.lang.Object $keymaps = this.getKeymaps();
+    result = result * PRIME + ($keymaps == null ? 43 : $keymaps.hashCode());
+    final java.lang.Object $keycodes = this.getKeycodes();
+    result = result * PRIME + ($keycodes == null ? 43 : $keycodes.hashCode());
+    final java.lang.Object $types = this.getTypes();
+    result = result * PRIME + ($types == null ? 43 : $types.hashCode());
+    final java.lang.Object $compatMaps = this.getCompatMaps();
+    result = result * PRIME + ($compatMaps == null ? 43 : $compatMaps.hashCode());
+    final java.lang.Object $symbols = this.getSymbols();
+    result = result * PRIME + ($symbols == null ? 43 : $symbols.hashCode());
+    final java.lang.Object $geometries = this.getGeometries();
+    result = result * PRIME + ($geometries == null ? 43 : $geometries.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ListComponentsReply(deviceID=" + this.getDeviceID() + ", sequenceNumber=" + this.getSequenceNumber() + ", extra=" + this.getExtra() + ", keymaps=" + this.getKeymaps() + ", keycodes=" + this.getKeycodes() + ", types=" + this.getTypes() + ", compatMaps=" + this.getCompatMaps() + ", symbols=" + this.getSymbols() + ", geometries=" + this.getGeometries() + ")";
   }
 }

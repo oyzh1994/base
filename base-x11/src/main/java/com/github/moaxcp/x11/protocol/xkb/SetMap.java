@@ -6,79 +6,38 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XObject;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class SetMap implements OneWayRequest {
+public final class SetMap implements OneWayRequest {
   public static final String PLUGIN_NAME = "xkb";
-
   public static final byte OPCODE = 9;
-
-  private short deviceSpec;
-
-  private short present;
-
-  private short flags;
-
-  private byte minKeyCode;
-
-  private byte maxKeyCode;
-
-  private byte firstType;
-
-  private byte firstKeySym;
-
-  private short totalSyms;
-
-  private byte firstKeyAction;
-
-  private byte firstKeyBehavior;
-
-  private byte nKeyBehaviors;
-
-  private byte firstKeyExplicit;
-
-  private byte nKeyExplicit;
-
-  private byte firstModMapKey;
-
-  private byte nModMapKeys;
-
-  private byte firstVModMapKey;
-
-  private byte nVModMapKeys;
-
-  @NonNull
-  private ImmutableList<SetKeyType> types;
-
-  @NonNull
-  private ImmutableList<KeySymMap> syms;
-
-  @NonNull
-  private ByteList actionsCount;
-
-  @NonNull
-  private ImmutableList<ActionUnion> actions;
-
-  @NonNull
-  private ImmutableList<SetBehavior> behaviors;
-
-  @NonNull
-  private ByteList vmods;
-
-  @NonNull
-  private ImmutableList<SetExplicit> explicit;
-
-  @NonNull
-  private ImmutableList<KeyModMap> modmap;
-
-  @NonNull
-  private ImmutableList<KeyVModMap> vmodmap;
+  private final short deviceSpec;
+  private final short present;
+  private final short flags;
+  private final byte minKeyCode;
+  private final byte maxKeyCode;
+  private final byte firstType;
+  private final byte firstKeySym;
+  private final short totalSyms;
+  private final byte firstKeyAction;
+  private final byte firstKeyBehavior;
+  private final byte nKeyBehaviors;
+  private final byte firstKeyExplicit;
+  private final byte nKeyExplicit;
+  private final byte firstModMapKey;
+  private final byte nModMapKeys;
+  private final byte firstVModMapKey;
+  private final byte nVModMapKeys;
+  private final ImmutableList<SetKeyType> types;
+  private final ImmutableList<KeySymMap> syms;
+  private final ByteList actionsCount;
+  private final ImmutableList<ActionUnion> actions;
+  private final ImmutableList<SetBehavior> behaviors;
+  private final ByteList vmods;
+  private final ImmutableList<SetExplicit> explicit;
+  private final ImmutableList<KeyModMap> modmap;
+  private final ImmutableList<KeyVModMap> vmodmap;
 
   public byte getOpCode() {
     return OPCODE;
@@ -142,39 +101,39 @@ public class SetMap implements OneWayRequest {
     javaBuilder.nModMapKeys(nModMapKeys);
     javaBuilder.firstVModMapKey(firstVModMapKey);
     javaBuilder.nVModMapKeys(nVModMapKeys);
-    if(MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
       types = in.readObject(SetKeyType::readSetKeyType, Byte.toUnsignedInt(nTypes));
       javaBuilder.types(types);
     }
-    if(MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
       syms = in.readObject(KeySymMap::readKeySymMap, Byte.toUnsignedInt(nKeySyms));
       javaBuilder.syms(syms);
     }
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
       actionsCount = in.readCard8(Byte.toUnsignedInt(nKeyActions));
       javaBuilder.actionsCount(actionsCount);
     }
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
       actions = in.readObject(ActionUnion::readActionUnion, Short.toUnsignedInt(totalActions));
       javaBuilder.actions(actions);
     }
-    if(MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
       behaviors = in.readObject(SetBehavior::readSetBehavior, Byte.toUnsignedInt(totalKeyBehaviors));
       javaBuilder.behaviors(behaviors);
     }
-    if(MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
       vmods = in.readCard8(Popcount.popcount(Short.toUnsignedInt(virtualMods)));
       javaBuilder.vmods(vmods);
     }
-    if(MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
       explicit = in.readObject(SetExplicit::readSetExplicit, Byte.toUnsignedInt(totalKeyExplicit));
       javaBuilder.explicit(explicit);
     }
-    if(MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
       modmap = in.readObject(KeyModMap::readKeyModMap, Byte.toUnsignedInt(totalModMapKeys));
       javaBuilder.modmap(modmap);
     }
-    if(MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
       vmodmap = in.readObject(KeyVModMap::readKeyVModMap, Byte.toUnsignedInt(totalVModMapKeys));
       javaBuilder.vmodmap(vmodmap);
     }
@@ -185,7 +144,7 @@ public class SetMap implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard16(deviceSpec);
     out.writeCard16(present);
@@ -222,64 +181,70 @@ public class SetMap implements OneWayRequest {
     out.writeCard8(totalVModMapKeys);
     short virtualMods = (short) vmods.size();
     out.writeCard16(virtualMods);
-    if(MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
-      for(SetKeyType t : types) {
+    if (MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present))) {
+      for (SetKeyType t : types) {
         t.write(out);
       }
     }
-    if(MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
-      for(KeySymMap t : syms) {
+    if (MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present))) {
+      for (KeySymMap t : syms) {
         t.write(out);
       }
     }
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
       out.writeCard8(actionsCount);
     }
     out.writePadAlign(Byte.toUnsignedInt(nKeyActions));
-    if(MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
-      for(ActionUnion t : actions) {
+    if (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present))) {
+      for (ActionUnion t : actions) {
         t.write(out);
       }
     }
-    if(MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
-      for(SetBehavior t : behaviors) {
+    if (MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present))) {
+      for (SetBehavior t : behaviors) {
         t.write(out);
       }
     }
-    if(MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
+    if (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present))) {
       out.writeCard8(vmods);
     }
     out.writePadAlign(com.github.moaxcp.x11.protocol.Popcount.popcount(Short.toUnsignedInt(virtualMods)));
-    if(MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
-      for(SetExplicit t : explicit) {
+    if (MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present))) {
+      for (SetExplicit t : explicit) {
         t.write(out);
       }
     }
-    if(MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
-      for(KeyModMap t : modmap) {
+    if (MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present))) {
+      for (KeyModMap t : modmap) {
         t.write(out);
       }
     }
-    if(MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
-      for(KeyVModMap t : vmodmap) {
+    if (MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present))) {
+      for (KeyVModMap t : vmodmap) {
         t.write(out);
       }
     }
     out.writePadAlign(getSize());
   }
 
-  public boolean isPresentEnabled(@NonNull MapPart... maskEnums) {
-    for(MapPart m : maskEnums) {
-      if(!m.isEnabled(present)) {
+  public boolean isPresentEnabled(MapPart... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (MapPart m : maskEnums) {
+      if (!m.isEnabled(present)) {
         return false;
       }
     }
     return true;
   }
 
-  public boolean isFlagsEnabled(@NonNull SetMapFlags... maskEnums) {
-    for(SetMapFlags m : maskEnums) {
-      if(!m.isEnabled(flags)) {
+  public boolean isFlagsEnabled(SetMapFlags... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (SetMapFlags m : maskEnums) {
+      if (!m.isEnabled(flags)) {
         return false;
       }
     }
@@ -295,10 +260,67 @@ public class SetMap implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class SetMapBuilder {
-    public boolean isPresentEnabled(@NonNull MapPart... maskEnums) {
-      for(MapPart m : maskEnums) {
-        if(!m.isEnabled(present)) {
+    @java.lang.SuppressWarnings("all")
+    private short deviceSpec;
+    @java.lang.SuppressWarnings("all")
+    private short present;
+    @java.lang.SuppressWarnings("all")
+    private short flags;
+    @java.lang.SuppressWarnings("all")
+    private byte minKeyCode;
+    @java.lang.SuppressWarnings("all")
+    private byte maxKeyCode;
+    @java.lang.SuppressWarnings("all")
+    private byte firstType;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeySym;
+    @java.lang.SuppressWarnings("all")
+    private short totalSyms;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeyAction;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeyBehavior;
+    @java.lang.SuppressWarnings("all")
+    private byte nKeyBehaviors;
+    @java.lang.SuppressWarnings("all")
+    private byte firstKeyExplicit;
+    @java.lang.SuppressWarnings("all")
+    private byte nKeyExplicit;
+    @java.lang.SuppressWarnings("all")
+    private byte firstModMapKey;
+    @java.lang.SuppressWarnings("all")
+    private byte nModMapKeys;
+    @java.lang.SuppressWarnings("all")
+    private byte firstVModMapKey;
+    @java.lang.SuppressWarnings("all")
+    private byte nVModMapKeys;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<SetKeyType> types;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeySymMap> syms;
+    @java.lang.SuppressWarnings("all")
+    private ByteList actionsCount;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<ActionUnion> actions;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<SetBehavior> behaviors;
+    @java.lang.SuppressWarnings("all")
+    private ByteList vmods;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<SetExplicit> explicit;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeyModMap> modmap;
+    @java.lang.SuppressWarnings("all")
+    private ImmutableList<KeyVModMap> vmodmap;
+
+    public boolean isPresentEnabled(MapPart... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (MapPart m : maskEnums) {
+        if (!m.isEnabled(present)) {
           return false;
         }
       }
@@ -306,22 +328,25 @@ public class SetMap implements OneWayRequest {
     }
 
     public SetMap.SetMapBuilder presentEnable(MapPart... maskEnums) {
-      for(MapPart m : maskEnums) {
+      for (MapPart m : maskEnums) {
         present((short) m.enableFor(present));
       }
       return this;
     }
 
     public SetMap.SetMapBuilder presentDisable(MapPart... maskEnums) {
-      for(MapPart m : maskEnums) {
+      for (MapPart m : maskEnums) {
         present((short) m.disableFor(present));
       }
       return this;
     }
 
-    public boolean isFlagsEnabled(@NonNull SetMapFlags... maskEnums) {
-      for(SetMapFlags m : maskEnums) {
-        if(!m.isEnabled(flags)) {
+    public boolean isFlagsEnabled(SetMapFlags... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (SetMapFlags m : maskEnums) {
+        if (!m.isEnabled(flags)) {
           return false;
         }
       }
@@ -329,14 +354,14 @@ public class SetMap implements OneWayRequest {
     }
 
     public SetMap.SetMapBuilder flagsEnable(SetMapFlags... maskEnums) {
-      for(SetMapFlags m : maskEnums) {
+      for (SetMapFlags m : maskEnums) {
         flags((short) m.enableFor(flags));
       }
       return this;
     }
 
     public SetMap.SetMapBuilder flagsDisable(SetMapFlags... maskEnums) {
-      for(SetMapFlags m : maskEnums) {
+      for (SetMapFlags m : maskEnums) {
         flags((short) m.disableFor(flags));
       }
       return this;
@@ -399,5 +424,467 @@ public class SetMap implements OneWayRequest {
     public int getSize() {
       return 36 + (MapPart.KEY_TYPES.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(types) : 0) + (MapPart.KEY_SYMS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(syms) : 0) + (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present)) ? 1 * actionsCount.size() : 0) + XObject.getSizeForPadAlign(4, (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present)) ? 1 * actionsCount.size() : 0)) + (MapPart.KEY_ACTIONS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(actions) : 0) + (MapPart.KEY_BEHAVIORS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(behaviors) : 0) + (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present)) ? 1 * vmods.size() : 0) + XObject.getSizeForPadAlign(4, (MapPart.VIRTUAL_MODS.isEnabled(Short.toUnsignedInt(present)) ? 1 * vmods.size() : 0)) + (MapPart.EXPLICIT_COMPONENTS.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(explicit) : 0) + (MapPart.MODIFIER_MAP.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(modmap) : 0) + (MapPart.VIRTUAL_MOD_MAP.isEnabled(Short.toUnsignedInt(present)) ? XObject.sizeOf(vmodmap) : 0);
     }
+
+    @java.lang.SuppressWarnings("all")
+    SetMapBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder deviceSpec(final short deviceSpec) {
+      this.deviceSpec = deviceSpec;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder present(final short present) {
+      this.present = present;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder flags(final short flags) {
+      this.flags = flags;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder minKeyCode(final byte minKeyCode) {
+      this.minKeyCode = minKeyCode;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder maxKeyCode(final byte maxKeyCode) {
+      this.maxKeyCode = maxKeyCode;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder firstType(final byte firstType) {
+      this.firstType = firstType;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder firstKeySym(final byte firstKeySym) {
+      this.firstKeySym = firstKeySym;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder totalSyms(final short totalSyms) {
+      this.totalSyms = totalSyms;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder firstKeyAction(final byte firstKeyAction) {
+      this.firstKeyAction = firstKeyAction;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder firstKeyBehavior(final byte firstKeyBehavior) {
+      this.firstKeyBehavior = firstKeyBehavior;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder nKeyBehaviors(final byte nKeyBehaviors) {
+      this.nKeyBehaviors = nKeyBehaviors;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder firstKeyExplicit(final byte firstKeyExplicit) {
+      this.firstKeyExplicit = firstKeyExplicit;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder nKeyExplicit(final byte nKeyExplicit) {
+      this.nKeyExplicit = nKeyExplicit;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder firstModMapKey(final byte firstModMapKey) {
+      this.firstModMapKey = firstModMapKey;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder nModMapKeys(final byte nModMapKeys) {
+      this.nModMapKeys = nModMapKeys;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder firstVModMapKey(final byte firstVModMapKey) {
+      this.firstVModMapKey = firstVModMapKey;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetMap.SetMapBuilder nVModMapKeys(final byte nVModMapKeys) {
+      this.nVModMapKeys = nVModMapKeys;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SetMap build() {
+      return new SetMap(this.deviceSpec, this.present, this.flags, this.minKeyCode, this.maxKeyCode, this.firstType, this.firstKeySym, this.totalSyms, this.firstKeyAction, this.firstKeyBehavior, this.nKeyBehaviors, this.firstKeyExplicit, this.nKeyExplicit, this.firstModMapKey, this.nModMapKeys, this.firstVModMapKey, this.nVModMapKeys, this.types, this.syms, this.actionsCount, this.actions, this.behaviors, this.vmods, this.explicit, this.modmap, this.vmodmap);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SetMap.SetMapBuilder(deviceSpec=" + this.deviceSpec + ", present=" + this.present + ", flags=" + this.flags + ", minKeyCode=" + this.minKeyCode + ", maxKeyCode=" + this.maxKeyCode + ", firstType=" + this.firstType + ", firstKeySym=" + this.firstKeySym + ", totalSyms=" + this.totalSyms + ", firstKeyAction=" + this.firstKeyAction + ", firstKeyBehavior=" + this.firstKeyBehavior + ", nKeyBehaviors=" + this.nKeyBehaviors + ", firstKeyExplicit=" + this.firstKeyExplicit + ", nKeyExplicit=" + this.nKeyExplicit + ", firstModMapKey=" + this.firstModMapKey + ", nModMapKeys=" + this.nModMapKeys + ", firstVModMapKey=" + this.firstVModMapKey + ", nVModMapKeys=" + this.nVModMapKeys + ", types=" + this.types + ", syms=" + this.syms + ", actionsCount=" + this.actionsCount + ", actions=" + this.actions + ", behaviors=" + this.behaviors + ", vmods=" + this.vmods + ", explicit=" + this.explicit + ", modmap=" + this.modmap + ", vmodmap=" + this.vmodmap + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SetMap(final short deviceSpec, final short present, final short flags, final byte minKeyCode, final byte maxKeyCode, final byte firstType, final byte firstKeySym, final short totalSyms, final byte firstKeyAction, final byte firstKeyBehavior, final byte nKeyBehaviors, final byte firstKeyExplicit, final byte nKeyExplicit, final byte firstModMapKey, final byte nModMapKeys, final byte firstVModMapKey, final byte nVModMapKeys, final ImmutableList<SetKeyType> types, final ImmutableList<KeySymMap> syms, final ByteList actionsCount, final ImmutableList<ActionUnion> actions, final ImmutableList<SetBehavior> behaviors, final ByteList vmods, final ImmutableList<SetExplicit> explicit, final ImmutableList<KeyModMap> modmap, final ImmutableList<KeyVModMap> vmodmap) {
+    if (types == null) {
+      throw new java.lang.NullPointerException("types is marked non-null but is null");
+    }
+    if (syms == null) {
+      throw new java.lang.NullPointerException("syms is marked non-null but is null");
+    }
+    if (actionsCount == null) {
+      throw new java.lang.NullPointerException("actionsCount is marked non-null but is null");
+    }
+    if (actions == null) {
+      throw new java.lang.NullPointerException("actions is marked non-null but is null");
+    }
+    if (behaviors == null) {
+      throw new java.lang.NullPointerException("behaviors is marked non-null but is null");
+    }
+    if (vmods == null) {
+      throw new java.lang.NullPointerException("vmods is marked non-null but is null");
+    }
+    if (explicit == null) {
+      throw new java.lang.NullPointerException("explicit is marked non-null but is null");
+    }
+    if (modmap == null) {
+      throw new java.lang.NullPointerException("modmap is marked non-null but is null");
+    }
+    if (vmodmap == null) {
+      throw new java.lang.NullPointerException("vmodmap is marked non-null but is null");
+    }
+    this.deviceSpec = deviceSpec;
+    this.present = present;
+    this.flags = flags;
+    this.minKeyCode = minKeyCode;
+    this.maxKeyCode = maxKeyCode;
+    this.firstType = firstType;
+    this.firstKeySym = firstKeySym;
+    this.totalSyms = totalSyms;
+    this.firstKeyAction = firstKeyAction;
+    this.firstKeyBehavior = firstKeyBehavior;
+    this.nKeyBehaviors = nKeyBehaviors;
+    this.firstKeyExplicit = firstKeyExplicit;
+    this.nKeyExplicit = nKeyExplicit;
+    this.firstModMapKey = firstModMapKey;
+    this.nModMapKeys = nModMapKeys;
+    this.firstVModMapKey = firstVModMapKey;
+    this.nVModMapKeys = nVModMapKeys;
+    this.types = types;
+    this.syms = syms;
+    this.actionsCount = actionsCount;
+    this.actions = actions;
+    this.behaviors = behaviors;
+    this.vmods = vmods;
+    this.explicit = explicit;
+    this.modmap = modmap;
+    this.vmodmap = vmodmap;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SetMap.SetMapBuilder builder() {
+    return new SetMap.SetMapBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getDeviceSpec() {
+    return this.deviceSpec;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getPresent() {
+    return this.present;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getFlags() {
+    return this.flags;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMinKeyCode() {
+    return this.minKeyCode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMaxKeyCode() {
+    return this.maxKeyCode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstType() {
+    return this.firstType;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeySym() {
+    return this.firstKeySym;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getTotalSyms() {
+    return this.totalSyms;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeyAction() {
+    return this.firstKeyAction;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeyBehavior() {
+    return this.firstKeyBehavior;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNKeyBehaviors() {
+    return this.nKeyBehaviors;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstKeyExplicit() {
+    return this.firstKeyExplicit;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNKeyExplicit() {
+    return this.nKeyExplicit;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstModMapKey() {
+    return this.firstModMapKey;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNModMapKeys() {
+    return this.nModMapKeys;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstVModMapKey() {
+    return this.firstVModMapKey;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getNVModMapKeys() {
+    return this.nVModMapKeys;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<SetKeyType> getTypes() {
+    return this.types;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeySymMap> getSyms() {
+    return this.syms;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getActionsCount() {
+    return this.actionsCount;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<ActionUnion> getActions() {
+    return this.actions;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<SetBehavior> getBehaviors() {
+    return this.behaviors;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getVmods() {
+    return this.vmods;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<SetExplicit> getExplicit() {
+    return this.explicit;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeyModMap> getModmap() {
+    return this.modmap;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ImmutableList<KeyVModMap> getVmodmap() {
+    return this.vmodmap;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SetMap)) return false;
+    final SetMap other = (SetMap) o;
+    if (this.getDeviceSpec() != other.getDeviceSpec()) return false;
+    if (this.getPresent() != other.getPresent()) return false;
+    if (this.getFlags() != other.getFlags()) return false;
+    if (this.getMinKeyCode() != other.getMinKeyCode()) return false;
+    if (this.getMaxKeyCode() != other.getMaxKeyCode()) return false;
+    if (this.getFirstType() != other.getFirstType()) return false;
+    if (this.getFirstKeySym() != other.getFirstKeySym()) return false;
+    if (this.getTotalSyms() != other.getTotalSyms()) return false;
+    if (this.getFirstKeyAction() != other.getFirstKeyAction()) return false;
+    if (this.getFirstKeyBehavior() != other.getFirstKeyBehavior()) return false;
+    if (this.getNKeyBehaviors() != other.getNKeyBehaviors()) return false;
+    if (this.getFirstKeyExplicit() != other.getFirstKeyExplicit()) return false;
+    if (this.getNKeyExplicit() != other.getNKeyExplicit()) return false;
+    if (this.getFirstModMapKey() != other.getFirstModMapKey()) return false;
+    if (this.getNModMapKeys() != other.getNModMapKeys()) return false;
+    if (this.getFirstVModMapKey() != other.getFirstVModMapKey()) return false;
+    if (this.getNVModMapKeys() != other.getNVModMapKeys()) return false;
+    final java.lang.Object this$types = this.getTypes();
+    final java.lang.Object other$types = other.getTypes();
+    if (this$types == null ? other$types != null : !this$types.equals(other$types)) return false;
+    final java.lang.Object this$syms = this.getSyms();
+    final java.lang.Object other$syms = other.getSyms();
+    if (this$syms == null ? other$syms != null : !this$syms.equals(other$syms)) return false;
+    final java.lang.Object this$actionsCount = this.getActionsCount();
+    final java.lang.Object other$actionsCount = other.getActionsCount();
+    if (this$actionsCount == null ? other$actionsCount != null : !this$actionsCount.equals(other$actionsCount)) return false;
+    final java.lang.Object this$actions = this.getActions();
+    final java.lang.Object other$actions = other.getActions();
+    if (this$actions == null ? other$actions != null : !this$actions.equals(other$actions)) return false;
+    final java.lang.Object this$behaviors = this.getBehaviors();
+    final java.lang.Object other$behaviors = other.getBehaviors();
+    if (this$behaviors == null ? other$behaviors != null : !this$behaviors.equals(other$behaviors)) return false;
+    final java.lang.Object this$vmods = this.getVmods();
+    final java.lang.Object other$vmods = other.getVmods();
+    if (this$vmods == null ? other$vmods != null : !this$vmods.equals(other$vmods)) return false;
+    final java.lang.Object this$explicit = this.getExplicit();
+    final java.lang.Object other$explicit = other.getExplicit();
+    if (this$explicit == null ? other$explicit != null : !this$explicit.equals(other$explicit)) return false;
+    final java.lang.Object this$modmap = this.getModmap();
+    final java.lang.Object other$modmap = other.getModmap();
+    if (this$modmap == null ? other$modmap != null : !this$modmap.equals(other$modmap)) return false;
+    final java.lang.Object this$vmodmap = this.getVmodmap();
+    final java.lang.Object other$vmodmap = other.getVmodmap();
+    if (this$vmodmap == null ? other$vmodmap != null : !this$vmodmap.equals(other$vmodmap)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDeviceSpec();
+    result = result * PRIME + this.getPresent();
+    result = result * PRIME + this.getFlags();
+    result = result * PRIME + this.getMinKeyCode();
+    result = result * PRIME + this.getMaxKeyCode();
+    result = result * PRIME + this.getFirstType();
+    result = result * PRIME + this.getFirstKeySym();
+    result = result * PRIME + this.getTotalSyms();
+    result = result * PRIME + this.getFirstKeyAction();
+    result = result * PRIME + this.getFirstKeyBehavior();
+    result = result * PRIME + this.getNKeyBehaviors();
+    result = result * PRIME + this.getFirstKeyExplicit();
+    result = result * PRIME + this.getNKeyExplicit();
+    result = result * PRIME + this.getFirstModMapKey();
+    result = result * PRIME + this.getNModMapKeys();
+    result = result * PRIME + this.getFirstVModMapKey();
+    result = result * PRIME + this.getNVModMapKeys();
+    final java.lang.Object $types = this.getTypes();
+    result = result * PRIME + ($types == null ? 43 : $types.hashCode());
+    final java.lang.Object $syms = this.getSyms();
+    result = result * PRIME + ($syms == null ? 43 : $syms.hashCode());
+    final java.lang.Object $actionsCount = this.getActionsCount();
+    result = result * PRIME + ($actionsCount == null ? 43 : $actionsCount.hashCode());
+    final java.lang.Object $actions = this.getActions();
+    result = result * PRIME + ($actions == null ? 43 : $actions.hashCode());
+    final java.lang.Object $behaviors = this.getBehaviors();
+    result = result * PRIME + ($behaviors == null ? 43 : $behaviors.hashCode());
+    final java.lang.Object $vmods = this.getVmods();
+    result = result * PRIME + ($vmods == null ? 43 : $vmods.hashCode());
+    final java.lang.Object $explicit = this.getExplicit();
+    result = result * PRIME + ($explicit == null ? 43 : $explicit.hashCode());
+    final java.lang.Object $modmap = this.getModmap();
+    result = result * PRIME + ($modmap == null ? 43 : $modmap.hashCode());
+    final java.lang.Object $vmodmap = this.getVmodmap();
+    result = result * PRIME + ($vmodmap == null ? 43 : $vmodmap.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SetMap(deviceSpec=" + this.getDeviceSpec() + ", present=" + this.getPresent() + ", flags=" + this.getFlags() + ", minKeyCode=" + this.getMinKeyCode() + ", maxKeyCode=" + this.getMaxKeyCode() + ", firstType=" + this.getFirstType() + ", firstKeySym=" + this.getFirstKeySym() + ", totalSyms=" + this.getTotalSyms() + ", firstKeyAction=" + this.getFirstKeyAction() + ", firstKeyBehavior=" + this.getFirstKeyBehavior() + ", nKeyBehaviors=" + this.getNKeyBehaviors() + ", firstKeyExplicit=" + this.getFirstKeyExplicit() + ", nKeyExplicit=" + this.getNKeyExplicit() + ", firstModMapKey=" + this.getFirstModMapKey() + ", nModMapKeys=" + this.getNModMapKeys() + ", firstVModMapKey=" + this.getFirstVModMapKey() + ", nVModMapKeys=" + this.getNVModMapKeys() + ", types=" + this.getTypes() + ", syms=" + this.getSyms() + ", actionsCount=" + this.getActionsCount() + ", actions=" + this.getActions() + ", behaviors=" + this.getBehaviors() + ", vmods=" + this.getVmods() + ", explicit=" + this.getExplicit() + ", modmap=" + this.getModmap() + ", vmodmap=" + this.getVmodmap() + ")";
   }
 }

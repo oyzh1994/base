@@ -4,17 +4,11 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class FreeCursor implements OneWayRequest {
+public final class FreeCursor implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 95;
-
-  private int cursor;
+  private final int cursor;
 
   public byte getOpCode() {
     return OPCODE;
@@ -31,7 +25,7 @@ public class FreeCursor implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard32(cursor);
@@ -46,9 +40,77 @@ public class FreeCursor implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class FreeCursorBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int cursor;
+
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    FreeCursorBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public FreeCursor.FreeCursorBuilder cursor(final int cursor) {
+      this.cursor = cursor;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public FreeCursor build() {
+      return new FreeCursor(this.cursor);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "FreeCursor.FreeCursorBuilder(cursor=" + this.cursor + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  FreeCursor(final int cursor) {
+    this.cursor = cursor;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static FreeCursor.FreeCursorBuilder builder() {
+    return new FreeCursor.FreeCursorBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getCursor() {
+    return this.cursor;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof FreeCursor)) return false;
+    final FreeCursor other = (FreeCursor) o;
+    if (this.getCursor() != other.getCursor()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getCursor();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "FreeCursor(cursor=" + this.getCursor() + ")";
   }
 }

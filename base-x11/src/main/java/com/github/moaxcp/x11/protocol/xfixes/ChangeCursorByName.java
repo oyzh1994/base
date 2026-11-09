@@ -4,22 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class ChangeCursorByName implements OneWayRequest {
+public final class ChangeCursorByName implements OneWayRequest {
   public static final String PLUGIN_NAME = "xfixes";
-
   public static final byte OPCODE = 27;
-
-  private int src;
-
-  @NonNull
-  private ByteList name;
+  private final int src;
+  private final ByteList name;
 
   public byte getOpCode() {
     return OPCODE;
@@ -42,7 +33,7 @@ public class ChangeCursorByName implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(src);
     short nbytes = (short) name.size();
@@ -61,9 +52,105 @@ public class ChangeCursorByName implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class ChangeCursorByNameBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int src;
+    @java.lang.SuppressWarnings("all")
+    private ByteList name;
+
     public int getSize() {
       return 12 + 1 * name.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    ChangeCursorByNameBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ChangeCursorByName.ChangeCursorByNameBuilder src(final int src) {
+      this.src = src;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public ChangeCursorByName.ChangeCursorByNameBuilder name(final ByteList name) {
+      if (name == null) {
+        throw new java.lang.NullPointerException("name is marked non-null but is null");
+      }
+      this.name = name;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public ChangeCursorByName build() {
+      return new ChangeCursorByName(this.src, this.name);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "ChangeCursorByName.ChangeCursorByNameBuilder(src=" + this.src + ", name=" + this.name + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  ChangeCursorByName(final int src, final ByteList name) {
+    if (name == null) {
+      throw new java.lang.NullPointerException("name is marked non-null but is null");
+    }
+    this.src = src;
+    this.name = name;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static ChangeCursorByName.ChangeCursorByNameBuilder builder() {
+    return new ChangeCursorByName.ChangeCursorByNameBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getSrc() {
+    return this.src;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getName() {
+    return this.name;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof ChangeCursorByName)) return false;
+    final ChangeCursorByName other = (ChangeCursorByName) o;
+    if (this.getSrc() != other.getSrc()) return false;
+    final java.lang.Object this$name = this.getName();
+    final java.lang.Object other$name = other.getName();
+    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getSrc();
+    final java.lang.Object $name = this.getName();
+    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "ChangeCursorByName(src=" + this.getSrc() + ", name=" + this.getName() + ")";
   }
 }

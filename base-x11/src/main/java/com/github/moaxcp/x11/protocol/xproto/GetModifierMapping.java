@@ -5,14 +5,9 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class GetModifierMapping implements TwoWayRequest<GetModifierMappingReply> {
+public final class GetModifierMapping implements TwoWayRequest<GetModifierMappingReply> {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 119;
 
   public XReplyFunction<GetModifierMappingReply> getReplyFunction() {
@@ -32,7 +27,7 @@ public class GetModifierMapping implements TwoWayRequest<GetModifierMappingReply
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
   }
@@ -46,9 +41,55 @@ public class GetModifierMapping implements TwoWayRequest<GetModifierMappingReply
     return PLUGIN_NAME;
   }
 
+
   public static class GetModifierMappingBuilder {
     public int getSize() {
       return 4;
     }
+
+    @java.lang.SuppressWarnings("all")
+    GetModifierMappingBuilder() {
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public GetModifierMapping build() {
+      return new GetModifierMapping();
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "GetModifierMapping.GetModifierMappingBuilder()";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  GetModifierMapping() {
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static GetModifierMapping.GetModifierMappingBuilder builder() {
+    return new GetModifierMapping.GetModifierMappingBuilder();
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GetModifierMapping)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int result = 1;
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "GetModifierMapping()";
   }
 }

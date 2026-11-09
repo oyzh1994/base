@@ -5,17 +5,11 @@ import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import com.github.moaxcp.x11.protocol.XReplyFunction;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class GetState implements TwoWayRequest<GetStateReply> {
+public final class GetState implements TwoWayRequest<GetStateReply> {
   public static final String PLUGIN_NAME = "xkb";
-
   public static final byte OPCODE = 4;
-
-  private short deviceSpec;
+  private final short deviceSpec;
 
   public XReplyFunction<GetStateReply> getReplyFunction() {
     return (field, sequenceNumber, in) -> GetStateReply.readGetStateReply(field, sequenceNumber, in);
@@ -38,7 +32,7 @@ public class GetState implements TwoWayRequest<GetStateReply> {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard16(deviceSpec);
     out.writePad(2);
@@ -53,9 +47,77 @@ public class GetState implements TwoWayRequest<GetStateReply> {
     return PLUGIN_NAME;
   }
 
+
   public static class GetStateBuilder {
+    @java.lang.SuppressWarnings("all")
+    private short deviceSpec;
+
     public int getSize() {
       return 8;
     }
+
+    @java.lang.SuppressWarnings("all")
+    GetStateBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public GetState.GetStateBuilder deviceSpec(final short deviceSpec) {
+      this.deviceSpec = deviceSpec;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public GetState build() {
+      return new GetState(this.deviceSpec);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "GetState.GetStateBuilder(deviceSpec=" + this.deviceSpec + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  GetState(final short deviceSpec) {
+    this.deviceSpec = deviceSpec;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static GetState.GetStateBuilder builder() {
+    return new GetState.GetStateBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getDeviceSpec() {
+    return this.deviceSpec;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof GetState)) return false;
+    final GetState other = (GetState) o;
+    if (this.getDeviceSpec() != other.getDeviceSpec()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getDeviceSpec();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "GetState(deviceSpec=" + this.getDeviceSpec() + ")";
   }
 }

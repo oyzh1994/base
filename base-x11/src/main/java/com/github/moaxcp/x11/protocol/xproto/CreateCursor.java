@@ -4,37 +4,21 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.Value;
 
-@Value
-@Builder
-public class CreateCursor implements OneWayRequest {
+public final class CreateCursor implements OneWayRequest {
   public static final String PLUGIN_NAME = "xproto";
-
   public static final byte OPCODE = 93;
-
-  private int cid;
-
-  private int source;
-
-  private int mask;
-
-  private short foreRed;
-
-  private short foreGreen;
-
-  private short foreBlue;
-
-  private short backRed;
-
-  private short backGreen;
-
-  private short backBlue;
-
-  private short x;
-
-  private short y;
+  private final int cid;
+  private final int source;
+  private final int mask;
+  private final short foreRed;
+  private final short foreGreen;
+  private final short foreBlue;
+  private final short backRed;
+  private final short backGreen;
+  private final short backBlue;
+  private final short x;
+  private final short y;
 
   public byte getOpCode() {
     return OPCODE;
@@ -71,7 +55,7 @@ public class CreateCursor implements OneWayRequest {
 
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writePad(1);
     out.writeCard16((short) getLength());
     out.writeCard32(cid);
@@ -96,9 +80,267 @@ public class CreateCursor implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class CreateCursorBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int cid;
+    @java.lang.SuppressWarnings("all")
+    private int source;
+    @java.lang.SuppressWarnings("all")
+    private int mask;
+    @java.lang.SuppressWarnings("all")
+    private short foreRed;
+    @java.lang.SuppressWarnings("all")
+    private short foreGreen;
+    @java.lang.SuppressWarnings("all")
+    private short foreBlue;
+    @java.lang.SuppressWarnings("all")
+    private short backRed;
+    @java.lang.SuppressWarnings("all")
+    private short backGreen;
+    @java.lang.SuppressWarnings("all")
+    private short backBlue;
+    @java.lang.SuppressWarnings("all")
+    private short x;
+    @java.lang.SuppressWarnings("all")
+    private short y;
+
     public int getSize() {
       return 32;
     }
+
+    @java.lang.SuppressWarnings("all")
+    CreateCursorBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder cid(final int cid) {
+      this.cid = cid;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder source(final int source) {
+      this.source = source;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder mask(final int mask) {
+      this.mask = mask;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder foreRed(final short foreRed) {
+      this.foreRed = foreRed;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder foreGreen(final short foreGreen) {
+      this.foreGreen = foreGreen;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder foreBlue(final short foreBlue) {
+      this.foreBlue = foreBlue;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder backRed(final short backRed) {
+      this.backRed = backRed;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder backGreen(final short backGreen) {
+      this.backGreen = backGreen;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder backBlue(final short backBlue) {
+      this.backBlue = backBlue;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder x(final short x) {
+      this.x = x;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor.CreateCursorBuilder y(final short y) {
+      this.y = y;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public CreateCursor build() {
+      return new CreateCursor(this.cid, this.source, this.mask, this.foreRed, this.foreGreen, this.foreBlue, this.backRed, this.backGreen, this.backBlue, this.x, this.y);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "CreateCursor.CreateCursorBuilder(cid=" + this.cid + ", source=" + this.source + ", mask=" + this.mask + ", foreRed=" + this.foreRed + ", foreGreen=" + this.foreGreen + ", foreBlue=" + this.foreBlue + ", backRed=" + this.backRed + ", backGreen=" + this.backGreen + ", backBlue=" + this.backBlue + ", x=" + this.x + ", y=" + this.y + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  CreateCursor(final int cid, final int source, final int mask, final short foreRed, final short foreGreen, final short foreBlue, final short backRed, final short backGreen, final short backBlue, final short x, final short y) {
+    this.cid = cid;
+    this.source = source;
+    this.mask = mask;
+    this.foreRed = foreRed;
+    this.foreGreen = foreGreen;
+    this.foreBlue = foreBlue;
+    this.backRed = backRed;
+    this.backGreen = backGreen;
+    this.backBlue = backBlue;
+    this.x = x;
+    this.y = y;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static CreateCursor.CreateCursorBuilder builder() {
+    return new CreateCursor.CreateCursorBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getCid() {
+    return this.cid;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getSource() {
+    return this.source;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getMask() {
+    return this.mask;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getForeRed() {
+    return this.foreRed;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getForeGreen() {
+    return this.foreGreen;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getForeBlue() {
+    return this.foreBlue;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getBackRed() {
+    return this.backRed;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getBackGreen() {
+    return this.backGreen;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getBackBlue() {
+    return this.backBlue;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getX() {
+    return this.x;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getY() {
+    return this.y;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof CreateCursor)) return false;
+    final CreateCursor other = (CreateCursor) o;
+    if (this.getCid() != other.getCid()) return false;
+    if (this.getSource() != other.getSource()) return false;
+    if (this.getMask() != other.getMask()) return false;
+    if (this.getForeRed() != other.getForeRed()) return false;
+    if (this.getForeGreen() != other.getForeGreen()) return false;
+    if (this.getForeBlue() != other.getForeBlue()) return false;
+    if (this.getBackRed() != other.getBackRed()) return false;
+    if (this.getBackGreen() != other.getBackGreen()) return false;
+    if (this.getBackBlue() != other.getBackBlue()) return false;
+    if (this.getX() != other.getX()) return false;
+    if (this.getY() != other.getY()) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getCid();
+    result = result * PRIME + this.getSource();
+    result = result * PRIME + this.getMask();
+    result = result * PRIME + this.getForeRed();
+    result = result * PRIME + this.getForeGreen();
+    result = result * PRIME + this.getForeBlue();
+    result = result * PRIME + this.getBackRed();
+    result = result * PRIME + this.getBackGreen();
+    result = result * PRIME + this.getBackBlue();
+    result = result * PRIME + this.getX();
+    result = result * PRIME + this.getY();
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "CreateCursor(cid=" + this.getCid() + ", source=" + this.getSource() + ", mask=" + this.getMask() + ", foreRed=" + this.getForeRed() + ", foreGreen=" + this.getForeGreen() + ", foreBlue=" + this.getForeBlue() + ", backRed=" + this.getBackRed() + ", backGreen=" + this.getBackGreen() + ", backBlue=" + this.getBackBlue() + ", x=" + this.getX() + ", y=" + this.getY() + ")";
   }
 }

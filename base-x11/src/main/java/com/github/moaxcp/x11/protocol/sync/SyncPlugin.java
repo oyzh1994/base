@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class SyncPlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,64 +46,64 @@ public class SyncPlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 1) {
+    if (minorOpcode == 1) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 2) {
+    if (minorOpcode == 2) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 6) {
+    if (minorOpcode == 6) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 5) {
+    if (minorOpcode == 5) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 7) {
+    if (minorOpcode == 7) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 3) {
+    if (minorOpcode == 3) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 8) {
+    if (minorOpcode == 8) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 9) {
+    if (minorOpcode == 9) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 11) {
+    if (minorOpcode == 11) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 10) {
+    if (minorOpcode == 10) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 12) {
+    if (minorOpcode == 12) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 13) {
+    if (minorOpcode == 13) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 14) {
+    if (minorOpcode == 14) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 15) {
+    if (minorOpcode == 15) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 16) {
+    if (minorOpcode == 16) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 17) {
+    if (minorOpcode == 17) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 18) {
+    if (minorOpcode == 18) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 19) {
+    if (minorOpcode == 19) {
       return isMajorOpcode;
     }
     return false;
@@ -121,10 +111,10 @@ public class SyncPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedEvent(byte number) {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return true;
     }
-    if(number - firstEvent == 1) {
+    if (number - firstEvent == 1) {
       return true;
     }
     return false;
@@ -132,10 +122,10 @@ public class SyncPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedError(byte code) {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return true;
     }
-    if(code - firstError == 1) {
+    if (code - firstError == 1) {
       return true;
     }
     return false;
@@ -143,64 +133,64 @@ public class SyncPlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == Initialize.OPCODE) {
+    if (minorOpcode == Initialize.OPCODE) {
       return Initialize.readInitialize(in);
     }
-    if(minorOpcode == ListSystemCounters.OPCODE) {
+    if (minorOpcode == ListSystemCounters.OPCODE) {
       return ListSystemCounters.readListSystemCounters(in);
     }
-    if(minorOpcode == CreateCounter.OPCODE) {
+    if (minorOpcode == CreateCounter.OPCODE) {
       return CreateCounter.readCreateCounter(in);
     }
-    if(minorOpcode == DestroyCounter.OPCODE) {
+    if (minorOpcode == DestroyCounter.OPCODE) {
       return DestroyCounter.readDestroyCounter(in);
     }
-    if(minorOpcode == QueryCounter.OPCODE) {
+    if (minorOpcode == QueryCounter.OPCODE) {
       return QueryCounter.readQueryCounter(in);
     }
-    if(minorOpcode == Await.OPCODE) {
+    if (minorOpcode == Await.OPCODE) {
       return Await.readAwait(in);
     }
-    if(minorOpcode == ChangeCounter.OPCODE) {
+    if (minorOpcode == ChangeCounter.OPCODE) {
       return ChangeCounter.readChangeCounter(in);
     }
-    if(minorOpcode == SetCounter.OPCODE) {
+    if (minorOpcode == SetCounter.OPCODE) {
       return SetCounter.readSetCounter(in);
     }
-    if(minorOpcode == CreateAlarm.OPCODE) {
+    if (minorOpcode == CreateAlarm.OPCODE) {
       return CreateAlarm.readCreateAlarm(in);
     }
-    if(minorOpcode == ChangeAlarm.OPCODE) {
+    if (minorOpcode == ChangeAlarm.OPCODE) {
       return ChangeAlarm.readChangeAlarm(in);
     }
-    if(minorOpcode == DestroyAlarm.OPCODE) {
+    if (minorOpcode == DestroyAlarm.OPCODE) {
       return DestroyAlarm.readDestroyAlarm(in);
     }
-    if(minorOpcode == QueryAlarm.OPCODE) {
+    if (minorOpcode == QueryAlarm.OPCODE) {
       return QueryAlarm.readQueryAlarm(in);
     }
-    if(minorOpcode == SetPriority.OPCODE) {
+    if (minorOpcode == SetPriority.OPCODE) {
       return SetPriority.readSetPriority(in);
     }
-    if(minorOpcode == GetPriority.OPCODE) {
+    if (minorOpcode == GetPriority.OPCODE) {
       return GetPriority.readGetPriority(in);
     }
-    if(minorOpcode == CreateFence.OPCODE) {
+    if (minorOpcode == CreateFence.OPCODE) {
       return CreateFence.readCreateFence(in);
     }
-    if(minorOpcode == TriggerFence.OPCODE) {
+    if (minorOpcode == TriggerFence.OPCODE) {
       return TriggerFence.readTriggerFence(in);
     }
-    if(minorOpcode == ResetFence.OPCODE) {
+    if (minorOpcode == ResetFence.OPCODE) {
       return ResetFence.readResetFence(in);
     }
-    if(minorOpcode == DestroyFence.OPCODE) {
+    if (minorOpcode == DestroyFence.OPCODE) {
       return DestroyFence.readDestroyFence(in);
     }
-    if(minorOpcode == QueryFence.OPCODE) {
+    if (minorOpcode == QueryFence.OPCODE) {
       return QueryFence.readQueryFence(in);
     }
-    if(minorOpcode == AwaitFence.OPCODE) {
+    if (minorOpcode == AwaitFence.OPCODE) {
       return AwaitFence.readAwaitFence(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -208,10 +198,10 @@ public class SyncPlugin implements XProtocolPlugin {
 
   @Override
   public XEvent readEvent(byte number, boolean sentEvent, X11Input in) throws IOException {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return CounterNotifyEvent.readCounterNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 1) {
+    if (number - firstEvent == 1) {
       return AlarmNotifyEvent.readAlarmNotifyEvent(firstEvent, sentEvent, in);
     }
     throw new IllegalArgumentException("number " + number + " is not supported");
@@ -219,18 +209,47 @@ public class SyncPlugin implements XProtocolPlugin {
 
   @Override
   public XError readError(byte code, X11Input in) throws IOException {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return CounterError.readCounterError(firstError, in);
     }
-    if(code - firstError == 1) {
+    if (code - firstError == 1) {
       return AlarmError.readAlarmError(firstError, in);
     }
     throw new IllegalArgumentException("code " + code + " is not supported");
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }

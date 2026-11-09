@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class RenderPlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,97 +46,97 @@ public class RenderPlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 1) {
+    if (minorOpcode == 1) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 2) {
+    if (minorOpcode == 2) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 5) {
+    if (minorOpcode == 5) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 6) {
+    if (minorOpcode == 6) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 7) {
+    if (minorOpcode == 7) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 8) {
+    if (minorOpcode == 8) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 10) {
+    if (minorOpcode == 10) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 11) {
+    if (minorOpcode == 11) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 12) {
+    if (minorOpcode == 12) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 13) {
+    if (minorOpcode == 13) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 17) {
+    if (minorOpcode == 17) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 18) {
+    if (minorOpcode == 18) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 19) {
+    if (minorOpcode == 19) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 20) {
+    if (minorOpcode == 20) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 22) {
+    if (minorOpcode == 22) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 23) {
+    if (minorOpcode == 23) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 24) {
+    if (minorOpcode == 24) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 25) {
+    if (minorOpcode == 25) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 26) {
+    if (minorOpcode == 26) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 27) {
+    if (minorOpcode == 27) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 28) {
+    if (minorOpcode == 28) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 29) {
+    if (minorOpcode == 29) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 30) {
+    if (minorOpcode == 30) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 31) {
+    if (minorOpcode == 31) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 32) {
+    if (minorOpcode == 32) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 33) {
+    if (minorOpcode == 33) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 34) {
+    if (minorOpcode == 34) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 35) {
+    if (minorOpcode == 35) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 36) {
+    if (minorOpcode == 36) {
       return isMajorOpcode;
     }
     return false;
@@ -159,19 +149,19 @@ public class RenderPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedError(byte code) {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return true;
     }
-    if(code - firstError == 1) {
+    if (code - firstError == 1) {
       return true;
     }
-    if(code - firstError == 2) {
+    if (code - firstError == 2) {
       return true;
     }
-    if(code - firstError == 3) {
+    if (code - firstError == 3) {
       return true;
     }
-    if(code - firstError == 4) {
+    if (code - firstError == 4) {
       return true;
     }
     return false;
@@ -179,97 +169,97 @@ public class RenderPlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == QueryVersion.OPCODE) {
+    if (minorOpcode == QueryVersion.OPCODE) {
       return QueryVersion.readQueryVersion(in);
     }
-    if(minorOpcode == QueryPictFormats.OPCODE) {
+    if (minorOpcode == QueryPictFormats.OPCODE) {
       return QueryPictFormats.readQueryPictFormats(in);
     }
-    if(minorOpcode == QueryPictIndexValues.OPCODE) {
+    if (minorOpcode == QueryPictIndexValues.OPCODE) {
       return QueryPictIndexValues.readQueryPictIndexValues(in);
     }
-    if(minorOpcode == CreatePicture.OPCODE) {
+    if (minorOpcode == CreatePicture.OPCODE) {
       return CreatePicture.readCreatePicture(in);
     }
-    if(minorOpcode == ChangePicture.OPCODE) {
+    if (minorOpcode == ChangePicture.OPCODE) {
       return ChangePicture.readChangePicture(in);
     }
-    if(minorOpcode == SetPictureClipRectangles.OPCODE) {
+    if (minorOpcode == SetPictureClipRectangles.OPCODE) {
       return SetPictureClipRectangles.readSetPictureClipRectangles(in);
     }
-    if(minorOpcode == FreePicture.OPCODE) {
+    if (minorOpcode == FreePicture.OPCODE) {
       return FreePicture.readFreePicture(in);
     }
-    if(minorOpcode == Composite.OPCODE) {
+    if (minorOpcode == Composite.OPCODE) {
       return Composite.readComposite(in);
     }
-    if(minorOpcode == Trapezoids.OPCODE) {
+    if (minorOpcode == Trapezoids.OPCODE) {
       return Trapezoids.readTrapezoids(in);
     }
-    if(minorOpcode == Triangles.OPCODE) {
+    if (minorOpcode == Triangles.OPCODE) {
       return Triangles.readTriangles(in);
     }
-    if(minorOpcode == TriStrip.OPCODE) {
+    if (minorOpcode == TriStrip.OPCODE) {
       return TriStrip.readTriStrip(in);
     }
-    if(minorOpcode == TriFan.OPCODE) {
+    if (minorOpcode == TriFan.OPCODE) {
       return TriFan.readTriFan(in);
     }
-    if(minorOpcode == CreateGlyphSet.OPCODE) {
+    if (minorOpcode == CreateGlyphSet.OPCODE) {
       return CreateGlyphSet.readCreateGlyphSet(in);
     }
-    if(minorOpcode == ReferenceGlyphSet.OPCODE) {
+    if (minorOpcode == ReferenceGlyphSet.OPCODE) {
       return ReferenceGlyphSet.readReferenceGlyphSet(in);
     }
-    if(minorOpcode == FreeGlyphSet.OPCODE) {
+    if (minorOpcode == FreeGlyphSet.OPCODE) {
       return FreeGlyphSet.readFreeGlyphSet(in);
     }
-    if(minorOpcode == AddGlyphs.OPCODE) {
+    if (minorOpcode == AddGlyphs.OPCODE) {
       return AddGlyphs.readAddGlyphs(in);
     }
-    if(minorOpcode == FreeGlyphs.OPCODE) {
+    if (minorOpcode == FreeGlyphs.OPCODE) {
       return FreeGlyphs.readFreeGlyphs(in);
     }
-    if(minorOpcode == CompositeGlyphs8.OPCODE) {
+    if (minorOpcode == CompositeGlyphs8.OPCODE) {
       return CompositeGlyphs8.readCompositeGlyphs8(in);
     }
-    if(minorOpcode == CompositeGlyphs16.OPCODE) {
+    if (minorOpcode == CompositeGlyphs16.OPCODE) {
       return CompositeGlyphs16.readCompositeGlyphs16(in);
     }
-    if(minorOpcode == CompositeGlyphs32.OPCODE) {
+    if (minorOpcode == CompositeGlyphs32.OPCODE) {
       return CompositeGlyphs32.readCompositeGlyphs32(in);
     }
-    if(minorOpcode == FillRectangles.OPCODE) {
+    if (minorOpcode == FillRectangles.OPCODE) {
       return FillRectangles.readFillRectangles(in);
     }
-    if(minorOpcode == CreateCursor.OPCODE) {
+    if (minorOpcode == CreateCursor.OPCODE) {
       return CreateCursor.readCreateCursor(in);
     }
-    if(minorOpcode == SetPictureTransform.OPCODE) {
+    if (minorOpcode == SetPictureTransform.OPCODE) {
       return SetPictureTransform.readSetPictureTransform(in);
     }
-    if(minorOpcode == QueryFilters.OPCODE) {
+    if (minorOpcode == QueryFilters.OPCODE) {
       return QueryFilters.readQueryFilters(in);
     }
-    if(minorOpcode == SetPictureFilter.OPCODE) {
+    if (minorOpcode == SetPictureFilter.OPCODE) {
       return SetPictureFilter.readSetPictureFilter(in);
     }
-    if(minorOpcode == CreateAnimCursor.OPCODE) {
+    if (minorOpcode == CreateAnimCursor.OPCODE) {
       return CreateAnimCursor.readCreateAnimCursor(in);
     }
-    if(minorOpcode == AddTraps.OPCODE) {
+    if (minorOpcode == AddTraps.OPCODE) {
       return AddTraps.readAddTraps(in);
     }
-    if(minorOpcode == CreateSolidFill.OPCODE) {
+    if (minorOpcode == CreateSolidFill.OPCODE) {
       return CreateSolidFill.readCreateSolidFill(in);
     }
-    if(minorOpcode == CreateLinearGradient.OPCODE) {
+    if (minorOpcode == CreateLinearGradient.OPCODE) {
       return CreateLinearGradient.readCreateLinearGradient(in);
     }
-    if(minorOpcode == CreateRadialGradient.OPCODE) {
+    if (minorOpcode == CreateRadialGradient.OPCODE) {
       return CreateRadialGradient.readCreateRadialGradient(in);
     }
-    if(minorOpcode == CreateConicalGradient.OPCODE) {
+    if (minorOpcode == CreateConicalGradient.OPCODE) {
       return CreateConicalGradient.readCreateConicalGradient(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -282,27 +272,56 @@ public class RenderPlugin implements XProtocolPlugin {
 
   @Override
   public XError readError(byte code, X11Input in) throws IOException {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return PictFormatError.readPictFormatError(firstError, in);
     }
-    if(code - firstError == 1) {
+    if (code - firstError == 1) {
       return PictureError.readPictureError(firstError, in);
     }
-    if(code - firstError == 2) {
+    if (code - firstError == 2) {
       return PictOpError.readPictOpError(firstError, in);
     }
-    if(code - firstError == 3) {
+    if (code - firstError == 3) {
       return GlyphSetError.readGlyphSetError(firstError, in);
     }
-    if(code - firstError == 4) {
+    if (code - firstError == 4) {
       return GlyphError.readGlyphError(firstError, in);
     }
     throw new IllegalArgumentException("code " + code + " is not supported");
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }

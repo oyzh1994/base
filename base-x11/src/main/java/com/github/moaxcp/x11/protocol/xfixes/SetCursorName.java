@@ -4,22 +4,13 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ByteList;
 
-@Value
-@Builder
-public class SetCursorName implements OneWayRequest {
+public final class SetCursorName implements OneWayRequest {
   public static final String PLUGIN_NAME = "xfixes";
-
   public static final byte OPCODE = 23;
-
-  private int cursor;
-
-  @NonNull
-  private ByteList name;
+  private final int cursor;
+  private final ByteList name;
 
   public byte getOpCode() {
     return OPCODE;
@@ -42,7 +33,7 @@ public class SetCursorName implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(cursor);
     short nbytes = (short) name.size();
@@ -61,9 +52,105 @@ public class SetCursorName implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class SetCursorNameBuilder {
+    @java.lang.SuppressWarnings("all")
+    private int cursor;
+    @java.lang.SuppressWarnings("all")
+    private ByteList name;
+
     public int getSize() {
       return 12 + 1 * name.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    SetCursorNameBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetCursorName.SetCursorNameBuilder cursor(final int cursor) {
+      this.cursor = cursor;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public SetCursorName.SetCursorNameBuilder name(final ByteList name) {
+      if (name == null) {
+        throw new java.lang.NullPointerException("name is marked non-null but is null");
+      }
+      this.name = name;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public SetCursorName build() {
+      return new SetCursorName(this.cursor, this.name);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "SetCursorName.SetCursorNameBuilder(cursor=" + this.cursor + ", name=" + this.name + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  SetCursorName(final int cursor, final ByteList name) {
+    if (name == null) {
+      throw new java.lang.NullPointerException("name is marked non-null but is null");
+    }
+    this.cursor = cursor;
+    this.name = name;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static SetCursorName.SetCursorNameBuilder builder() {
+    return new SetCursorName.SetCursorNameBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getCursor() {
+    return this.cursor;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ByteList getName() {
+    return this.name;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof SetCursorName)) return false;
+    final SetCursorName other = (SetCursorName) o;
+    if (this.getCursor() != other.getCursor()) return false;
+    final java.lang.Object this$name = this.getName();
+    final java.lang.Object other$name = other.getName();
+    if (this$name == null ? other$name != null : !this$name.equals(other$name)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getCursor();
+    final java.lang.Object $name = this.getName();
+    result = result * PRIME + ($name == null ? 43 : $name.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "SetCursorName(cursor=" + this.getCursor() + ", name=" + this.getName() + ")";
   }
 }

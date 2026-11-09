@@ -4,34 +4,19 @@ import com.github.moaxcp.x11.protocol.OneWayRequest;
 import com.github.moaxcp.x11.protocol.X11Input;
 import com.github.moaxcp.x11.protocol.X11Output;
 import java.io.IOException;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.Value;
 import org.eclipse.collections.api.list.primitive.ShortList;
 
-@Value
-@Builder
-public class CreatePointerBarrier implements OneWayRequest {
+public final class CreatePointerBarrier implements OneWayRequest {
   public static final String PLUGIN_NAME = "xfixes";
-
   public static final byte OPCODE = 31;
-
-  private int barrier;
-
-  private int window;
-
-  private short x1;
-
-  private short y1;
-
-  private short x2;
-
-  private short y2;
-
-  private int directions;
-
-  @NonNull
-  private ShortList devices;
+  private final int barrier;
+  private final int window;
+  private final short x1;
+  private final short y1;
+  private final short x2;
+  private final short y2;
+  private final int directions;
+  private final ShortList devices;
 
   public byte getOpCode() {
     return OPCODE;
@@ -66,7 +51,7 @@ public class CreatePointerBarrier implements OneWayRequest {
   @Override
   public void write(byte majorOpcode, X11Output out) throws IOException {
     out.writeCard8(majorOpcode);
-    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard8((byte) (Byte.toUnsignedInt(OPCODE)));
     out.writeCard16((short) getLength());
     out.writeCard32(barrier);
     out.writeCard32(window);
@@ -82,9 +67,12 @@ public class CreatePointerBarrier implements OneWayRequest {
     out.writePadAlign(getSize());
   }
 
-  public boolean isDirectionsEnabled(@NonNull BarrierDirections... maskEnums) {
-    for(BarrierDirections m : maskEnums) {
-      if(!m.isEnabled(directions)) {
+  public boolean isDirectionsEnabled(BarrierDirections... maskEnums) {
+    if (maskEnums == null) {
+      throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+    }
+    for (BarrierDirections m : maskEnums) {
+      if (!m.isEnabled(directions)) {
         return false;
       }
     }
@@ -100,27 +88,46 @@ public class CreatePointerBarrier implements OneWayRequest {
     return PLUGIN_NAME;
   }
 
+
   public static class CreatePointerBarrierBuilder {
-    public boolean isDirectionsEnabled(@NonNull BarrierDirections... maskEnums) {
-      for(BarrierDirections m : maskEnums) {
-        if(!m.isEnabled(directions)) {
+    @java.lang.SuppressWarnings("all")
+    private int barrier;
+    @java.lang.SuppressWarnings("all")
+    private int window;
+    @java.lang.SuppressWarnings("all")
+    private short x1;
+    @java.lang.SuppressWarnings("all")
+    private short y1;
+    @java.lang.SuppressWarnings("all")
+    private short x2;
+    @java.lang.SuppressWarnings("all")
+    private short y2;
+    @java.lang.SuppressWarnings("all")
+    private int directions;
+    @java.lang.SuppressWarnings("all")
+    private ShortList devices;
+
+    public boolean isDirectionsEnabled(BarrierDirections... maskEnums) {
+      if (maskEnums == null) {
+        throw new java.lang.NullPointerException("maskEnums is marked non-null but is null");
+      }
+      for (BarrierDirections m : maskEnums) {
+        if (!m.isEnabled(directions)) {
           return false;
         }
       }
       return true;
     }
 
-    public CreatePointerBarrier.CreatePointerBarrierBuilder directionsEnable(
-        BarrierDirections... maskEnums) {
-      for(BarrierDirections m : maskEnums) {
+    public CreatePointerBarrier.CreatePointerBarrierBuilder directionsEnable(BarrierDirections... maskEnums) {
+      for (BarrierDirections m : maskEnums) {
         directions((int) m.enableFor(directions));
       }
       return this;
     }
 
-    public CreatePointerBarrier.CreatePointerBarrierBuilder directionsDisable(
-        BarrierDirections... maskEnums) {
-      for(BarrierDirections m : maskEnums) {
+    public CreatePointerBarrier.CreatePointerBarrierBuilder directionsDisable(BarrierDirections... maskEnums) {
+      for (BarrierDirections m : maskEnums) {
         directions((int) m.disableFor(directions));
       }
       return this;
@@ -129,5 +136,197 @@ public class CreatePointerBarrier implements OneWayRequest {
     public int getSize() {
       return 28 + 2 * devices.size();
     }
+
+    @java.lang.SuppressWarnings("all")
+    CreatePointerBarrierBuilder() {
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder barrier(final int barrier) {
+      this.barrier = barrier;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder window(final int window) {
+      this.window = window;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder x1(final short x1) {
+      this.x1 = x1;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder y1(final short y1) {
+      this.y1 = y1;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder x2(final short x2) {
+      this.x2 = x2;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder y2(final short y2) {
+      this.y2 = y2;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder directions(final int directions) {
+      this.directions = directions;
+      return this;
+    }
+
+    /**
+     * @return {@code this}.
+     */
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier.CreatePointerBarrierBuilder devices(final ShortList devices) {
+      if (devices == null) {
+        throw new java.lang.NullPointerException("devices is marked non-null but is null");
+      }
+      this.devices = devices;
+      return this;
+    }
+
+    @java.lang.SuppressWarnings("all")
+    public CreatePointerBarrier build() {
+      return new CreatePointerBarrier(this.barrier, this.window, this.x1, this.y1, this.x2, this.y2, this.directions, this.devices);
+    }
+
+    @java.lang.Override
+    @java.lang.SuppressWarnings("all")
+    public java.lang.String toString() {
+      return "CreatePointerBarrier.CreatePointerBarrierBuilder(barrier=" + this.barrier + ", window=" + this.window + ", x1=" + this.x1 + ", y1=" + this.y1 + ", x2=" + this.x2 + ", y2=" + this.y2 + ", directions=" + this.directions + ", devices=" + this.devices + ")";
+    }
+  }
+
+  @java.lang.SuppressWarnings("all")
+  CreatePointerBarrier(final int barrier, final int window, final short x1, final short y1, final short x2, final short y2, final int directions, final ShortList devices) {
+    if (devices == null) {
+      throw new java.lang.NullPointerException("devices is marked non-null but is null");
+    }
+    this.barrier = barrier;
+    this.window = window;
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.directions = directions;
+    this.devices = devices;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public static CreatePointerBarrier.CreatePointerBarrierBuilder builder() {
+    return new CreatePointerBarrier.CreatePointerBarrierBuilder();
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getBarrier() {
+    return this.barrier;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getWindow() {
+    return this.window;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getX1() {
+    return this.x1;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getY1() {
+    return this.y1;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getX2() {
+    return this.x2;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public short getY2() {
+    return this.y2;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public int getDirections() {
+    return this.directions;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public ShortList getDevices() {
+    return this.devices;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public boolean equals(final java.lang.Object o) {
+    if (o == this) return true;
+    if (!(o instanceof CreatePointerBarrier)) return false;
+    final CreatePointerBarrier other = (CreatePointerBarrier) o;
+    if (this.getBarrier() != other.getBarrier()) return false;
+    if (this.getWindow() != other.getWindow()) return false;
+    if (this.getX1() != other.getX1()) return false;
+    if (this.getY1() != other.getY1()) return false;
+    if (this.getX2() != other.getX2()) return false;
+    if (this.getY2() != other.getY2()) return false;
+    if (this.getDirections() != other.getDirections()) return false;
+    final java.lang.Object this$devices = this.getDevices();
+    final java.lang.Object other$devices = other.getDevices();
+    if (this$devices == null ? other$devices != null : !this$devices.equals(other$devices)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public int hashCode() {
+    final int PRIME = 59;
+    int result = 1;
+    result = result * PRIME + this.getBarrier();
+    result = result * PRIME + this.getWindow();
+    result = result * PRIME + this.getX1();
+    result = result * PRIME + this.getY1();
+    result = result * PRIME + this.getX2();
+    result = result * PRIME + this.getY2();
+    result = result * PRIME + this.getDirections();
+    final java.lang.Object $devices = this.getDevices();
+    result = result * PRIME + ($devices == null ? 43 : $devices.hashCode());
+    return result;
+  }
+
+  @java.lang.Override
+  @java.lang.SuppressWarnings("all")
+  public java.lang.String toString() {
+    return "CreatePointerBarrier(barrier=" + this.getBarrier() + ", window=" + this.getWindow() + ", x1=" + this.getX1() + ", y1=" + this.getY1() + ", x2=" + this.getX2() + ", y2=" + this.getY2() + ", directions=" + this.getDirections() + ", devices=" + this.getDevices() + ")";
   }
 }

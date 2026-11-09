@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class DpmsPlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,28 +46,28 @@ public class DpmsPlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 1) {
+    if (minorOpcode == 1) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 2) {
+    if (minorOpcode == 2) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 3) {
+    if (minorOpcode == 3) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 5) {
+    if (minorOpcode == 5) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 6) {
+    if (minorOpcode == 6) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 7) {
+    if (minorOpcode == 7) {
       return isMajorOpcode;
     }
     return false;
@@ -95,28 +85,28 @@ public class DpmsPlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == GetVersion.OPCODE) {
+    if (minorOpcode == GetVersion.OPCODE) {
       return GetVersion.readGetVersion(in);
     }
-    if(minorOpcode == Capable.OPCODE) {
+    if (minorOpcode == Capable.OPCODE) {
       return Capable.readCapable(in);
     }
-    if(minorOpcode == GetTimeouts.OPCODE) {
+    if (minorOpcode == GetTimeouts.OPCODE) {
       return GetTimeouts.readGetTimeouts(in);
     }
-    if(minorOpcode == SetTimeouts.OPCODE) {
+    if (minorOpcode == SetTimeouts.OPCODE) {
       return SetTimeouts.readSetTimeouts(in);
     }
-    if(minorOpcode == Enable.OPCODE) {
+    if (minorOpcode == Enable.OPCODE) {
       return Enable.readEnable(in);
     }
-    if(minorOpcode == Disable.OPCODE) {
+    if (minorOpcode == Disable.OPCODE) {
       return Disable.readDisable(in);
     }
-    if(minorOpcode == ForceLevel.OPCODE) {
+    if (minorOpcode == ForceLevel.OPCODE) {
       return ForceLevel.readForceLevel(in);
     }
-    if(minorOpcode == Info.OPCODE) {
+    if (minorOpcode == Info.OPCODE) {
       return Info.readInfo(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -133,8 +123,37 @@ public class DpmsPlugin implements XProtocolPlugin {
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }

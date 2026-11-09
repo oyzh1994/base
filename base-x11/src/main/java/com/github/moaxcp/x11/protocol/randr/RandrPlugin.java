@@ -8,20 +8,10 @@ import com.github.moaxcp.x11.protocol.XProtocolPlugin;
 import com.github.moaxcp.x11.protocol.XRequest;
 import java.io.IOException;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.Setter;
 
 public class RandrPlugin implements XProtocolPlugin {
-  @Getter
-  @Setter
   private byte majorOpcode;
-
-  @Getter
-  @Setter
   private byte firstEvent;
-
-  @Getter
-  @Setter
   private byte firstError;
 
   public String getPluginName() {
@@ -56,139 +46,139 @@ public class RandrPlugin implements XProtocolPlugin {
   @Override
   public boolean supportedRequest(byte majorOpcode, byte minorOpcode) {
     boolean isMajorOpcode = majorOpcode == getMajorOpcode();
-    if(minorOpcode == 0) {
+    if (minorOpcode == 0) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 2) {
+    if (minorOpcode == 2) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 4) {
+    if (minorOpcode == 4) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 5) {
+    if (minorOpcode == 5) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 6) {
+    if (minorOpcode == 6) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 7) {
+    if (minorOpcode == 7) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 8) {
+    if (minorOpcode == 8) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 9) {
+    if (minorOpcode == 9) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 10) {
+    if (minorOpcode == 10) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 11) {
+    if (minorOpcode == 11) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 12) {
+    if (minorOpcode == 12) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 13) {
+    if (minorOpcode == 13) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 14) {
+    if (minorOpcode == 14) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 15) {
+    if (minorOpcode == 15) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 16) {
+    if (minorOpcode == 16) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 17) {
+    if (minorOpcode == 17) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 18) {
+    if (minorOpcode == 18) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 19) {
+    if (minorOpcode == 19) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 20) {
+    if (minorOpcode == 20) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 21) {
+    if (minorOpcode == 21) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 22) {
+    if (minorOpcode == 22) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 23) {
+    if (minorOpcode == 23) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 24) {
+    if (minorOpcode == 24) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 25) {
+    if (minorOpcode == 25) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 26) {
+    if (minorOpcode == 26) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 27) {
+    if (minorOpcode == 27) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 28) {
+    if (minorOpcode == 28) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 29) {
+    if (minorOpcode == 29) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 30) {
+    if (minorOpcode == 30) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 31) {
+    if (minorOpcode == 31) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 32) {
+    if (minorOpcode == 32) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 33) {
+    if (minorOpcode == 33) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 34) {
+    if (minorOpcode == 34) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 35) {
+    if (minorOpcode == 35) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 36) {
+    if (minorOpcode == 36) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 37) {
+    if (minorOpcode == 37) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 38) {
+    if (minorOpcode == 38) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 39) {
+    if (minorOpcode == 39) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 40) {
+    if (minorOpcode == 40) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 41) {
+    if (minorOpcode == 41) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 42) {
+    if (minorOpcode == 42) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 43) {
+    if (minorOpcode == 43) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 44) {
+    if (minorOpcode == 44) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 45) {
+    if (minorOpcode == 45) {
       return isMajorOpcode;
     }
-    if(minorOpcode == 46) {
+    if (minorOpcode == 46) {
       return isMajorOpcode;
     }
     return false;
@@ -196,10 +186,10 @@ public class RandrPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedEvent(byte number) {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return true;
     }
-    if(number - firstEvent == 1) {
+    if (number - firstEvent == 1) {
       return true;
     }
     return false;
@@ -207,16 +197,16 @@ public class RandrPlugin implements XProtocolPlugin {
 
   @Override
   public boolean supportedError(byte code) {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return true;
     }
-    if(code - firstError == 1) {
+    if (code - firstError == 1) {
       return true;
     }
-    if(code - firstError == 2) {
+    if (code - firstError == 2) {
       return true;
     }
-    if(code - firstError == 3) {
+    if (code - firstError == 3) {
       return true;
     }
     return false;
@@ -224,139 +214,139 @@ public class RandrPlugin implements XProtocolPlugin {
 
   @Override
   public XRequest readRequest(byte majorOpcode, byte minorOpcode, X11Input in) throws IOException {
-    if(minorOpcode == QueryVersion.OPCODE) {
+    if (minorOpcode == QueryVersion.OPCODE) {
       return QueryVersion.readQueryVersion(in);
     }
-    if(minorOpcode == SetScreenConfig.OPCODE) {
+    if (minorOpcode == SetScreenConfig.OPCODE) {
       return SetScreenConfig.readSetScreenConfig(in);
     }
-    if(minorOpcode == SelectInput.OPCODE) {
+    if (minorOpcode == SelectInput.OPCODE) {
       return SelectInput.readSelectInput(in);
     }
-    if(minorOpcode == GetScreenInfo.OPCODE) {
+    if (minorOpcode == GetScreenInfo.OPCODE) {
       return GetScreenInfo.readGetScreenInfo(in);
     }
-    if(minorOpcode == GetScreenSizeRange.OPCODE) {
+    if (minorOpcode == GetScreenSizeRange.OPCODE) {
       return GetScreenSizeRange.readGetScreenSizeRange(in);
     }
-    if(minorOpcode == SetScreenSize.OPCODE) {
+    if (minorOpcode == SetScreenSize.OPCODE) {
       return SetScreenSize.readSetScreenSize(in);
     }
-    if(minorOpcode == GetScreenResources.OPCODE) {
+    if (minorOpcode == GetScreenResources.OPCODE) {
       return GetScreenResources.readGetScreenResources(in);
     }
-    if(minorOpcode == GetOutputInfo.OPCODE) {
+    if (minorOpcode == GetOutputInfo.OPCODE) {
       return GetOutputInfo.readGetOutputInfo(in);
     }
-    if(minorOpcode == ListOutputProperties.OPCODE) {
+    if (minorOpcode == ListOutputProperties.OPCODE) {
       return ListOutputProperties.readListOutputProperties(in);
     }
-    if(minorOpcode == QueryOutputProperty.OPCODE) {
+    if (minorOpcode == QueryOutputProperty.OPCODE) {
       return QueryOutputProperty.readQueryOutputProperty(in);
     }
-    if(minorOpcode == ConfigureOutputProperty.OPCODE) {
+    if (minorOpcode == ConfigureOutputProperty.OPCODE) {
       return ConfigureOutputProperty.readConfigureOutputProperty(in);
     }
-    if(minorOpcode == ChangeOutputProperty.OPCODE) {
+    if (minorOpcode == ChangeOutputProperty.OPCODE) {
       return ChangeOutputProperty.readChangeOutputProperty(in);
     }
-    if(minorOpcode == DeleteOutputProperty.OPCODE) {
+    if (minorOpcode == DeleteOutputProperty.OPCODE) {
       return DeleteOutputProperty.readDeleteOutputProperty(in);
     }
-    if(minorOpcode == GetOutputProperty.OPCODE) {
+    if (minorOpcode == GetOutputProperty.OPCODE) {
       return GetOutputProperty.readGetOutputProperty(in);
     }
-    if(minorOpcode == CreateMode.OPCODE) {
+    if (minorOpcode == CreateMode.OPCODE) {
       return CreateMode.readCreateMode(in);
     }
-    if(minorOpcode == DestroyMode.OPCODE) {
+    if (minorOpcode == DestroyMode.OPCODE) {
       return DestroyMode.readDestroyMode(in);
     }
-    if(minorOpcode == AddOutputMode.OPCODE) {
+    if (minorOpcode == AddOutputMode.OPCODE) {
       return AddOutputMode.readAddOutputMode(in);
     }
-    if(minorOpcode == DeleteOutputMode.OPCODE) {
+    if (minorOpcode == DeleteOutputMode.OPCODE) {
       return DeleteOutputMode.readDeleteOutputMode(in);
     }
-    if(minorOpcode == GetCrtcInfo.OPCODE) {
+    if (minorOpcode == GetCrtcInfo.OPCODE) {
       return GetCrtcInfo.readGetCrtcInfo(in);
     }
-    if(minorOpcode == SetCrtcConfig.OPCODE) {
+    if (minorOpcode == SetCrtcConfig.OPCODE) {
       return SetCrtcConfig.readSetCrtcConfig(in);
     }
-    if(minorOpcode == GetCrtcGammaSize.OPCODE) {
+    if (minorOpcode == GetCrtcGammaSize.OPCODE) {
       return GetCrtcGammaSize.readGetCrtcGammaSize(in);
     }
-    if(minorOpcode == GetCrtcGamma.OPCODE) {
+    if (minorOpcode == GetCrtcGamma.OPCODE) {
       return GetCrtcGamma.readGetCrtcGamma(in);
     }
-    if(minorOpcode == SetCrtcGamma.OPCODE) {
+    if (minorOpcode == SetCrtcGamma.OPCODE) {
       return SetCrtcGamma.readSetCrtcGamma(in);
     }
-    if(minorOpcode == GetScreenResourcesCurrent.OPCODE) {
+    if (minorOpcode == GetScreenResourcesCurrent.OPCODE) {
       return GetScreenResourcesCurrent.readGetScreenResourcesCurrent(in);
     }
-    if(minorOpcode == SetCrtcTransform.OPCODE) {
+    if (minorOpcode == SetCrtcTransform.OPCODE) {
       return SetCrtcTransform.readSetCrtcTransform(in);
     }
-    if(minorOpcode == GetCrtcTransform.OPCODE) {
+    if (minorOpcode == GetCrtcTransform.OPCODE) {
       return GetCrtcTransform.readGetCrtcTransform(in);
     }
-    if(minorOpcode == GetPanning.OPCODE) {
+    if (minorOpcode == GetPanning.OPCODE) {
       return GetPanning.readGetPanning(in);
     }
-    if(minorOpcode == SetPanning.OPCODE) {
+    if (minorOpcode == SetPanning.OPCODE) {
       return SetPanning.readSetPanning(in);
     }
-    if(minorOpcode == SetOutputPrimary.OPCODE) {
+    if (minorOpcode == SetOutputPrimary.OPCODE) {
       return SetOutputPrimary.readSetOutputPrimary(in);
     }
-    if(minorOpcode == GetOutputPrimary.OPCODE) {
+    if (minorOpcode == GetOutputPrimary.OPCODE) {
       return GetOutputPrimary.readGetOutputPrimary(in);
     }
-    if(minorOpcode == GetProviders.OPCODE) {
+    if (minorOpcode == GetProviders.OPCODE) {
       return GetProviders.readGetProviders(in);
     }
-    if(minorOpcode == GetProviderInfo.OPCODE) {
+    if (minorOpcode == GetProviderInfo.OPCODE) {
       return GetProviderInfo.readGetProviderInfo(in);
     }
-    if(minorOpcode == SetProviderOffloadSink.OPCODE) {
+    if (minorOpcode == SetProviderOffloadSink.OPCODE) {
       return SetProviderOffloadSink.readSetProviderOffloadSink(in);
     }
-    if(minorOpcode == SetProviderOutputSource.OPCODE) {
+    if (minorOpcode == SetProviderOutputSource.OPCODE) {
       return SetProviderOutputSource.readSetProviderOutputSource(in);
     }
-    if(minorOpcode == ListProviderProperties.OPCODE) {
+    if (minorOpcode == ListProviderProperties.OPCODE) {
       return ListProviderProperties.readListProviderProperties(in);
     }
-    if(minorOpcode == QueryProviderProperty.OPCODE) {
+    if (minorOpcode == QueryProviderProperty.OPCODE) {
       return QueryProviderProperty.readQueryProviderProperty(in);
     }
-    if(minorOpcode == ConfigureProviderProperty.OPCODE) {
+    if (minorOpcode == ConfigureProviderProperty.OPCODE) {
       return ConfigureProviderProperty.readConfigureProviderProperty(in);
     }
-    if(minorOpcode == ChangeProviderProperty.OPCODE) {
+    if (minorOpcode == ChangeProviderProperty.OPCODE) {
       return ChangeProviderProperty.readChangeProviderProperty(in);
     }
-    if(minorOpcode == DeleteProviderProperty.OPCODE) {
+    if (minorOpcode == DeleteProviderProperty.OPCODE) {
       return DeleteProviderProperty.readDeleteProviderProperty(in);
     }
-    if(minorOpcode == GetProviderProperty.OPCODE) {
+    if (minorOpcode == GetProviderProperty.OPCODE) {
       return GetProviderProperty.readGetProviderProperty(in);
     }
-    if(minorOpcode == GetMonitors.OPCODE) {
+    if (minorOpcode == GetMonitors.OPCODE) {
       return GetMonitors.readGetMonitors(in);
     }
-    if(minorOpcode == SetMonitor.OPCODE) {
+    if (minorOpcode == SetMonitor.OPCODE) {
       return SetMonitor.readSetMonitor(in);
     }
-    if(minorOpcode == DeleteMonitor.OPCODE) {
+    if (minorOpcode == DeleteMonitor.OPCODE) {
       return DeleteMonitor.readDeleteMonitor(in);
     }
-    if(minorOpcode == CreateLease.OPCODE) {
+    if (minorOpcode == CreateLease.OPCODE) {
       return CreateLease.readCreateLease(in);
     }
-    if(minorOpcode == FreeLease.OPCODE) {
+    if (minorOpcode == FreeLease.OPCODE) {
       return FreeLease.readFreeLease(in);
     }
     throw new IllegalArgumentException("majorOpcode " + majorOpcode + ", minorOpcode " + minorOpcode + " is not supported");
@@ -364,10 +354,10 @@ public class RandrPlugin implements XProtocolPlugin {
 
   @Override
   public XEvent readEvent(byte number, boolean sentEvent, X11Input in) throws IOException {
-    if(number - firstEvent == 0) {
+    if (number - firstEvent == 0) {
       return ScreenChangeNotifyEvent.readScreenChangeNotifyEvent(firstEvent, sentEvent, in);
     }
-    if(number - firstEvent == 1) {
+    if (number - firstEvent == 1) {
       return NotifyEvent.readNotifyEvent(firstEvent, sentEvent, in);
     }
     throw new IllegalArgumentException("number " + number + " is not supported");
@@ -375,24 +365,53 @@ public class RandrPlugin implements XProtocolPlugin {
 
   @Override
   public XError readError(byte code, X11Input in) throws IOException {
-    if(code - firstError == 0) {
+    if (code - firstError == 0) {
       return BadOutputError.readBadOutputError(firstError, in);
     }
-    if(code - firstError == 1) {
+    if (code - firstError == 1) {
       return BadCrtcError.readBadCrtcError(firstError, in);
     }
-    if(code - firstError == 2) {
+    if (code - firstError == 2) {
       return BadModeError.readBadModeError(firstError, in);
     }
-    if(code - firstError == 3) {
+    if (code - firstError == 3) {
       return BadProviderError.readBadProviderError(firstError, in);
     }
     throw new IllegalArgumentException("code " + code + " is not supported");
   }
 
   @Override
-  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension,
-      short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
+  public XGenericEvent readGenericEvent(byte firstEventOffset, boolean sentEvent, byte extension, short sequenceNumber, int length, short eventType, X11Input in) throws IOException {
     throw new IllegalArgumentException("eventType " + eventType + " is not supported");
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getMajorOpcode() {
+    return this.majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setMajorOpcode(final byte majorOpcode) {
+    this.majorOpcode = majorOpcode;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstEvent() {
+    return this.firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstEvent(final byte firstEvent) {
+    this.firstEvent = firstEvent;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public byte getFirstError() {
+    return this.firstError;
+  }
+
+  @java.lang.SuppressWarnings("all")
+  public void setFirstError(final byte firstError) {
+    this.firstError = firstError;
   }
 }
