@@ -34,12 +34,13 @@
         <module>base-common</module>
         <module>base-event</module>
         <module>base-i18n</module>
+        <module>base-mongodb</module>
         <module>base-mosh</module>
         <module>base-pkg</module>
         <module>base-ssh</module>
         <module>base-store</module>
+        <module>base-x11</module>
         <module>base-zookeeper</module>
-        <module>base-mongodb</module>
     </modules>
     <groupId>io.github.oyzh1994</groupId>
     <packaging>pom</packaging>
@@ -148,6 +149,12 @@
             <dependency>
                 <groupId>io.github.oyzh1994</groupId>
                 <artifactId>base-store</artifactId>
+                <version>${base.version}</version>
+            </dependency>
+            <!-- 自定义类库，x11模块 -->
+            <dependency>
+                <groupId>io.github.oyzh1994</groupId>
+                <artifactId>base-x11</artifactId>
                 <version>${base.version}</version>
             </dependency>
             <!-- 自定义类库，zookeeper模块 -->

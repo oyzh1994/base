@@ -1,0 +1,93 @@
+package com.github.moaxcp.x11.protocol.render;
+
+import com.github.moaxcp.x11.protocol.OneWayRequest;
+import com.github.moaxcp.x11.protocol.X11Input;
+import com.github.moaxcp.x11.protocol.X11Output;
+import com.github.moaxcp.x11.protocol.XObject;
+import java.io.IOException;
+import lombok.Builder;
+import lombok.NonNull;
+import lombok.Value;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.api.list.MutableList;
+import org.eclipse.collections.api.list.primitive.IntList;
+
+@Value
+@Builder
+public class CreateConicalGradient implements OneWayRequest {
+  public static final String PLUGIN_NAME = "render";
+
+  public static final byte OPCODE = 36;
+
+  private int picture;
+
+  @NonNull
+  private Pointfix center;
+
+  private int angle;
+
+  @NonNull
+  private IntList stops;
+
+  @NonNull
+  private ImmutableList<Color> colors;
+
+  public byte getOpCode() {
+    return OPCODE;
+  }
+
+  public static CreateConicalGradient readCreateConicalGradient(X11Input in) throws IOException {
+    CreateConicalGradient.CreateConicalGradientBuilder javaBuilder = CreateConicalGradient.builder();
+    byte majorOpcode = in.readCard8();
+    short length = in.readCard16();
+    int picture = in.readCard32();
+    Pointfix center = Pointfix.readPointfix(in);
+    int angle = in.readInt32();
+    int numStops = in.readCard32();
+    IntList stops = in.readInt32((int) (Integer.toUnsignedLong(numStops)));
+    MutableList<Color> colors = Lists.mutable.withInitialCapacity((int) (Integer.toUnsignedLong(numStops)));
+    for(int i = 0; i < Integer.toUnsignedLong(numStops); i++) {
+      colors.add(Color.readColor(in));
+    }
+    javaBuilder.picture(picture);
+    javaBuilder.center(center);
+    javaBuilder.angle(angle);
+    javaBuilder.stops(stops.toImmutable());
+    javaBuilder.colors(colors.toImmutable());
+    in.readPadAlign(javaBuilder.getSize());
+    return javaBuilder.build();
+  }
+
+  @Override
+  public void write(byte majorOpcode, X11Output out) throws IOException {
+    out.writeCard8(majorOpcode);
+    out.writeCard8((byte)(Byte.toUnsignedInt(OPCODE)));
+    out.writeCard16((short) getLength());
+    out.writeCard32(picture);
+    center.write(out);
+    out.writeInt32(angle);
+    int numStops = colors.size();
+    out.writeCard32(numStops);
+    out.writeInt32(stops);
+    for(Color t : colors) {
+      t.write(out);
+    }
+    out.writePadAlign(getSize());
+  }
+
+  @Override
+  public int getSize() {
+    return 24 + 4 * stops.size() + XObject.sizeOf(colors);
+  }
+
+  public String getPluginName() {
+    return PLUGIN_NAME;
+  }
+
+  public static class CreateConicalGradientBuilder {
+    public int getSize() {
+      return 24 + 4 * stops.size() + XObject.sizeOf(colors);
+    }
+  }
+}

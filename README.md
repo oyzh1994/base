@@ -21,6 +21,7 @@
 | `base-pkg` | 打包模块，支持 JAR、JLink、JPackage、AppImage 等跨平台打包能力 |
 | `base-ssh` | SSH 模块，提供 SSH 客户端、跳板机和端口转发能力 |
 | `base-store` | 存储模块，提供文件、JDBC 和嵌入式数据库存储能力 |
+| `base-x11` | X11模块，提供X11协议的底层能力 |
 | `base-zookeeper` | ZooKeeper 支持模块，提供客户端、协议和命令行相关能力 |
 
 ## Maven
