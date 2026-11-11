@@ -29,6 +29,11 @@ public class Project {
     private String version;
 
     /**
+     * 版本发布地址
+     */
+    private String releaseUrl;
+
+    /**
      * 更新日期
      */
     private String updateDate;
@@ -65,6 +70,10 @@ public class Project {
                     String version = propFile.getProperty("project.version");
                     if (StringUtil.isNotBlank(version)) {
                         project.setVersion(version);
+                    }
+                    String releaseUrl = propFile.getProperty("project.releaseUrl");
+                    if (StringUtil.isNotBlank(releaseUrl)) {
+                        project.setReleaseUrl(releaseUrl);
                     }
                     String updateDate = propFile.getProperty("project.updateDate");
                     if (StringUtil.isNotBlank(updateDate)) {
@@ -136,6 +145,24 @@ public class Project {
      */
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    /**
+     * 获取版本发布地址
+     *
+     * @return 版本发布地址
+     */
+    public String getReleaseUrl() {
+        return releaseUrl;
+    }
+
+    /**
+     * 设置版本发布地址
+     *
+     * @param releaseUrl 版本发布地址
+     */
+    public void setReleaseUrl(String releaseUrl) {
+        this.releaseUrl = releaseUrl;
     }
 
     /**

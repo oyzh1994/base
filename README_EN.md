@@ -2,7 +2,7 @@
 
 English | [简体中文](README.md)
 
-`base` is a Java foundation library providing shared utilities, internationalization, eventing, storage, SSH, packaging, and integration foundations for MongoDB, Mosh, and ZooKeeper. It reduces the need for business projects to depend directly on scattered third-party components.
+`base` is a Java foundation library providing shared utilities, internationalization, eventing, storage, SSH, packaging, and integration foundations for MongoDB, Mosh, X11, and ZooKeeper. It reduces the need for business projects to depend directly on scattered third-party components.
 
 ## Requirements
 
@@ -21,6 +21,7 @@ English | [简体中文](README.md)
 | `base-pkg` | Cross-platform packaging for JAR, JLink, JPackage, AppImage, and related workflows |
 | `base-ssh` | SSH clients, jump hosts, and port forwarding |
 | `base-store` | File, JDBC, and embedded-database storage support |
+| `base-x11` | X11 protocol support and low-level integration |
 | `base-zookeeper` | ZooKeeper client, protocol, and command-line support |
 
 ## Maven

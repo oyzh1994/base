@@ -2,7 +2,7 @@
 
 [English](README_EN.md) | 简体中文
 
-`base` 是一个 Java 基础集成库，提供通用工具、国际化、事件总线、存储、SSH、打包以及 MongoDB、Mosh、ZooKeeper 等基础能力，减少业务项目对零散第三方组件的直接依赖。
+`base` 是一个 Java 基础集成库，提供通用工具、国际化、事件总线、存储、SSH、打包以及 MongoDB、Mosh、X11、ZooKeeper 等基础能力，减少业务项目对零散第三方组件的直接依赖。
 
 ## 环境要求
 
@@ -21,7 +21,7 @@
 | `base-pkg` | 打包模块，支持 JAR、JLink、JPackage、AppImage 等跨平台打包能力 |
 | `base-ssh` | SSH 模块，提供 SSH 客户端、跳板机和端口转发能力 |
 | `base-store` | 存储模块，提供文件、JDBC 和嵌入式数据库存储能力 |
-| `base-x11` | X11模块，提供X11协议的底层能力 |
+| `base-x11` | X11 模块，提供 X11 协议的底层能力 |
 | `base-zookeeper` | ZooKeeper 支持模块，提供客户端、协议和命令行相关能力 |
 
 ## Maven
