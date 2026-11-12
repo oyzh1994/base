@@ -230,13 +230,16 @@ public abstract class JdbcStandardOperator extends JdbcOperator {
      * @throws SQLException 异常
      */
     public Map<String, Object> selectOne(PrimaryKeyColumn primaryKey) throws SQLException {
+        JdbcConn connection = JdbcManager.takeoff();
+        if (connection == null) {
+            return Collections.emptyMap();
+        }
         String tableName = this.tableName();
         StringBuilder sql = new StringBuilder("SELECT * FROM ");
         sql.append(JdbcUtil.wrap(tableName));
         sql.append(" WHERE ");
         sql.append(JdbcUtil.wrap(primaryKey.getColumnName()));
         sql.append(" = ?");
-        JdbcConn connection = JdbcManager.takeoff();
         try {
             JdbcResultSet resultSet = JdbcHelper.executeQuery(connection, sql.toString(), primaryKey.getColumnData());
             Map<String, Object> record = new HashMap<>();

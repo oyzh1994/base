@@ -3,14 +3,12 @@ package cn.oyzh.store.jdbc;
 import cn.oyzh.common.log.JulLog;
 import cn.oyzh.common.util.ArrayUtil;
 
-import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * jdbc辅助类
