@@ -1,6 +1,6 @@
 # 通用 JAR 压缩组件
 
-`cn.oyzh.pkg.util.compact` 提供一套通用的 Spring Boot 可执行 JAR 二次压缩方案。它把应用 JAR、依赖 JAR 和 ZIP 元数据交给 XZ 统一压缩，最终仍生成一个可以直接执行的 JAR：
+`cn.oyzh.pkg.compact` 提供一套通用的 Spring Boot 可执行 JAR 二次压缩方案。它把应用 JAR、依赖 JAR 和 ZIP 元数据交给 XZ 统一压缩，最终仍生成一个可以直接执行的 JAR：
 
 ```bash
 java -jar target/application-compressed.jar
@@ -49,7 +49,7 @@ Path executableJar = Path.of("target/application.jar");
 Path applicationJar = Path.of("target/application.jar.original");
 Path outputJar = Path.of("target/application-compressed.jar");
 
-// 默认 XZ preset 9，优先保证分发体积；XZ 字典默认最多使用 32 MiB。
+// 默认 XZ preset 9，优先保证分发体积；XZ 字典上限会按 CPU 在 32-64 MiB 间选择。
 CompactJarTool.
 
 compact(executableJar, applicationJar, outputJar);
@@ -64,7 +64,7 @@ compact(executableJar, applicationJar, outputJar, 6);
 
 ```bash
 java -cp "$BASE_PKG_CLASSES:$BASE_COMMON_JAR:$XZ_JAR" \
-  cn.oyzh.pkg.util.compact.CompactJarTool \
+  cn.oyzh.pkg.compact.CompactJarTool \
   target/application.jar \
   target/application.jar.original \
   target/application-compressed.jar \
@@ -76,13 +76,13 @@ java -cp "$BASE_PKG_CLASSES:$BASE_COMMON_JAR:$XZ_JAR" \
 
 ## 压缩结构
 
-payload 不再使用一个全局 XZ 流，而是拆成三个大块：
+payload 不再使用一个全局 XZ 流，而是拆成 1 个应用流和 N 个依赖流：
 
 1. 应用 JAR 一个块。
-2. classpath 前一段依赖一个块。
-3. classpath 后一段依赖一个块。
+2. 依赖按 classpath 顺序、嵌套 JAR 存储大小连续均衡切成 N 个块。
 
-依赖切分点按嵌套 JAR 的存储大小选择，使两个依赖块的负载尽量接近。每个块都是独立 XZ 流，
+`N` 默认随 CPU 调整：CI 和非多核构建机为 2，8-15 个处理器为 4，16 个及以上为 6；
+也可以通过 `-Dcompact.jar.xz.dependency-chunks=4` 显式指定，范围为 1 到 16。每个块都是独立 XZ 流，
 并包含一个原始 ZIP 形式的数据区：
 
 ```text
@@ -95,22 +95,22 @@ d/00001/<dependency-entry>
 
 ZIP 条目使用 `STORED`，避免在 payload 内重复执行 DEFLATE；实际压缩由外层 XZ 完成。依赖按 classpath 顺序连续切分，尽量让相邻依赖共享同一 XZ 字典。
 
-三个块的压缩后长度记录在 Manifest 中：
+所有块的压缩后长度按顺序记录在 Manifest 中：
 
 ```text
 Payload-Chunk-Sizes: 1468716,24427656,18804392
 Cache-Version: 4
 ```
 
-启动器严格按这些长度切分 `compact-payload.xz`，每个块使用独立 XZ 解码器并行恢复。应用和依赖条目直接流式写入临时 JAR，不在堆中排队保存整个条目内容。
+启动器严格按这些长度切分 `compact-payload.xz`，每个块使用独立 XZ 解码器并行恢复。应用和依赖条目直接流式写入临时 JAR，不在堆中排队保存整个条目内容。Manifest 布局和 `Cache-Version: 4` 未变，旧启动器同样可以读取任意数量的分块。
 
 ## 并行策略
 
 打包阶段：
 
-- 原始应用块和两个依赖块并行生成。
-- XZ 任务由固定大小的工作线程队列执行，默认最多两个编码器同时运行。
-- LZMA2 字典默认最多使用 32 MiB，并会按构建 JVM 当前空闲堆自动下调字典和并发数。
+- 原始应用块和依赖块并行生成，默认最多 3 个原始 ZIP 展开任务。
+- XZ 任务由固定大小的工作线程队列执行；默认线程数在 CI 为 1，8-15 个处理器为 4，16 个及以上为 6，其余为 2。
+- LZMA2 字典默认上限在 CI 为 32 MiB，6 个及以上处理器为 48 MiB，12 个及以上为 64 MiB，并会按构建 JVM 当前空闲堆自动下调字典和并发数。
 - 使用 `ThreadUtil.newThread()` 创建一次性工作线程，不使用共享缓存线程池，避免打包进程结束后仍等待空闲线程退出。
 
 压缩内存参数通过 JVM 系统属性调整：
@@ -118,31 +118,34 @@ Cache-Version: 4
 ```bash
 java -Dcompact.jar.xz.dict.size=50331648 \
      -Dcompact.jar.xz.compress.threads=2 \
+     -Dcompact.jar.xz.dependency-chunks=4 \
      -cp "$BASE_PKG_CLASSES:$BASE_COMMON_JAR:$XZ_JAR" \
-     cn.oyzh.pkg.util.compact.CompactJarTool ...
+     cn.oyzh.pkg.compact.CompactJarTool ...
 ```
 
-- `compact.jar.xz.dict.size`：LZMA2 字典大小上限，单位为字节，默认 `33554432`（32 MiB）。
-- `compact.jar.xz.compress.threads`：XZ 压缩线程上限，默认 `2`，允许范围为 1 到 16。
-- `compact.jar.xz.nice.length`：preset 9 的 LZMA2 匹配长度上限，默认 `128`，允许范围为
+- `compact.jar.xz.dict.size`：LZMA2 字典大小上限，单位为字节；默认按 CPU 在 32-64 MiB 间选择。
+- `compact.jar.xz.compress.threads`：XZ 压缩线程上限，默认在 2-6 间随 CPU 调整，允许范围为 1 到 16。
+- `compact.jar.xz.dependency-chunks`：依赖 XZ 流数量，默认在 2-6 间随 CPU 调整，允许范围为 1 到 16。
+- `compact.jar.xz.nice.length`：preset 9 的 LZMA2 匹配长度上限，默认 `273`，允许范围为
   `4` 到 `273`。更大的值通常能略微改善压缩率，但会增加打包时间和 CPU。
 - 字典和线程参数是上限而不是无条件值。构建器会读取 `Runtime` 当前空闲堆，只使用其中约 75% 作为编码器预算；必要时减少并发并逐级降低字典。
-- preset 9 的原始默认字典是 64 MiB。它会让三个编码器同时产生较大数组分配，也是旧版 Linux 构建 OOM 的主要来源。32 MiB 默认值相当于更保守的 preset 8 字典，但其他 preset 9 匹配参数保持不变。
+- preset 9 的原始默认字典是 64 MiB。多个编码器同时使用大字典会产生较大数组分配，因此构建器仍会按空闲堆限制总预算，避免旧版 Linux 构建 OOM。
 - 机器内存充足且更看重体积时，可显式把字典上限设为 48 MiB 或 64 MiB；系统属性写错或越界会直接报错，不会静默忽略。
+- 增加依赖流数量可显著缩短压缩和首次解压时间，但会牺牲少量跨依赖字典复用；默认值已按常见桌面 CPU 做了平衡，除非有明确基准数据，不建议继续盲目增加。
 
 启动阶段：
 
-- 最多三个 XZ 块并行解压。
+- XZ 块按 Manifest 声明的数量并行解压。
 - 应用和依赖 JAR 并行重建。
 - 每个解压线程处理完一个依赖 JAR 就立即提交写出，不等待整块全部解压。
 
-启动并发数默认为 3（单核机器自动降为 1），可以通过 JVM 参数调整：
+启动并发数默认为 `min(XZ 块数, CPU 数按 1-6 截断)`；例如 7 个块、20 核时使用 6 个线程。可以通过 JVM 参数调整：
 
 ```bash
-java -Dcompact.jar.unpack.threads=3 -jar target/application-compressed.jar
+java -Dcompact.jar.unpack.threads=6 -jar target/application-compressed.jar
 ```
 
-允许范围为 1 到 16。SSD 和多核机器可尝试 3 或 4；机械硬盘、低内存机器建议设置为 1 或 2。线程过多可能增加 CPU、内存和磁盘争用。
+实际线程数还会被 XZ 块数限制，并至少为 1。SSD 和多核机器可使用 4 到 6；机械硬盘、低内存机器建议设置为 1 或 2。线程过多可能增加 CPU、内存和磁盘争用。
 
 ## 缓存机制
 
@@ -292,24 +295,24 @@ AOT cache 是启动优化，不替代展开缓存；程序更新后会生成新�
 缓存 JAR 可以选择压缩写入或直接存储，通过 JVM 系统属性切换：
 
 ```bash
-# 默认模式：节省缓存磁盘空间
-java -Dcompact.jar.cache.mode=deflate -jar target/application-compressed.jar
-
-# STORED 模式：跳过 ZIP 重建压缩，换取更快的首次缓存创建
+# 默认 STORED 模式：跳过 ZIP 重建压缩，换取更快的首次缓存创建
 java -Dcompact.jar.cache.mode=stored -jar target/application-compressed.jar
+
+# DEFLATE 模式：牺牲首次启动 CPU，换取更小的缓存磁盘占用
+java -Dcompact.jar.cache.mode=deflate -jar target/application-compressed.jar
 
 # 混合模式：压缩资源直接存储，类文件和普通资源继续 DEFLATE
 java -Dcompact.jar.cache.mode=hybrid -jar target/application-compressed.jar
 ```
 
-- `deflate`：默认值。使用 `Deflater.BEST_SPEED` 重建 `application.jar` 和 `lib/*.jar`。
-- `stored`：所有缓存 JAR 条目使用 ZIP `STORED`，不再执行 DEFLATE。
+- `stored`：默认值。所有缓存 JAR 条目使用 ZIP `STORED`，不再执行 DEFLATE。
+- `deflate`：使用 `Deflater.BEST_SPEED` 重建 `application.jar` 和 `lib/*.jar`。
 - `hybrid`：图片、音视频、压缩包、PDF 和常见 Office/字体资源使用 `STORED`；`.class`、文本、XML、JSON、配置文件和未知扩展名继续使用 `DEFLATE`。
 - 模式写入 `cache.ok`。任意模式之间切换时，都会自动清除旧缓存并按新模式重建。
 - `CompressedJarLauncher.warmCache()` 同样读取该属性，打包工具或安装程序可以按目标模式预热。
 - 非法模式会立即报错，不会静默退回默认值。
 
-EasyShell 当前输入同批次实测缓存大小约为：`deflate` 96.8 MiB、`hybrid` 91.6 MiB、`stored` 221.6 MiB。`stored` 会明显减少 DEFLATE CPU，但磁盘写入量增加约 1.3 倍；`hybrid` 的收益取决于应用中媒体和压缩资源的实际占比。最终首次启动耗时取决于 CPU、磁盘速度和缓存目录位置，应以目标机器实测为准。
+EasyShell 1.2.5 输入同批次实测缓存大小约为：`stored` 323.1 MiB、`deflate` 141.4 MiB、`hybrid` 133.7 MiB；空缓存预热耗时分别约为 2.29 秒、4.2-4.4 秒、6.0 秒。`stored` 会明显减少 DEFLATE CPU，但磁盘写入量更大；`hybrid` 的收益取决于应用中媒体和压缩资源的实际占比。最终首次启动耗时取决于 CPU、磁盘速度和缓存目录位置，应以目标机器实测为准。
 
 ## 启动转发
 
@@ -340,19 +343,33 @@ Linux 重启进程优先通过 `setsid` 放入独立会话，确保应用退出�
 
 ## 实测取舍
 
-以下数据来自同一个约 103 MB 的实际 Spring Boot 应用、macOS、XZ preset 9。不同应用和硬件会变化；不同字典和并发组合的耗时、峰值 RSS 不应直接横向等价比较。
+以下数据来自 EasyShell 1.2.5 的真实 Spring Boot 包、Windows、20 逻辑核、32 GB 内存、JDK 25，XZ preset 9。应用输入为 140,600,292 bytes，thin JAR 为 6,393,401 bytes。不同应用和硬件会变化，不应把耗时直接套用到其他机器。
 
-针对 EasyShell 1.2.2 的 XZ 分块与缓冲区优化回归如下：均衡切分让两个依赖块从约
-24.9/18.9 MB 变为 21.8/21.7 MB，空缓存 `warmCache()` 从 3.11 秒降至 2.77 秒，
-约改善 11%；产物从 45,480,131 bytes 降至 45,182,263 bytes，减少约 0.65%。
-代价是构建时间从 45.5 秒增至 48.1 秒，峰值 RSS 基本不变，适合以打包 CPU 换取
-更小产物和更快首次缓存创建。
+### 压缩速度和体积
 
-| 方案 | 产物大小 | 相对旧方案 | 构建及预热时间 | 峰值 RSS |
+| 方案 | 构建耗时 | 产物大小 | 相对基线体积 | 相对基线耗时 |
 | --- | ---: | ---: | ---: | ---: |
-| 旧方案：64 MiB 字典、三个压缩线程 | 39,200,773 bytes | 基线 | 约 45 秒 | 未记录 |
-| 当前默认：32 MiB 上限、`-Xmx512m` 自动降为单线程 | 39,799,089 bytes | 增加 1.53% | 66.3 秒 | 583 MB |
-| 压缩优先：48 MiB 上限、两个压缩线程、`-Xmx2g` | 39,323,139 bytes | 增加 0.31% | 47.3 秒 | 1.78 GB |
+| 原默认：3 流、preset 9、niceLen 273 | 183.644 秒 | 61,991,752 bytes | 基线 | 基线 |
+| niceLen 128 | 174.427 秒 | 62,088,685 bytes | +0.16% | 约快 5% |
+| niceLen 64 | 171.207 秒 | 62,430,465 bytes | +0.71% | 约快 7% |
+| preset 8 | 162.654 秒 | 62,769,169 bytes | +1.25% | 约快 11% |
+| 4 个依赖块、5 流、6 压缩线程 | 114.293 秒 | 62,111,230 bytes | +0.19% | 约快 38% |
+| 当前默认：6 个依赖块、7 流、6 压缩线程 | 106.974 秒 | 62,203,622 bytes | +0.34% | 约快 42% |
+| 6 个依赖块、7 流、8 压缩线程 | 105.774 秒 | 62,214,794 bytes | +0.36% | 约快 42% |
+
+结论：增加独立 XZ 流数量带来的速度收益远大于降低 niceLen 或 preset；把依赖切成 4-6 个流只增加约 0.2%-0.4% 的体积，却能把真实打包时间缩短约四成。
+
+### 解压速度
+
+缓存写入模式为 `STORED`，使用真实进程预热空缓存：
+
+| 包类型 | 1 线程 | 2 线程 | 3 线程 | 4 线程 | 5 线程 | 6 线程 | 7 线程 | 8 线程 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 原 3 流 | 4.300 秒 | 2.416 秒 | 2.279 秒 | 2.319 秒 | - | - | - | 2.286 秒 |
+| 5 流 | 4.734 秒 | 2.542 秒 | 2.234 秒 | 1.528 秒 | 1.445 秒 | 1.433 秒 | 1.419 秒 | 1.413 秒 |
+| 7 流 | 4.376 秒 | 2.458 秒 | 2.085 秒 | 1.675 秒 | 1.631 秒 | 1.239 秒 | 1.193 秒 | 1.187 秒 |
+
+7 流、6 解压线程约 1.24-1.32 秒，相比原 3 流默认约 2.28 秒快约 42%-46%，继续增加到 8 线程收益很小。因此启动器默认把并发限制在 6。
 
 另外使用包含 256 MiB 单一条目的嵌套依赖做低堆回归：`-Xmx256m`、preset 9 构建、`unzip -t` 和实际 `java -jar` 启动均通过，输出正常。这验证了大条目不再整体进入堆，同时低堆时会自动降低 XZ 字典。
 
@@ -362,9 +379,7 @@ XZ preset 主要影响打包时间与最终体积：
 - preset 6：构建更快，产物通常明显变大。
 - preset 0 到 3：适合频繁打包的开发环境，不建议用于正式分发。
 
-当前默认使用 preset 9、32 MiB 字典上限和 nice length 128。若要继续优先压缩率，可提高
-`compact.jar.xz.dict.size` 或 `compact.jar.xz.nice.length`，但不建议增加分块数量；8 个以上
-独立 XZ 流会明显损失跨文件字典收益。三块是压缩率、并行度和首次缓存创建时间之间的平衡点。
+当前默认使用 preset 9、32-64 MiB 动态字典上限、nice length 273，以及 2-6 个依赖流。若要继续优先压缩率，可提高 `compact.jar.xz.dict.size`，或把 `compact.jar.xz.dependency-chunks` 降为 1-2；若要优先打包和首启速度，可改用 preset 8、nice length 128，或把依赖流调到 4-6。超过 8 个独立 XZ 流通常会明显损失跨文件字典收益，只建议在明确基准收益时使用。
 
 ## 正确性保障
 
@@ -373,6 +388,7 @@ XZ preset 主要影响打包时间与最终体积：
 - 输出 JAR 不允许覆盖任一输入 JAR。
 - Manifest 记录应用 JAR SHA-256、payload SHA-256、XZ preset 和分块长度。
 - payload 顺序写入，启动时校验分块长度以及是否存在多余尾部数据。
+- 每个分块都是独立 XZ 流，XZ 自带校验和；并行解压不共享解码状态，因此块间可以安全并发。
 - 依赖文件名必须唯一、不能包含路径分隔符或控制字符，索引中的重复 ID 会被拒绝。
 - payload 索引 ID 必须从 0 连续编号，数量还必须与 Manifest `Dependency-Count` 一致。
 - 应用 payload 只能出现一次，缺失或重复都会中止缓存创建。
@@ -388,6 +404,8 @@ XZ preset 主要影响打包时间与最终体积：
 - 通用最小 Spring Boot 布局冒烟测试：应用和依赖恢复成功，退出码为 0。
 - 256 MiB 大条目、`-Xmx256m`、preset 9 构建和启动：通过。
 - 实际 EasyShell 输入使用 32 MiB 和 48 MiB 字典构建、缓存预热、ZIP 完整性检查：通过。
+- EasyShell 1.2.5 的 5 流和 7 流包分别使用 1-8 个解压线程预热空缓存：通过。
+- `compact.jar.xz.dependency-chunks=4` 的分块数量与真实启动回归：通过。
 - 实际应用空缓存启动：进入 JavaFX 主界面并持续运行。
 - 实际应用热缓存启动：正常复用缓存。
 - Manifest 分块长度、缓存版本和依赖数量读取：通过。
@@ -397,4 +415,5 @@ XZ preset 主要影响打包时间与最终体积：
 - 该组件优化的是分发体积和首次缓存创建速度，不直接降低业务 JVM 的堆占用。
 - 首次启动需要把 payload 展开到可写目录；只读安装环境应配置 `compact.jar.cache.dir`。
 - 重建后的 JAR ZIP 元数据可能与原 JAR 不完全相同，但条目内容保持一致。
+- 并行解压的前提是发布 JAR 本身完整。启动时会校验 Manifest 分块长度、独立 XZ 流校验和以及依赖 ID 连续性，但不会在每次启动时重新计算整个 payload 的 SHA-256；需要防篡改场景应依赖发布签名或额外的安装校验。
 - 如果应用依赖 JAR 签名对 ZIP 元数据本身有额外要求，应在正式发布流程中重新执行签名和 `jarsigner -verify`。

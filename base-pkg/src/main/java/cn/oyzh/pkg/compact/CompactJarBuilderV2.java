@@ -47,6 +47,7 @@ import java.util.zip.ZipOutputStream;
  * 构建器将应用 JAR 与依赖 JAR 展开为原始 ZIP 条目，通过多个 Zstd 流并行压缩，
  * 并把最小启动器和 Zstd 运行时嵌入最终 JAR。启动时再按 JAR 哈希重建运行缓存。
  */
+@Deprecated
 public final class CompactJarBuilderV2 {
 
     private static final String PAYLOAD_INDEX_ENTRY = "META-INF/compact-index.tsv";

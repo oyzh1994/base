@@ -257,7 +257,7 @@ public final class CompressedJarLauncher {
     }
 
     /**
-     * 解析缓存 JAR 写入模式；默认使用 DEFLATE 节省磁盘，STORED 用空间换取首次启动速度。
+     * 解析缓存 JAR 写入模式；默认使用 STORED 换取首次启动速度，DEFLATE 用 CPU 换取磁盘空间。
      */
     private static CacheMode resolveCacheMode() {
         String value = System.getProperty(CACHE_MODE_PROPERTY);
@@ -412,7 +412,8 @@ public final class CompressedJarLauncher {
         Map<Integer, String> dependencies = new ConcurrentSkipListMap<>();
         AtomicBoolean applicationPayloadSeen = new AtomicBoolean();
         validateChunkSizes(payloadChunkSizes, payloadEntry.getSize());
-        int defaultUnpackThreads = Math.clamp(Runtime.getRuntime().availableProcessors(), 1, 3);
+        int defaultUnpackThreads = Math.min(payloadChunkSizes.size(),
+                Math.clamp(Runtime.getRuntime().availableProcessors(), 1, 6));
         int unpackThreads = Integer.getInteger(UNPACK_THREADS_PROPERTY, defaultUnpackThreads);
         //        if (unpackThreads < 1 || unpackThreads > 16) {
         //            throw new IllegalArgumentException(UNPACK_THREADS_PROPERTY + " must be between 1 and 16");

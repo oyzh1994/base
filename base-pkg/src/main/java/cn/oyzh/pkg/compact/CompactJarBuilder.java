@@ -78,7 +78,26 @@ public final class CompactJarBuilder {
     private static final int DEFAULT_XZ_COMPRESS_THREADS = 2;
 
     /**
-     * preset 9 默认字典为 64 MiB；默认上限压到 32 MiB，实测压缩率损失很小。
+     * 依赖默认切成两个 XZ 流，与应用流组成三个并行单元，保持现有压缩率。
+     */
+    private static final int DEFAULT_XZ_DEPENDENCY_CHUNKS = 2;
+
+    private static int defaultDependencyChunkCount() {
+        if (SystemUtil.isCIEnv()) {
+            return DEFAULT_XZ_DEPENDENCY_CHUNKS;
+        }
+        int processors = RuntimeUtil.processorCount();
+        if (processors >= 16) {
+            return 6;
+        }
+        if (processors >= 8) {
+            return 4;
+        }
+        return DEFAULT_XZ_DEPENDENCY_CHUNKS;
+    }
+
+    /**
+     * preset 9 默认字典为 64 MiB；CI 等低并行度环境仍使用 32 MiB 上限。
      */
     private static final int DEFAULT_XZ_DICT_SIZE = 32 * 1024 * 1024;
 
@@ -95,7 +114,7 @@ public final class CompactJarBuilder {
     private static final ThreadLocal<byte[]> COPY_BUFFERS = ThreadLocal.withInitial(() -> new byte[IO_BUFFER_SIZE]);
 
     /**
-     * preset 9 默认 nice length 较保守；提高到 128 可用少量打包 CPU 换取更好的 LZMA2 匹配。
+     * preset 9 使用最大 nice length，优先保证分发体积；速度敏感场景可显式调低。
      */
     private static final int DEFAULT_XZ_NICE_LENGTH = 273;
 
@@ -189,7 +208,9 @@ public final class CompactJarBuilder {
             List<Long> dependencySizes = readDependencySizes(executableJar, dependencies);
             List<Callable<Path>> rawChunkTasks = new ArrayList<>();
             rawChunkTasks.add(() -> createApplicationChunk(applicationJar, payload.getParent(), index));
-            for (List<String> dependencyGroup : splitDependencies(dependencies, dependencySizes)) {
+            int dependencyChunks = readIntProperty("compact.jar.xz.dependency-chunks",
+                    defaultDependencyChunkCount(), 1, MAX_PARALLELISM);
+            for (List<String> dependencyGroup : splitDependencies(dependencies, dependencySizes, dependencyChunks)) {
                 rawChunkTasks.add(() -> createDependencyChunk(executableJar, payload.getParent(), index, dependencies, dependencyGroup));
             }
             rawChunks.addAll(invokeParallel(rawChunkTasks, DEFAULT_RAW_CHUNK_THREADS));
@@ -217,13 +238,14 @@ public final class CompactJarBuilder {
     }
 
     /**
-     * 将依赖按嵌套 JAR 大小均衡分成两个大块；应用单独占一块，兼顾压缩率与并行度。
+     * 将依赖按嵌套 JAR 大小均衡分成指定数量的大块；应用单独占一块。
      * <p>
      * 依赖列表来自 classpath 索引，连续切分可保持类路径相邻依赖位于同一 XZ 字典中。
-     * 旧版按依赖数量切分时，内容大小差异会造成解压线程等待最长块；按大小切分可让两个
-     * 依赖块更接近，通常能缩短首次缓存创建时间，同时仍只使用三个 XZ 流。
+     * 低并行度机器默认只切两个依赖块以保持压缩率；增加分块数可提高压缩和解压并行度，但会降低
+     * 跨依赖的字典复用，属于速度与体积之间的显式取舍。
      */
-    private static List<List<String>> splitDependencies(List<String> dependencies, List<Long> dependencySizes) {
+    private static List<List<String>> splitDependencies(List<String> dependencies, List<Long> dependencySizes,
+                                                        int requestedChunkCount) {
         if (dependencies.size() <= 1) {
             return dependencies.isEmpty() ? List.of() : List.of(dependencies);
         }
@@ -237,18 +259,36 @@ public final class CompactJarBuilder {
             }
             total += size;
         }
-        long left = 0;
-        long bestDifference = Long.MAX_VALUE;
-        int middle = (dependencies.size() + 1) / 2;
-        for (int index = 0; index < dependencies.size() - 1; index++) {
-            left += dependencySizes.get(index);
-            long difference = Math.abs(left - (total - left));
-            if (difference < bestDifference) {
-                bestDifference = difference;
-                middle = index + 1;
-            }
+        int chunkCount = Math.max(1, Math.min(requestedChunkCount, dependencies.size()));
+        if (chunkCount == 1) {
+            return List.of(dependencies);
         }
-        return List.of(dependencies.subList(0, middle), dependencies.subList(middle, dependencies.size()));
+        List<List<String>> chunks = new ArrayList<>(chunkCount);
+        int start = 0;
+        long consumed = 0;
+        for (int chunkIndex = 1; chunkIndex < chunkCount; chunkIndex++) {
+            long target = total * chunkIndex / chunkCount;
+            int minimumEnd = start + 1;
+            int maximumEnd = dependencies.size() - (chunkCount - chunkIndex);
+            int bestEnd = minimumEnd;
+            long candidate = consumed + dependencySizes.get(start);
+            long bestDifference = Math.abs(candidate - target);
+            for (int end = start + 2; end <= maximumEnd; end++) {
+                candidate += dependencySizes.get(end - 1);
+                long difference = Math.abs(candidate - target);
+                if (difference < bestDifference) {
+                    bestDifference = difference;
+                    bestEnd = end;
+                }
+            }
+            chunks.add(dependencies.subList(start, bestEnd));
+            for (int index = start; index < bestEnd; index++) {
+                consumed += dependencySizes.get(index);
+            }
+            start = bestEnd;
+        }
+        chunks.add(dependencies.subList(start, dependencies.size()));
+        return chunks;
     }
 
     /**
@@ -334,8 +374,8 @@ public final class CompactJarBuilder {
     /**
      * 根据 preset、调用方上限和当前空闲堆，计算 XZ 字典大小及压缩并发数。
      * <p>
-     * {@code compact.jar.xz.dict.size} 是字节数上限，默认 32 MiB；
-     * {@code compact.jar.xz.compress.threads} 是压缩线程上限，默认 2。
+     * {@code compact.jar.xz.dict.size} 是字节数上限，默认值随 CPU 在 32-64 MiB 间调整；
+     * {@code compact.jar.xz.compress.threads} 是压缩线程上限，默认值随 CPU 在 2-6 间调整。
      * 两者都会继续按空闲堆自动下调，避免在 EasyShell 等长驻 JVM 内打包时挤压业务内存。
      */
     private static CompressionConfig createCompressionConfig(int xzPreset, int taskCount) throws Exception {
@@ -356,9 +396,9 @@ public final class CompactJarBuilder {
         if (SystemUtil.isCIEnv()) {
             xzThreads = 1;
         } else if (RuntimeUtil.processorCount() >= 16) {
-            xzThreads = 4;
+            xzThreads = 6;
         } else if (RuntimeUtil.processorCount() >= 8) {
-            xzThreads = 3;
+            xzThreads = 4;
         } else {
             xzThreads = DEFAULT_XZ_COMPRESS_THREADS;
         }

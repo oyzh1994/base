@@ -13,6 +13,7 @@ import java.nio.file.Paths;
  * 与 payload 的 SHA-256 隔离，调用方可通过
  * {@link CompressedJarLauncherV2#warmCache(Path)} 提前创建运行缓存。
  */
+@Deprecated
 public final class CompactJarToolV2 {
 
     /**

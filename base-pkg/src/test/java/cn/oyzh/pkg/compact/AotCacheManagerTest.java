@@ -1,4 +1,4 @@
-package cn.oyzh.pkg.util.compact;
+package cn.oyzh.pkg.compact;
 
 import cn.oyzh.pkg.compact.AotCacheManager;
 import org.junit.Test;

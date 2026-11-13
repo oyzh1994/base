@@ -1,4 +1,4 @@
-package cn.oyzh.pkg.util.compact;
+package cn.oyzh.pkg.compact;
 
 import cn.oyzh.pkg.compact.CacheRetentionManager;
 import cn.oyzh.pkg.compact.CompactJarTool;
@@ -74,6 +74,7 @@ public class CompactJarToolV2Test {
         System.clearProperty("compact.jar.sanitize.dependencies");
         System.clearProperty("compact.jar.zstd.window.log");
         System.clearProperty("compact.jar.zstd.compress.threads");
+        System.clearProperty("compact.jar.xz.dependency-chunks");
     }
 
     @Test
@@ -137,14 +138,30 @@ public class CompactJarToolV2Test {
         assertEquals("V2_PID:" + lastProcessPid, pidOutput);
         try (JarFile jar = new JarFile(fixture.outputJar().toFile())) {
             assertTrue(jar.getJarEntry("compact-payload.xz") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotAssemblyMain.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager$UsageLock.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncherV2.class") == null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/AotAssemblyMain.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/CacheRetentionManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/CacheRetentionManager$UsageLock.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/CompressedJarLauncherV2.class") == null);
             assertEquals(CompressedJarLauncher.class.getName(),
                     jar.getManifest().getMainAttributes().getValue("Main-Class"));
         }
+    }
+
+    @Test
+    public void configuresXzDependencyChunkCount() throws Exception {
+        System.setProperty("compact.jar.aot", "false");
+        System.setProperty("compact.jar.xz.dependency-chunks", "4");
+        TestFixture fixture = createFixture(6);
+        CompactJarTool.compact(fixture.executableJar(), fixture.applicationJar(), fixture.outputJar());
+
+        try (JarFile jar = new JarFile(fixture.outputJar().toFile())) {
+            String chunkSizes = jar.getManifest().getMainAttributes().getValue("Payload-Chunk-Sizes");
+            assertNotNull(chunkSizes);
+            assertEquals(5, chunkSizes.split(",").length);
+        }
+        assertEquals("V2_OK:chunked|dependency-one|resource, \"quoted\"\nline",
+                runJar(fixture.outputJar(), "chunked"));
     }
 
     @Test
@@ -533,11 +550,11 @@ public class CompactJarToolV2Test {
         try (JarFile jar = new JarFile(outputJar.toFile())) {
             assertTrue(jar.getJarEntry("compact-payload.zst") != null);
             assertTrue(jar.getJarEntry("META-INF/compact-index.tsv") == null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotCacheManager.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/AotAssemblyMain.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CacheRetentionManager$UsageLock.class") != null);
-            assertTrue(jar.getJarEntry("cn/oyzh/pkg/util/compact/CompressedJarLauncher.class") == null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/AotCacheManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/AotAssemblyMain.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/CacheRetentionManager.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/CacheRetentionManager$UsageLock.class") != null);
+            assertTrue(jar.getJarEntry("cn/oyzh/pkg/compact/CompressedJarLauncher.class") == null);
             assertTrue(jar.getJarEntry("com/github/luben/zstd/ZstdInputStream.class") != null);
             assertTrue(jar.stream().anyMatch(entry -> entry.getName().startsWith("linux/amd64/libzstd-jni-")
                     && entry.getName().endsWith(".so")));

@@ -53,6 +53,7 @@ import java.util.zip.ZipInputStream;
  * 启动器根据当前用户和自身 JAR 的 SHA-256 选择缓存目录，并行重建应用和依赖 JAR，
  * 再在当前 JVM（AOT 关闭）或独立子 JVM（AOT 开启）中启动实际主类。
  */
+@Deprecated
 public final class CompressedJarLauncherV2 {
 
     private static final String PAYLOAD_INDEX_ENTRY = "META-INF/compact-index.tsv";
