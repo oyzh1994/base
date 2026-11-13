@@ -41,7 +41,7 @@ Spring-Boot-Lib: BOOT-INF/lib/
 Java API：
 
 ```java
-import cn.oyzh.pkg.util.compact.CompactJarTool;
+
 
 import java.nio.file.Path;
 
@@ -50,10 +50,14 @@ Path applicationJar = Path.of("target/application.jar.original");
 Path outputJar = Path.of("target/application-compressed.jar");
 
 // 默认 XZ preset 9，优先保证分发体积；XZ 字典默认最多使用 32 MiB。
-CompactJarTool.compact(executableJar, applicationJar, outputJar);
+CompactJarTool.
+
+compact(executableJar, applicationJar, outputJar);
 
 // 构建服务器更看重打包速度时可降低 preset。
-CompactJarTool.compact(executableJar, applicationJar, outputJar, 6);
+CompactJarTool.
+
+compact(executableJar, applicationJar, outputJar, 6);
 ```
 
 命令行入口：

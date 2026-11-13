@@ -1,5 +1,10 @@
 package cn.oyzh.pkg.util.compact;
 
+import cn.oyzh.pkg.compact.CacheRetentionManager;
+import cn.oyzh.pkg.compact.CompactJarTool;
+import cn.oyzh.pkg.compact.CompactJarToolV2;
+import cn.oyzh.pkg.compact.CompressedJarLauncher;
+import cn.oyzh.pkg.compact.CompressedJarLauncherV2;
 import com.github.luben.zstd.Zstd;
 import org.junit.After;
 import org.junit.Before;

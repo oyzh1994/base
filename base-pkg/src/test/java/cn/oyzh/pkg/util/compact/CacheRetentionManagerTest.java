@@ -1,5 +1,6 @@
 package cn.oyzh.pkg.util.compact;
 
+import cn.oyzh.pkg.compact.CacheRetentionManager;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

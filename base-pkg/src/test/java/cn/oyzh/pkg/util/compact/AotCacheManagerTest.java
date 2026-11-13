@@ -1,5 +1,6 @@
 package cn.oyzh.pkg.util.compact;
 
+import cn.oyzh.pkg.compact.AotCacheManager;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;

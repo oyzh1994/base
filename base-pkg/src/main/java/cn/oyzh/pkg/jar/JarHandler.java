@@ -24,8 +24,8 @@ import cn.oyzh.pkg.config.PackConfig;
 import cn.oyzh.pkg.filter.RegFilter;
 import cn.oyzh.pkg.macos.MacosUtil;
 import cn.oyzh.pkg.util.PkgUtil;
-import cn.oyzh.pkg.util.compact.CompactJarTool;
-import cn.oyzh.pkg.util.compact.CompactJarToolV2;
+import cn.oyzh.pkg.compact.CompactJarTool;
+import cn.oyzh.pkg.compact.CompactJarToolV2;
 import cn.oyzh.pkg.woa.WoaUtil;
 
 import java.io.BufferedInputStream;

@@ -1,5 +1,6 @@
 package cn.oyzh.pkg.util.compact;
 
+import cn.oyzh.pkg.compact.CompactJarSanitizer;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;

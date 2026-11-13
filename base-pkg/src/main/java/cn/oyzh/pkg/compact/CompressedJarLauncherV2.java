@@ -1,6 +1,6 @@
-package cn.oyzh.pkg.util.compact;
+package cn.oyzh.pkg.compact;
 
-import org.tukaani.xz.XZInputStream;
+import com.github.luben.zstd.ZstdInputStream;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -53,7 +53,7 @@ import java.util.zip.ZipInputStream;
  * 启动器根据当前用户和自身 JAR 的 SHA-256 选择缓存目录，并行重建应用和依赖 JAR，
  * 再在当前 JVM（AOT 关闭）或独立子 JVM（AOT 开启）中启动实际主类。
  */
-public final class CompressedJarLauncher {
+public final class CompressedJarLauncherV2 {
 
     private static final String PAYLOAD_INDEX_ENTRY = "META-INF/compact-index.tsv";
     private static final String APPLICATION_PREFIX = "a/";
@@ -62,9 +62,6 @@ public final class CompressedJarLauncher {
     private static final String CACHE_DIRECTORY_PROPERTY = "compact.jar.cache.dir";
     private static final String UNPACK_THREADS_PROPERTY = "compact.jar.unpack.threads";
     private static final String CACHE_MODE_PROPERTY = "compact.jar.cache.mode";
-    private static final int IO_BUFFER_SIZE = 256 * 1024;
-    private static final ThreadLocal<byte[]> COPY_BUFFERS =
-            ThreadLocal.withInitial(() -> new byte[IO_BUFFER_SIZE]);
     //    private static final String RESTART_CLASSPATH_PROPERTY = "compact.jar.restart.classpath";
     //    private static final String RESTART_START_CLASS_PROPERTY = "compact.jar.restart.start.class";
 
@@ -101,7 +98,7 @@ public final class CompressedJarLauncher {
         return hybridStoredExtensions;
     }
 
-    private CompressedJarLauncher() {
+    private CompressedJarLauncherV2() {
     }
 
     /**
@@ -137,7 +134,7 @@ public final class CompressedJarLauncher {
     }
 
     private static Path getLauncherJar() throws URISyntaxException {
-        Path path = Paths.get(CompressedJarLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+        Path path = Paths.get(CompressedJarLauncherV2.class.getProtectionDomain().getCodeSource().getLocation().toURI());
         if (!Files.isRegularFile(path)) {
             throw new IllegalStateException("Launcher must run from a jar");
         }
@@ -187,7 +184,7 @@ public final class CompressedJarLauncher {
     }
 
     /**
-     * 读取并校验 payload 分块长度；旧格式没有分块信息时按单个 XZ 流处理。
+     * 读取并校验 payload 分块长度；未设置分块信息时按单个 Zstd 流处理。
      */
     private static List<Long> parseChunkSizes(Manifest manifest) {
         String value = manifest.getMainAttributes().getValue("Payload-Chunk-Sizes");
@@ -229,9 +226,10 @@ public final class CompressedJarLauncher {
     private static Path cacheDirectory(String launcherSha256) throws Exception {
         String configured = System.getProperty(CACHE_DIRECTORY_PROPERTY);
         Path root = configured == null || configured.isBlank() ? defaultCacheRoot() : Paths.get(configured);
-        return root.toAbsolutePath().normalize()
+        Path path = root.toAbsolutePath().normalize()
                 .resolve(userCacheId())
                 .resolve(launcherSha256);
+        return path;
     }
 
     /**
@@ -262,7 +260,7 @@ public final class CompressedJarLauncher {
     private static CacheMode resolveCacheMode() {
         String value = System.getProperty(CACHE_MODE_PROPERTY);
         if (value == null || value.isBlank()) {
-            return CacheMode.STORED;
+            return CacheMode.DEFLATE;
         }
         for (CacheMode mode : CacheMode.values()) {
             if (mode.value.equalsIgnoreCase(value.trim())) {
@@ -398,7 +396,7 @@ public final class CompressedJarLauncher {
     /**
      * 解压多段 payload，并以有限并发重建应用 JAR 和依赖 JAR。
      * <p>
-     * 每段都是独立 XZ 流。读取线程只保留尚未处理的压缩分块，
+     * 每段都是独立 Zstd 流。读取线程只保留尚未处理的压缩分块，
      * 解压线程每完成一个依赖 JAR 就立即交给重建线程，避免累计完整解压数据。
      */
     private static void unpackPayload(JarFile launcher, String payloadEntryName, List<Long> payloadChunkSizes,
@@ -485,7 +483,7 @@ public final class CompressedJarLauncher {
     }
 
     /**
-     * 按 Manifest 长度读取一个独立 XZ 块，避免把整个 payload 同时载入内存。
+     * 按 Manifest 长度读取一个独立 Zstd 块，避免把整个 payload 同时载入内存。
      */
     private static byte[] readChunk(InputStream payload, long declaredSize, long totalSize) throws IOException {
         if (declaredSize < 0) {
@@ -502,7 +500,7 @@ public final class CompressedJarLauncher {
     }
 
     /**
-     * 解压一个独立 XZ 块，并直接流式写入应用或依赖 JAR。
+     * 解压一个独立 Zstd 块，并直接流式写入应用或依赖 JAR。
      * <p>
      * 不再把整个 JAR 的条目收集到内存队列中，单个超大资源也只使用固定大小的复制缓冲区。
      */
@@ -514,8 +512,8 @@ public final class CompressedJarLauncher {
         JarTarget dependency = null;
         int currentId = -1;
         boolean success = false;
-        try (XZInputStream xz = new XZInputStream(new ByteArrayInputStream(compressedChunk));
-             ZipInputStream zip = new ZipInputStream(xz)) {
+        try (ZstdInputStream zstd = new ZstdInputStream(new ByteArrayInputStream(compressedChunk));
+             ZipInputStream zip = new ZipInputStream(zstd)) {
             ZipEntry entry;
             while ((entry = zip.getNextEntry()) != null) {
                 if (PAYLOAD_INDEX_ENTRY.equals(entry.getName())) {
@@ -595,17 +593,6 @@ public final class CompressedJarLauncher {
     }
 
     /**
-     * 使用工作线程私有的大缓冲区复制 ZIP 条目，减少首次缓存重建时的系统调用。
-     */
-    private static void copy(InputStream input, OutputStream output) throws IOException {
-        byte[] buffer = COPY_BUFFERS.get();
-        int length;
-        while ((length = input.read(buffer)) >= 0) {
-            output.write(buffer, 0, length);
-        }
-    }
-
-    /**
      * 目标 JAR 的流式写入器；提交前只保留临时文件，不保留条目内容。
      */
     private static final class JarTarget implements AutoCloseable {
@@ -618,8 +605,7 @@ public final class CompressedJarLauncher {
         private JarTarget(Path target, CacheMode cacheMode) throws IOException {
             this.target = target;
             this.temporary = target.resolveSibling(target.getFileName() + ".tmp");
-            this.output = new JarOutputStream(
-                    new BufferedOutputStream(Files.newOutputStream(temporary), IO_BUFFER_SIZE));
+            this.output = new JarOutputStream(new BufferedOutputStream(Files.newOutputStream(temporary)));
             this.cacheMode = cacheMode;
             if (cacheMode == CacheMode.DEFLATE) {
                 this.output.setLevel(java.util.zip.Deflater.BEST_SPEED);
@@ -637,7 +623,7 @@ public final class CompressedJarLauncher {
                 outputEntry.setTime(sourceEntry.getTime());
             }
             output.putNextEntry(outputEntry);
-            copy(input, output);
+            input.transferTo(output);
             output.closeEntry();
         }
 
@@ -657,7 +643,7 @@ public final class CompressedJarLauncher {
                 CRC32 checksum = new CRC32();
                 long total = 0;
                 try (OutputStream fileOutput = Files.newOutputStream(entryTemporary)) {
-                    byte[] buffer = new byte[IO_BUFFER_SIZE];
+                    byte[] buffer = new byte[64 * 1024];
                     int length;
                     while ((length = input.read(buffer)) >= 0) {
                         fileOutput.write(buffer, 0, length);
@@ -683,7 +669,7 @@ public final class CompressedJarLauncher {
                 outputEntry.setTime(time);
             }
             output.putNextEntry(outputEntry);
-            copy(input, output);
+            input.transferTo(output);
             output.closeEntry();
         }
 

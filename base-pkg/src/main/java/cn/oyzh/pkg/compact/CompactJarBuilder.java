@@ -1,4 +1,4 @@
-package cn.oyzh.pkg.util.compact;
+package cn.oyzh.pkg.compact;
 
 import cn.oyzh.common.system.RuntimeUtil;
 import cn.oyzh.common.system.SystemUtil;
