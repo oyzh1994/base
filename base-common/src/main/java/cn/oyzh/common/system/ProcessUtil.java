@@ -396,9 +396,23 @@ public class ProcessUtil {
             }
             if (execPath != null) {
                 // 构建重启命令
-                ProcessBuilder builder = new ProcessBuilder("nohup", execPath, "&");
+                long currentPid = ProcessHandle.current().pid();
+                List<String> command = new ArrayList<>();
+                command.add("/bin/sh");
+                command.add("-c");
+                command.add("while kill -0 \"$1\" 2>/dev/null; do /bin/sleep 0.1; done; "
+                        + "/bin/sleep 0.2; shift; exec \"$@\"");
+                command.add(SysConst.projectName() + "-restart");
+                command.add(Long.toString(currentPid));
+                command.add(execPath);
+
+                ProcessBuilder builder = new ProcessBuilder(command);
+                builder.directory(dir);
+                builder.redirectInput(ProcessBuilder.Redirect.from(new File("/dev/null")));
+                builder.redirectOutput(ProcessBuilder.Redirect.DISCARD);
+                builder.redirectError(ProcessBuilder.Redirect.DISCARD);
                 // 打印命令
-                JulLog.info("restartCommand:{} dir:{}", Arrays.toString(builder.command().toArray()), dir);
+                JulLog.info("restart after pid:{} exit, command:{} dir:{}", currentPid, Arrays.toString(builder.command().toArray()), dir);
                 // 执行重启命令
                 builder.start();
             } else {
