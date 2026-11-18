@@ -5708,6 +5708,15 @@ public class I18nHelper {
     }
 
     /**
+     * 获取国际化文本：未命名序列
+     *
+     * @return 未命名序列
+     */
+    public static String unnamedSequence() {
+        return I18nResourceBundle.i18nString(UNNAMED, sequence);
+    }
+
+    /**
      * 获取国际化文本：未命名事件
      *
      * @return 未命名事件
