@@ -1,6 +1,7 @@
 package cn.oyzh.common.util;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
@@ -118,7 +119,7 @@ public class NumberUtil {
             return false;
         }
         BigDecimal da = new BigDecimal(n1.toString());
-        BigDecimal db = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n2.toString());
         return da.compareTo(db) < 0;
     }
 
@@ -134,12 +135,12 @@ public class NumberUtil {
             return false;
         }
         BigDecimal da = new BigDecimal(n1.toString());
-        BigDecimal db = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n2.toString());
         return da.compareTo(db) <= 0;
     }
 
     /**
-     * 判断n1是否等于n2（按double值比较）
+     * 判断n1是否等于n2（按数值精确比较）
      *
      * @param n1 数值1
      * @param n2 数值2
@@ -150,7 +151,7 @@ public class NumberUtil {
             return false;
         }
         BigDecimal da = new BigDecimal(n1.toString());
-        BigDecimal db = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n2.toString());
         return da.compareTo(db) == 0;
     }
 
@@ -166,7 +167,7 @@ public class NumberUtil {
             return false;
         }
         BigDecimal da = new BigDecimal(n1.toString());
-        BigDecimal db = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n2.toString());
         return da.compareTo(db) > 0;
     }
 
@@ -182,7 +183,7 @@ public class NumberUtil {
             return false;
         }
         BigDecimal da = new BigDecimal(n1.toString());
-        BigDecimal db = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n2.toString());
         return da.compareTo(db) >= 0;
     }
 
@@ -270,13 +271,14 @@ public class NumberUtil {
      * @return Number
      */
     public static Number parseNumber(String str) {
-        if (RegexUtil.isDecimal(str)) {
+        if (RegexUtil.isNumber(str)) {
+           return new BigInteger(str);
+        }
+        try {
+            return new BigDecimal(str);
+        } catch (NumberFormatException ex) {
             return Double.parseDouble(str);
         }
-        if (RegexUtil.isNumber(str)) {
-            return Long.parseLong(str);
-        }
-        return Double.parseDouble(str);
     }
 
     /**
