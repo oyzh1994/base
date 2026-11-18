@@ -117,7 +117,9 @@ public class NumberUtil {
         if (n1 == null || n2 == null) {
             return false;
         }
-        return n1.doubleValue() < n2.doubleValue();
+        BigDecimal da = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n1.toString());
+        return da.compareTo(db) < 0;
     }
 
     /**
@@ -131,7 +133,9 @@ public class NumberUtil {
         if (n1 == null || n2 == null) {
             return false;
         }
-        return n1.doubleValue() <= n2.doubleValue();
+        BigDecimal da = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n1.toString());
+        return da.compareTo(db) <= 0;
     }
 
     /**
@@ -145,7 +149,9 @@ public class NumberUtil {
         if (n1 == null || n2 == null) {
             return false;
         }
-        return n1.doubleValue() == n2.doubleValue();
+        BigDecimal da = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n1.toString());
+        return da.compareTo(db) == 0;
     }
 
     /**
@@ -159,7 +165,9 @@ public class NumberUtil {
         if (n1 == null || n2 == null) {
             return false;
         }
-        return n1.doubleValue() > n2.doubleValue();
+        BigDecimal da = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n1.toString());
+        return da.compareTo(db) > 0;
     }
 
     /**
@@ -173,7 +181,9 @@ public class NumberUtil {
         if (n1 == null || n2 == null) {
             return false;
         }
-        return n1.doubleValue() >= n2.doubleValue();
+        BigDecimal da = new BigDecimal(n1.toString());
+        BigDecimal db = new BigDecimal(n1.toString());
+        return da.compareTo(db) >= 0;
     }
 
     /**
