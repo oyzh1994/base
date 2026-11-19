@@ -592,6 +592,65 @@ public class TextUtil {
         return builder.toString();
     }
 
+    /**
+     * 反转义字符串中的常见转义字符。
+     *
+     * <p>支持引号、反斜杠、斜杠、退格、换页、换行、回车、制表符以及 Unicode 转义；
+     * 不完整或无法识别的转义序列保持原样。</p>
+     *
+     * @param str 字符串
+     * @return 反转义后的字符串
+     */
+    public static String unescape(String str) {
+        if (str == null || str.indexOf('\\') < 0) {
+            return str;
+        }
+        StringBuilder builder = new StringBuilder(str.length());
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c != '\\' || i + 1 >= str.length()) {
+                builder.append(c);
+                continue;
+            }
+            char next = str.charAt(++i);
+            switch (next) {
+                case '"' -> builder.append('"');
+                case '\\' -> builder.append('\\');
+                case '/' -> builder.append('/');
+                case 'b' -> builder.append('\b');
+                case 'f' -> builder.append('\f');
+                case 'n' -> builder.append('\n');
+                case 'r' -> builder.append('\r');
+                case 't' -> builder.append('\t');
+                case 'u' -> {
+                    boolean parsed = false;
+                    if (i + 4 < str.length()) {
+                        int code = 0;
+                        boolean valid = true;
+                        for (int j = 1; j <= 4; j++) {
+                            int digit = Character.digit(str.charAt(i + j), 16);
+                            if (digit < 0) {
+                                valid = false;
+                                break;
+                            }
+                            code = (code << 4) + digit;
+                        }
+                        if (valid) {
+                            builder.append((char) code);
+                            i += 4;
+                            parsed = true;
+                        }
+                    }
+                    if (!parsed) {
+                        builder.append('\\').append(next);
+                    }
+                }
+                default -> builder.append('\\').append(next);
+            }
+        }
+        return builder.toString();
+    }
+
     //    /**
     //     * 将字节数组转换为十六进制字符串
     //     *

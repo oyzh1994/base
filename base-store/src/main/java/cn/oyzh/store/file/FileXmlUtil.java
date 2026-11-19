@@ -2,7 +2,6 @@ package cn.oyzh.store.file;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,45 +33,44 @@ public final class FileXmlUtil {
      * @throws XMLStreamException xml解析异常
      */
     public static Map<String, Object> readRecord(XMLEventReader reader) throws XMLStreamException {
+        Map<String, Object> map = new HashMap<>();
         String name = null;
-        String value = null;
-        Map<String, Object> map = null;
-        boolean objStart = false;
+        StringBuilder value = null;
+        boolean recordStart = false;
         boolean childStart = false;
         while (reader.hasNext()) {
             XMLEvent event = reader.nextEvent();
             // 记录结束
-            if (event.isEndElement() && objStart && !childStart) {
-                break;
+            if (event.isEndElement()) {
+                if (recordStart && !childStart) {
+                    break;
+                }
+                if (childStart) {
+                    map.put(name, value == null ? null : value.toString());
+                    name = null;
+                    value = null;
+                    childStart = false;
+                }
+                continue;
             }
             // 记录开始
-            if (event.isStartElement() && !objStart) {
-                objStart = true;
-                continue;
-            }
-            // 子节点开始
-            if (event.isStartElement() && !childStart) {
-                childStart = true;
-                StartElement element = event.asStartElement();
-                name = element.getName().getLocalPart();
-                continue;
-            }
-            // 子节点结束
-            if (event.isEndElement() && childStart) {
-                childStart = false;
-                if (map == null) {
-                    map = new HashMap<>();
+            if (event.isStartElement()) {
+                if (!recordStart) {
+                    recordStart = true;
+                    continue;
                 }
-                map.put(name, value);
-                name = null;
-                value = null;
+                if (!childStart) {
+                    childStart = true;
+                    name = event.asStartElement().getName().getLocalPart();
+                    value = new StringBuilder();
+                }
                 continue;
             }
-            // 子节点数据
-            if (event.isCharacters() && name != null) {
-                value = event.asCharacters().getData();
+            // 子节点数据。实体引用可能被拆成多个字符事件，必须追加而不是覆盖。
+            if (event.isCharacters() && childStart) {
+                value.append(event.asCharacters().getData());
             }
         }
-        return map;
+        return map.isEmpty() ? null : map;
     }
 }

@@ -390,7 +390,7 @@ public class LexicalSqlSplitter implements SqlSplitter {
             statementWordCount++;
             if (word.equals("CREATE") || word.equals("ALTER")) {
                 createCandidate = true;
-            } else if (isRoutineObject(word) && createCandidate && statementWordCount <= 20
+            } else if (isRoutineObject(word, next) && createCandidate && statementWordCount <= 20
                     && profile != SqlLexicalProfile.ANSI
                     && profile != SqlLexicalProfile.POSTGRESQL) {
                 routineMode = true;
@@ -518,9 +518,11 @@ public class LexicalSqlSplitter implements SqlSplitter {
          * @param word 单词
          * @return 结果
          */
-        private static boolean isRoutineObject(String word) {
+        private static boolean isRoutineObject(String word, String nextWord) {
             return switch (word) {
-                case "PROCEDURE", "FUNCTION", "TRIGGER", "EVENT", "PACKAGE", "TYPE" -> true;
+                case "PROCEDURE", "FUNCTION", "TRIGGER", "EVENT", "PACKAGE" -> true;
+                // CREATE TYPE 是普通DDL，只有 CREATE TYPE BODY 才包含PL/SQL过程体
+                case "TYPE" -> "BODY".equals(nextWord);
                 default -> false;
             };
         }

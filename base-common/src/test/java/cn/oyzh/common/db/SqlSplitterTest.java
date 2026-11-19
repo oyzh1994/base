@@ -163,6 +163,28 @@ public class SqlSplitterTest {
     }
 
     @Test
+    public void keepsOracleTypeSpecSeparateFromFollowingBlock() {
+        String sql = """
+                CREATE OR REPLACE EDITIONABLE TYPE "T_ADDR" AS OBJECT (
+                    STREET VARCHAR2(50),
+                    CITY VARCHAR2(30)
+                );
+                BEGIN
+                    EXECUTE IMMEDIATE 'DROP TABLE "T"';
+                END;
+                /
+                CREATE TABLE "T" ("ID" NUMBER);
+                """;
+
+        List<String> statements = SqlUtil.split(sql, SqlDatabase.ORACLE);
+
+        assertEquals(3, statements.size());
+        assertTrue(statements.get(0).startsWith("CREATE OR REPLACE EDITIONABLE TYPE"));
+        assertTrue(statements.get(1).startsWith("BEGIN"));
+        assertEquals("CREATE TABLE \"T\" (\"ID\" NUMBER)", statements.get(2));
+    }
+
+    @Test
     public void supportsSqlServerGoBatches() {
         String sql = """
                 CREATE PROCEDURE test_proc AS
