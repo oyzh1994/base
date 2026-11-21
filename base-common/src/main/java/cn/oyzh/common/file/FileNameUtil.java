@@ -4,6 +4,7 @@ import cn.oyzh.common.system.OSUtil;
 import cn.oyzh.common.util.StringUtil;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * 文件名工具类
@@ -63,6 +64,16 @@ public class FileNameUtil {
      */
     public static String extName(File file) {
         return file == null ? null : extName(file.getName());
+    }
+
+    /**
+     * 获取文件的扩展名
+     *
+     * @param file 文件
+     * @return 扩展名，file 为 null 时返回 null
+     */
+    public static String extName(Path file) {
+        return file == null ? null : extName(file.toFile());
     }
 
     /**

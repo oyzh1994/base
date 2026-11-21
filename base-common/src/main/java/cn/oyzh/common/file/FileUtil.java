@@ -1387,4 +1387,12 @@ public class FileUtil {
     public static String parent(String path) {
         return Path.of(path).getParent().toString();
     }
+
+    public static boolean isMacMetadata(String name) {
+        if(StringUtil.isBlank(name)){
+            return false;
+        }
+        return name.equals("__MACOSX") || name.startsWith("__MACOSX/")
+                || name.endsWith("/.DS_Store") || name.equals(".DS_Store");
+    }
 }
