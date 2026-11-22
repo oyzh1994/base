@@ -639,6 +639,8 @@ public class I18nHelper {
 
     public static final String llm = "base.llm";
 
+    public static final String remark = "base.remark";
+
     public static final String PORT = "base.port";
 
     public static final String PORTS = "base.ports";
@@ -10213,6 +10215,10 @@ public class I18nHelper {
 
     public static String llmProvider() {
         return I18nResourceBundle.i18nString(llm, provider);
+    }
+
+    public static String remark() {
+        return I18nResourceBundle.i18nString(remark);
     }
 
     /**
