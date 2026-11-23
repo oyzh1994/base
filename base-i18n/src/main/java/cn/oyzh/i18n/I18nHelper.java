@@ -5071,6 +5071,15 @@ public class I18nHelper {
     }
 
     /**
+     * 获取国际化文本：删除会话
+     *
+     * @return 删除会话
+     */
+    public static String deleteSession() {
+        return I18nResourceBundle.i18nString(DELETE, SESSION);
+    }
+
+    /**
      * 获取国际化文本：删除分组
      *
      * @return 删除分组
