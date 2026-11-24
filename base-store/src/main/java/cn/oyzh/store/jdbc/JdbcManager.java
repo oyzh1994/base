@@ -101,6 +101,10 @@ public class JdbcManager {
             url += ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
         } else {
             url = "jdbc:sqlite:" + dbFile;
+            String cacheSize = JdbcConst.dbCacheSize();
+            if (StringUtil.isNotBlank(cacheSize)) {
+                url += (dbFile.contains("?") ? "&" : "?") + "cache_size=" + cacheSize;
+            }
         }
         //ReflectUtil.setFieldValue("MIN_GROW", (int)32 * 1024, WriteBuffer.class);
         connection = DriverManager.getConnection(url);
