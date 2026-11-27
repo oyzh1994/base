@@ -178,7 +178,7 @@ public class XMLUtil {
      * @param result 结果
      */
     private static void appendSpace(StringBuilder result) {
-        if (result.length() > 0) {
+        if (!result.isEmpty()) {
             char last = result.charAt(result.length() - 1);
             if (last != '<' && last != ' ' && last != '=') {
                 result.append(' ');
@@ -203,5 +203,22 @@ public class XMLUtil {
             }
         }
         return newline;
+    }
+
+    /**
+     * XML 格式需要对字段值转义，其它格式原样返回。
+     * 字段顺序：先转义 &，再转义 < >；回车用字符引用保留，避免 XML 解析时被规范化为换行。
+     *
+     * @param value 原始值
+     * @return 写入文件的值
+     */
+    public static String escape(String value) {
+        if (value != null) {
+            return value.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("\r", "&#13;");
+        }
+        return value;
     }
 }
