@@ -1000,4 +1000,14 @@ public class StringUtil {
             builder.delete(0, builder.length());
         }
     }
+
+    /**
+     * 去除空格
+     *
+     * @param str 字符串
+     * @return 结果
+     */
+    public static String trim(String str) {
+        return str == null ? null : str.trim();
+    }
 }
