@@ -5809,6 +5809,33 @@ public class I18nHelper {
     }
 
     /**
+     * 获取国际化文本：未命名索引
+     *
+     * @return 未命名索引
+     */
+    public static String unnamedIndex() {
+        return I18nResourceBundle.i18nString(UNNAMED, INDEX);
+    }
+
+    /**
+     * 获取国际化文本：未命名触发器
+     *
+     * @return 未命名触发器
+     */
+    public static String unnamedTrigger() {
+        return I18nResourceBundle.i18nString(UNNAMED, TRIGGER);
+    }
+
+    /**
+     * 获取国际化文本：未命名类型
+     *
+     * @return 未命名类型
+     */
+    public static String unnamedType() {
+        return I18nResourceBundle.i18nString(UNNAMED, TYPE);
+    }
+
+    /**
      * 获取国际化文本：视图
      *
      * @return 视图
